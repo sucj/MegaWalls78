@@ -11,61 +11,61 @@ import java.util.List;
 
 public abstract class Kit {
 
-  private final List<ItemBuilder> itemBuilders;
-  private ItemBuilder helmetBuilder;
-  private ItemBuilder chestplateBuilder;
-  private ItemBuilder leggingsBuilder;
-  private ItemBuilder bootsBuilder;
-  private final Identity identity;
+    private final List<ItemBuilder> itemBuilders;
+    private ItemBuilder helmetBuilder;
+    private ItemBuilder chestplateBuilder;
+    private ItemBuilder leggingsBuilder;
+    private ItemBuilder bootsBuilder;
+    private final Identity identity;
 
-  protected Kit(Identity identity) {
-    this.itemBuilders = Lists.newArrayList();
-    this.identity = identity;
-    init();
-  }
-
-  protected abstract void init();
-
-  protected void setHelmetBuilder(ItemBuilder helmetBuilder) {
-    this.helmetBuilder = helmetBuilder;
-  }
-
-  protected void setChestplateBuilder(ItemBuilder chestplateBuilder) {
-    this.chestplateBuilder = chestplateBuilder;
-  }
-
-  protected void setLeggingsBuilder(ItemBuilder leggingsBuilder) {
-    this.leggingsBuilder = leggingsBuilder;
-  }
-
-  protected void setBootsBuilder(ItemBuilder bootsBuilder) {
-    this.bootsBuilder = bootsBuilder;
-  }
-
-  protected void addBuilder(ItemBuilder builder) {
-    itemBuilders.add(builder);
-  }
-
-  protected Component prefix() {
-    return identity.getName().append(MessageUtil.BLANK_COMPONENT);
-  }
-
-  public void equip(Player player) {
-    PlayerInventory inventory = player.getInventory();
-    for (ItemBuilder itemBuilder : this.itemBuilders) {
-      inventory.addItem(itemBuilder.build());
+    protected Kit(Identity identity) {
+        this.itemBuilders = Lists.newArrayList();
+        this.identity = identity;
+        init();
     }
-    if (helmetBuilder != null) {
-      inventory.setHelmet(helmetBuilder.build());
+
+    protected abstract void init();
+
+    protected void setHelmetBuilder(ItemBuilder helmetBuilder) {
+        this.helmetBuilder = helmetBuilder;
     }
-    if (chestplateBuilder != null) {
-      inventory.setChestplate(chestplateBuilder.build());
+
+    protected void setChestplateBuilder(ItemBuilder chestplateBuilder) {
+        this.chestplateBuilder = chestplateBuilder;
     }
-    if (leggingsBuilder != null) {
-      inventory.setLeggings(leggingsBuilder.build());
+
+    protected void setLeggingsBuilder(ItemBuilder leggingsBuilder) {
+        this.leggingsBuilder = leggingsBuilder;
     }
-    if (bootsBuilder != null) {
-      inventory.setBoots(bootsBuilder.build());
+
+    protected void setBootsBuilder(ItemBuilder bootsBuilder) {
+        this.bootsBuilder = bootsBuilder;
     }
-  }
+
+    protected void addBuilder(ItemBuilder builder) {
+        itemBuilders.add(builder);
+    }
+
+    protected Component prefix() {
+        return identity.getName().append(MessageUtil.BLANK_COMPONENT);
+    }
+
+    public void equip(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        for (ItemBuilder itemBuilder : this.itemBuilders) {
+            inventory.addItem(itemBuilder.build());
+        }
+        if (helmetBuilder != null) {
+            inventory.setHelmet(helmetBuilder.build());
+        }
+        if (chestplateBuilder != null) {
+            inventory.setChestplate(chestplateBuilder.build());
+        }
+        if (leggingsBuilder != null) {
+            inventory.setLeggings(leggingsBuilder.build());
+        }
+        if (bootsBuilder != null) {
+            inventory.setBoots(bootsBuilder.build());
+        }
+    }
 }

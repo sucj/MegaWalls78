@@ -9,12 +9,12 @@ import java.util.function.Predicate;
 
 public class PathfinderGoalNearestAttackableTargetTeam extends NearestAttackableTargetGoal<LivingEntity> {
 
-  public PathfinderGoalNearestAttackableTargetTeam(Mob mob, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Predicate<LivingEntity> targetPredicate) {
-    super(mob, LivingEntity.class, reciprocalChance, checkVisibility, checkCanNavigate, targetPredicate);
-  }
+    public PathfinderGoalNearestAttackableTargetTeam(Mob mob, int reciprocalChance, boolean checkVisibility, boolean checkCanNavigate, @Nullable Predicate<LivingEntity> targetPredicate) {
+        super(mob, LivingEntity.class, reciprocalChance, checkVisibility, checkCanNavigate, targetPredicate);
+    }
 
-  @Override
-  protected void findTarget() {
-    this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(this.targetType, this.getTargetSearchArea(this.getFollowDistance()), (var0) -> mob.getTeam() == var0.getTeam()), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
-  }
+    @Override
+    protected void findTarget() {
+        this.target = this.mob.level().getNearestEntity(this.mob.level().getEntitiesOfClass(this.targetType, this.getTargetSearchArea(this.getFollowDistance()), (var0) -> mob.getTeam() == var0.getTeam()), this.targetConditions, this.mob, this.mob.getX(), this.mob.getEyeY(), this.mob.getZ());
+    }
 }

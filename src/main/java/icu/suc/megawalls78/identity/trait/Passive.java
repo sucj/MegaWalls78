@@ -6,35 +6,35 @@ import org.bukkit.event.Listener;
 
 public abstract class Passive implements Listener {
 
-  private final String id;
-  private final String name;
+    private final String id;
+    private final String name;
 
-  private GamePlayer player;
+    private GamePlayer player;
 
-  protected Passive(String id, String name) {
-    this.id = id;
-    this.name = name;
-  }
+    protected Passive(String id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-  protected boolean shouldPassive(Player player) {
-    return player != null && player.getUniqueId().equals(this.player.getUuid());
-  }
+    protected boolean shouldPassive(Player player) {
+        return player != null && player.getUniqueId().equals(this.player.getUuid());
+    }
 
-  public abstract void unregister();
+    public abstract void unregister();
 
-  public String getId() {
-    return id;
-  }
+    public String getId() {
+        return id;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public GamePlayer getPlayer() {
-    return player;
-  }
+    public GamePlayer getPlayer() {
+        return player;
+    }
 
-  public void setPlayer(GamePlayer player) {
-    this.player = player;
-  }
+    public void setPlayer(GamePlayer player) {
+        this.player = player;
+    }
 }

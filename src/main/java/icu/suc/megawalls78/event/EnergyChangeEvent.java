@@ -8,54 +8,54 @@ import org.jetbrains.annotations.NotNull;
 
 public class EnergyChangeEvent extends Event implements Cancellable {
 
-  private final Player player;
-  private final int origin;
-  private final int energy;
-  private final int max;
+    private final Player player;
+    private final int origin;
+    private final int energy;
+    private final int max;
 
-  private boolean cancelled;
+    private boolean cancelled;
 
-  private static final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
 
-  public EnergyChangeEvent(Player player, int origin, int energy, int max) {
-    this.player = player;
-    this.origin = origin;
-    this.energy = energy;
-    this.max = max;
-  }
+    public EnergyChangeEvent(Player player, int origin, int energy, int max) {
+        this.player = player;
+        this.origin = origin;
+        this.energy = energy;
+        this.max = max;
+    }
 
-  public Player getPlayer() {
-    return player;
-  }
+    public Player getPlayer() {
+        return player;
+    }
 
-  public int getOrigin() {
-    return origin;
-  }
+    public int getOrigin() {
+        return origin;
+    }
 
-  public int getEnergy() {
-    return energy;
-  }
+    public int getEnergy() {
+        return energy;
+    }
 
-  public int getMax() {
-    return max;
-  }
+    public int getMax() {
+        return max;
+    }
 
-  @Override
-  public boolean isCancelled() {
-    return cancelled;
-  }
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
 
-  @Override
-  public void setCancelled(boolean b) {
-    cancelled = b;
-  }
+    @Override
+    public void setCancelled(boolean b) {
+        cancelled = b;
+    }
 
-  @Override
-  public @NotNull HandlerList getHandlers() {
-    return handlers;
-  }
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return handlers;
+    }
 
-  public static HandlerList getHandlerList() {
-    return handlers;
-  }
+    public static HandlerList getHandlerList() {
+        return handlers;
+    }
 }

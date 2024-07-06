@@ -10,33 +10,33 @@ import org.bukkit.potion.PotionEffectType;
 
 public class Flurry extends Passive {
 
-  private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 60, 2);
-  private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1);
+    private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 60, 2);
+    private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1);
 
-  private int hit;
+    private int hit;
 
-  public Flurry() {
-    super("flurry", "Flurry");
-  }
-
-  @EventHandler
-  public void onPlayerDamage(EntityDamageByEntityEvent event) {
-    if (event.isCancelled()) {
-      return;
+    public Flurry() {
+        super("flurry", "Flurry");
     }
-    if (event.getDamageSource().getCausingEntity() instanceof Player player) {
-      if (shouldPassive(player) && !event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) && player != this.getPlayer().getBukkitPlayer()) {
-        if (++hit >= 3) {
-          hit = 0;
-          player.addPotionEffect(SPEED);
-          player.addPotionEffect(REGENERATION);
+
+    @EventHandler
+    public void onPlayerDamage(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) {
+            return;
         }
-      }
+        if (event.getDamageSource().getCausingEntity() instanceof Player player) {
+            if (shouldPassive(player) && !event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) && player != this.getPlayer().getBukkitPlayer()) {
+                if (++hit >= 3) {
+                    hit = 0;
+                    player.addPotionEffect(SPEED);
+                    player.addPotionEffect(REGENERATION);
+                }
+            }
+        }
     }
-  }
 
-  @Override
-  public void unregister() {
-    hit = 0;
-  }
+    @Override
+    public void unregister() {
+        hit = 0;
+    }
 }

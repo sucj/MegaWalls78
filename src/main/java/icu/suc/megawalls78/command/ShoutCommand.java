@@ -16,29 +16,29 @@ import org.jetbrains.annotations.NotNull;
 
 public class ShoutCommand implements CommandExecutor {
 
-  @Override
-  public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-    if (commandSender instanceof Player player) {
-      if (strings.length >= 1) {
-        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-        if (gameManager.isSpectator(player)) {
-          return true;
+    @Override
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        if (commandSender instanceof Player player) {
+            if (strings.length >= 1) {
+                GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+                if (gameManager.isSpectator(player)) {
+                    return true;
+                }
+                if (gameManager.inFighting()) {
+                    GamePlayer gamePlayer = gameManager.getPlayer(player);
+                    Bukkit.broadcast(Component.translatable("ms78.brackets", NamedTextColor.GOLD, Component.translatable("mw78.shout"))
+                            .append(MessageUtil.BLANK_COMPONENT)
+                            .append(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().chat()))
+                            .append(MessageUtil.BLANK_COMPONENT)
+                            .append(LP.getPrefix(player))
+                            .append(player.displayName().color(LP.getNameColor(player)))
+                            .append(Component.translatable("mw78.sb.colon", NamedTextColor.WHITE))
+                            .append(MessageUtil.BLANK_COMPONENT)
+                            .append(Component.text(String.join(" ", strings), NamedTextColor.WHITE)));
+                }
+                return true;
+            }
         }
-        if (gameManager.inFighting()) {
-          GamePlayer gamePlayer = gameManager.getPlayer(player);
-          Bukkit.broadcast(Component.translatable("ms78.brackets", NamedTextColor.GOLD, Component.translatable("mw78.shout"))
-            .append(MessageUtil.BLANK_COMPONENT)
-            .append(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().chat()))
-            .append(MessageUtil.BLANK_COMPONENT)
-            .append(LP.getPrefix(player))
-            .append(player.displayName().color(LP.getNameColor(player)))
-            .append(Component.translatable("mw78.sb.colon", NamedTextColor.WHITE))
-            .append(MessageUtil.BLANK_COMPONENT)
-            .append(Component.text(String.join(" ", strings), NamedTextColor.WHITE)));
-        }
-        return true;
-      }
+        return false;
     }
-    return false;
-  }
 }

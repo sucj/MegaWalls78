@@ -11,11 +11,11 @@ import java.util.Map;
 
 public class I18n {
 
-  public static void register(Map<Locale, Map<String, MessageFormat>> formats) {
-    TranslationRegistry registry = TranslationRegistry.create(new NamespacedKey(MegaWalls78.getInstance(), "lang"));
-    for (Locale locale : formats.keySet()) {
-      registry.registerAll(locale, formats.get(locale));
+    public static void register(Map<Locale, Map<String, MessageFormat>> formats) {
+        TranslationRegistry registry = TranslationRegistry.create(new NamespacedKey(MegaWalls78.getInstance(), "lang"));
+        for (Locale locale : formats.keySet()) {
+            registry.registerAll(locale, formats.get(locale));
+        }
+        GlobalTranslator.translator().addSource(registry);
     }
-    GlobalTranslator.translator().addSource(registry);
-  }
 }

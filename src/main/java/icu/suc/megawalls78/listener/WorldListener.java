@@ -13,66 +13,66 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class WorldListener implements Listener {
 
-  @EventHandler(priority = EventPriority.LOWEST)
-  public void onBlockPlace(BlockPlaceEvent event) {
-    GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-    Player player = event.getPlayer();
-    if (gameManager.isSpectator(player)) {
-      event.setCancelled(true);
-      return;
-    }
-    switch (gameManager.getState()) {
-      case WAITING:
-      case COUNTDOWN:
-      case OPENING:
-      case ENDING:
-        event.setCancelled(true);
-        return;
-      default: {
-        if (gameManager.getRunner().getProtectedBlocks().contains(event.getBlock().getLocation())) {
-          event.setCancelled(true);
-        } else if (ItemUtil.isEnderChest(event.getItemInHand())) {
-          event.setCancelled(true);
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+        Player player = event.getPlayer();
+        if (gameManager.isSpectator(player)) {
+            event.setCancelled(true);
+            return;
         }
-      }
-    }
-  }
-
-  @EventHandler(priority = EventPriority.LOWEST)
-  public void onBlockBreak(BlockBreakEvent event) {
-    GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-    Player player = event.getPlayer();
-    if (gameManager.isSpectator(player)) {
-      event.setCancelled(true);
-      return;
-    }
-    switch (gameManager.getState()) {
-      case WAITING:
-      case COUNTDOWN:
-      case OPENING:
-      case ENDING:
-        event.setCancelled(true);
-        return;
-      default: {
-        if (gameManager.getRunner().getProtectedBlocks().contains(event.getBlock().getLocation())) {
-          event.setCancelled(true);
+        switch (gameManager.getState()) {
+            case WAITING:
+            case COUNTDOWN:
+            case OPENING:
+            case ENDING:
+                event.setCancelled(true);
+                return;
+            default: {
+                if (gameManager.getRunner().getProtectedBlocks().contains(event.getBlock().getLocation())) {
+                    event.setCancelled(true);
+                } else if (ItemUtil.isEnderChest(event.getItemInHand())) {
+                    event.setCancelled(true);
+                }
+            }
         }
-      }
     }
-  }
 
-  @EventHandler
-  public void onExplode(EntityExplodeEvent event) {
-    GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-    switch (gameManager.getState()) {
-      case WAITING:
-      case COUNTDOWN:
-      case ENDING:
-        event.setCancelled(true);
-        return;
-      default: {
-        event.blockList().removeIf(block -> gameManager.getRunner().getProtectedBlocks().contains(block.getLocation()));
-      }
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onBlockBreak(BlockBreakEvent event) {
+        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+        Player player = event.getPlayer();
+        if (gameManager.isSpectator(player)) {
+            event.setCancelled(true);
+            return;
+        }
+        switch (gameManager.getState()) {
+            case WAITING:
+            case COUNTDOWN:
+            case OPENING:
+            case ENDING:
+                event.setCancelled(true);
+                return;
+            default: {
+                if (gameManager.getRunner().getProtectedBlocks().contains(event.getBlock().getLocation())) {
+                    event.setCancelled(true);
+                }
+            }
+        }
     }
-  }
+
+    @EventHandler
+    public void onExplode(EntityExplodeEvent event) {
+        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+        switch (gameManager.getState()) {
+            case WAITING:
+            case COUNTDOWN:
+            case ENDING:
+                event.setCancelled(true);
+                return;
+            default: {
+                event.blockList().removeIf(block -> gameManager.getRunner().getProtectedBlocks().contains(block.getLocation()));
+            }
+        }
+    }
 }

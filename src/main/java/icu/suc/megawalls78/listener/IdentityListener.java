@@ -10,21 +10,21 @@ import org.bukkit.event.Listener;
 
 public class IdentityListener implements Listener {
 
-  @EventHandler
-  public void preIdentitySelected(IdentitySelectEvent.Pre event) {
-    Player player = Bukkit.getPlayer(event.getUuid());
-    if (player == null) {
-      return;
+    @EventHandler
+    public void preIdentitySelected(IdentitySelectEvent.Pre event) {
+        Player player = Bukkit.getPlayer(event.getUuid());
+        if (player == null) {
+            return;
+        }
+        MegaWalls78.getInstance().getSkinManager().applySkin(player, event.getIdentity());
     }
-    MegaWalls78.getInstance().getSkinManager().applySkin(player, event.getIdentity());
-  }
 
-  @EventHandler
-  public void postIdentitySelected(IdentitySelectEvent.Post event) {
-    Player player = Bukkit.getPlayer(event.getUuid());
-    if (player == null) {
-      return;
+    @EventHandler
+    public void postIdentitySelected(IdentitySelectEvent.Post event) {
+        Player player = Bukkit.getPlayer(event.getUuid());
+        if (player == null) {
+            return;
+        }
+        player.getInventory().setItem(0, IdentityGui.trigger(player));
     }
-    player.getInventory().setItem(0, IdentityGui.trigger(player));
-  }
 }

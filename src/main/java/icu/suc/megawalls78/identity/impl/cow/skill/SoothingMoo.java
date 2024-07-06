@@ -4,12 +4,12 @@ import org.bukkit.entity.Player;
 
 public class SoothingMoo extends icu.suc.megawalls78.identity.trait.Skill {
 
-  public SoothingMoo() {
-    super("soothing_moo", "Soothing Moo", 100);
-  }
+    public SoothingMoo() {
+        super("soothing_moo", "Soothing Moo", 100);
+    }
 
-  @Override
-  public void use(Player player) {
+    @Override
+    public void use(Player player) {
 
-  }
+    }
 }

@@ -20,159 +20,159 @@ import java.util.UUID;
 
 public class GamePlayer {
 
-  private final UUID uuid;
+    private final UUID uuid;
 
-  private Identity identity;
-  private GameTeam team;
+    private Identity identity;
+    private GameTeam team;
 
-  private int kills;
-  private int deaths;
-  private int assists;
-  private int finalKills;
-  private int finalDeaths;
-  private int finalAssists;
+    private int kills;
+    private int deaths;
+    private int assists;
+    private int finalKills;
+    private int finalDeaths;
+    private int finalAssists;
 
-  private int energy;
-  private Map<Trigger, Skill> skills;
-  private List<Passive> passives;
+    private int energy;
+    private Map<Trigger, Skill> skills;
+    private List<Passive> passives;
 
-  public GamePlayer(Player player) {
-    this.uuid = player.getUniqueId();
-    setIdentity(MegaWalls78.getInstance().getIdentityManager().getPlayerIdentity(uuid));
-  }
-
-  public List<Passive> getPassives() {
-    if (passives == null) {
-      passives = identity.getPassives(this);
-    }
-    return passives;
-  }
-
-  public boolean useSkill(Action action, Material material) {
-    Skill skill = skills.get(Trigger.getTrigger(action, material));
-    if (skill == null) {
-      return false;
-    }
-    if (energy < skill.getCost()) {
-      return false;
-    }
-    decreaseEnergy(skill.getCost());
-    skill.use(getBukkitPlayer());
-    return true;
-  }
-
-  public void setEnergy(int energy) {
-    int max = identity.getEnergy();
-    if (energy > max) {
-      energy = max;
-    } else if (energy < 0) {
-      energy = 0;
+    public GamePlayer(Player player) {
+        this.uuid = player.getUniqueId();
+        setIdentity(MegaWalls78.getInstance().getIdentityManager().getPlayerIdentity(uuid));
     }
 
-    EnergyChangeEvent event = new EnergyChangeEvent(getBukkitPlayer(), this.energy, energy, max);
-    Bukkit.getPluginManager().callEvent(event);
-    if (event.isCancelled()) {
-      return;
+    public List<Passive> getPassives() {
+        if (passives == null) {
+            passives = identity.getPassives(this);
+        }
+        return passives;
     }
 
-    this.energy = energy;
-  }
-
-  public void increaseEnergy(int increase) {
-    setEnergy(energy + increase);
-  }
-
-  public void decreaseEnergy(int decrease) {
-    setEnergy(energy - decrease);
-  }
-
-  public void increaseEnergy(EnergyHit energyHit) {
-    setEnergy(energy + identity.getEnergyHit(energyHit));
-  }
-
-  public int getEnergy() {
-    return energy;
-  }
-
-  public Player getBukkitPlayer() {
-    return Bukkit.getPlayer(uuid);
-  }
-
-  public UUID getUuid() {
-    return uuid;
-  }
-
-  public Identity getIdentity() {
-    return identity;
-  }
-
-  public void setIdentity(Identity identity) {
-    IdentitySelectEvent.Pre pre = new IdentitySelectEvent.Pre(uuid, identity);
-    Bukkit.getPluginManager().callEvent(pre);
-    if (pre.isCancelled()) {
-      return;
+    public boolean useSkill(Action action, Material material) {
+        Skill skill = skills.get(Trigger.getTrigger(action, material));
+        if (skill == null) {
+            return false;
+        }
+        if (energy < skill.getCost()) {
+            return false;
+        }
+        decreaseEnergy(skill.getCost());
+        skill.use(getBukkitPlayer());
+        return true;
     }
 
-    this.identity = pre.getIdentity();
-    this.skills = identity.getSkills();
+    public void setEnergy(int energy) {
+        int max = identity.getEnergy();
+        if (energy > max) {
+            energy = max;
+        } else if (energy < 0) {
+            energy = 0;
+        }
 
-    IdentitySelectEvent.Post post = new IdentitySelectEvent.Post(uuid, identity);
-    Bukkit.getPluginManager().callEvent(post);
-  }
+        EnergyChangeEvent event = new EnergyChangeEvent(getBukkitPlayer(), this.energy, energy, max);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
 
-  public GameTeam getTeam() {
-    return team;
-  }
+        this.energy = energy;
+    }
 
-  public void setTeam(GameTeam team) {
-    this.team = team;
-  }
+    public void increaseEnergy(int increase) {
+        setEnergy(energy + increase);
+    }
 
-  public int getKills() {
-    return kills;
-  }
+    public void decreaseEnergy(int decrease) {
+        setEnergy(energy - decrease);
+    }
 
-  public int getDeaths() {
-    return deaths;
-  }
+    public void increaseEnergy(EnergyHit energyHit) {
+        setEnergy(energy + identity.getEnergyHit(energyHit));
+    }
 
-  public int getAssists() {
-    return assists;
-  }
+    public int getEnergy() {
+        return energy;
+    }
 
-  public int getFinalKills() {
-    return finalKills;
-  }
+    public Player getBukkitPlayer() {
+        return Bukkit.getPlayer(uuid);
+    }
 
-  public int getFinalDeaths() {
-    return finalDeaths;
-  }
+    public UUID getUuid() {
+        return uuid;
+    }
 
-  public int getFinalAssists() {
-    return finalAssists;
-  }
+    public Identity getIdentity() {
+        return identity;
+    }
 
-  public void increaseKills() {
-    kills++;
-  }
+    public void setIdentity(Identity identity) {
+        IdentitySelectEvent.Pre pre = new IdentitySelectEvent.Pre(uuid, identity);
+        Bukkit.getPluginManager().callEvent(pre);
+        if (pre.isCancelled()) {
+            return;
+        }
 
-  public void increaseDeaths() {
-    deaths++;
-  }
+        this.identity = pre.getIdentity();
+        this.skills = identity.getSkills();
 
-  public void increaseAssists() {
-    assists++;
-  }
+        IdentitySelectEvent.Post post = new IdentitySelectEvent.Post(uuid, identity);
+        Bukkit.getPluginManager().callEvent(post);
+    }
 
-  public void increaseFinalKills() {
-    finalKills++;
-  }
+    public GameTeam getTeam() {
+        return team;
+    }
 
-  public void increaseFinalDeaths() {
-    finalDeaths++;
-  }
+    public void setTeam(GameTeam team) {
+        this.team = team;
+    }
 
-  public void increaseFinalAssists() {
-    finalAssists++;
-  }
+    public int getKills() {
+        return kills;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public int getAssists() {
+        return assists;
+    }
+
+    public int getFinalKills() {
+        return finalKills;
+    }
+
+    public int getFinalDeaths() {
+        return finalDeaths;
+    }
+
+    public int getFinalAssists() {
+        return finalAssists;
+    }
+
+    public void increaseKills() {
+        kills++;
+    }
+
+    public void increaseDeaths() {
+        deaths++;
+    }
+
+    public void increaseAssists() {
+        assists++;
+    }
+
+    public void increaseFinalKills() {
+        finalKills++;
+    }
+
+    public void increaseFinalDeaths() {
+        finalDeaths++;
+    }
+
+    public void increaseFinalAssists() {
+        finalAssists++;
+    }
 }

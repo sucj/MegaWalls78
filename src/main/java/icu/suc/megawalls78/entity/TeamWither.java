@@ -18,23 +18,23 @@ import java.util.function.Predicate;
 
 public class TeamWither extends WitherBoss {
 
-  private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR;
-  private static final TargetingConditions TARGETING_CONDITIONS;
+    private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR;
+    private static final TargetingConditions TARGETING_CONDITIONS;
 
-  public TeamWither(Level world) {
-    super(EntityType.WITHER, world);
-    Objects.requireNonNull(getAttribute(Attributes.MAX_HEALTH)).setBaseValue(MegaWalls78.getInstance().getConfigManager().witherHealth);
-    setHealth(this.getMaxHealth());
-    bossEvent.setVisible(false);
-  }
+    public TeamWither(Level world) {
+        super(EntityType.WITHER, world);
+        Objects.requireNonNull(getAttribute(Attributes.MAX_HEALTH)).setBaseValue(MegaWalls78.getInstance().getConfigManager().witherHealth);
+        setHealth(this.getMaxHealth());
+        bossEvent.setVisible(false);
+    }
 
-  @Override
-  protected void registerGoals() {
+    @Override
+    protected void registerGoals() {
 //        this.goalSelector.addGoal(2, new PathfinderGoalArrowAttack(this, 1.0, 40, 20.0F));
 //        this.goalSelector.addGoal(7, new PathfinderGoalRandomLookaround(this));
-    this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 10.0F));
-    this.targetSelector.addGoal(2, new PathfinderGoalNearestAttackableTargetTeam(this, 0, false, false, LIVING_ENTITY_SELECTOR));
-  }
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 10.0F));
+        this.targetSelector.addGoal(2, new PathfinderGoalNearestAttackableTargetTeam(this, 0, false, false, LIVING_ENTITY_SELECTOR));
+    }
 
 //    @Override
 //    protected void customServerAiStep() {
@@ -71,18 +71,18 @@ public class TeamWither extends WitherBoss {
 //    }
 
 
-  @Override
-  public void setDeltaMovement(Vec3 velocity) {
-  }
+    @Override
+    public void setDeltaMovement(Vec3 velocity) {
+    }
 
-  @Override
-  public void setYRot(float var0) {
-    super.setYRot(var0);
-    setYBodyRot(var0);
-  }
+    @Override
+    public void setYRot(float var0) {
+        super.setYRot(var0);
+        setYBodyRot(var0);
+    }
 
-  static {
-    LIVING_ENTITY_SELECTOR = (var0) -> !var0.getType().is(EntityTypeTags.WITHER_FRIENDS) && var0.attackable();
-    TARGETING_CONDITIONS = TargetingConditions.forCombat().range(10.0).selector(LIVING_ENTITY_SELECTOR);
-  }
+    static {
+        LIVING_ENTITY_SELECTOR = (var0) -> !var0.getType().is(EntityTypeTags.WITHER_FRIENDS) && var0.attackable();
+        TARGETING_CONDITIONS = TargetingConditions.forCombat().range(10.0).selector(LIVING_ENTITY_SELECTOR);
+    }
 }

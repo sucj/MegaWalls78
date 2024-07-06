@@ -19,48 +19,48 @@ import java.util.stream.Collectors;
 
 public class IdCommand implements CommandExecutor, TabExecutor {
 
-  private static List<String> identities;
+    private static List<String> identities;
 
-  @Override
-  public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-    if (commandSender instanceof Player player) {
-      MegaWalls78 instance = MegaWalls78.getInstance();
-      GameManager gameManager = instance.getGameManager();
-      if (gameManager.inFighting() || !gameManager.inWaiting()) {
-        return true;
-      }
-      if (strings.length == 1) {
-        Identity identity = Identity.getIdentity(strings[0]);
-        if (identity == null) {
-          commandSender.sendMessage(Component.translatable("mw78.identity.failed", NamedTextColor.RED));
-          return true;
+    @Override
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+        if (commandSender instanceof Player player) {
+            MegaWalls78 instance = MegaWalls78.getInstance();
+            GameManager gameManager = instance.getGameManager();
+            if (gameManager.inFighting() || !gameManager.inWaiting()) {
+                return true;
+            }
+            if (strings.length == 1) {
+                Identity identity = Identity.getIdentity(strings[0]);
+                if (identity == null) {
+                    commandSender.sendMessage(Component.translatable("mw78.identity.failed", NamedTextColor.RED));
+                    return true;
+                }
+                gameManager.getPlayer(player).setIdentity(identity);
+                commandSender.sendMessage(Component.translatable("mw78.identity", NamedTextColor.GREEN, identity.getName().color(instance.getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
+                return true;
+            }
         }
-        gameManager.getPlayer(player).setIdentity(identity);
-        commandSender.sendMessage(Component.translatable("mw78.identity", NamedTextColor.GREEN, identity.getName().color(instance.getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
-        return true;
-      }
-    }
-    return false;
-  }
-
-  @Override
-  public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-
-    if (strings.length == 1) {
-      return getIdentities(strings[0]);
+        return false;
     }
 
-    return List.of();
-  }
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
 
-  private static List<String> getIdentities(String name) {
-    if (identities == null) {
-      identities = Arrays.stream(Identity.values())
-        .map(Identity::getId)
-        .collect(Collectors.toList());
+        if (strings.length == 1) {
+            return getIdentities(strings[0]);
+        }
+
+        return List.of();
     }
-    return identities.stream()
-      .filter(s -> s.contains(name.toLowerCase()))
-      .toList();
-  }
+
+    private static List<String> getIdentities(String name) {
+        if (identities == null) {
+            identities = Arrays.stream(Identity.values())
+                    .map(Identity::getId)
+                    .collect(Collectors.toList());
+        }
+        return identities.stream()
+                .filter(s -> s.contains(name.toLowerCase()))
+                .toList();
+    }
 }

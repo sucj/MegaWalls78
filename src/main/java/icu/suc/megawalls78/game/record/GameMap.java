@@ -5,7 +5,7 @@ import org.bukkit.Location;
 
 public record GameMap(String id, Location[][] spawn, Location[][] wall, Location[][] region, Location spectator) {
 
-  public Component name() {
-    return Component.translatable("mw78.map." + id);
-  }
+    public Component name() {
+        return Component.translatable("mw78.map." + id);
+    }
 }

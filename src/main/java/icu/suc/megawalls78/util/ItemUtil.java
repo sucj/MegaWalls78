@@ -8,32 +8,32 @@ import org.bukkit.persistence.PersistentDataType;
 
 public class ItemUtil {
 
-  public static boolean isSoulBound(ItemStack itemStack) {
-    if (itemStack == null) {
-      return false;
+    public static boolean isSoulBound(ItemStack itemStack) {
+        if (itemStack == null) {
+            return false;
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) {
+            return false;
+        } else {
+            return itemMeta.getPersistentDataContainer().getOrDefault(NamespacedKeys.SOUL_BOUND, PersistentDataType.BOOLEAN, false);
+        }
     }
-    ItemMeta itemMeta = itemStack.getItemMeta();
-    if (itemMeta == null) {
-      return false;
-    } else {
-      return itemMeta.getPersistentDataContainer().getOrDefault(NamespacedKeys.SOUL_BOUND, PersistentDataType.BOOLEAN, false);
-    }
-  }
 
-  public static boolean isEnderChest(ItemStack itemStack) {
-    if (itemStack == null) {
-      return false;
+    public static boolean isEnderChest(ItemStack itemStack) {
+        if (itemStack == null) {
+            return false;
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) {
+            return false;
+        } else {
+            return itemMeta.getPersistentDataContainer().getOrDefault(NamespacedKeys.ENDER_CHEST, PersistentDataType.BOOLEAN, false);
+        }
     }
-    ItemMeta itemMeta = itemStack.getItemMeta();
-    if (itemMeta == null) {
-      return false;
-    } else {
-      return itemMeta.getPersistentDataContainer().getOrDefault(NamespacedKeys.ENDER_CHEST, PersistentDataType.BOOLEAN, false);
-    }
-  }
 
-  public static class NamespacedKeys {
-    public static final NamespacedKey SOUL_BOUND = new NamespacedKey(MegaWalls78.getInstance(), "soul_bound");
-    public static final NamespacedKey ENDER_CHEST = new NamespacedKey(MegaWalls78.getInstance(), "ender_chest");
-  }
+    public static class NamespacedKeys {
+        public static final NamespacedKey SOUL_BOUND = new NamespacedKey(MegaWalls78.getInstance(), "soul_bound");
+        public static final NamespacedKey ENDER_CHEST = new NamespacedKey(MegaWalls78.getInstance(), "ender_chest");
+    }
 }

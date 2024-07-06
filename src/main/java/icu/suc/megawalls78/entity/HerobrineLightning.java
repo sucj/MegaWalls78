@@ -9,28 +9,28 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 
 public class HerobrineLightning extends LightningBolt {
 
-  private Player target;
+    private Player target;
 
-  public HerobrineLightning(Level world) {
-    super(EntityType.LIGHTNING_BOLT, world);
-  }
-
-  @Override
-  public void tick() { //tick()
-    --this.life; // life
-
-    if (this.life < 0) {
-      this.discard();
+    public HerobrineLightning(Level world) {
+        super(EntityType.LIGHTNING_BOLT, world);
     }
 
-    if (this.life >= 0) {
-      if (target != null) {
-        target.thunderHit(((ServerLevel) this.level()), this); // thunderHit(level(), this)
-      }
-    }
-  }
+    @Override
+    public void tick() { //tick()
+        --this.life; // life
 
-  public void setTarget(org.bukkit.entity.Player target) {
-    this.target = ((CraftPlayer) target).getHandle();
-  }
+        if (this.life < 0) {
+            this.discard();
+        }
+
+        if (this.life >= 0) {
+            if (target != null) {
+                target.thunderHit(((ServerLevel) this.level()), this); // thunderHit(level(), this)
+            }
+        }
+    }
+
+    public void setTarget(org.bukkit.entity.Player target) {
+        this.target = ((CraftPlayer) target).getHandle();
+    }
 }
