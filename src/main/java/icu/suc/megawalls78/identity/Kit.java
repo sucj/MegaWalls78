@@ -2,7 +2,7 @@ package icu.suc.megawalls78.identity;
 
 import com.google.common.collect.Lists;
 import icu.suc.megawalls78.util.ItemBuilder;
-import icu.suc.megawalls78.util.MessageUtil;
+import icu.suc.megawalls78.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
@@ -47,7 +47,7 @@ public abstract class Kit {
     }
 
     protected Component prefix() {
-        return identity.getName().append(MessageUtil.BLANK_COMPONENT);
+        return identity.getName().append(ComponentUtil.BLANK_COMPONENT);
     }
 
     public void equip(Player player) {

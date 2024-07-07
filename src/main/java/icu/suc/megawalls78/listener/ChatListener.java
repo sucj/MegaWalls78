@@ -4,7 +4,7 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.LP;
-import icu.suc.megawalls78.util.MessageUtil;
+import icu.suc.megawalls78.util.ComponentUtil;
 import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
@@ -43,16 +43,16 @@ public class ChatListener implements Listener, ChatRenderer {
         if (MegaWalls78.getInstance().getGameManager().inFighting()) {
             GamePlayer gamePlayer = MegaWalls78.getInstance().getGameManager().getPlayer(player);
             formatted = Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().chat())
-                    .append(MessageUtil.BLANK_COMPONENT)
+                    .append(ComponentUtil.BLANK_COMPONENT)
                     .append(LP.getPrefix(player))
                     .append(player.displayName().color(LP.getNameColor(player)))
                     .append(Component.translatable("mw78.sb.colon", NamedTextColor.GRAY))
-                    .append(MessageUtil.BLANK_COMPONENT);
+                    .append(ComponentUtil.BLANK_COMPONENT);
         } else {
             formatted = LP.getPrefix(player)
                     .append(player.displayName().color(LP.getNameColor(player)))
                     .append(Component.translatable("mw78.sb.colon", NamedTextColor.GRAY))
-                    .append(MessageUtil.BLANK_COMPONENT);
+                    .append(ComponentUtil.BLANK_COMPONENT);
         }
         return formatted.append(component1.color(LP.getChatColor(player)));
     }

@@ -7,7 +7,7 @@ import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.management.ConfigManager;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.EntityUtil;
-import icu.suc.megawalls78.util.MessageUtil;
+import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.RandomUtil;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -59,14 +59,14 @@ public class GameRunner implements Runnable {
                 switch (state) {
                     case COUNTDOWN -> {
                         if (timer == 10000L || timer <= 5000L) {
-                            Component seconds = MessageUtil.second(timer);
-                            MessageUtil.sendMessage(Component.translatable("mw78.start.in", NamedTextColor.AQUA, Component.translatable("mw78.seconds", seconds)), Bukkit.getOnlinePlayers());
-                            MessageUtil.sendTitle(Component.empty(), seconds, MessageUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
+                            Component seconds = ComponentUtil.second(timer);
+                            ComponentUtil.sendMessage(Component.translatable("mw78.start.in", NamedTextColor.AQUA, Component.translatable("mw78.seconds", seconds)), Bukkit.getOnlinePlayers());
+                            ComponentUtil.sendTitle(Component.empty(), seconds, ComponentUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
                         }
                     }
                     case OPENING -> {
                         if (timer == 10000L || timer <= 5000L) {
-                            MessageUtil.sendMessage(Component.translatable("mw78.gates", NamedTextColor.AQUA, Component.translatable("mw78.seconds", MessageUtil.second(timer))), Bukkit.getOnlinePlayers());
+                            ComponentUtil.sendMessage(Component.translatable("mw78.gates", NamedTextColor.AQUA, Component.translatable("mw78.seconds", ComponentUtil.second(timer))), Bukkit.getOnlinePlayers());
                         }
                     }
                 }
@@ -84,9 +84,9 @@ public class GameRunner implements Runnable {
                         this.timer = configManager.waitingTime;
                         gameManager.setState(GameState.COUNTDOWN);
                         if (timer > 10000L || timer < 10000L && timer > 5000L) {
-                            Component seconds = MessageUtil.second(timer);
-                            MessageUtil.sendMessage(Component.translatable("mw78.start.in", NamedTextColor.AQUA, Component.translatable("mw78.seconds", seconds)), Bukkit.getOnlinePlayers());
-                            MessageUtil.sendTitle(Component.empty(), seconds, MessageUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
+                            Component seconds = ComponentUtil.second(timer);
+                            ComponentUtil.sendMessage(Component.translatable("mw78.start.in", NamedTextColor.AQUA, Component.translatable("mw78.seconds", seconds)), Bukkit.getOnlinePlayers());
+                            ComponentUtil.sendTitle(Component.empty(), seconds, ComponentUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
                         }
                     }, 20L);
                 }
@@ -94,8 +94,8 @@ public class GameRunner implements Runnable {
             case COUNTDOWN -> {
                 if (gameManager.getPlayers().size() < configManager.minPlayer) {
                     gameManager.setState(GameState.WAITING);
-                    MessageUtil.sendMessage(Component.translatable("mw78.start.cancel", NamedTextColor.RED), Bukkit.getOnlinePlayers());
-                    MessageUtil.sendTitle(Component.empty(), Component.translatable("mw78.start.wait", NamedTextColor.RED), MessageUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
+                    ComponentUtil.sendMessage(Component.translatable("mw78.start.cancel", NamedTextColor.RED), Bukkit.getOnlinePlayers());
+                    ComponentUtil.sendTitle(Component.empty(), Component.translatable("mw78.start.wait", NamedTextColor.RED), ComponentUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
                 }
             }
         }
@@ -120,7 +120,7 @@ public class GameRunner implements Runnable {
                         .appendNewline()
                         .append(Component.text("--------------------------------", NamedTextColor.BLUE, TextDecoration.BOLD)));
                 if (timer > 10000L || timer < 10000L && timer > 5000L) {
-                    MessageUtil.sendMessage(Component.translatable("mw78.gates", Component.translatable("mw78.seconds", NamedTextColor.AQUA, MessageUtil.second(timer))), audience);
+                    ComponentUtil.sendMessage(Component.translatable("mw78.gates", Component.translatable("mw78.seconds", NamedTextColor.AQUA, ComponentUtil.second(timer))), audience);
                 }
                 for (GameTeam team : gameManager.getTeams()) {
                     Bukkit.getScheduler().runTask(instance, () -> {
@@ -143,7 +143,7 @@ public class GameRunner implements Runnable {
                     }
                     destroyTeamGate();
                 });
-                MessageUtil.sendMessage(Component.translatable("mw78.prepare", NamedTextColor.RED).decorate(TextDecoration.BOLD), Bukkit.getOnlinePlayers());
+                ComponentUtil.sendMessage(Component.translatable("mw78.prepare", NamedTextColor.RED).decorate(TextDecoration.BOLD), Bukkit.getOnlinePlayers());
             }
             case PREPARING -> {
                 gameManager.setState(GameState.BUFFING);
@@ -235,7 +235,7 @@ public class GameRunner implements Runnable {
                 }
                 EntityUtil.spawn(gameTeam.wither(), EntityUtil.Type.TEAM_WITHER, entity -> {
                     Wither wither = (Wither) entity;
-                    wither.customName((gameTeam.name().append(MessageUtil.BLANK_COMPONENT).append(Component.translatable("entity.minecraft.wither"))).color(gameTeam.color()));
+                    wither.customName((gameTeam.name().append(ComponentUtil.BLANK_COMPONENT).append(Component.translatable("entity.minecraft.wither"))).color(gameTeam.color()));
                     mcTeam.addEntity(wither);
                     gameManager.addWither(gameTeam, wither);
                 });

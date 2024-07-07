@@ -9,10 +9,7 @@ import icu.suc.megawalls78.gui.IdentityGui;
 import icu.suc.megawalls78.identity.energy.EnergyHit;
 import icu.suc.megawalls78.identity.trait.Passive;
 import icu.suc.megawalls78.management.GameManager;
-import icu.suc.megawalls78.util.ItemUtil;
-import icu.suc.megawalls78.util.LP;
-import icu.suc.megawalls78.util.MessageUtil;
-import icu.suc.megawalls78.util.RandomUtil;
+import icu.suc.megawalls78.util.*;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -53,14 +50,14 @@ public class PlayerListener implements Listener {
             player.getInventory().setItem(0, IdentityGui.trigger(player));
             MegaWalls78.getInstance().getSkinManager().applySkin(player);
             event.joinMessage(Component.translatable("multiplayer.player.joined", player.displayName().color(LP.getNameColor(player)))
-                    .append(MessageUtil.BLANK_COMPONENT)
+                    .append(ComponentUtil.BLANK_COMPONENT)
                     .append(Component.translatable("mw78.online", Component.text(gameManager.getPlayers().values().size(), NamedTextColor.WHITE), Component.text(MegaWalls78.getInstance().getConfigManager().maxPlayer, NamedTextColor.WHITE)))
                     .color(NamedTextColor.AQUA));
             if (gameManager.getState().equals(GameState.COUNTDOWN)) {
                 long timer = gameManager.getRunner().getTimer();
                 if (timer != MegaWalls78.getInstance().getConfigManager().waitingTime && timer > 10000L || timer < 10000L && timer > 5000L) {
-                    MessageUtil.sendMessage(Component.translatable("mw78.start.in", NamedTextColor.AQUA, Component.translatable("mw78.seconds", MessageUtil.second(timer))), player);
-                    MessageUtil.sendTitle(Component.empty(), MessageUtil.second(timer), MessageUtil.ONE_SEC_TIMES, player);
+                    ComponentUtil.sendMessage(Component.translatable("mw78.start.in", NamedTextColor.AQUA, Component.translatable("mw78.seconds", ComponentUtil.second(timer))), player);
+                    ComponentUtil.sendTitle(Component.empty(), ComponentUtil.second(timer), ComponentUtil.ONE_SEC_TIMES, player);
                 }
             }
         } else {
@@ -154,7 +151,7 @@ public class PlayerListener implements Listener {
                         deathMessage = component.key(key.substring(0, key.length() - ".item".length()));
                     }
                     if (dead) {
-                        deathMessage = deathMessage.append(MessageUtil.BLANK_COMPONENT).append(Component.translatable("mw78.kill.final", NamedTextColor.AQUA, TextDecoration.BOLD));
+                        deathMessage = deathMessage.append(ComponentUtil.BLANK_COMPONENT).append(Component.translatable("mw78.kill.final", NamedTextColor.AQUA, TextDecoration.BOLD));
                     }
                     event.deathMessage(deathMessage.color(NamedTextColor.GRAY));
                 }
@@ -288,7 +285,7 @@ public class PlayerListener implements Listener {
                     case RIGHT_CLICK_BLOCK:
                     case RIGHT_CLICK_AIR: {
                         if (ItemUtil.isEnderChest(event.getItem())) {
-                            player.openInventory(player.getEnderChest());
+                            InventoryUtils.openEnderChest(player);
                         }
                     }
                 }

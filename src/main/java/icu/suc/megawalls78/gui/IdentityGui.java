@@ -5,7 +5,7 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.util.ItemBuilder;
-import icu.suc.megawalls78.util.MessageUtil;
+import icu.suc.megawalls78.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -37,7 +37,7 @@ public class IdentityGui {
     public static final Map<Inventory, Integer> INVENTORIES = Maps.newHashMap();
 
     public static void open(Player player, int page) {
-        Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.identity").append(MessageUtil.BLANK_COMPONENT).append(Component.translatable("mw78.gui.identity.title", Component.text(page), Component.text(MAX_PAGE))));
+        Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.identity").append(ComponentUtil.BLANK_COMPONENT).append(Component.translatable("mw78.gui.identity.title", Component.text(page), Component.text(MAX_PAGE))));
 
         List<Identity> identities = Arrays.stream(Identity.values()).skip((page - 1L) * SLOT_COUNT).limit(SLOT_COUNT).toList();
 
@@ -49,7 +49,7 @@ public class IdentityGui {
                     .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                     .clearAttributes();
             if (flag && MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity().equals(identity)) {
-                itemBuilder.addSuffix(MessageUtil.BLANK_COMPONENT.append(Component.translatable("mw78.gui.selected", NamedTextColor.GRAY))).setEnchantmentGlintOverride(true);
+                itemBuilder.addSuffix(ComponentUtil.BLANK_COMPONENT.append(Component.translatable("mw78.gui.selected", NamedTextColor.GRAY))).setEnchantmentGlintOverride(true);
                 flag = false;
             }
             inventory.setItem(ID_SLOT[i], itemBuilder.build());
@@ -131,7 +131,7 @@ public class IdentityGui {
 
     public static ItemStack trigger(Player player) {
         return ItemBuilder.of(MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity().getMaterial())
-                .setDisplayName(Component.translatable("mw78.gui.identity").append(MessageUtil.BLANK_COMPONENT).append(Component.translatable("mw78.gui.identity.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
+                .setDisplayName(Component.translatable("mw78.gui.identity").append(ComponentUtil.BLANK_COMPONENT).append(Component.translatable("mw78.gui.identity.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .clearAttributes()
                 .build();

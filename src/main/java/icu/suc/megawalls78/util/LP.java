@@ -16,7 +16,7 @@ public class LP {
         if (prefix == null) {
             return Component.empty();
         }
-        return MiniMessage.miniMessage().deserialize(prefix).append(MessageUtil.BLANK_COMPONENT);
+        return MiniMessage.miniMessage().deserialize(prefix).append(ComponentUtil.BLANK_COMPONENT);
     }
 
     public static String getPerm(Player player) {

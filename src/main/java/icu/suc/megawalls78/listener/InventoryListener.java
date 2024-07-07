@@ -116,7 +116,7 @@ public class InventoryListener implements Listener {
     public void onInventoryOpen(InventoryOpenEvent event) {
         if (event.getPlayer() instanceof Player player) {
             Inventory inventory = event.getInventory();
-            if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() != null) {
+            if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() == null) {
                 player.playSound(player, Sound.BLOCK_ENDER_CHEST_OPEN, 1.0F, 1.0F);
             }
         }
@@ -126,7 +126,7 @@ public class InventoryListener implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         if (event.getPlayer() instanceof Player player) {
             Inventory inventory = event.getInventory();
-            if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() != null) {
+            if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() == null) {
                 player.playSound(player, Sound.BLOCK_ENDER_CHEST_CLOSE, 1.0F, 1.0F);
             } else IdentityGui.INVENTORIES.remove(inventory);
             if (player.getItemOnCursor().getType().isAir()) {

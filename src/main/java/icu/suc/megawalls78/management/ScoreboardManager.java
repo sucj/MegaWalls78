@@ -9,7 +9,7 @@ import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.util.LP;
-import icu.suc.megawalls78.util.MessageUtil;
+import icu.suc.megawalls78.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
@@ -36,7 +36,7 @@ public class ScoreboardManager implements Listener {
 
     public static final SidebarComponent TITLE = SidebarComponent.staticLine(Component.translatable("mw78.sb.title").color(AQUA).decorate(TextDecoration.BOLD));
     public static final SidebarComponent IP = SidebarComponent.staticLine(Component.text("mc.suc.icu").color(AQUA));
-    public static final SidebarComponent INFO = SidebarComponent.dynamicLine(() -> Component.text(LocalDate.now().format(MessageUtil.DATE_FORMATTER)).color(GRAY).append(MessageUtil.BLANK_COMPONENT).append(Component.text("TEST").color(DARK_GRAY)));
+    public static final SidebarComponent INFO = SidebarComponent.dynamicLine(() -> Component.text(LocalDate.now().format(ComponentUtil.DATE_FORMATTER)).color(GRAY).append(ComponentUtil.BLANK_COMPONENT).append(Component.text("TEST").color(DARK_GRAY)));
 
     private final Map<UUID, SidebarWrapper> sidebarMap;
     private final TeamManager teamManager;
@@ -82,7 +82,7 @@ public class ScoreboardManager implements Listener {
             teamDisplay.prefix(LP.getPrefix(player));
             Identity identity = MegaWalls78.getInstance().getIdentityManager().getRankedIdentity(player.getUniqueId());
             if (identity != null) {
-                teamDisplay.suffix(MessageUtil.BLANK_COMPONENT.append(identity.getIcon().color(MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
+                teamDisplay.suffix(ComponentUtil.BLANK_COMPONENT.append(identity.getIcon().color(MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
             }
             teamDisplay.playerColor(LP.getNameColor(player));
             teamDisplay.addEntry(player.getName());
@@ -91,11 +91,11 @@ public class ScoreboardManager implements Listener {
             TeamDisplay teamDisplay = teamManager.createIfAbsent(String.valueOf(player.getUniqueId())).defaultDisplay();
             teamDisplay.canSeeFriendlyInvisibles(true);
             if (MegaWalls78.getInstance().getGameManager().isSpectator(player)) {
-                teamDisplay.prefix(Component.translatable("ms78.brackets", GRAY, Component.translatable("mw78.team.spec.abbr")).append(MessageUtil.BLANK_COMPONENT));
+                teamDisplay.prefix(Component.translatable("ms78.brackets", GRAY, Component.translatable("mw78.team.spec.abbr")).append(ComponentUtil.BLANK_COMPONENT));
                 teamDisplay.playerColor(GRAY);
             } else {
-                teamDisplay.prefix(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(MessageUtil.BLANK_COMPONENT));
-                teamDisplay.suffix(MessageUtil.BLANK_COMPONENT.append(Component.translatable("ms78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
+                teamDisplay.prefix(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(ComponentUtil.BLANK_COMPONENT));
+                teamDisplay.suffix(ComponentUtil.BLANK_COMPONENT.append(Component.translatable("ms78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
                 teamDisplay.playerColor(gamePlayer.getTeam().color());
             }
             teamDisplay.addEntry(player.getName());
@@ -117,11 +117,11 @@ public class ScoreboardManager implements Listener {
         TeamDisplay teamDisplay = teamManager.createIfAbsent(String.valueOf(player.getUniqueId())).defaultDisplay();
         teamDisplay.canSeeFriendlyInvisibles(true);
         if (MegaWalls78.getInstance().getGameManager().isSpectator(player)) {
-            teamDisplay.prefix(Component.translatable("ms78.brackets", GRAY, Component.translatable("mw78.team.spec.abbr")).append(MessageUtil.BLANK_COMPONENT));
+            teamDisplay.prefix(Component.translatable("ms78.brackets", GRAY, Component.translatable("mw78.team.spec.abbr")).append(ComponentUtil.BLANK_COMPONENT));
             teamDisplay.playerColor(GRAY);
         } else {
-            teamDisplay.prefix(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(MessageUtil.BLANK_COMPONENT));
-            teamDisplay.suffix(MessageUtil.BLANK_COMPONENT.append(Component.translatable("ms78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
+            teamDisplay.prefix(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(ComponentUtil.BLANK_COMPONENT));
+            teamDisplay.suffix(ComponentUtil.BLANK_COMPONENT.append(Component.translatable("ms78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
             teamDisplay.playerColor(gamePlayer.getTeam().color());
         }
         teamDisplay.addEntry(player.getName());
@@ -158,7 +158,7 @@ public class ScoreboardManager implements Listener {
                         .addStaticLine(Component.translatable("mw78.sb.start.1"))
                         .addBlankLine()
                         .addStaticLine(Component.translatable("mw78.sb.identity"))
-                        .addDynamicLine(() -> gamePlayer.getIdentity().getName().color(AQUA).append(MessageUtil.BLANK_COMPONENT).append(gamePlayer.getIdentity().getIcon().color(identityManager.getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()))))
+                        .addDynamicLine(() -> gamePlayer.getIdentity().getName().color(AQUA).append(ComponentUtil.BLANK_COMPONENT).append(gamePlayer.getIdentity().getIcon().color(identityManager.getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()))))
                         .addBlankLine()
                         .addComponent(IP)
                         .build());
@@ -170,10 +170,10 @@ public class ScoreboardManager implements Listener {
                         .addStaticLine(Component.translatable("mw78.sb.map", gameManager.getMap().name().color(AQUA)))
                         .addDynamicLine(() -> Component.translatable("mw78.sb.players", Component.translatable("mw78.sb.online", Component.text(gameManager.getPlayers().size()), Component.text(configManager.maxPlayer)).color(AQUA)))
                         .addBlankLine()
-                        .addDynamicLine(() -> Component.translatable("mw78.sb.start", Component.translatable("mw78.seconds", MessageUtil.second(gameManager.getRunner().getTimer()))))
+                        .addDynamicLine(() -> Component.translatable("mw78.sb.start", Component.translatable("mw78.seconds", ComponentUtil.second(gameManager.getRunner().getTimer()))))
                         .addBlankLine()
                         .addStaticLine(Component.translatable("mw78.sb.identity"))
-                        .addDynamicLine(() -> gamePlayer.getIdentity().getName().color(AQUA).append(MessageUtil.BLANK_COMPONENT).append(gamePlayer.getIdentity().getIcon().color(identityManager.getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()))))
+                        .addDynamicLine(() -> gamePlayer.getIdentity().getName().color(AQUA).append(ComponentUtil.BLANK_COMPONENT).append(gamePlayer.getIdentity().getIcon().color(identityManager.getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()))))
                         .addBlankLine()
                         .addComponent(IP)
                         .build());
@@ -204,14 +204,14 @@ public class ScoreboardManager implements Listener {
         SidebarComponent.Builder builder = SidebarComponent.builder()
                 .addComponent(INFO)
                 .addBlankLine()
-                .addDynamicLine(() -> Component.translatable(name, MessageUtil.mmss(gameManager.getRunner().getTimer())))
+                .addDynamicLine(() -> Component.translatable(name, ComponentUtil.mmss(gameManager.getRunner().getTimer())))
                 .addBlankLine();
         for (GameTeam team : gameManager.getTeamPlayersMap().keySet()) {
             builder.addDynamicLine(() -> {
                 if (gameManager.isEliminated(team)) {
                     return Component.translatable("mw78.sb.team.eliminated", GRAY, team.name());
                 } else {
-                    Component component = Component.translatable("ms78.brackets", team.color(), team.abbr()).append(MessageUtil.BLANK_COMPONENT);
+                    Component component = Component.translatable("ms78.brackets", team.color(), team.abbr()).append(ComponentUtil.BLANK_COMPONENT);
                     Component label;
                     Component value;
                     if (gameManager.isWitherDead(team)) {
@@ -226,7 +226,7 @@ public class ScoreboardManager implements Listener {
                     } else {
                         label = label.color(WHITE);
                     }
-                    component = component.append(label).append(Component.translatable("mw78.sb.colon", WHITE)).append(MessageUtil.BLANK_COMPONENT).append(value.color(team.color()));
+                    component = component.append(label).append(Component.translatable("mw78.sb.colon", WHITE)).append(ComponentUtil.BLANK_COMPONENT).append(value.color(team.color()));
                     return component;
                 }
             });

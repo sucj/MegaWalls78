@@ -11,7 +11,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class MessageUtil {
+public class ComponentUtil {
 
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
     public static final DateTimeFormatter MMSS_FORMATTER = DateTimeFormatter.ofPattern("mm:ss");

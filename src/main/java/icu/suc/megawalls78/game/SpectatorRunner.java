@@ -1,7 +1,7 @@
 package icu.suc.megawalls78.game;
 
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.util.MessageUtil;
+import icu.suc.megawalls78.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -20,11 +20,11 @@ public class SpectatorRunner extends BukkitRunnable {
         this.player = player;
         this.timer = MegaWalls78.getInstance().getConfigManager().respawnTime;
         Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
-            Component component = Component.translatable("mw78.respawn", NamedTextColor.AQUA, Component.translatable("mw78.seconds", MessageUtil.second(timer)));
+            Component component = Component.translatable("mw78.respawn", NamedTextColor.AQUA, Component.translatable("mw78.seconds", ComponentUtil.second(timer)));
             if (timer > 10000L || timer < 10000L && timer > 5000L) {
-                MessageUtil.sendMessage(component, player);
+                ComponentUtil.sendMessage(component, player);
             }
-            MessageUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), component, MessageUtil.ONE_SEC_TIMES, player);
+            ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), component, ComponentUtil.ONE_SEC_TIMES, player);
         });
     }
 
@@ -41,10 +41,10 @@ public class SpectatorRunner extends BukkitRunnable {
             this.task.cancel();
         } else {
             if (timer == 10000L || timer <= 5000L) {
-                Component component = Component.translatable("mw78.respawn", NamedTextColor.AQUA, Component.translatable("mw78.seconds", MessageUtil.second(timer)));
+                Component component = Component.translatable("mw78.respawn", NamedTextColor.AQUA, Component.translatable("mw78.seconds", ComponentUtil.second(timer)));
                 Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
-                    MessageUtil.sendMessage(component, player);
-                    MessageUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), component, MessageUtil.ONE_SEC_TIMES, player);
+                    ComponentUtil.sendMessage(component, player);
+                    ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), component, ComponentUtil.ONE_SEC_TIMES, player);
                 });
             }
             timer -= 1000L;
