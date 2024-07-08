@@ -137,10 +137,6 @@ public class ScoreboardManager implements Listener {
         updateSidebar(event.getState());
     }
 
-    public TeamManager getTeamManager() {
-        return teamManager;
-    }
-
     private static ComponentSidebarLayout getLayout(Player player, GameState state) {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         ConfigManager configManager = MegaWalls78.getInstance().getConfigManager();
@@ -188,10 +184,11 @@ public class ScoreboardManager implements Listener {
                 return new ComponentSidebarLayout(TITLE, fightingSidebar("mw78.sb.energy", gameManager, gamePlayer));
             }
             case FIGHTING -> {
-                return new ComponentSidebarLayout(TITLE, fightingSidebar("mw78.sb.dm", gameManager, gamePlayer));
-            }
-            case DM -> {
-                return new ComponentSidebarLayout(TITLE, fightingSidebar("mw78.sb.end", gameManager, gamePlayer));
+                if (gameManager.getRunner().isDmC()) {
+                    return new ComponentSidebarLayout(TITLE, fightingSidebar("mw78.sb.dm", gameManager, gamePlayer));
+                } else {
+                    return new ComponentSidebarLayout(TITLE, fightingSidebar("mw78.sb.end", gameManager, gamePlayer));
+                }
             }
             case ENDING -> {
                 return new ComponentSidebarLayout(TITLE, fightingSidebar("mw78.sb.end", gameManager, gamePlayer));

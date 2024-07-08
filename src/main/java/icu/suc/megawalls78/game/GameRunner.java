@@ -3,6 +3,7 @@ package icu.suc.megawalls78.game;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.entity.TeamWither;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.management.ConfigManager;
 import icu.suc.megawalls78.management.GameManager;
@@ -29,6 +30,9 @@ import java.util.Set;
 public class GameRunner implements Runnable {
 
     private long timer;
+    private boolean dm;
+    private long dmTimer;
+    private boolean dmC;
 
     private Set<Block> barriers;
 
@@ -55,7 +59,18 @@ public class GameRunner implements Runnable {
             if (timer <= 1000L) {
                 next(state);
             } else {
-                timer -= 1000L;
+                if (dmC) {
+                    if (dmTimer <= 0L) {
+                        dmC = false;
+                        dm = true;
+                        //TODO DM message
+                        Bukkit.broadcast(Component.text("dm"));
+                    } else {
+                        dmTimer -= 1000L;
+                    }
+                } else {
+                    timer -= 1000L;
+                }
                 switch (state) {
                     case COUNTDOWN -> {
                         if (timer == 10000L || timer <= 5000L) {
@@ -162,14 +177,7 @@ public class GameRunner implements Runnable {
                 timer = configManager.fightingTime;
             }
             case FIGHTING -> {
-                gameManager.setState(GameState.DM);
-                timer = configManager.dmTime;
-            }
-            case DM -> {
                 gameManager.setState(GameState.ENDING);
-                gameManager.getPlayers().values().forEach(player -> {
-                    player.getBukkitPlayer().setGameMode(GameMode.ADVENTURE);
-                });
             }
         }
     }
@@ -237,7 +245,7 @@ public class GameRunner implements Runnable {
                     Wither wither = (Wither) entity;
                     wither.customName((gameTeam.name().append(ComponentUtil.BLANK_COMPONENT).append(Component.translatable("entity.minecraft.wither"))).color(gameTeam.color()));
                     mcTeam.addEntity(wither);
-                    gameManager.addWither(gameTeam, wither);
+                    ((TeamWither) entity.getHandle()).setBossBar(gameManager.addWither(gameTeam, wither));
                 });
             }
         });
@@ -288,7 +296,7 @@ public class GameRunner implements Runnable {
     }
 
     public long getTimer() {
-        return timer;
+        return dmC ? dmTimer : timer;
     }
 
     public Set<Location> getProtectedBlocks() {
@@ -314,5 +322,20 @@ public class GameRunner implements Runnable {
             }
         }
         return null;
+    }
+
+    public void startDm() {
+        MegaWalls78.getInstance().getGameManager().setState(GameState.FIGHTING);
+        dmTimer = MegaWalls78.getInstance().getConfigManager().dmTime;
+        timer -= dmTimer;
+        dmC = true;
+    }
+
+    public boolean isDm() {
+        return dm;
+    }
+
+    public boolean isDmC() {
+        return dmC;
     }
 }

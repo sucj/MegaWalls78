@@ -2,6 +2,7 @@ package icu.suc.megawalls78.listener;
 
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.management.GameManager;
 import net.kyori.adventure.bossbar.BossBar;
@@ -22,11 +23,10 @@ public class WitherListener implements Listener {
         if (event.getEntity() instanceof Wither wither && event.getDamageSource().getCausingEntity() instanceof Player player) {
             GameManager gameManager = MegaWalls78.getInstance().getGameManager();
             GameTeam team = gameManager.getWitherTeam(wither);
-            if (team == null || gameManager.getPlayer(player).getTeam().equals(team)) {
+            if (team == null || gameManager.getPlayer(player).getTeam().equals(team) || gameManager.getState().equals(GameState.PREPARING)) {
                 event.setCancelled(true);
-                return;
             }
-            gameManager.getBossBar(team).progress((float) (wither.getHealth() / wither.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()));
+//            gameManager.getBossBar(team).progress((float) (wither.getHealth() / wither.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()));
         }
     }
 
@@ -55,6 +55,16 @@ public class WitherListener implements Listener {
                         player.hideBossBar(bossBar);
                     }
                 }
+            }
+            boolean dm = true;
+            for (Wither w : gameManager.getWithers()) {
+                if (!w.isDead()) {
+                    dm = false;
+                    break;
+                }
+            }
+            if (dm) {
+                gameManager.getRunner().startDm();
             }
         }
     }

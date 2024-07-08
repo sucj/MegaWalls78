@@ -101,46 +101,6 @@ public class PlayerListener implements Listener {
                 DamageSource damageSource = event.getDamageSource();
                 GameTeam team = gamePlayer.getTeam();
                 boolean dead = gameManager.isWitherDead(team);
-//                if (causingEntity instanceof Player causingPlayer) {
-//                    Component component = Component.translatable("death.attack." + damageSource.getDamageType().getTranslationKey(), NamedTextColor.GRAY, player.displayName().color(team.color()), causingPlayer.displayName().color(gameManager.getPlayer(causingPlayer).getTeam().color()));
-//                    if (dead) {
-//                        Bukkit.broadcast(component.append(Component.text(" FINAL KILL!", NamedTextColor.AQUA, TextDecoration.BOLD)));
-//                        gameManager.getPlayer(causingPlayer).increaseFinalKills();
-//                    } else {
-//                        Bukkit.broadcast(component);
-//                        gameManager.getPlayer(causingPlayer).increaseKills();
-//                    }
-//                    gameManager.saveAssists(player, causingPlayer);
-//                } else {
-//                    Player killer = player.getKiller();
-//                    if (killer == null) {
-//                        if (causingEntity instanceof Wither wither) {
-//                            Component component = Component.translatable("death.attack." + damageSource.getDamageType().getTranslationKey(), NamedTextColor.GRAY, player.displayName().color(team.color()), wither.name());
-//                            if (dead) {
-//                                Bukkit.broadcast(component.append(Component.text(" FINAL KILL!", NamedTextColor.AQUA, TextDecoration.BOLD)));
-//                            } else {
-//                                Bukkit.broadcast(component);
-//                            }
-//                        } else {
-//                            Component component = Component.translatable("death.attack." + damageSource.getDamageType().getTranslationKey(), NamedTextColor.GRAY, player.displayName().color(team.color()));
-//                            if (dead) {
-//                                Bukkit.broadcast(component.append(Component.text(" FINAL KILL!", NamedTextColor.AQUA, TextDecoration.BOLD)));
-//                            } else {
-//                                Bukkit.broadcast(component);
-//                            }
-//                        }
-//                    } else {
-//                        Component component = Component.translatable("death.attack." + damageSource.getDamageType().getTranslationKey() + ".player", NamedTextColor.GRAY, player.displayName().color(team.color()), killer.displayName().color(gameManager.getPlayer(killer).getTeam().color()));
-//                        if (dead) {
-//                            Bukkit.broadcast(component.append(Component.text(" FINAL KILL!", NamedTextColor.AQUA, TextDecoration.BOLD)));
-//                            gameManager.getPlayer(killer).increaseFinalKills();
-//                        } else {
-//                            Bukkit.broadcast(component);
-//                            gameManager.getPlayer(killer).increaseKills();
-//                        }
-//                        gameManager.saveAssists(player, killer);
-//                    }
-//                }
                 if (event.deathMessage() instanceof TranslatableComponent component) {
                     Component deathMessage = component;
                     String key = component.key();
@@ -182,7 +142,9 @@ public class PlayerListener implements Listener {
                     HandlerList.unregisterAll(passive);
                 }
                 Bukkit.broadcast(event.deathMessage());
-                gameManager.addSpectator(player, gamePlayer.getFinalDeaths() == 0);
+                if (gamePlayer.getFinalDeaths() != 0) {
+                    gameManager.addSpectator(player);
+                }
             }
         } else {
             drops.clear();
@@ -202,8 +164,9 @@ public class PlayerListener implements Listener {
             GamePlayer gamePlayer = gameManager.getPlayer(player);
             if (gamePlayer == null) {
                 gameManager.addSpectator(player);
-            } else if (gamePlayer.getFinalDeaths() == 0) {
-                gameManager.addSpectator(player, true);
+            } else if (gamePlayer.getFinalDeaths() != 0) {
+                gameManager.addSpectator(player);
+                ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), null, ComponentUtil.DEFAULT_TIMES, player);
             }
             event.setSpawnLocation(gameManager.getMap().spectator());
             player.setGameMode(GameMode.ADVENTURE);
@@ -223,6 +186,9 @@ public class PlayerListener implements Listener {
             event.setRespawnLocation(RandomUtil.getRandomSpawn(gameManager.getMap().spawn()));
             player.setGameMode(GameMode.ADVENTURE);
         } else if (gameManager.isSpectator(player)) {
+            if (gameManager.getPlayer(player) != null) {
+                ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), null, ComponentUtil.DEFAULT_TIMES, player);
+            }
             event.setRespawnLocation(gameManager.getMap().spectator());
             player.setGameMode(GameMode.ADVENTURE);
             player.setAllowFlight(true);

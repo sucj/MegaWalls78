@@ -8,7 +8,6 @@ import icu.suc.megawalls78.event.StateChangeEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameRunner;
 import icu.suc.megawalls78.game.GameState;
-import icu.suc.megawalls78.game.SpectatorRunner;
 import icu.suc.megawalls78.game.record.GameMap;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.util.ExpiringValue;
@@ -71,18 +70,9 @@ public class GameManager {
     }
 
     public void addSpectator(Player player) {
-        addSpectator(player, false);
-    }
-
-    public void addSpectator(Player player, boolean respawn) {
         spectators.add(player.getUniqueId());
         player.setGameMode(GameMode.ADVENTURE);
         VanishAPI.hidePlayer(player);
-        if (respawn) {
-            SpectatorRunner spectatorRunner = new SpectatorRunner(player);
-            spectatorRunner.setTask(Bukkit.getScheduler().runTaskTimerAsynchronously(MegaWalls78.getInstance(), spectatorRunner::run, 0L, 20L));
-            MegaWalls78.getInstance().getSkinManager().resetSkin(player);
-        }
     }
 
     public void removeSpectator(Player player) {
@@ -105,7 +95,7 @@ public class GameManager {
     }
 
     public boolean inFighting() {
-        return state == GameState.OPENING || state == GameState.PREPARING || state == GameState.BUFFING || state == GameState.FIGHTING || state == GameState.DM;
+        return state == GameState.OPENING || state == GameState.PREPARING || state == GameState.BUFFING || state == GameState.FIGHTING;
     }
 
     public Set<Player> getTeammates(Player player) {
@@ -116,9 +106,11 @@ public class GameManager {
         return players;
     }
 
-    public void addWither(GameTeam team, Wither wither) {
+    public BossBar addWither(GameTeam team, Wither wither) {
         witherMap.put(team, wither);
-        witherBossBars.put(team, BossBar.bossBar(Objects.requireNonNull(wither.customName()), 1.0F, BossBar.Color.NAMES.valueOr(team.color().toString(), BossBar.Color.WHITE), BossBar.Overlay.PROGRESS));
+        BossBar bossBar = BossBar.bossBar(Objects.requireNonNull(wither.customName()), 1.0F, BossBar.Color.NAMES.valueOr(team.color().toString(), BossBar.Color.WHITE), BossBar.Overlay.PROGRESS);
+        witherBossBars.put(team, bossBar);
+        return bossBar;
     }
 
     public GameTeam getWitherTeam(Wither wither) {
@@ -229,5 +221,9 @@ public class GameManager {
             }
         }
         return alive;
+    }
+
+    public Collection<Wither> getWithers() {
+        return witherMap.values();
     }
 }

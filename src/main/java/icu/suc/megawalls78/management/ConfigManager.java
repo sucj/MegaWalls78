@@ -43,7 +43,6 @@ public class ConfigManager {
     public long buffingTime;
     public long fightingTime;
     public long dmTime;
-    public long endingTime;
     public long respawnTime;
     public float witherHealth;
 
@@ -82,8 +81,7 @@ public class ConfigManager {
         preparingTime = gameConfig.getLong("preparing-time", 360000L);
         buffingTime = gameConfig.getLong("buffing-time", 480000L);
         fightingTime = gameConfig.getLong("fighting-time", 1800000L);
-        dmTime = gameConfig.getLong("dm-time", 800000L);
-        endingTime = gameConfig.getLong("ending-time", 10000L);
+        dmTime = gameConfig.getLong("dm-time", 10000L);
         respawnTime = gameConfig.getLong("respawn-time", 5000L);
         witherHealth = (float) gameConfig.getDouble("wither-health", 500.0D);
 
@@ -133,7 +131,6 @@ public class ConfigManager {
         gameConfig.set("buffing-time", buffingTime);
         gameConfig.set("fighting-time", fightingTime);
         gameConfig.set("dm-time", dmTime);
-        gameConfig.set("ending-time", endingTime);
         gameConfig.set("respawn-time", respawnTime);
 
         saveFiles();
