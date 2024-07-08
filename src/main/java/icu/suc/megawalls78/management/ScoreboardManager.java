@@ -11,7 +11,12 @@ import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.util.LP;
 import icu.suc.megawalls78.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
+import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
+import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.sidebar.component.ComponentSidebarLayout;
 import net.megavex.scoreboardlibrary.api.sidebar.component.SidebarComponent;
@@ -40,10 +45,16 @@ public class ScoreboardManager implements Listener {
 
     private final Map<UUID, SidebarWrapper> sidebarMap;
     private final TeamManager teamManager;
+    private final ObjectiveManager objectiveManager;
+    private final ScoreboardObjective objective;
 
     public ScoreboardManager() {
         sidebarMap = Maps.newHashMap();
         teamManager = MegaWalls78.getScoreboardLib().createTeamManager();
+        objectiveManager = MegaWalls78.getScoreboardLib().createObjectiveManager();
+        objective = objectiveManager.create("HP");
+        objective.value(Component.translatable("mw78.hp", RED));
+        objectiveManager.display(ObjectiveDisplaySlot.belowName(), objective);
     }
 
     public void updateSidebar(GameState state) {
@@ -67,6 +78,9 @@ public class ScoreboardManager implements Listener {
     public void onTick(ServerTickStartEvent event) {
         for (SidebarWrapper sidebar : sidebarMap.values()) {
             sidebar.tick();
+        }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            objective.score(player.getName(), (int) player.getHealth());
         }
     }
 
@@ -97,6 +111,7 @@ public class ScoreboardManager implements Listener {
                 teamDisplay.prefix(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(ComponentUtil.BLANK_COMPONENT));
                 teamDisplay.suffix(ComponentUtil.BLANK_COMPONENT.append(Component.translatable("ms78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
                 teamDisplay.playerColor(gamePlayer.getTeam().color());
+                objectiveManager.addPlayer(player);
             }
             teamDisplay.addEntry(player.getName());
         }
@@ -108,6 +123,7 @@ public class ScoreboardManager implements Listener {
         removeSidebar(player);
         teamManager.removePlayer(player);
         teamManager.removeTeam(String.valueOf(player.getUniqueId()));
+        objectiveManager.removePlayer(player);
     }
 
     @EventHandler
@@ -123,13 +139,16 @@ public class ScoreboardManager implements Listener {
             teamDisplay.prefix(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(ComponentUtil.BLANK_COMPONENT));
             teamDisplay.suffix(ComponentUtil.BLANK_COMPONENT.append(Component.translatable("ms78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
             teamDisplay.playerColor(gamePlayer.getTeam().color());
+            objectiveManager.addPlayer(player);
         }
         teamDisplay.addEntry(player.getName());
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        teamManager.removeTeam(String.valueOf(event.getPlayer().getUniqueId()));
+        Player player = event.getPlayer();
+        teamManager.removeTeam(String.valueOf(player.getUniqueId()));
+        objectiveManager.removePlayer(player);
     }
 
     @EventHandler

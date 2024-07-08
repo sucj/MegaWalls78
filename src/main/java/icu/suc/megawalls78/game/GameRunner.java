@@ -20,8 +20,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Wither;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.*;
 
 import java.util.List;
 import java.util.Map;
@@ -59,18 +58,6 @@ public class GameRunner implements Runnable {
             if (timer <= 1000L) {
                 next(state);
             } else {
-                if (dmC) {
-                    if (dmTimer <= 0L) {
-                        dmC = false;
-                        dm = true;
-                        //TODO DM message
-                        Bukkit.broadcast(Component.text("dm"));
-                    } else {
-                        dmTimer -= 1000L;
-                    }
-                } else {
-                    timer -= 1000L;
-                }
                 switch (state) {
                     case COUNTDOWN -> {
                         if (timer == 10000L || timer <= 5000L) {
@@ -84,6 +71,18 @@ public class GameRunner implements Runnable {
                             ComponentUtil.sendMessage(Component.translatable("mw78.gates", NamedTextColor.AQUA, Component.translatable("mw78.seconds", ComponentUtil.second(timer))), Bukkit.getOnlinePlayers());
                         }
                     }
+                }
+                if (dmC) {
+                    if (dmTimer <= 0L) {
+                        dmC = false;
+                        dm = true;
+                        //TODO DM message
+                        Bukkit.broadcast(Component.text("dm"));
+                    } else {
+                        dmTimer -= 1000L;
+                    }
+                } else {
+                    timer -= 1000L;
                 }
             }
         }

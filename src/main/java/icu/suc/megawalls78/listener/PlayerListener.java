@@ -98,7 +98,6 @@ public class PlayerListener implements Listener {
                 GamePlayer gamePlayer = gameManager.getPlayer(player);
                 drops.removeIf(ItemUtil::isSoulBound);
                 Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(20);
-                DamageSource damageSource = event.getDamageSource();
                 GameTeam team = gamePlayer.getTeam();
                 boolean dead = gameManager.isWitherDead(team);
                 if (event.deathMessage() instanceof TranslatableComponent component) {
@@ -116,7 +115,7 @@ public class PlayerListener implements Listener {
                     event.deathMessage(deathMessage.color(NamedTextColor.GRAY));
                 }
                 Player killer = player.getKiller();
-                if (damageSource.getCausingEntity() instanceof Player || killer != null) {
+                if (killer != null) {
                     if (dead) {
                         gameManager.getPlayer(killer).increaseFinalKills();
                     } else {
@@ -141,7 +140,7 @@ public class PlayerListener implements Listener {
                     passive.unregister();
                     HandlerList.unregisterAll(passive);
                 }
-                Bukkit.broadcast(event.deathMessage());
+                ComponentUtil.sendMessage(event.deathMessage(), Bukkit.getOnlinePlayers());
                 if (gamePlayer.getFinalDeaths() != 0) {
                     gameManager.addSpectator(player);
                 }
@@ -162,19 +161,32 @@ public class PlayerListener implements Listener {
             player.setGameMode(GameMode.ADVENTURE);
         } else if (gameManager.inFighting()) {
             GamePlayer gamePlayer = gameManager.getPlayer(player);
-            if (gamePlayer == null) {
+            if (gamePlayer == null || gamePlayer.getFinalDeaths() != 0) {
                 gameManager.addSpectator(player);
-            } else if (gamePlayer.getFinalDeaths() != 0) {
-                gameManager.addSpectator(player);
-                ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), null, ComponentUtil.DEFAULT_TIMES, player);
+                event.setSpawnLocation(gameManager.getMap().spectator());
+                player.setGameMode(GameMode.ADVENTURE);
+                Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+                    if (gamePlayer != null && gamePlayer.getFinalDeaths() != 0) {
+                        ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), Component.empty(), ComponentUtil.DEFAULT_TIMES, player);
+                    }
+                    player.setAllowFlight(true);
+                    player.setFlying(true);
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, PotionEffect.INFINITE_DURATION, 1));
+                });
+            } else if (gamePlayer.getFinalDeaths() == 0) {
+                event.setSpawnLocation(RandomUtil.getRandomSpawn(gamePlayer.getTeam().spawn()));
+                player.setGameMode(GameMode.SURVIVAL);
+                Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(40);
+                player.setHealth(40);
+                Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+                    MegaWalls78.getInstance().getSkinManager().applySkin(player);
+                    gamePlayer.getIdentity().getKit().equip(player);
+                    gamePlayer.setEnergy(gamePlayer.getEnergy());
+                    for (Passive passive : gamePlayer.getPassives()) {
+                        Bukkit.getPluginManager().registerEvents(passive, MegaWalls78.getInstance());
+                    }
+                });
             }
-            event.setSpawnLocation(gameManager.getMap().spectator());
-            player.setGameMode(GameMode.ADVENTURE);
-            Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
-                player.setAllowFlight(true);
-                player.setFlying(true);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, PotionEffect.INFINITE_DURATION, 1));
-            });
         }
     }
 
@@ -187,7 +199,8 @@ public class PlayerListener implements Listener {
             player.setGameMode(GameMode.ADVENTURE);
         } else if (gameManager.isSpectator(player)) {
             if (gameManager.getPlayer(player) != null) {
-                ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), null, ComponentUtil.DEFAULT_TIMES, player);
+                ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), Component.empty(), ComponentUtil.DEFAULT_TIMES, player);
+                MegaWalls78.getInstance().getSkinManager().resetSkin(player);
             }
             event.setRespawnLocation(gameManager.getMap().spectator());
             player.setGameMode(GameMode.ADVENTURE);
