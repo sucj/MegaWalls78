@@ -37,7 +37,8 @@ public class WitherListener implements Listener {
             GameTeam team = gameManager.getWitherTeam(wither);
             BossBar bossBar = gameManager.getBossBar(team);
             for (GamePlayer gamePlayer : gameManager.getTeamPlayersMap().get(team)) {
-                if (!gamePlayer.getBukkitPlayer().isOnline()) {
+                Player bukkitPlayer = gamePlayer.getBukkitPlayer();
+                if (bukkitPlayer == null || !bukkitPlayer.isOnline()) {
                     gamePlayer.increaseFinalDeaths();
                 }
             }

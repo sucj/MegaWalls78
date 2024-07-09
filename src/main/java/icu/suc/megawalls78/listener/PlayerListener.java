@@ -20,7 +20,6 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -164,21 +163,21 @@ public class PlayerListener implements Listener {
             if (gamePlayer == null || gamePlayer.getFinalDeaths() != 0) {
                 gameManager.addSpectator(player);
                 event.setSpawnLocation(gameManager.getMap().spectator());
-                player.setGameMode(GameMode.ADVENTURE);
                 Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
                     if (gamePlayer != null && gamePlayer.getFinalDeaths() != 0) {
                         ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), Component.empty(), ComponentUtil.DEFAULT_TIMES, player);
                     }
+                    player.setGameMode(GameMode.ADVENTURE);
                     player.setAllowFlight(true);
                     player.setFlying(true);
                     player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, PotionEffect.INFINITE_DURATION, 1));
                 });
             } else if (gamePlayer.getFinalDeaths() == 0) {
                 event.setSpawnLocation(RandomUtil.getRandomSpawn(gamePlayer.getTeam().spawn()));
-                player.setGameMode(GameMode.SURVIVAL);
                 Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(40);
                 player.setHealth(40);
                 Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+                    player.setGameMode(GameMode.SURVIVAL);
                     MegaWalls78.getInstance().getSkinManager().applySkin(player);
                     gamePlayer.getIdentity().getKit().equip(player);
                     gamePlayer.setEnergy(gamePlayer.getEnergy());
