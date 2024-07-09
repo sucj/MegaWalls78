@@ -13,7 +13,7 @@ public class Flurry extends Passive {
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 60, 2);
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1);
 
-    private int hit;
+    private int hit = 2;
 
     public Flurry() {
         super("flurry", "Flurry");
