@@ -41,18 +41,28 @@ public class ChatListener implements Listener, ChatRenderer {
     public @NotNull Component render(@NotNull Player player, @NotNull Component component, @NotNull Component component1, @NotNull Audience audience) {
         Component formatted;
         if (MegaWalls78.getInstance().getGameManager().inFighting()) {
-            GamePlayer gamePlayer = MegaWalls78.getInstance().getGameManager().getPlayer(player);
-            formatted = Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().chat())
-                    .append(ComponentUtil.BLANK_COMPONENT)
+            GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+            NamedTextColor color;
+            Component chat;
+            if (gameManager.isSpectator(player)) {
+                color = NamedTextColor.GRAY;
+                chat = Component.translatable("mw78.team.spec.chat");
+            } else {
+                GamePlayer gamePlayer = gameManager.getPlayer(player);
+                color = gamePlayer.getTeam().color();
+                chat = gamePlayer.getTeam().chat();
+            }
+            formatted = Component.translatable("ms78.brackets", color, chat )
+                    .append(Component.space())
                     .append(LP.getPrefix(player))
                     .append(player.displayName().color(LP.getNameColor(player)))
                     .append(Component.translatable("mw78.sb.colon", NamedTextColor.GRAY))
-                    .append(ComponentUtil.BLANK_COMPONENT);
+                    .append(Component.space());
         } else {
             formatted = LP.getPrefix(player)
                     .append(player.displayName().color(LP.getNameColor(player)))
                     .append(Component.translatable("mw78.sb.colon", NamedTextColor.GRAY))
-                    .append(ComponentUtil.BLANK_COMPONENT);
+                    .append(Component.space());
         }
         return formatted.append(component1.color(LP.getChatColor(player)));
     }

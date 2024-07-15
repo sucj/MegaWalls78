@@ -4,13 +4,21 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.energy.EnergyHit;
+import icu.suc.megawalls78.identity.impl.cow.gathering.UltraPasteurized;
+import icu.suc.megawalls78.identity.impl.cow.passive.BucketBarrier;
+import icu.suc.megawalls78.identity.impl.cow.passive.RefreshingSip;
+import icu.suc.megawalls78.identity.impl.cow.skill.SoothingMoo;
+import icu.suc.megawalls78.identity.impl.herebrine.gathering.TreasureHunter;
 import icu.suc.megawalls78.identity.impl.herebrine.passive.Flurry;
 import icu.suc.megawalls78.identity.impl.herebrine.passive.Power;
 import icu.suc.megawalls78.identity.impl.herebrine.skill.Wrath;
+import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.Passive;
 import icu.suc.megawalls78.identity.trait.Skill;
-import icu.suc.megawalls78.identity.trait.Trigger;
+import icu.suc.megawalls78.identity.trait.Skill.Trigger;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,49 +27,59 @@ import java.util.Map;
 
 public enum Identity {
     COW("cow",
+            NamedTextColor.LIGHT_PURPLE,
             Material.MILK_BUCKET,
             icu.suc.megawalls78.identity.impl.cow.Kit.class,
             100,
             Map.of(EnergyHit.MELEE, 25, EnergyHit.BOW, 20),
-            Map.of(Trigger.SWORD, Wrath.class,
-                    Trigger.BOW, Wrath.class),
-            List.of()),
+            Map.of(Trigger.SWORD, SoothingMoo.class,
+                    Trigger.BOW, SoothingMoo.class),
+            List.of(BucketBarrier.class, RefreshingSip.class),
+            UltraPasteurized.class),
     HEROBRINE("herobrine",
+            NamedTextColor.YELLOW,
             Material.DIAMOND_SWORD,
             icu.suc.megawalls78.identity.impl.herebrine.Kit.class,
             100,
             Map.of(EnergyHit.MELEE, 25, EnergyHit.BOW, 25),
             Map.of(Trigger.SWORD, Wrath.class,
                     Trigger.BOW, Wrath.class),
-            List.of(Power.class, Flurry.class));
+            List.of(Power.class, Flurry.class),
+            TreasureHunter.class);
 
     private final String id;
+    private final TextColor color;
     private final Material material;
     private final Class<? extends Kit> kitClass;
     private final int energy;
     private final Map<EnergyHit, Integer> energyHit;
-    private final Map<Trigger, Class<? extends Skill>> skillClasses;
+    private final Map<Skill.Trigger, Class<? extends Skill>> skillClasses;
     private final List<Class<? extends Passive>> passiveClasses;
+    private final Class<? extends Gathering> gatheringClass;
 
     private Kit kit;
-    private Component name;
-    private Component abbr;
-    private Component icon;
+    private final Component name;
+    private final Component abbr;
+    private final Component icon;
 
     Identity(String id,
+             TextColor color,
              Material material,
              Class<? extends Kit> kitClass,
              int energy,
              Map<EnergyHit, Integer> energyHit,
-             Map<Trigger, Class<? extends Skill>> skillClasses,
-             List<Class<? extends Passive>> passiveClasses) {
+             Map<Skill.Trigger, Class<? extends Skill>> skillClasses,
+             List<Class<? extends Passive>> passiveClasses,
+             Class<? extends Gathering> gatheringClass) {
         this.id = id;
+        this.color = color;
         this.material = material;
         this.kitClass = kitClass;
         this.energy = energy;
         this.energyHit = energyHit == null ? Maps.newIdentityHashMap() : energyHit;
         this.skillClasses = skillClasses;
         this.passiveClasses = passiveClasses;
+        this.gatheringClass = gatheringClass;
 
         this.name = Component.translatable("mw78.id." + id + ".name");
         this.abbr = Component.translatable("mw78.id." + id + ".abbr");
@@ -74,6 +92,10 @@ public enum Identity {
 
     public Component getName() {
         return name;
+    }
+
+    public TextColor getColor() {
+        return color;
     }
 
     public Component getAbbr() {
@@ -108,10 +130,10 @@ public enum Identity {
         return this.energyHit.getOrDefault(energyHit, 0);
     }
 
-    public Map<Trigger, Skill> getSkills() {
+    public Map<Skill.Trigger, Skill> getSkills() {
         try {
-            Map<Trigger, Skill> skills = Maps.newHashMap();
-            for (Trigger trigger : skillClasses.keySet()) {
+            Map<Skill.Trigger, Skill> skills = Maps.newHashMap();
+            for (Skill.Trigger trigger : skillClasses.keySet()) {
                 add:
                 {
                     Class<? extends Skill> skillClass = skillClasses.get(trigger);
@@ -140,6 +162,22 @@ public enum Identity {
                 passives.add(passive);
             }
             return passives;
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Gathering getGathering(GamePlayer player, List<Passive> passives) {
+        try {
+            Gathering gathering = gatheringClass.getConstructor().newInstance();
+            Class<? extends Passive> passiveClass = gathering.getInternalPassive();
+            if (passiveClass != null) {
+                Passive passive = passiveClass.getConstructor().newInstance();
+                passive.setPlayer(player);
+                passives.add(passive);
+            }
+            return gathering;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             throw new RuntimeException(e);

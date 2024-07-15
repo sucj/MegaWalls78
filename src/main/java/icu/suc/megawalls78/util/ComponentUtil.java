@@ -9,17 +9,11 @@ import net.kyori.adventure.util.Ticks;
 
 import java.time.Duration;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public class ComponentUtil {
 
-    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
-    public static final DateTimeFormatter MMSS_FORMATTER = DateTimeFormatter.ofPattern("mm:ss");
-
     public static final Title.Times ONE_SEC_TIMES = Title.Times.times(Duration.ZERO, Duration.ofSeconds(1L), Duration.ZERO);
     public static final Title.Times DEFAULT_TIMES = Title.Times.times(Ticks.duration(10L), Ticks.duration(70L), Ticks.duration(20L));
-
-    public static final Component BLANK_COMPONENT = Component.text(" ");
 
     private static TextColor secondColor(long millis) {
         TextColor color = NamedTextColor.GREEN;
@@ -38,7 +32,7 @@ public class ComponentUtil {
     }
 
     public static Component mmss(long millis) {
-        return Component.text(MMSS_FORMATTER.format(LocalTime.ofSecondOfDay(millis / 1000L)), secondColor(millis));
+        return Component.text(Formatters.MMSS.format(LocalTime.ofSecondOfDay(millis / 1000L)), secondColor(millis));
     }
 
     public static void sendTitle(Component title, Component subtitle, Title.Times times, Audience audience) {

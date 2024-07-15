@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.components.FoodComponent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 
@@ -44,12 +45,8 @@ public class ItemBuilder {
     private List<Component> prefixList;
     private List<Component> suffixList;
 
-    private List<TextColor> colorList;
+    private TextColor color;
     private List<Decoration> decorationList;
-
-    private ItemBuilder() {
-
-    }
 
     public static ItemBuilder of(Material type) {
         ItemBuilder instance = new ItemBuilder();
@@ -155,11 +152,8 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder addColor(TextColor color) {
-        if (this.colorList == null) {
-            this.colorList = Lists.newArrayList();
-        }
-        this.colorList.add(color);
+    public ItemBuilder setColor(TextColor color) {
+        this.color = color;
         return this;
     }
 
@@ -172,7 +166,7 @@ public class ItemBuilder {
     }
 
     public ItemStack build() {
-        ItemStack itemStack = new ItemStack(type);
+        ItemStack itemStack = ItemStack.of(type);
         if (amount != null) {
             itemStack.setAmount(amount);
         }
@@ -246,12 +240,10 @@ public class ItemBuilder {
 
         Component component = itemMeta.displayName();
         if (component == null) {
-            if (colorList != null || decorationList != null) {
+            if (color != null || decorationList != null) {
                 component = Component.translatable(itemStack);
-                if (colorList != null) {
-                    for (TextColor color : colorList) {
-                        component = component.color(color);
-                    }
+                if (color != null) {
+                    component = component.color(color);
                 }
                 if (decorationList != null) {
                     for (Decoration decoration : decorationList) {
@@ -261,10 +253,8 @@ public class ItemBuilder {
                 itemMeta.displayName(component);
             }
         } else {
-            if (colorList != null) {
-                for (TextColor color : colorList) {
-                    component = component.color(color);
-                }
+            if (color != null) {
+                component = component.color(color);
             }
             if (decorationList != null) {
                 for (Decoration decoration : decorationList) {

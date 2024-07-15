@@ -47,7 +47,7 @@ public abstract class Kit {
     }
 
     protected Component prefix() {
-        return identity.getName().append(ComponentUtil.BLANK_COMPONENT);
+        return identity.getName().append(Component.space());
     }
 
     public void equip(Player player) {

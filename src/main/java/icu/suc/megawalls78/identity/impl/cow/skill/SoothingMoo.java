@@ -1,15 +1,47 @@
 package icu.suc.megawalls78.identity.impl.cow.skill;
 
+import icu.suc.megawalls78.identity.trait.Skill;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
-public class SoothingMoo extends icu.suc.megawalls78.identity.trait.Skill {
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
+
+public class SoothingMoo extends Skill {
+
+    private static final double RANGE = 7.0D;
+
+    private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 50, 0);
+    private static final PotionEffect REGENERATION_2 = new PotionEffect(PotionEffectType.REGENERATION, 50, 1);
+    private static final PotionEffect REGENERATION_3 = new PotionEffect(PotionEffectType.REGENERATION, 50, 2);
 
     public SoothingMoo() {
-        super("soothing_moo", "Soothing Moo", 100);
+        super("soothing_moo", 100, 1000L);
     }
 
     @Override
-    public void use(Player player) {
+    protected void use0(Player player) {
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_COW_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F, 0);
 
+        AtomicInteger count = new AtomicInteger();
+        player.addPotionEffect(RESISTANCE);
+        player.addPotionEffect(REGENERATION_2);
+        player.spawnParticle(Particle.HEART, player.getEyeLocation().add(0.0D, 1.0D, 0.0D), 1);
+        count.incrementAndGet();
+
+        player.getNearbyEntities(RANGE, RANGE, RANGE).stream()
+                .filter(entity -> entity instanceof Player)
+                .filter(entity -> isValidAllies(player, entity))
+                .forEach(entity -> {
+                    ((Player) entity).addPotionEffect(REGENERATION_3);
+                    ((Player) entity).spawnParticle(Particle.HEART, ((Player) entity).getEyeLocation().add(0.0D, 1.0D, 0.0D), 1);
+                    count.getAndIncrement();
+                });
+        summaryHeal(player, count.get());
     }
 }

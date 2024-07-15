@@ -27,13 +27,13 @@ public class ShoutCommand implements CommandExecutor {
                 if (gameManager.inFighting()) {
                     GamePlayer gamePlayer = gameManager.getPlayer(player);
                     Bukkit.broadcast(Component.translatable("ms78.brackets", NamedTextColor.GOLD, Component.translatable("mw78.shout"))
-                            .append(ComponentUtil.BLANK_COMPONENT)
+                            .append(Component.space())
                             .append(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().chat()))
-                            .append(ComponentUtil.BLANK_COMPONENT)
+                            .append(Component.space())
                             .append(LP.getPrefix(player))
                             .append(player.displayName().color(LP.getNameColor(player)))
                             .append(Component.translatable("mw78.sb.colon", NamedTextColor.WHITE))
-                            .append(ComponentUtil.BLANK_COMPONENT)
+                            .append(Component.space())
                             .append(Component.text(String.join(" ", strings), NamedTextColor.WHITE)));
                 }
                 return true;

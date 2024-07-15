@@ -1,6 +1,8 @@
 package icu.suc.megawalls78.identity.impl.herebrine.passive;
 
+import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Passive;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -8,15 +10,17 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class Flurry extends Passive {
+public class Flurry extends Passive implements IActionbar {
 
-    private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 60, 2);
-    private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1);
+    private static final int MAX = 3;
 
-    private int hit = 2;
+    private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 60, 1);
+    private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 0);
+
+    private int hit = MAX;
 
     public Flurry() {
-        super("flurry", "Flurry");
+        super("flurry");
     }
 
     @EventHandler
@@ -24,10 +28,10 @@ public class Flurry extends Passive {
         if (event.isCancelled()) {
             return;
         }
-        if (event.getDamageSource().getCausingEntity() instanceof Player player) {
-            if (shouldPassive(player) && !event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) && player != this.getPlayer().getBukkitPlayer()) {
-                if (++hit >= 3) {
-                    hit = 0;
+        if (event.getEntity() instanceof Player && event.getDamageSource().getCausingEntity() instanceof Player player) {
+            if (shouldPassive(player) && !event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK)) {
+                if (hit++ >= MAX) {
+                    hit = 1;
                     player.addPotionEffect(SPEED);
                     player.addPotionEffect(REGENERATION);
                 }
@@ -37,6 +41,11 @@ public class Flurry extends Passive {
 
     @Override
     public void unregister() {
-        hit = 0;
+        hit = 1;
+    }
+
+    @Override
+    public Component acbValue() {
+        return Type.COMBO.accept(hit, MAX);
     }
 }

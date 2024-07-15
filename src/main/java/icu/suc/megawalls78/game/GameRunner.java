@@ -244,7 +244,7 @@ public class GameRunner implements Runnable {
                 }
                 EntityUtil.spawn(gameTeam.wither(), EntityUtil.Type.TEAM_WITHER, entity -> {
                     Wither wither = (Wither) entity;
-                    wither.customName((gameTeam.name().append(ComponentUtil.BLANK_COMPONENT).append(Component.translatable("entity.minecraft.wither"))).color(gameTeam.color()));
+                    wither.customName((gameTeam.name().append(Component.space()).append(Component.translatable("entity.minecraft.wither"))).color(gameTeam.color()));
                     mcTeam.addEntity(wither);
                     ((TeamWither) entity.getHandle()).setBossBar(gameManager.addWither(gameTeam, wither));
                 });

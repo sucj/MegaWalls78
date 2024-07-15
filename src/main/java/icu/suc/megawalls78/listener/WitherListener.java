@@ -19,11 +19,11 @@ import org.bukkit.event.entity.EntityDeathEvent;
 public class WitherListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void EntityDamageByEntityEvent(EntityDamageEvent event) {
+    public void onWitherDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Wither wither && event.getDamageSource().getCausingEntity() instanceof Player player) {
             GameManager gameManager = MegaWalls78.getInstance().getGameManager();
             GameTeam team = gameManager.getWitherTeam(wither);
-            if (team == null || gameManager.getPlayer(player).getTeam().equals(team) || gameManager.getState().equals(GameState.PREPARING)) {
+            if (team == null || gameManager.getPlayer(player).getTeam().equals(team)) {
                 event.setCancelled(true);
             }
 //            gameManager.getBossBar(team).progress((float) (wither.getHealth() / wither.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()));

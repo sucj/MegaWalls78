@@ -3,6 +3,7 @@ package icu.suc.megawalls78.listener;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.ItemUtil;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class WorldListener implements Listener {
 
@@ -54,7 +56,8 @@ public class WorldListener implements Listener {
                 event.setCancelled(true);
                 return;
             default: {
-                if (gameManager.getRunner().getProtectedBlocks().contains(event.getBlock().getLocation())) {
+                Block block = event.getBlock();
+                if (gameManager.getRunner().getProtectedBlocks().contains(block.getLocation())) {
                     event.setCancelled(true);
                 }
             }
@@ -62,7 +65,7 @@ public class WorldListener implements Listener {
     }
 
     @EventHandler
-    public void onExplode(EntityExplodeEvent event) {
+    public void onEntityExplode(EntityExplodeEvent event) {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         switch (gameManager.getState()) {
             case WAITING:

@@ -6,6 +6,7 @@ import icu.suc.megawalls78.gui.IdentityGui;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.ItemUtil;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -117,7 +118,7 @@ public class InventoryListener implements Listener {
         if (event.getPlayer() instanceof Player player) {
             Inventory inventory = event.getInventory();
             if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() == null) {
-                player.playSound(player, Sound.BLOCK_ENDER_CHEST_OPEN, 1.0F, 1.0F);
+                player.playSound(player, Sound.BLOCK_ENDER_CHEST_OPEN, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
         }
     }
@@ -127,7 +128,7 @@ public class InventoryListener implements Listener {
         if (event.getPlayer() instanceof Player player) {
             Inventory inventory = event.getInventory();
             if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() == null) {
-                player.playSound(player, Sound.BLOCK_ENDER_CHEST_CLOSE, 1.0F, 1.0F);
+                player.playSound(player, Sound.BLOCK_ENDER_CHEST_CLOSE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             } else IdentityGui.INVENTORIES.remove(inventory);
             if (player.getItemOnCursor().getType().isAir()) {
                 LAST_SLOTS.remove(player.getUniqueId());

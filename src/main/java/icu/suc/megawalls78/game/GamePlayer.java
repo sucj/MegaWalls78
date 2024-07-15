@@ -1,21 +1,32 @@
 package icu.suc.megawalls78.game;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.event.EnergyChangeEvent;
 import icu.suc.megawalls78.event.IdentitySelectEvent;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.energy.EnergyHit;
+import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Passive;
 import icu.suc.megawalls78.identity.trait.Skill;
-import icu.suc.megawalls78.identity.trait.Trigger;
+import icu.suc.megawalls78.util.ComponentUtil;
+import icu.suc.megawalls78.util.SupplierComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class GamePlayer {
@@ -33,32 +44,43 @@ public class GamePlayer {
     private int finalAssists;
 
     private int energy;
-    private Map<Trigger, Skill> skills;
+    private Map<Skill.Trigger, Skill> skills;
     private List<Passive> passives;
+    private Gathering gathering;
+
+    private List<ComponentLike> actionbar;
 
     public GamePlayer(Player player) {
         this.uuid = player.getUniqueId();
         setIdentity(MegaWalls78.getInstance().getIdentityManager().getPlayerIdentity(uuid));
     }
 
-    public List<Passive> getPassives() {
-        if (passives == null) {
-            passives = identity.getPassives(this);
+    public void enablePassives() {
+        for (Passive passive : passives) {
+            Bukkit.getPluginManager().registerEvents(passive, MegaWalls78.getInstance());
         }
-        return passives;
+    }
+
+    public void disablePassives() {
+        for (Passive passive : passives) {
+            passive.unregister();
+            HandlerList.unregisterAll(passive);
+        }
     }
 
     public boolean useSkill(Action action, Material material) {
-        Skill skill = skills.get(Trigger.getTrigger(action, material));
+        Skill skill = skills.get(Skill.Trigger.getTrigger(action, material));
         if (skill == null) {
             return false;
         }
         if (energy < skill.getCost()) {
             return false;
         }
-        decreaseEnergy(skill.getCost());
-        skill.use(getBukkitPlayer());
-        return true;
+        if (skill.use(getBukkitPlayer())) {
+            decreaseEnergy(skill.getCost());
+            return true;
+        }
+        return false;
     }
 
     public void setEnergy(int energy) {
@@ -115,9 +137,30 @@ public class GamePlayer {
 
         this.identity = pre.getIdentity();
         this.skills = identity.getSkills();
+        this.passives = identity.getPassives(this);
+        this.gathering = identity.getGathering(this, passives);
+
+        this.actionbar = Lists.newArrayList();
+        Set<Class<? extends Skill>> skillClasses = Sets.newHashSet();
+        for (Skill skill : skills.values()) {
+            Class<? extends Skill> skillClass = skill.getClass();
+            if (skillClasses.contains(skillClass)) {
+                add2Actionbar(Component.translatable("mw78.acb." + skill.getId(), identity.getColor(), TextDecoration.BOLD), SupplierComponent.create(skill::acbValue));
+            }
+            skillClasses.add(skillClass);
+        }
+        for (Passive passive : passives) {
+            if (passive instanceof IActionbar) {
+                add2Actionbar(Component.translatable("mw78.acb." + passive.getId(), identity.getColor(), TextDecoration.BOLD), SupplierComponent.create(((IActionbar) passive)::acbValue));
+            }
+        }
 
         IdentitySelectEvent.Post post = new IdentitySelectEvent.Post(uuid, identity);
         Bukkit.getPluginManager().callEvent(post);
+    }
+
+    public List<ComponentLike> getActionbar() {
+        return actionbar;
     }
 
     public GameTeam getTeam() {
@@ -174,5 +217,27 @@ public class GamePlayer {
 
     public void increaseFinalAssists() {
         finalAssists++;
+    }
+
+    private void add2Actionbar(Component name, ComponentLike value) {
+        if (actionbar.size() % 4 == 0) {
+            actionbar.addFirst(value);
+            actionbar.addFirst(name);
+        } else {
+            actionbar.addLast(name);
+            actionbar.addLast(value);
+        }
+    }
+
+    public Map<Skill.Trigger, Skill> getSkills() {
+        return skills;
+    }
+
+    public List<Passive> getPassives() {
+        return passives;
+    }
+
+    public Gathering getGathering() {
+        return gathering;
     }
 }

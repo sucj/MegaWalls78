@@ -8,9 +8,6 @@ import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -38,7 +35,6 @@ public final class MegaWalls78 extends JavaPlugin {
         registerCommands();
         registerListeners();
         configManager.load();
-
     }
 
     @Override
@@ -62,7 +58,7 @@ public final class MegaWalls78 extends JavaPlugin {
 
     private void registerListeners() {
         Bukkit.getPluginManager().registerEvents(new ChatListener(), this);
-        Bukkit.getPluginManager().registerEvents(new EnergyListener(), this);
+        Bukkit.getPluginManager().registerEvents(new SkillListener(), this);
         Bukkit.getPluginManager().registerEvents(new IdentityListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
