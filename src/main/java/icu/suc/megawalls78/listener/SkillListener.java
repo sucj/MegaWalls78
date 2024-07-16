@@ -8,7 +8,6 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.event.EnergyChangeEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
-import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.impl.herebrine.gathering.TreasureHunter;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.ItemUtil;
@@ -55,7 +54,7 @@ public class SkillListener implements Listener {
     private static final LootTable NEWBEE_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "newbee"));
     private static final LootTable NORMAL_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "normal"));
     private static final Set<UUID> NO_NEWBEE = Sets.newHashSet();
-    private static final Set<Material> GEN_CHEST = Sets.immutableEnumSet(Material.STONE, Material.DEEPSLATE,
+    private static final Set<Material> GEN_CHEST = Set.of(Material.STONE, Material.DEEPSLATE,
             Material.COAL_ORE, Material.IRON_ORE, Material.GOLD_ORE,
             Material.DEEPSLATE_COAL_ORE, Material.DEEPSLATE_IRON_ORE, Material.DEEPSLATE_GOLD_ORE,
             Material.OAK_LOG, Material.SPRUCE_LOG, Material.BIRCH_LOG, Material.JUNGLE_LOG, Material.ACACIA_LOG, Material.CHERRY_LOG, Material.DARK_OAK_LOG, Material.MANGROVE_LOG);

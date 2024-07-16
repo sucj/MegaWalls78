@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class Flurry extends Passive implements IActionbar {
+public final class Flurry extends Passive implements IActionbar {
 
     private static final int MAX = 3;
 
@@ -41,7 +41,7 @@ public class Flurry extends Passive implements IActionbar {
 
     @Override
     public void unregister() {
-        hit = 1;
+        hit = MAX;
     }
 
     @Override

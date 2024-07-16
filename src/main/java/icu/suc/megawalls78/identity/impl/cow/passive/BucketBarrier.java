@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 
-public class BucketBarrier extends Passive implements IActionbar {
+public final class BucketBarrier extends Passive implements IActionbar {
 
     private static final long COOLDOWN = 30000L;
     private static final long DURATION = 20000L;
@@ -44,9 +44,9 @@ public class BucketBarrier extends Passive implements IActionbar {
             if (shouldPassive(player) && duration > 0) {
                 double damage = event.getFinalDamage();
                 if (damage >= DAMAGE) {
-                    duration -= PER;
                     event.setDamage(damage * SCALE);
-                    player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.PLAYERS, 1.0F, 2.0F);
+                    player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.PLAYERS, 1.0F, 2.5F - ((float) duration / DURATION));
+                    duration -= PER;
                 }
             }
         }
@@ -64,24 +64,14 @@ public class BucketBarrier extends Passive implements IActionbar {
                     barriers = new ItemDisplay[4];
                     center = player.getLocation().add(0, 1.0D, 0);
                     for (int i = 0; i < 4; i++) {
-                        double angle = Math.toRadians(i * 90 + 45);
-                        double x = center.getX() + RADIUS * Math.cos(angle);
-                        double z = center.getZ() + RADIUS * Math.sin(angle);
-                        float yaw = (float) Math.toDegrees(angle) + 90.0F;
-                        Location location = new Location(center.getWorld(), x, center.getY(), z, yaw, 0);
-                        barriers[i] = (ItemDisplay) center.getWorld().spawnEntity(location, EntityType.ITEM_DISPLAY);
+                        barriers[i] = (ItemDisplay) center.getWorld().spawnEntity(barrierLocation(i), EntityType.ITEM_DISPLAY);
                         barriers[i].setItemStack(ItemStack.of(Material.MILK_BUCKET));
                         Transformation transformation = barriers[i].getTransformation();
                         barriers[i].setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(), transformation.getScale().set(0.8F), transformation.getRightRotation()));
                     }
                 } else {
                     for (int i = 0; i < 4; i++) {
-                        double angle = Math.toRadians(i * 90 + 45);
-                        double x = center.getX() + RADIUS * Math.cos(angle);
-                        double z = center.getZ() + RADIUS * Math.sin(angle);
-                        float yaw = (float) Math.toDegrees(angle) + 90.0F;
-                        Location location = new Location(center.getWorld(), x, center.getY(), z, yaw, 0);
-                        barriers[i].spawnAt(location);
+                        barriers[i].spawnAt(barrierLocation(i));
                     }
                 }
             } else if (barriers != null) {
@@ -93,17 +83,21 @@ public class BucketBarrier extends Passive implements IActionbar {
         }
     }
 
+    private Location barrierLocation(int i) {
+        double angle = Math.toRadians(i * 90 + 45);
+        double x = center.getX() + RADIUS * Math.cos(angle);
+        double z = center.getZ() + RADIUS * Math.sin(angle);
+        float yaw = (float) Math.toDegrees(angle) + 90.0F;
+        return new Location(center.getWorld(), x, center.getY(), z, yaw, 0);
+    }
+
     @EventHandler
     public void onPlayerTickEnd(ServerTickEndEvent event) {
         if (duration > 0) {
             duration -= 50L;
             for (ItemDisplay barrier : barriers) {
-                Location location = barrier.getLocation();
-                double angle = Math.toRadians(location.getYaw()) + SPEED;
-                double x = center.getX() + RADIUS * Math.cos(angle);
-                double z = center.getZ() + RADIUS * Math.sin(angle);
-                float yaw = (float) Math.toDegrees(angle) + 90.0F;
-                barrier.teleport(new Location(center.getWorld(), x, center.getY(), z, yaw, 0));
+                double angle = Math.toRadians(barrier.getLocation().getYaw()) + SPEED;
+                barrier.teleport(new Location(center.getWorld(), center.getX() + RADIUS * Math.cos(angle), center.getY(), center.getZ() + RADIUS * Math.sin(angle), (float) Math.toDegrees(angle) + 90.0F, 0));
             }
         }
     }

@@ -1,4 +1,4 @@
-package icu.suc.megawalls78.identity.impl.cow;
+package icu.suc.megawalls78.identity.impl.zombie;
 
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.util.ItemBuilder;
@@ -33,7 +33,6 @@ public final class Kit extends icu.suc.megawalls78.identity.Kit {
                 .setColor(NamedTextColor.AQUA)
                 .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
                 .setEnchantmentGlintOverride(true)
-                .setEnchantmentGlintOverride(true)
                 .setMaxStackSize(1)
                 .addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.ENDER_CHEST));
         addBuilder(ItemBuilder.of(Material.DIAMOND_PICKAXE)
@@ -51,7 +50,7 @@ public final class Kit extends icu.suc.megawalls78.identity.Kit {
                 .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
                 .setEnchantmentGlintOverride(true)
                 .setUnbreakable(true));
-        addBuilder(ItemBuilder.of(Material.MILK_BUCKET)
+        addBuilder(ItemBuilder.of(Material.COOKED_BEEF)
                 .addPrefix(prefix())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .setColor(NamedTextColor.AQUA)
@@ -59,22 +58,14 @@ public final class Kit extends icu.suc.megawalls78.identity.Kit {
                 .setEnchantmentGlintOverride(true)
                 .setAmount(3)
                 .setMaxStackSize(3));
-        addBuilder(ItemBuilder.of(Material.BREAD)
-                .addPrefix(prefix())
-                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setColor(NamedTextColor.AQUA)
-                .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
-                .setEnchantmentGlintOverride(true)
-                .setAmount(6)
-                .setMaxStackSize(6));
         addBuilder(ItemBuilder.of(Material.POTION)
                 .addPrefix(prefix())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .setColor(NamedTextColor.AQUA)
                 .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
                 .setEnchantmentGlintOverride(true)
-                .setAmount(2)
-                .setMaxStackSize(2)
+                .setAmount(4)
+                .setMaxStackSize(4)
                 .setDisplayName(Component.translatable("item.minecraft.potion.effect.swiftness"))
                 .addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 300, 1), false));
         addBuilder(ItemBuilder.of(Material.POTION)
@@ -92,7 +83,7 @@ public final class Kit extends icu.suc.megawalls78.identity.Kit {
                 .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
                 .setEnchantmentGlintOverride(true)
                 .setMaxStackSize(1));
-        setChestplateBuilder(ItemBuilder.of(Material.DIAMOND_CHESTPLATE)
+        setHelmetBuilder(ItemBuilder.of(Material.IRON_HELMET)
                 .addPrefix(prefix())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .setColor(NamedTextColor.AQUA)
@@ -100,5 +91,13 @@ public final class Kit extends icu.suc.megawalls78.identity.Kit {
                 .setEnchantmentGlintOverride(true)
                 .setUnbreakable(true)
                 .addEnchantment(Enchantment.PROTECTION, 1, true));
+        setChestplateBuilder(ItemBuilder.of(Material.DIAMOND_CHESTPLATE)
+                .addPrefix(prefix())
+                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                .setColor(NamedTextColor.AQUA)
+                .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
+                .setEnchantmentGlintOverride(true)
+                .setUnbreakable(true)
+                .addEnchantment(Enchantment.PROTECTION, 3, true));
     }
 }

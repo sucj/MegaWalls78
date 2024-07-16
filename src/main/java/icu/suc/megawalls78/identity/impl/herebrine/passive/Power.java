@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-public class Power extends Passive implements IActionbar {
+public final class Power extends Passive implements IActionbar {
 
     private static final long DURATION = 6000L;
     private static final double SCALE = 1.85D;
@@ -24,10 +24,6 @@ public class Power extends Passive implements IActionbar {
     @Override
     public Component acbValue() {
         return Type.DURATION.accept(System.currentTimeMillis(), lastMills, DURATION);
-    }
-
-    private boolean isActivate() {
-        return System.currentTimeMillis() - lastMills <= DURATION;
     }
 
     @EventHandler
@@ -47,7 +43,7 @@ public class Power extends Passive implements IActionbar {
             return;
         }
         if (event.getDamager() instanceof Player player) {
-            if (shouldPassive(player) && isActivate() && (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK)) && player != this.getPlayer().getBukkitPlayer()) {
+            if (shouldPassive(player) && System.currentTimeMillis() - lastMills <= DURATION && (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK))) {
                 event.setDamage(event.getDamage() * SCALE);
             }
         }

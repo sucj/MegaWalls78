@@ -48,7 +48,7 @@ public class GameManager {
         this.witherBossBars = Maps.newHashMap();
         this.teamEliminateMap = Maps.newHashMap();
         this.runner = new GameRunner();
-        Bukkit.getScheduler().runTaskTimerAsynchronously(MegaWalls78.getInstance(), runner, 0L, 20L);
+        Bukkit.getScheduler().runTaskTimer(MegaWalls78.getInstance(), runner, 0L, 20L);
     }
 
     public GamePlayer getPlayer(Player player) {
@@ -128,7 +128,7 @@ public class GameManager {
 
     public void setState(GameState state) {
         this.state = state;
-        Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> Bukkit.getPluginManager().callEvent(new StateChangeEvent(state)));
+        Bukkit.getPluginManager().callEvent(new StateChangeEvent(state));
     }
 
     public Map<UUID, GamePlayer> getPlayers() {

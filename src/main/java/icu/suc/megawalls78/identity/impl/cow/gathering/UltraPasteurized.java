@@ -1,6 +1,8 @@
 package icu.suc.megawalls78.identity.impl.cow.gathering;
 
 import com.google.common.collect.Sets;
+import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
@@ -16,7 +18,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Set;
 
-public class UltraPasteurized extends Gathering {
+public final class UltraPasteurized extends Gathering {
 
     public UltraPasteurized() {
         super("ultra_pasteurized", Internal.class);
@@ -25,8 +27,8 @@ public class UltraPasteurized extends Gathering {
     public static class Internal extends Passive implements IActionbar {
 
         private static final int MAX = 60;
-        private static final Set<Material> MATERIALS = Sets.immutableEnumSet(Material.STONE, Material.DEEPSLATE);
-        private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET).setAmount(2).addPrefix(Identity.COW.getName().append(Component.space())).addDecoration(TextDecoration.BOLD, TextDecoration.State.FALSE).setMaxStackSize(64).addPersistentData(ItemUtil.NamespacedKeys.NO_BACK, PersistentDataType.BOOLEAN, true).addPersistentData(ItemUtil.NamespacedKeys.COW_MILK, PersistentDataType.BOOLEAN, true);
+        private static final Set<Material> MATERIALS = Set.of(Material.STONE, Material.DEEPSLATE);
+        private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET).setAmount(2).addPrefix(Identity.COW.getName().append(Component.space())).addDecoration(TextDecoration.BOLD, TextDecoration.State.FALSE).setMaxStackSize(64).addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.COW_MILK);
 
         private int count;
 
@@ -36,7 +38,7 @@ public class UltraPasteurized extends Gathering {
 
         @EventHandler
         public void onBlockBreak(BlockBreakEvent event) {
-            if (shouldPassive(event.getPlayer()) && MATERIALS.contains(event.getBlock().getType())) {
+            if (shouldPassive(event.getPlayer()) && MATERIALS.contains(event.getBlock().getType()) && MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING)) {
                 count++;
             }
             if (count >= MAX) {
@@ -52,7 +54,7 @@ public class UltraPasteurized extends Gathering {
 
         @Override
         public Component acbValue() {
-            return Type.COMBO.accept(count, MAX);
+            return Type.COMBO_D.accept(count, MAX, !MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING));
         }
     }
 }

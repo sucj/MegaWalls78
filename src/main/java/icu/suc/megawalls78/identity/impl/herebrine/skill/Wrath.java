@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-public class Wrath extends Skill {
+public final class Wrath extends Skill {
 
     private static final double RANGE = 5.0D;
 

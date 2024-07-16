@@ -1,6 +1,8 @@
 package icu.suc.megawalls78.identity.impl.cow.skill;
 
 import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.util.ParticleUtil;
+import org.bukkit.Color;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -12,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-public class SoothingMoo extends Skill {
+public final class SoothingMoo extends Skill {
 
     private static final double RANGE = 7.0D;
 
@@ -26,12 +28,13 @@ public class SoothingMoo extends Skill {
 
     @Override
     protected void use0(Player player) {
+        ParticleUtil.playExpandingCircleParticle(player.getLocation(), Particle.ENTITY_EFFECT, 64, RANGE, 500L, Color.FUCHSIA);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_COW_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F, 0);
 
         AtomicInteger count = new AtomicInteger();
         player.addPotionEffect(RESISTANCE);
         player.addPotionEffect(REGENERATION_2);
-        player.spawnParticle(Particle.HEART, player.getEyeLocation().add(0.0D, 1.0D, 0.0D), 1);
+        ParticleUtil.spawnParticleOverhead(player, Particle.HEART, 2);
         count.incrementAndGet();
 
         player.getNearbyEntities(RANGE, RANGE, RANGE).stream()
@@ -39,7 +42,7 @@ public class SoothingMoo extends Skill {
                 .filter(entity -> isValidAllies(player, entity))
                 .forEach(entity -> {
                     ((Player) entity).addPotionEffect(REGENERATION_3);
-                    ((Player) entity).spawnParticle(Particle.HEART, ((Player) entity).getEyeLocation().add(0.0D, 1.0D, 0.0D), 1);
+                    ParticleUtil.spawnParticleOverhead(((Player) entity), Particle.HEART, 3);
                     count.getAndIncrement();
                 });
         summaryHeal(player, count.get());

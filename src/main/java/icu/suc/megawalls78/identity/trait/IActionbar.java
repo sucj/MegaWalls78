@@ -16,25 +16,29 @@ public interface IActionbar {
         DURATION,
         COOLDOWN_DURATION,
         COMBO,
+        COMBO_D,
         CHARGE;
 
-        public Component accept(double... args) {
+        public Component accept(Object... args) {
             switch (this) {
                 case COOLDOWN -> {
-                    double cooldown = Math.max((args[2] - args[0] + args[1]) / 1000, 0);
+                    double cooldown = Math.max(((long) args[2] - (long) args[0] + (long) args[1]) / 1000.0F, 0);
                     return cooldown == 0 ? A : Component.text(Formatters.NUMBER_Z.format(cooldown), NamedTextColor.RED);
                 }
                 case DURATION -> {
-                    double duration = Math.max((args[2] - args[0] + args[1]) / 1000, 0);
+                    double duration = Math.max(((long) args[2] - (long) args[0] + (long) args[1]) / 1000.0F, 0);
                     return duration == 0 ? D : Component.text(Formatters.NUMBER_Z.format(duration), NamedTextColor.GREEN);
                 }
                 case COOLDOWN_DURATION -> {
-                    double cooldown = Math.max((args[2] - args[0] + args[1]) / 1000, 0);
-                    double duration = Math.max(args[3] / 1000, 0);
+                    double cooldown = Math.max(((long) args[2] - (long) args[0] + (long) args[1]) / 1000.0F, 0);
+                    double duration = Math.max((long) args[3] / 1000.0F, 0);
                     return duration == 0 ? (cooldown == 0 ? A : Component.text(Formatters.NUMBER_Z.format(cooldown), NamedTextColor.RED)) : Component.text(Formatters.NUMBER_Z.format(duration), NamedTextColor.GREEN);
                 }
                 case COMBO -> {
-                    return args[0] >= args[1] ? A : Component.text(Formatters.NUMBER.format(args[0]), NamedTextColor.GREEN);
+                    return (int) args[0] >= (int) args[1] ? A : Component.text(Formatters.NUMBER.format(args[0]), NamedTextColor.GREEN);
+                }
+                case COMBO_D -> {
+                    return ((boolean) args[2]) ? D : (int) args[0] >= (int) args[1] ? A : Component.text(Formatters.NUMBER.format(args[0]), NamedTextColor.GREEN);
                 }
                 case CHARGE -> {
                     return null;

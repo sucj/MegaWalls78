@@ -7,8 +7,7 @@ import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.gui.IdentityGui;
-import icu.suc.megawalls78.identity.energy.EnergyHit;
-import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
@@ -24,14 +23,12 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -227,22 +224,25 @@ public class PlayerListener implements Listener {
             if (gameManager.isSpectator(player)) {
                 event.setCancelled(true);
             } else if (!gameManager.getState().equals(GameState.OPENING) && gameManager.inFighting()) {
+                GamePlayer gamePlayer = gameManager.getPlayer(player);
                 Entity causingEntity = event.getDamageSource().getCausingEntity();
                 if (causingEntity instanceof Player causingPlayer) {
 //                    if (gameManager.getPlayer(causingPlayer).getTeam().equals(team) && causingEntity != player) {
 //                        event.setCancelled(true);
 //                    } else {
-                    if (causingEntity != player) {
+                    if (!causingEntity.equals(player)) {
                         if (event.getDamageSource().getDirectEntity() instanceof Arrow) {
-                            gameManager.getPlayer(causingPlayer).increaseEnergy(EnergyHit.BOW);
+                            gamePlayer.increaseEnergy(EnergyWay.BOW_WHEN);
+                            gameManager.getPlayer(causingPlayer).increaseEnergy(EnergyWay.BOW_PER);
                         } else if (!event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK)) {
-                            gameManager.getPlayer(causingPlayer).increaseEnergy(EnergyHit.MELEE);
+                            gamePlayer.increaseEnergy(EnergyWay.MELEE_WHEN);
+                            gameManager.getPlayer(causingPlayer).increaseEnergy(EnergyWay.MELEE_PER);
                         }
                         gameManager.addAssist(player, causingPlayer);
                     }
 //                    }
                 } else if (causingEntity instanceof Wither wither) {
-                    if (gameManager.getPlayer(player).getTeam().equals(gameManager.getWitherTeam(wither))) {
+                    if (gamePlayer.getTeam().equals(gameManager.getWitherTeam(wither))) {
                         event.setCancelled(true);
                     }
                 }
@@ -387,13 +387,6 @@ public class PlayerListener implements Listener {
     public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
         if (ItemUtil.isSoulBound(event.getPlayerItem())) {
             event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
-        if (event.getReplacement() != null && ItemUtil.isNoBack(event.getItem())) {
-            event.setReplacement(null);
         }
     }
 

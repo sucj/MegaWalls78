@@ -136,42 +136,36 @@ public class GameRunner implements Runnable {
                     ComponentUtil.sendMessage(Component.translatable("mw78.gates", NamedTextColor.AQUA, Component.translatable("mw78.seconds", ComponentUtil.second(timer))), audience);
                 }
                 for (GameTeam team : gameManager.getTeams()) {
-                    Bukkit.getScheduler().runTask(instance, () -> {
-                        placeTeamGate(team);
-                        for (GamePlayer gamePlayer : gameManager.getTeamPlayersMap().get(team)) {
-                            OfflinePlayer bukkitPlayer = gamePlayer.getBukkitPlayer();
-                            if (bukkitPlayer.isOnline()) {
-                                ((Player) bukkitPlayer).setHealth(0);
-                            }
+                    placeTeamGate(team);
+                    for (GamePlayer gamePlayer : gameManager.getTeamPlayersMap().get(team)) {
+                        Player bukkitPlayer = gamePlayer.getBukkitPlayer();
+                        if (bukkitPlayer != null && bukkitPlayer.isOnline()) {
+                            bukkitPlayer.setHealth(0);
                         }
-                    });
+                    }
                 }
                 protectBlocks();
             }
             case OPENING -> {
                 gameManager.setState(GameState.PREPARING);
                 timer = configManager.preparingTime;
-                Bukkit.getScheduler().runTask(instance, () -> {
-                    for (GameTeam team : gameManager.getTeamPlayersMap().keySet()) {
-                        if (gameManager.getTeamPlayersMap().get(team).isEmpty()) {
-                            gameManager.getWither(team).setHealth(0);
-                        }
+                for (GameTeam team : gameManager.getTeamPlayersMap().keySet()) {
+                    if (gameManager.getTeamPlayersMap().get(team).isEmpty()) {
+                        gameManager.getWither(team).setHealth(0);
                     }
-                    destroyTeamGate();
-                });
+                }
+                destroyTeamGate();
                 ComponentUtil.sendMessage(Component.translatable("mw78.prepare", NamedTextColor.RED).decorate(TextDecoration.BOLD), Bukkit.getOnlinePlayers());
             }
             case PREPARING -> {
                 gameManager.setState(GameState.BUFFING);
                 timer = configManager.buffingTime;
-                Bukkit.getScheduler().runTask(instance, () -> {
-                    destroyWalls();
-                    if (protectedBlocks != null) {
-                        protectedBlocks.removeAll(walls);
-                        protectedBlocks.removeAll(region);
-                    }
-                    walls.clear();
-                });
+                destroyWalls();
+                if (protectedBlocks != null) {
+                    protectedBlocks.removeAll(walls);
+                    protectedBlocks.removeAll(region);
+                }
+                walls.clear();
             }
             case BUFFING -> {
                 gameManager.setState(GameState.FIGHTING);
@@ -233,23 +227,21 @@ public class GameRunner implements Runnable {
             gameManager.getTeamPlayersMap().computeIfAbsent(gameTeam, k -> Sets.newHashSet());
             gameManager.setTeamEliminate(gameTeam, false);
         }
-        Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
-            Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-            for (GameTeam gameTeam : gameManager.getTeams()) {
-                Team mcTeam = scoreboard.registerNewTeam(gameTeam.id());
-                mcTeam.color(gameTeam.color());
-                mcTeam.setAllowFriendlyFire(false);
-                for (GamePlayer player : gameManager.getTeamPlayersMap().get(gameTeam)) {
-                    mcTeam.addPlayer(player.getBukkitPlayer());
-                }
-                EntityUtil.spawn(gameTeam.wither(), EntityUtil.Type.TEAM_WITHER, entity -> {
-                    Wither wither = (Wither) entity;
-                    wither.customName((gameTeam.name().append(Component.space()).append(Component.translatable("entity.minecraft.wither"))).color(gameTeam.color()));
-                    mcTeam.addEntity(wither);
-                    ((TeamWither) entity.getHandle()).setBossBar(gameManager.addWither(gameTeam, wither));
-                });
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        for (GameTeam gameTeam : gameManager.getTeams()) {
+            Team mcTeam = scoreboard.registerNewTeam(gameTeam.id());
+            mcTeam.color(gameTeam.color());
+            mcTeam.setAllowFriendlyFire(false);
+            for (GamePlayer player : gameManager.getTeamPlayersMap().get(gameTeam)) {
+                mcTeam.addPlayer(player.getBukkitPlayer());
             }
-        });
+            EntityUtil.spawn(gameTeam.wither(), EntityUtil.Type.TEAM_WITHER, entity -> {
+                Wither wither = (Wither) entity;
+                wither.customName((gameTeam.name().append(Component.space()).append(Component.translatable("entity.minecraft.wither"))).color(gameTeam.color()));
+                mcTeam.addEntity(wither);
+                ((TeamWither) entity.getHandle()).setBossBar(gameManager.addWither(gameTeam, wither));
+            });
+        }
     }
 
     private void placeTeamGate(GameTeam team) {

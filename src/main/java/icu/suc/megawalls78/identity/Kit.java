@@ -18,7 +18,7 @@ public abstract class Kit {
     private ItemBuilder bootsBuilder;
     private final Identity identity;
 
-    protected Kit(Identity identity) {
+    public Kit(Identity identity) {
         this.itemBuilders = Lists.newArrayList();
         this.identity = identity;
         init();

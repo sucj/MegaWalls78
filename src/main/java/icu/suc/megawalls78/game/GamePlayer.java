@@ -6,17 +6,15 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.event.EnergyChangeEvent;
 import icu.suc.megawalls78.event.IdentitySelectEvent;
 import icu.suc.megawalls78.game.record.GameTeam;
+import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.identity.Identity;
-import icu.suc.megawalls78.identity.energy.EnergyHit;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Passive;
 import icu.suc.megawalls78.identity.trait.Skill;
-import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.SupplierComponent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -108,8 +106,8 @@ public class GamePlayer {
         setEnergy(energy - decrease);
     }
 
-    public void increaseEnergy(EnergyHit energyHit) {
-        setEnergy(energy + identity.getEnergyHit(energyHit));
+    public void increaseEnergy(EnergyWay way) {
+        setEnergy(energy + identity.getEnergyByWay(way));
     }
 
     public int getEnergy() {

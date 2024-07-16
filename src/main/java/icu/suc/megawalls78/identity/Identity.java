@@ -3,7 +3,6 @@ package icu.suc.megawalls78.identity;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.game.GamePlayer;
-import icu.suc.megawalls78.identity.energy.EnergyHit;
 import icu.suc.megawalls78.identity.impl.cow.gathering.UltraPasteurized;
 import icu.suc.megawalls78.identity.impl.cow.passive.BucketBarrier;
 import icu.suc.megawalls78.identity.impl.cow.passive.RefreshingSip;
@@ -12,6 +11,10 @@ import icu.suc.megawalls78.identity.impl.herebrine.gathering.TreasureHunter;
 import icu.suc.megawalls78.identity.impl.herebrine.passive.Flurry;
 import icu.suc.megawalls78.identity.impl.herebrine.passive.Power;
 import icu.suc.megawalls78.identity.impl.herebrine.skill.Wrath;
+import icu.suc.megawalls78.identity.impl.zombie.gathering.WellTrained;
+import icu.suc.megawalls78.identity.impl.zombie.passive.Berserk;
+import icu.suc.megawalls78.identity.impl.zombie.passive.Toughness;
+import icu.suc.megawalls78.identity.impl.zombie.skill.CircleOfHealing;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.Passive;
 import icu.suc.megawalls78.identity.trait.Skill;
@@ -31,7 +34,7 @@ public enum Identity {
             Material.MILK_BUCKET,
             icu.suc.megawalls78.identity.impl.cow.Kit.class,
             100,
-            Map.of(EnergyHit.MELEE, 25, EnergyHit.BOW, 20),
+            Map.of(EnergyWay.MELEE_PER, 25, EnergyWay.BOW_PER, 20),
             Map.of(Trigger.SWORD, SoothingMoo.class,
                     Trigger.BOW, SoothingMoo.class),
             List.of(BucketBarrier.class, RefreshingSip.class),
@@ -41,18 +44,29 @@ public enum Identity {
             Material.DIAMOND_SWORD,
             icu.suc.megawalls78.identity.impl.herebrine.Kit.class,
             100,
-            Map.of(EnergyHit.MELEE, 25, EnergyHit.BOW, 25),
+            Map.of(EnergyWay.MELEE_PER, 25, EnergyWay.BOW_PER, 25),
             Map.of(Trigger.SWORD, Wrath.class,
                     Trigger.BOW, Wrath.class),
             List.of(Power.class, Flurry.class),
-            TreasureHunter.class);
+            TreasureHunter.class),
+    ZOMBIE("zombie",
+            NamedTextColor.DARK_GREEN,
+            Material.ROTTEN_FLESH,
+            icu.suc.megawalls78.identity.impl.zombie.Kit.class,
+            100,
+            Map.of(EnergyWay.MELEE_PER, 12, EnergyWay.BOW_PER, 12,
+                    EnergyWay.MELEE_WHEN, 1, EnergyWay.BOW_WHEN, 2),
+            Map.of(Trigger.SWORD, CircleOfHealing.class,
+                    Trigger.BOW, CircleOfHealing.class),
+            List.of(Toughness.class, Berserk.class),
+            WellTrained.class);
 
     private final String id;
     private final TextColor color;
     private final Material material;
     private final Class<? extends Kit> kitClass;
     private final int energy;
-    private final Map<EnergyHit, Integer> energyHit;
+    private final Map<EnergyWay, Integer> energyWay;
     private final Map<Skill.Trigger, Class<? extends Skill>> skillClasses;
     private final List<Class<? extends Passive>> passiveClasses;
     private final Class<? extends Gathering> gatheringClass;
@@ -67,7 +81,7 @@ public enum Identity {
              Material material,
              Class<? extends Kit> kitClass,
              int energy,
-             Map<EnergyHit, Integer> energyHit,
+             Map<EnergyWay, Integer> energyWay,
              Map<Skill.Trigger, Class<? extends Skill>> skillClasses,
              List<Class<? extends Passive>> passiveClasses,
              Class<? extends Gathering> gatheringClass) {
@@ -76,7 +90,7 @@ public enum Identity {
         this.material = material;
         this.kitClass = kitClass;
         this.energy = energy;
-        this.energyHit = energyHit == null ? Maps.newIdentityHashMap() : energyHit;
+        this.energyWay = energyWay;
         this.skillClasses = skillClasses;
         this.passiveClasses = passiveClasses;
         this.gatheringClass = gatheringClass;
@@ -126,8 +140,8 @@ public enum Identity {
         return energy;
     }
 
-    public int getEnergyHit(EnergyHit energyHit) {
-        return this.energyHit.getOrDefault(energyHit, 0);
+    public int getEnergyByWay(EnergyWay way) {
+        return this.energyWay.getOrDefault(way, 0);
     }
 
     public Map<Skill.Trigger, Skill> getSkills() {

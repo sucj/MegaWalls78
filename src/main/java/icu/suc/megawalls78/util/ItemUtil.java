@@ -5,27 +5,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import static icu.suc.megawalls78.util.ItemUtil.NamespacedKeys.*;
-
 public class ItemUtil {
 
+    public static final NamespacedKey ID = new NamespacedKey("mw78", "id");
+    public static final NamespacedKey TAG = new NamespacedKey("mw78", "tag");
+
+    public static final String COW_MILK = "cow_milk";
+    public static final String ENDER_CHEST = "ender_chest";
+    public static final String SOUL_B0UND = "soul_bound";
+
     public static boolean isSoulBound(ItemStack itemStack) {
-        return is(itemStack, SOUL_BOUND);
-    }
-
-    public static boolean isEnderChest(ItemStack itemStack) {
-        return is(itemStack, ENDER_CHEST);
-    }
-
-    public static boolean isNoBack(ItemStack itemStack) {
-        return is(itemStack, NO_BACK);
-    }
-
-    public static boolean isCowMilk(ItemStack itemStack) {
-        return is(itemStack, COW_MILK);
-    }
-
-    private static boolean is(ItemStack itemStack, NamespacedKey key) {
         if (itemStack == null) {
             return false;
         }
@@ -33,14 +22,31 @@ public class ItemUtil {
         if (itemMeta == null) {
             return false;
         } else {
-            return itemMeta.getPersistentDataContainer().getOrDefault(key, PersistentDataType.BOOLEAN, false);
+            return SOUL_B0UND.equals(itemMeta.getPersistentDataContainer().get(TAG, PersistentDataType.STRING));
         }
     }
 
-    public static class NamespacedKeys {
-        public static final NamespacedKey COW_MILK = new NamespacedKey("mw78", "id.cow_milk");
-        public static final NamespacedKey ENDER_CHEST = new NamespacedKey("mw78", "id.ender_chest");
-        public static final NamespacedKey SOUL_BOUND = new NamespacedKey("mw78", "tag.soul_bound");
-        public static final NamespacedKey NO_BACK = new NamespacedKey("mw78", "tag.no_back");
+    public static boolean isEnderChest(ItemStack itemStack) {
+        if (itemStack == null) {
+            return false;
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) {
+            return false;
+        } else {
+            return ENDER_CHEST.equals(itemMeta.getPersistentDataContainer().get(ID, PersistentDataType.STRING));
+        }
+    }
+
+    public static boolean isCowMilk(ItemStack itemStack) {
+        if (itemStack == null) {
+            return false;
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) {
+            return false;
+        } else {
+            return COW_MILK.equals(itemMeta.getPersistentDataContainer().get(ID, PersistentDataType.STRING));
+        }
     }
 }

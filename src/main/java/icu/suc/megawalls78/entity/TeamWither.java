@@ -6,8 +6,6 @@ import icu.suc.megawalls78.game.GameState;
 import net.kyori.adventure.bossbar.BossBar;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.Difficulty;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -67,20 +65,6 @@ public class TeamWither extends WitherBoss {
         for (int i = 1; i < 3; ++i) {
             if (this.tickCount >= this.nextHeadUpdate0[i - 1]) {
                 this.nextHeadUpdate0[i - 1] = this.tickCount + 10 + this.random.nextInt(10);
-//                if (this.level().getDifficulty() == Difficulty.NORMAL || this.level().getDifficulty() == Difficulty.HARD) {
-//                    int k = i - 1;
-//                    int l = this.idleHeadUpdates0[i - 1];
-//
-//                    this.idleHeadUpdates0[k] = this.idleHeadUpdates0[i - 1] + 1;
-//                    if (l > 15) {
-//                        double d0 = Mth.nextDouble(this.random, this.getX() - 10.0D, this.getX() + 10.0D);
-//                        double d1 = Mth.nextDouble(this.random, this.getY() - 5.0D, this.getY() + 5.0D);
-//                        double d2 = Mth.nextDouble(this.random, this.getZ() - 10.0D, this.getZ() + 10.0D);
-//
-//                        this.performRangedAttack(i + 1, d0, d1, d2, true);
-//                        this.idleHeadUpdates0[i - 1] = 0;
-//                    }
-//                }
 
                 j = this.getAlternativeTarget(i);
                 if (j > 0) {
@@ -123,6 +107,25 @@ public class TeamWither extends WitherBoss {
         }
 
         this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
+
+        if (state.equals(GameState.BUFFING)) {
+            for (LivingEntity nearbyEntity : this.level().getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(5.0D, 5.0D, 5.0D))) {
+                if (this.tickCount % 100 == 0) {
+                    if (this.tickCount % 200 == 0) {
+                        nearbyEntity.setDeltaMovement(0.0D, 1.0D, 0.0D);
+                    } else {
+                        Vec3 vec3 = nearbyEntity.getLookAngle();
+                        nearbyEntity.setDeltaMovement(-0.5D * vec3.x, 0.0D, -0.5D * vec3.z);
+                    }
+                    float health = nearbyEntity.getHealth();
+                    if (health <= 0 || health / 2 <= 0) {
+                        nearbyEntity.hurt(this.damageSources().wither(), random.nextFloat());
+                    } else {
+                        nearbyEntity.hurt(this.damageSources().wither(), health / 2);
+                    }
+                }
+            }
+        }
     }
 
     private void performRangedAttack(int headIndex, double targetX, double targetY, double targetZ, boolean charged) {
