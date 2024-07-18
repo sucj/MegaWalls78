@@ -13,7 +13,6 @@ import org.bukkit.potion.PotionEffectType;
 public final class Flurry extends Passive implements IActionbar {
 
     private static final int MAX = 3;
-
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 60, 1);
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 0);
 
@@ -31,9 +30,9 @@ public final class Flurry extends Passive implements IActionbar {
         if (event.getEntity() instanceof Player && event.getDamageSource().getCausingEntity() instanceof Player player) {
             if (shouldPassive(player) && !event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK)) {
                 if (hit++ >= MAX) {
-                    hit = 1;
                     player.addPotionEffect(SPEED);
                     player.addPotionEffect(REGENERATION);
+                    hit = 1;
                 }
             }
         }

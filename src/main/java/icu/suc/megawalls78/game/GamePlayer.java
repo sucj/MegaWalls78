@@ -74,7 +74,11 @@ public class GamePlayer {
         if (energy < skill.getCost()) {
             return false;
         }
-        if (skill.use(getBukkitPlayer())) {
+        Player player = getBukkitPlayer();
+        if (player.isSneaking()) {
+            return false;
+        }
+        if (skill.use(player)) {
             decreaseEnergy(skill.getCost());
             return true;
         }
@@ -107,7 +111,7 @@ public class GamePlayer {
     }
 
     public void increaseEnergy(EnergyWay way) {
-        setEnergy(energy + identity.getEnergyByWay(way));
+        increaseEnergy(identity.getEnergyByWay(way));
     }
 
     public int getEnergy() {

@@ -1,16 +1,11 @@
 package icu.suc.megawalls78.identity.impl.herebrine;
 
 import icu.suc.megawalls78.identity.Identity;
-import icu.suc.megawalls78.util.ItemBuilder;
-import icu.suc.megawalls78.util.ItemUtil;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+
+import static org.bukkit.Material.*;
+import static org.bukkit.enchantments.Enchantment.*;
+import static org.bukkit.potion.PotionEffectType.*;
 
 public final class Kit extends icu.suc.megawalls78.identity.Kit {
 
@@ -20,80 +15,14 @@ public final class Kit extends icu.suc.megawalls78.identity.Kit {
 
     @Override
     protected void init() {
-        addBuilder(ItemBuilder.of(Material.DIAMOND_SWORD)
-                .addPrefix(prefix())
-                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setColor(NamedTextColor.AQUA)
-                .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
-                .setEnchantmentGlintOverride(true)
-                .setUnbreakable(true));
-            addBuilder(ItemBuilder.of(Material.ENDER_CHEST)
-                    .addPrefix(prefix())
-                    .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                    .setColor(NamedTextColor.AQUA)
-                    .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
-                    .setEnchantmentGlintOverride(true)
-                    .setMaxStackSize(1)
-                    .addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.ENDER_CHEST));
-            addBuilder(ItemBuilder.of(Material.DIAMOND_PICKAXE)
-                    .addPrefix(prefix())
-                    .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                    .setColor(NamedTextColor.AQUA)
-                    .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
-                    .setEnchantmentGlintOverride(true)
-                    .setUnbreakable(true)
-                    .addEnchantment(Enchantment.EFFICIENCY, 3, true));
-        addBuilder(ItemBuilder.of(Material.BOW)
-                .addPrefix(prefix())
-                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setColor(NamedTextColor.AQUA)
-                .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
-                .setEnchantmentGlintOverride(true)
-                .setUnbreakable(true));
-        addBuilder(ItemBuilder.of(Material.COOKED_BEEF)
-                .addPrefix(prefix())
-                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setColor(NamedTextColor.AQUA)
-                .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
-                .setEnchantmentGlintOverride(true)
-                .setAmount(3)
-                .setMaxStackSize(3));
-        addBuilder(ItemBuilder.of(Material.POTION)
-                .addPrefix(prefix())
-                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setColor(NamedTextColor.AQUA)
-                .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
-                .setEnchantmentGlintOverride(true)
-                .setAmount(4)
-                .setMaxStackSize(4)
-                .setDisplayName(Component.translatable("item.minecraft.potion.effect.swiftness"))
-                .addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 300, 1), false));
-        addBuilder(ItemBuilder.of(Material.POTION)
-                .addPrefix(prefix())
-                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setColor(NamedTextColor.AQUA)
-                .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
-                .setEnchantmentGlintOverride(true)
-                .setAmount(2)
-                .setMaxStackSize(2)
-                .setDisplayName(Component.translatable("item.minecraft.potion.effect.healing"))
-                .addCustomEffect(new PotionEffect(PotionEffectType.INSTANT_HEALTH, 0, 2), false)
-                .addCustomEffect(new PotionEffect(PotionEffectType.REGENERATION, 0, 4), false));
-        addBuilder(ItemBuilder.of(Material.COMPASS)
-                .addPrefix(prefix())
-                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setColor(NamedTextColor.AQUA)
-                .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
-                .setEnchantmentGlintOverride(true)
-                .setMaxStackSize(1));
-        setHelmetBuilder(ItemBuilder.of(Material.IRON_HELMET)
-                .addPrefix(prefix())
-                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setColor(NamedTextColor.AQUA)
-                .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
-                .setEnchantmentGlintOverride(true)
-                .setUnbreakable(true)
-                .addEnchantment(Enchantment.AQUA_AFFINITY, 1, true)
-                .addEnchantment(Enchantment.PROTECTION, 2, true));
+        addTool(DIAMOND_SWORD);
+        addEnderChest();
+        addPickaxe();
+        addTool(BOW);
+        addItem(COOKED_BEEF, 3);
+        addSpeedPotion(2, 15, 2);
+        addHealingPotion(2, 2).addCustomEffect(new PotionEffect(REGENERATION, 0, 4), false);
+        addCompass();
+        setHelmet(IRON_HELMET).addEnchantment(AQUA_AFFINITY, 1, true).addEnchantment(PROTECTION, 2, true);
     }
 }

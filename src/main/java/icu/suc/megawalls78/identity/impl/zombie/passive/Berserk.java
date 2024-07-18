@@ -62,6 +62,6 @@ public final class Berserk extends Passive implements IActionbar {
 
     @Override
     public Component acbValue() {
-        return Type.COOLDOWN_DURATION.accept(System.currentTimeMillis(), lastMills, COOLDOWN, duration);
+        return Type.DURATION_COOLDOWN.accept(System.currentTimeMillis(), lastMills, COOLDOWN, duration);
     }
 }

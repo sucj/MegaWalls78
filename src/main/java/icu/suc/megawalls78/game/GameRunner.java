@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.entity.TeamWither;
 import icu.suc.megawalls78.game.record.GameTeam;
+import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.management.ConfigManager;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -81,6 +82,16 @@ public class GameRunner implements Runnable {
                         if (timer == 10000L || timer <= 5000L) {
                             ComponentUtil.sendMessage(Component.translatable("mw78.gates", NamedTextColor.AQUA, Component.translatable("mw78.seconds", ComponentUtil.second(timer))), Bukkit.getOnlinePlayers());
                         }
+                    }
+                }
+            }
+        }
+        if (gameManager.inFighting() && !state.equals(GameState.OPENING) && !state.equals(GameState.PREPARING) && !state.equals(GameState.COUNTDOWN)) {
+            for (GamePlayer gamePlayer : gameManager.getPlayers().values()) {
+                if (gamePlayer.getFinalDeaths() == 0) {
+                    Player bukkitPlayer = gamePlayer.getBukkitPlayer();
+                    if (bukkitPlayer != null && bukkitPlayer.isOnline()) {
+                        gamePlayer.increaseEnergy(isDm() ? EnergyWay.DM : EnergyWay.GAME);
                     }
                 }
             }
@@ -166,6 +177,7 @@ public class GameRunner implements Runnable {
                     protectedBlocks.removeAll(region);
                 }
                 walls.clear();
+                region.clear();
             }
             case BUFFING -> {
                 gameManager.setState(GameState.FIGHTING);

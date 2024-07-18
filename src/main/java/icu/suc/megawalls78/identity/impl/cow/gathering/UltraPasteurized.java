@@ -1,6 +1,5 @@
 package icu.suc.megawalls78.identity.impl.cow.gathering;
 
-import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.Identity;
@@ -54,7 +53,7 @@ public final class UltraPasteurized extends Gathering {
 
         @Override
         public Component acbValue() {
-            return Type.COMBO_D.accept(count, MAX, !MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING));
+            return Type.COMBO_DISABLE.accept(count, MAX, !MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING));
         }
     }
 }

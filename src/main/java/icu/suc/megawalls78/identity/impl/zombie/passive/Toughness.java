@@ -12,7 +12,6 @@ import org.bukkit.potion.PotionEffectType;
 public final class Toughness extends Passive implements IActionbar {
 
     private static final int MAX = 3;
-
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 20, 0);
 
     private int hit = MAX;
@@ -29,8 +28,8 @@ public final class Toughness extends Passive implements IActionbar {
         if (event.getEntity() instanceof Player player) {
             if (shouldPassive(player)) {
                 if (hit++ >= MAX) {
-                    hit = 1;
                     player.addPotionEffect(RESISTANCE);
+                    hit = 1;
                 }
             }
         }

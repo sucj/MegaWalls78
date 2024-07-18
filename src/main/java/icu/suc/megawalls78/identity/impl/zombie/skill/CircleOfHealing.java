@@ -30,8 +30,8 @@ public final class CircleOfHealing extends Skill {
         count.incrementAndGet();
 
         player.getNearbyEntities(RANGE, RANGE, RANGE).stream()
-                .filter(entity -> entity instanceof Player)
                 .filter(entity -> isValidAllies(player, entity))
+                .filter(entity -> entity instanceof Player)
                 .forEach(entity -> {
                     ((Player) entity).heal(OTHER);
                     ParticleUtil.spawnParticleOverhead((Player) entity, Particle.HEART, (int) (OTHER / 2));

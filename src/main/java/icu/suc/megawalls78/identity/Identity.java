@@ -11,6 +11,10 @@ import icu.suc.megawalls78.identity.impl.herebrine.gathering.TreasureHunter;
 import icu.suc.megawalls78.identity.impl.herebrine.passive.Flurry;
 import icu.suc.megawalls78.identity.impl.herebrine.passive.Power;
 import icu.suc.megawalls78.identity.impl.herebrine.skill.Wrath;
+import icu.suc.megawalls78.identity.impl.spider.gathering.IronRush;
+import icu.suc.megawalls78.identity.impl.spider.passive.Skitter;
+import icu.suc.megawalls78.identity.impl.spider.passive.VenomStrike;
+import icu.suc.megawalls78.identity.impl.spider.skill.Leap;
 import icu.suc.megawalls78.identity.impl.zombie.gathering.WellTrained;
 import icu.suc.megawalls78.identity.impl.zombie.passive.Berserk;
 import icu.suc.megawalls78.identity.impl.zombie.passive.Toughness;
@@ -59,7 +63,19 @@ public enum Identity {
             Map.of(Trigger.SWORD, CircleOfHealing.class,
                     Trigger.BOW, CircleOfHealing.class),
             List.of(Toughness.class, Berserk.class),
-            WellTrained.class);
+            WellTrained.class),
+    SPIDER("spider",
+            NamedTextColor.DARK_PURPLE,
+            Material.COBWEB,
+            icu.suc.megawalls78.identity.impl.spider.Kit.class,
+            100,
+            Map.of(EnergyWay.MELEE_PER, 8, EnergyWay.BOW_PER, 8,
+                    EnergyWay.GAME, 4, EnergyWay.DM, 4),
+            Map.of(Trigger.SWORD, Leap.class,
+                    Trigger.BOW, Leap.class),
+            List.of(VenomStrike.class, Skitter.class),
+            IronRush.class
+    );
 
     private final String id;
     private final TextColor color;

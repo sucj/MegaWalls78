@@ -23,8 +23,8 @@ public final class Wrath extends Skill {
     protected void use0(Player player) {
         AtomicInteger count = new AtomicInteger();
         player.getNearbyEntities(RANGE, RANGE, RANGE).stream()
-                .filter(entity -> entity instanceof Player)
                 .filter(entity -> !isValidAllies(player, entity))
+                .filter(entity -> entity instanceof Player)
                 .forEach(entity -> {
                     EntityUtil.spawn(entity.getLocation(), EntityUtil.Type.HEROBRINE_LIGHTNING, lightning -> ((HerobrineLightning) lightning.getHandle()).setTarget(entity));
                     count.getAndIncrement();

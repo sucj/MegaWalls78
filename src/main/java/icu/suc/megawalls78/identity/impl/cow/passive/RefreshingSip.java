@@ -50,8 +50,8 @@ public final class RefreshingSip extends Passive implements IActionbar {
                 count.getAndIncrement();
 
                 player.getNearbyEntities(RANGE, RANGE, RANGE).stream()
-                        .filter(entity -> entity instanceof Player)
                         .filter(entity -> isValidAllies(player, entity))
+                        .filter(entity -> entity instanceof Player)
                         .filter(entity -> !getIdentity((Player) entity).equals(Identity.COW))
                         .forEach(entity -> {
                             ((Player) entity).heal(HEALTH);

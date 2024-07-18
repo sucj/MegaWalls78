@@ -282,7 +282,6 @@ public class PlayerListener implements Listener {
         } else {
             event.setCancelled(true);
         }
-
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

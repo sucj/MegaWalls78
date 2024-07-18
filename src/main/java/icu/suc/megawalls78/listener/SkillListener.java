@@ -10,6 +10,7 @@ import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.impl.herebrine.gathering.TreasureHunter;
 import icu.suc.megawalls78.management.GameManager;
+import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ItemUtil;
 import icu.suc.megawalls78.util.PlayerUtil;
 import icu.suc.megawalls78.util.RandomUtil;
@@ -133,7 +134,7 @@ public class SkillListener implements Listener {
             block.setType(Material.TRAPPED_CHEST);
             Chest chest = (Chest) block.getState();
             Directional data = (Directional) chest.getBlockData();
-            data.setFacing(PlayerUtil.getFacingTowardsPlayer(block, player));
+            data.setFacing(EntityUtil.getFacingTowards(block, player));
             chest.setBlockData(data);
             chest.update();
             if (NO_NEWBEE.contains(player.getUniqueId())) {

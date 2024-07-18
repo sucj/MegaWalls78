@@ -38,8 +38,8 @@ public final class SoothingMoo extends Skill {
         count.incrementAndGet();
 
         player.getNearbyEntities(RANGE, RANGE, RANGE).stream()
-                .filter(entity -> entity instanceof Player)
                 .filter(entity -> isValidAllies(player, entity))
+                .filter(entity -> entity instanceof Player)
                 .forEach(entity -> {
                     ((Player) entity).addPotionEffect(REGENERATION_3);
                     ParticleUtil.spawnParticleOverhead(((Player) entity), Particle.HEART, 3);

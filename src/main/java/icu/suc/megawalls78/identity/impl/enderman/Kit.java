@@ -1,4 +1,4 @@
-package icu.suc.megawalls78.identity.impl.zombie;
+package icu.suc.megawalls78.identity.impl.enderman;
 
 import icu.suc.megawalls78.identity.Identity;
 
@@ -21,7 +21,6 @@ public final class Kit extends icu.suc.megawalls78.identity.Kit {
         addSpeedPotion(2, 15, 2);
         addHealingPotion(2, 3);
         addCompass();
-        setHelmet(IRON_HELMET).addEnchantment(PROTECTION, 1, true);
-        setChestplate(DIAMOND_CHESTPLATE).addEnchantment(PROTECTION, 3, true);
+        setBoots(DIAMOND_BOOTS).addEnchantment(PROJECTILE_PROTECTION, 2, true);
     }
 }
