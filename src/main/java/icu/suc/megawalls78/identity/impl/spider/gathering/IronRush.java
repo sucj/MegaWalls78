@@ -1,9 +1,8 @@
 package icu.suc.megawalls78.identity.impl.spider.gathering;
 
-import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.util.PlayerUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,7 +27,7 @@ public class IronRush extends Gathering {
         @EventHandler
         public void onBlockBreak(BlockBreakEvent event) {
             Player player = event.getPlayer();
-            if (shouldPassive(player) && MATERIALS.contains(player.getEquipment().getItemInMainHand().getType())) {
+            if (shouldPassive(player) && MATERIALS.contains(PlayerUtil.getPlayerMainHand(player).getType())) {
                 player.getInventory().addItem(ItemStack.of(Material.IRON_INGOT));
             }
         }

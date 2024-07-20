@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.identity.impl.cow.skill;
 
 import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ParticleUtil;
 import org.bukkit.Color;
 import org.bukkit.Particle;
@@ -27,7 +28,7 @@ public final class SoothingMoo extends Skill {
     }
 
     @Override
-    protected void use0(Player player) {
+    protected boolean use0(Player player) {
         ParticleUtil.playExpandingCircleParticle(player.getLocation(), Particle.ENTITY_EFFECT, 64, RANGE, 500L, Color.FUCHSIA);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_COW_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F, 0);
 
@@ -37,14 +38,14 @@ public final class SoothingMoo extends Skill {
         ParticleUtil.spawnParticleOverhead(player, Particle.HEART, 2);
         count.incrementAndGet();
 
-        player.getNearbyEntities(RANGE, RANGE, RANGE).stream()
-                .filter(entity -> isValidAllies(player, entity))
+        EntityUtil.getNearbyEntities(player, RANGE).stream()
                 .filter(entity -> entity instanceof Player)
+                .filter(entity -> isValidAllies(player, entity))
                 .forEach(entity -> {
                     ((Player) entity).addPotionEffect(REGENERATION_3);
                     ParticleUtil.spawnParticleOverhead(((Player) entity), Particle.HEART, 3);
                     count.getAndIncrement();
                 });
-        summaryHeal(player, count.get());
+        return summaryHeal(player, count.get());
     }
 }

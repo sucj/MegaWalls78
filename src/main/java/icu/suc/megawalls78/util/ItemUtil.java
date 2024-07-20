@@ -14,7 +14,7 @@ public class ItemUtil {
     public static final String ENDER_CHEST = "ender_chest";
     public static final String SOUL_B0UND = "soul_bound";
 
-    public static boolean isSoulBound(ItemStack itemStack) {
+    public static boolean mw78SoulBound(ItemStack itemStack) {
         if (itemStack == null) {
             return false;
         }
@@ -26,7 +26,7 @@ public class ItemUtil {
         }
     }
 
-    public static boolean isEnderChest(ItemStack itemStack) {
+    public static boolean mw78EnderChest(ItemStack itemStack) {
         if (itemStack == null) {
             return false;
         }
@@ -38,7 +38,7 @@ public class ItemUtil {
         }
     }
 
-    public static boolean isCowMilk(ItemStack itemStack) {
+    public static boolean mw78CowMilk(ItemStack itemStack) {
         if (itemStack == null) {
             return false;
         }
@@ -49,4 +49,5 @@ public class ItemUtil {
             return COW_MILK.equals(itemMeta.getPersistentDataContainer().get(ID, PersistentDataType.STRING));
         }
     }
+
 }

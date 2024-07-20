@@ -10,9 +10,9 @@ import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.impl.herebrine.gathering.TreasureHunter;
 import icu.suc.megawalls78.management.GameManager;
+import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ItemUtil;
-import icu.suc.megawalls78.util.PlayerUtil;
 import icu.suc.megawalls78.util.RandomUtil;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.IntIntMutablePair;
@@ -55,10 +55,6 @@ public class SkillListener implements Listener {
     private static final LootTable NEWBEE_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "newbee"));
     private static final LootTable NORMAL_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "normal"));
     private static final Set<UUID> NO_NEWBEE = Sets.newHashSet();
-    private static final Set<Material> GEN_CHEST = Set.of(Material.STONE, Material.DEEPSLATE,
-            Material.COAL_ORE, Material.IRON_ORE, Material.GOLD_ORE,
-            Material.DEEPSLATE_COAL_ORE, Material.DEEPSLATE_IRON_ORE, Material.DEEPSLATE_GOLD_ORE,
-            Material.OAK_LOG, Material.SPRUCE_LOG, Material.BIRCH_LOG, Material.JUNGLE_LOG, Material.ACACIA_LOG, Material.CHERRY_LOG, Material.DARK_OAK_LOG, Material.MANGROVE_LOG);
 
     @EventHandler
     public void onEnergyChange(EnergyChangeEvent event) {
@@ -116,7 +112,7 @@ public class SkillListener implements Listener {
     @EventHandler
     public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
-        if (ItemUtil.isCowMilk(event.getItem())) {
+        if (ItemUtil.mw78CowMilk(event.getItem())) {
             player.addPotionEffect(COW_MILK_RESISTANCE);
             player.addPotionEffect(COW_MILK_REGENERATION);
         }
@@ -129,7 +125,7 @@ public class SkillListener implements Listener {
         for (Item item : event.getItems()) {
             player.getInventory().addItem(item.getItemStack());
         }
-        if (GEN_CHEST.contains(event.getBlockState().getType()) && roll(player)) {
+        if (BlockUtil.isNatural(event.getBlockState().getType()) && roll(player)) {
             Block block = event.getBlock();
             block.setType(Material.TRAPPED_CHEST);
             Chest chest = (Chest) block.getState();

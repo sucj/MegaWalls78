@@ -3,6 +3,7 @@ package icu.suc.megawalls78.identity.impl.cow.passive;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ParticleUtil;
 import icu.suc.megawalls78.util.PlayerUtil;
 import net.kyori.adventure.text.Component;
@@ -49,9 +50,9 @@ public final class RefreshingSip extends Passive implements IActionbar {
                 ParticleUtil.spawnParticleOverhead(player, Particle.HEART, (int) (HEALTH / 2));
                 count.getAndIncrement();
 
-                player.getNearbyEntities(RANGE, RANGE, RANGE).stream()
-                        .filter(entity -> isValidAllies(player, entity))
+                EntityUtil.getNearbyEntities(player, RANGE).stream()
                         .filter(entity -> entity instanceof Player)
+                        .filter(entity -> isValidAllies(player, entity))
                         .filter(entity -> !getIdentity((Player) entity).equals(Identity.COW))
                         .forEach(entity -> {
                             ((Player) entity).heal(HEALTH);

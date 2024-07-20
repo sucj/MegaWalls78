@@ -25,7 +25,7 @@ public final class Toughness extends Passive implements IActionbar {
         if (event.isCancelled()) {
             return;
         }
-        if (event.getEntity() instanceof Player player) {
+        if (event.getEntity() instanceof Player player && event.getDamageSource().getCausingEntity() != null) {
             if (shouldPassive(player)) {
                 if (hit++ >= MAX) {
                     player.addPotionEffect(RESISTANCE);

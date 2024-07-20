@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.event.EnergyChangeEvent;
 import icu.suc.megawalls78.event.IdentitySelectEvent;
+import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.identity.Identity;
@@ -198,26 +199,62 @@ public class GamePlayer {
     }
 
     public void increaseKills() {
+        IncreaseStatsEvent.Kill event = new IncreaseStatsEvent.Kill(uuid, false);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         kills++;
     }
 
     public void increaseDeaths() {
+        IncreaseStatsEvent.Death event = new IncreaseStatsEvent.Death(uuid, false);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         deaths++;
     }
 
     public void increaseAssists() {
+        IncreaseStatsEvent.Assist event = new IncreaseStatsEvent.Assist(uuid, false);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         assists++;
     }
 
     public void increaseFinalKills() {
+        IncreaseStatsEvent.Kill event = new IncreaseStatsEvent.Kill(uuid, true);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         finalKills++;
     }
 
     public void increaseFinalDeaths() {
+        IncreaseStatsEvent.Death event = new IncreaseStatsEvent.Death(uuid, true);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         finalDeaths++;
     }
 
     public void increaseFinalAssists() {
+        IncreaseStatsEvent.Assist event = new IncreaseStatsEvent.Assist(uuid, true);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         finalAssists++;
     }
 

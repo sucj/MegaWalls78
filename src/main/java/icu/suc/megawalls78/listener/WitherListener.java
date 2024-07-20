@@ -1,5 +1,6 @@
 package icu.suc.megawalls78.listener;
 
+import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
@@ -66,6 +67,19 @@ public class WitherListener implements Listener {
             }
             if (dm) {
                 gameManager.getRunner().startDm();
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onWitherTick(ServerTickStartEvent event) {
+        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+        GameState state = gameManager.getState();
+        if (!state.equals(GameState.OPENING) && !state.equals(GameState.PREPARING)) {
+            for (Wither wither : gameManager.getWithers()) {
+                if (!wither.isDead() && wither.getTicksLived() % 100 == 0) {
+                    wither.heal(-4.0D);
+                }
             }
         }
     }

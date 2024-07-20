@@ -48,7 +48,7 @@ public class GameManager {
         this.witherBossBars = Maps.newHashMap();
         this.teamEliminateMap = Maps.newHashMap();
         this.runner = new GameRunner();
-        Bukkit.getScheduler().runTaskTimer(MegaWalls78.getInstance(), runner, 0L, 20L);
+        Bukkit.getScheduler().runTaskTimer(MegaWalls78.getInstance(), runner, 0L, 1L);
     }
 
     public GamePlayer getPlayer(Player player) {
@@ -61,12 +61,10 @@ public class GameManager {
 
     public void addPlayer(Player player) {
         players.put(player.getUniqueId(), new GamePlayer(player));
-        runner.update();
     }
 
     public void removePlayer(Player player) {
         players.remove(player.getUniqueId());
-        runner.update();
     }
 
     public void addSpectator(Player player) {

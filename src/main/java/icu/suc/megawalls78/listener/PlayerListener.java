@@ -7,9 +7,11 @@ import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.gui.IdentityGui;
+import icu.suc.megawalls78.gui.SkinGui;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
+import io.papermc.paper.event.player.PlayerItemCooldownEvent;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -19,6 +21,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -46,6 +49,7 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         if (gameManager.inWaiting()) {
             player.getInventory().setItem(0, IdentityGui.trigger(player));
+            player.getInventory().setItem(1, SkinGui.trigger(player));
             MegaWalls78.getInstance().getSkinManager().applySkin(player);
             event.joinMessage(Component.translatable("multiplayer.player.joined", player.displayName().color(LP.getNameColor(player)))
                     .append(Component.space())
@@ -87,14 +91,12 @@ public class PlayerListener implements Listener {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         Player player = event.getEntity();
         List<ItemStack> drops = event.getDrops();
-        if (gameManager.getState().equals(GameState.OPENING)) {
-            drops.clear();
-        } else if (gameManager.inFighting()) {
+        if (gameManager.inFighting()) {
             if (gameManager.isSpectator(player)) {
                 drops.clear();
             } else {
                 GamePlayer gamePlayer = gameManager.getPlayer(player);
-                drops.removeIf(ItemUtil::isSoulBound);
+                drops.removeIf(ItemUtil::mw78SoulBound);
                 Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(20);
                 GameTeam team = gamePlayer.getTeam();
                 boolean dead = gameManager.isWitherDead(team);
@@ -263,22 +265,26 @@ public class PlayerListener implements Listener {
                 switch (event.getAction()) {
                     case RIGHT_CLICK_BLOCK:
                     case RIGHT_CLICK_AIR: {
-                        if (ItemUtil.isEnderChest(event.getItem())) {
-                            InventoryUtils.openEnderChest(player);
+                        if (ItemUtil.mw78EnderChest(event.getItem())) {
+                            InventoryUtil.openEnderChest(player);
+                            event.setCancelled(true);
                         }
                     }
                 }
             }
         } else if (gameManager.inWaiting()) {
-            event.setCancelled(true);
             switch (event.getAction()) {
                 case RIGHT_CLICK_BLOCK:
                 case RIGHT_CLICK_AIR: {
-                    if (event.getMaterial().equals(gameManager.getPlayer(player).getIdentity().getMaterial())) {
+                    Material material = event.getMaterial();
+                    if (material.equals(gameManager.getPlayer(player).getIdentity().getMaterial())) {
                         IdentityGui.open(player, 1);
+                    } else if (material.equals(Material.PLAYER_HEAD)) {
+                        SkinGui.open(player, 1);
                     }
                 }
             }
+            event.setCancelled(true);
         } else {
             event.setCancelled(true);
         }
@@ -306,7 +312,7 @@ public class PlayerListener implements Listener {
                 event.setCancelled(true);
             } else {
                 ItemStack itemStack = event.getItemDrop().getItemStack();
-                if (ItemUtil.isSoulBound(itemStack)) {
+                if (ItemUtil.mw78SoulBound(itemStack)) {
                     Integer slot = InventoryListener.LAST_SLOTS.get(player.getUniqueId());
                     if (slot == null) {
                         event.setCancelled(true);
@@ -373,7 +379,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event) {
-        if (ItemUtil.isSoulBound(event.getPlayer().getEquipment().getItem(event.getHand()))) {
+        if (ItemUtil.mw78SoulBound(event.getPlayer().getEquipment().getItem(event.getHand()))) {
             if (event.getRightClicked() instanceof ItemFrame itemFrame) {
                 if (itemFrame.getItem().isEmpty()) {
                     event.setCancelled(true);
@@ -384,7 +390,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-        if (ItemUtil.isSoulBound(event.getPlayerItem())) {
+        if (ItemUtil.mw78SoulBound(event.getPlayerItem())) {
             event.setCancelled(true);
         }
     }

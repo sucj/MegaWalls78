@@ -7,6 +7,10 @@ import icu.suc.megawalls78.identity.impl.cow.gathering.UltraPasteurized;
 import icu.suc.megawalls78.identity.impl.cow.passive.BucketBarrier;
 import icu.suc.megawalls78.identity.impl.cow.passive.RefreshingSip;
 import icu.suc.megawalls78.identity.impl.cow.skill.SoothingMoo;
+import icu.suc.megawalls78.identity.impl.enderman.gathering.Enderblocks;
+import icu.suc.megawalls78.identity.impl.enderman.passive.EnderHeart;
+import icu.suc.megawalls78.identity.impl.enderman.passive.SoulCharge;
+import icu.suc.megawalls78.identity.impl.enderman.skill.Teleport;
 import icu.suc.megawalls78.identity.impl.herebrine.gathering.TreasureHunter;
 import icu.suc.megawalls78.identity.impl.herebrine.passive.Flurry;
 import icu.suc.megawalls78.identity.impl.herebrine.passive.Power;
@@ -33,49 +37,11 @@ import java.util.List;
 import java.util.Map;
 
 public enum Identity {
-    COW("cow",
-            NamedTextColor.LIGHT_PURPLE,
-            Material.MILK_BUCKET,
-            icu.suc.megawalls78.identity.impl.cow.Kit.class,
-            100,
-            Map.of(EnergyWay.MELEE_PER, 25, EnergyWay.BOW_PER, 20),
-            Map.of(Trigger.SWORD, SoothingMoo.class,
-                    Trigger.BOW, SoothingMoo.class),
-            List.of(BucketBarrier.class, RefreshingSip.class),
-            UltraPasteurized.class),
-    HEROBRINE("herobrine",
-            NamedTextColor.YELLOW,
-            Material.DIAMOND_SWORD,
-            icu.suc.megawalls78.identity.impl.herebrine.Kit.class,
-            100,
-            Map.of(EnergyWay.MELEE_PER, 25, EnergyWay.BOW_PER, 25),
-            Map.of(Trigger.SWORD, Wrath.class,
-                    Trigger.BOW, Wrath.class),
-            List.of(Power.class, Flurry.class),
-            TreasureHunter.class),
-    ZOMBIE("zombie",
-            NamedTextColor.DARK_GREEN,
-            Material.ROTTEN_FLESH,
-            icu.suc.megawalls78.identity.impl.zombie.Kit.class,
-            100,
-            Map.of(EnergyWay.MELEE_PER, 12, EnergyWay.BOW_PER, 12,
-                    EnergyWay.MELEE_WHEN, 1, EnergyWay.BOW_WHEN, 2),
-            Map.of(Trigger.SWORD, CircleOfHealing.class,
-                    Trigger.BOW, CircleOfHealing.class),
-            List.of(Toughness.class, Berserk.class),
-            WellTrained.class),
-    SPIDER("spider",
-            NamedTextColor.DARK_PURPLE,
-            Material.COBWEB,
-            icu.suc.megawalls78.identity.impl.spider.Kit.class,
-            100,
-            Map.of(EnergyWay.MELEE_PER, 8, EnergyWay.BOW_PER, 8,
-                    EnergyWay.GAME, 4, EnergyWay.DM, 4),
-            Map.of(Trigger.SWORD, Leap.class,
-                    Trigger.BOW, Leap.class),
-            List.of(VenomStrike.class, Skitter.class),
-            IronRush.class
-    );
+    COW("cow", NamedTextColor.LIGHT_PURPLE, Material.MILK_BUCKET, icu.suc.megawalls78.identity.impl.cow.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 25, EnergyWay.BOW_PER, 20), Map.of(Trigger.SWORD, SoothingMoo.class, Trigger.BOW, SoothingMoo.class), List.of(BucketBarrier.class, RefreshingSip.class), UltraPasteurized.class),
+    HEROBRINE("herobrine", NamedTextColor.YELLOW, Material.DIAMOND_SWORD, icu.suc.megawalls78.identity.impl.herebrine.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 25, EnergyWay.BOW_PER, 25), Map.of(Trigger.SWORD, Wrath.class, Trigger.BOW, Wrath.class), List.of(Power.class, Flurry.class), TreasureHunter.class),
+    ZOMBIE("zombie", NamedTextColor.DARK_GREEN, Material.ROTTEN_FLESH, icu.suc.megawalls78.identity.impl.zombie.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 12, EnergyWay.BOW_PER, 12, EnergyWay.MELEE_WHEN, 1, EnergyWay.BOW_WHEN, 2), Map.of(Trigger.SWORD, CircleOfHealing.class, Trigger.BOW, CircleOfHealing.class), List.of(Toughness.class, Berserk.class), WellTrained.class),
+    ENDERMAN("enderman", NamedTextColor.DARK_PURPLE, Material.ENDER_PEARL, icu.suc.megawalls78.identity.impl.enderman.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 20, EnergyWay.BOW_PER, 20), Map.of(Trigger.SWORD, Teleport.class, Trigger.BOW, Teleport.class), List.of(EnderHeart.class, SoulCharge.class), Enderblocks.class),
+    SPIDER("spider", NamedTextColor.DARK_PURPLE, Material.COBWEB, icu.suc.megawalls78.identity.impl.spider.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 8, EnergyWay.BOW_PER, 8, EnergyWay.GAME, 4, EnergyWay.DM, 4), Map.of(Trigger.SWORD, Leap.class, Trigger.BOW, Leap.class), List.of(VenomStrike.class, Skitter.class), IronRush.class);
 
     private final String id;
     private final TextColor color;
@@ -201,7 +167,7 @@ public enum Identity {
     public Gathering getGathering(GamePlayer player, List<Passive> passives) {
         try {
             Gathering gathering = gatheringClass.getConstructor().newInstance();
-            Class<? extends Passive> passiveClass = gathering.getInternalPassive();
+            Class<? extends Passive> passiveClass = gathering.getInternal();
             if (passiveClass != null) {
                 Passive passive = passiveClass.getConstructor().newInstance();
                 passive.setPlayer(player);

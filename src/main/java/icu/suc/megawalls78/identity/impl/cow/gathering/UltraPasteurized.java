@@ -6,6 +6,7 @@ import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.ItemUtil;
 import net.kyori.adventure.text.Component;
@@ -14,8 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.persistence.PersistentDataType;
-
-import java.util.Set;
 
 public final class UltraPasteurized extends Gathering {
 
@@ -26,8 +25,7 @@ public final class UltraPasteurized extends Gathering {
     public static class Internal extends Passive implements IActionbar {
 
         private static final int MAX = 60;
-        private static final Set<Material> MATERIALS = Set.of(Material.STONE, Material.DEEPSLATE);
-        private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET).setAmount(2).addPrefix(Identity.COW.getName().append(Component.space())).addDecoration(TextDecoration.BOLD, TextDecoration.State.FALSE).setMaxStackSize(64).addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.COW_MILK);
+        private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET).setAmount(2).addPrefix(Identity.COW.getName().append(Component.space())).addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE).setMaxStackSize(64).addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.COW_MILK);
 
         private int count;
 
@@ -37,12 +35,11 @@ public final class UltraPasteurized extends Gathering {
 
         @EventHandler
         public void onBlockBreak(BlockBreakEvent event) {
-            if (shouldPassive(event.getPlayer()) && MATERIALS.contains(event.getBlock().getType()) && MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING)) {
-                count++;
-            }
-            if (count >= MAX) {
-                count = 0;
-                event.getPlayer().getInventory().addItem(MILK.build());
+            if (shouldPassive(event.getPlayer()) && BlockUtil.isStone(event.getBlock().getType()) && MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING)) {
+                if (++count > MAX) {
+                    event.getPlayer().getInventory().addItem(MILK.build());
+                    count = 0;
+                }
             }
         }
 

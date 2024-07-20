@@ -9,6 +9,7 @@ import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class PlayerUtil {
 
@@ -29,5 +30,9 @@ public class PlayerUtil {
 
     public static void setStarvation(Player player, float saturationLevel) {
         ((CraftPlayer) player).getHandle().getFoodData().setSaturation(saturationLevel);
+    }
+
+    public static ItemStack getPlayerMainHand(Player player) {
+        return player.getEquipment().getItemInMainHand();
     }
 }

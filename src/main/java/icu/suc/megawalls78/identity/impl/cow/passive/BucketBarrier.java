@@ -62,7 +62,7 @@ public final class BucketBarrier extends Passive implements IActionbar {
                 duration = DURATION;
                 if (barriers == null) {
                     barriers = new ItemDisplay[4];
-                    center = player.getLocation().add(0, 1.0D, 0);
+                    center = player.getLocation().clone().add(0, 1.0D, 0);
                     for (int i = 0; i < 4; i++) {
                         barriers[i] = (ItemDisplay) center.getWorld().spawnEntity(barrierLocation(i), EntityType.ITEM_DISPLAY);
                         barriers[i].setItemStack(ItemStack.of(Material.MILK_BUCKET));
@@ -74,7 +74,8 @@ public final class BucketBarrier extends Passive implements IActionbar {
                         barriers[i].spawnAt(barrierLocation(i));
                     }
                 }
-            } else if (barriers != null) {
+            }
+            else if (barriers != null) {
                 for (ItemDisplay barrier : barriers) {
                     barrier.remove();
                 }

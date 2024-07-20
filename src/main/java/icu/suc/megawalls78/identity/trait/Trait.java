@@ -17,12 +17,19 @@ public abstract class Trait {
         this.name = name;
     }
 
-    protected void summaryHeal(Player player, int count) {
-        ComponentUtil.sendMessage(Component.translatable("mw78.summary.heal", NamedTextColor.AQUA, getName().color(MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity().getColor()).decorate(TextDecoration.BOLD), Component.text(count, NamedTextColor.GREEN)), player);
+    protected boolean noTarget(Player player) {
+        ComponentUtil.sendMessage(Component.translatable("mw78.summary.no_target", NamedTextColor.RED, getName().color(MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity().getColor()).decorate(TextDecoration.BOLD)), player);
+        return false;
     }
 
-    protected void summaryHit(Player player, int count) {
+    protected boolean summaryHeal(Player player, int count) {
+        ComponentUtil.sendMessage(Component.translatable("mw78.summary.heal", NamedTextColor.AQUA, getName().color(MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity().getColor()).decorate(TextDecoration.BOLD), Component.text(count, NamedTextColor.GREEN)), player);
+        return true;
+    }
+
+    protected boolean summaryHit(Player player, int count) {
         ComponentUtil.sendMessage(Component.translatable("mw78.summary.hit", NamedTextColor.AQUA, getName().color(MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity().getColor()).decorate(TextDecoration.BOLD), Component.text(count, NamedTextColor.RED)), player);
+        return true;
     }
 
     public String getId() {

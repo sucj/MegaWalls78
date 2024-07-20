@@ -89,7 +89,7 @@ public class ConfigManager {
 
         Configuration mapConfig = YamlConfiguration.loadConfiguration(mapFile);
         GameManager gameManager = instance.getGameManager();
-        gameManager.setMap(new GameMap(mapConfig.getString("name"), toLocations(mapConfig.getList("spawn")), toLocations(mapConfig.getList("wall")), toLocations(mapConfig.getList("region")), toLocation(mapConfig.getList("spectator"))));
+        gameManager.setMap(new GameMap(mapConfig.getString("id"), mapConfig.getString("version"), mapConfig.getStringList("authors"), mapConfig.getInt("size"), toLocations(mapConfig.getList("spawn")), toLocations(mapConfig.getList("wall")), toLocations(mapConfig.getList("region")), toLocation(mapConfig.getList("spectator"))));
         gameManager.setTeams(Lists.newArrayList());
         ConfigurationSection teams = mapConfig.getConfigurationSection("team");
         for (String key : teams.getKeys(false)) {
@@ -116,7 +116,7 @@ public class ConfigManager {
             }
             for (String s : section.getKeys(false)) {
                 ConfigurationSection sc = Objects.requireNonNull(section.getConfigurationSection(s));
-                instance.getSkinManager().addSkin(identity, new Skin(s, sc.getString("value"), sc.getString("signature")));
+                instance.getSkinManager().addSkin(identity, new Skin(key + "." + s, sc.getString("value"), sc.getString("signature")));
             }
         }
     }

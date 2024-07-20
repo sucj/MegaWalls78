@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.management;
 
 import com.destroystokyo.paper.profile.ProfileProperty;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.Identity;
@@ -15,7 +16,7 @@ import java.util.*;
 
 public class SkinManager {
 
-    private final Map<Identity, Set<Skin>> skins;
+    private final Map<Identity, List<Skin>> skins;
     private final Map<Player, Map<Identity, Skin>> playerSelectedSkin;
 
     private final Map<Player, SkinProperty> playerSkins;
@@ -23,7 +24,7 @@ public class SkinManager {
     public SkinManager() {
         this.skins = Maps.newHashMap();
         for (Identity identity : Identity.values()) {
-            skins.put(identity, new LinkedHashSet<>());
+            skins.put(identity, Lists.newArrayList());
         }
         this.playerSelectedSkin = Maps.newHashMap();
         this.playerSkins = Maps.newHashMap();
@@ -71,6 +72,10 @@ public class SkinManager {
     public void addSkin(Identity identity, Skin skin) {
         skins.get(identity).add(skin);
         SkinsRestorerProvider.get().getSkinStorage().setCustomSkinData(customSkin(identity, skin), SkinProperty.of(skin.value(), skin.signature()));
+    }
+
+    public List<Skin> getSkins(Identity identity) {
+        return skins.get(identity);
     }
 
     private String customSkin(Identity identity, Skin skin) {

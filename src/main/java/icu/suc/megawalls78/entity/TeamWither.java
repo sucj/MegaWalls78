@@ -96,19 +96,9 @@ public class TeamWither extends WitherBoss {
             this.setAlternativeTarget(0, 0);
         }
 
-        GameState state = MegaWalls78.getInstance().getGameManager().getState();
-        if (!state.equals(GameState.OPENING) && !state.equals(GameState.PREPARING)) {
-            if (this.tickCount % 20 == 0) {
-                if (++count == 5) {
-                    heal(-4);
-                    count = 0;
-                }
-            }
-        }
-
         this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
 
-        if (state.equals(GameState.BUFFING)) {
+        if (MegaWalls78.getInstance().getGameManager().getState().equals(GameState.BUFFING)) {
             for (LivingEntity nearbyEntity : this.level().getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(5.0D, 5.0D, 5.0D))) {
                 if (this.tickCount % 100 == 0) {
                     if (this.tickCount % 200 == 0) {

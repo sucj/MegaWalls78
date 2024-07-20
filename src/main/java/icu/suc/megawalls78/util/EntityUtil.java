@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.util;
 
 import com.google.common.collect.ImmutableList;
+import de.myzelyam.api.vanish.VanishAPI;
 import icu.suc.megawalls78.entity.HerobrineLightning;
 import icu.suc.megawalls78.entity.TeamWither;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
@@ -79,6 +80,19 @@ public class EntityUtil {
         Vec3 movement = mcEntity.getDeltaMovement();
         Vec3 vec3 = adjustMovementForCollisions(world, mcEntity, movement);
         return movement.y() != vec3.y() && movement.y() < 0.0D;
+    }
+
+    public static List<Entity> getNearbyEntities(Entity entity, double x, double y, double z) {
+        List<Entity> entities = entity.getNearbyEntities(x, y, z);
+        entities.removeIf(e -> (e instanceof Player && VanishAPI.isInvisible((Player) e)));
+        return entities;
+    }
+
+    public static List<Entity> getNearbyEntities(Entity entity, double radius) {
+        Location location = entity.getLocation();
+        List<Entity> nearbyEntities = getNearbyEntities(entity, radius, radius, radius);
+        nearbyEntities.removeIf(e -> location.distance(e.getLocation()) > radius);
+        return nearbyEntities;
     }
 
     private static Vec3 adjustMovementForCollisions(ServerLevel world, net.minecraft.world.entity.Entity entity, Vec3 movement) {

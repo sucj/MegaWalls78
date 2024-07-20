@@ -23,9 +23,11 @@ public abstract class Skill extends Trait implements IActionbar {
     public boolean use(Player player) {
         long currentMillis = System.currentTimeMillis();
         if (currentMillis - lastMills >= cooldown) {
-            use0(player);
-            lastMills = currentMillis;
-            return true;
+            if (use0(player)) {
+                lastMills = currentMillis;
+                return true;
+            }
+            return false;
         }
         return false;
     }
@@ -35,7 +37,7 @@ public abstract class Skill extends Trait implements IActionbar {
         return Type.COOLDOWN.accept(System.currentTimeMillis(), lastMills, cooldown);
     }
 
-    protected abstract void use0(Player player);
+    protected abstract boolean use0(Player player);
 
     public int getCost() {
         return cost;

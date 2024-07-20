@@ -38,7 +38,7 @@ public final class Leap extends Skill {
     }
 
     @Override
-    protected void use0(Player player) {
+    protected boolean use0(Player player) {
         Location location = player.getLocation();
         player.getWorld().playSound(location, Sound.ENTITY_SPIDER_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
@@ -55,6 +55,8 @@ public final class Leap extends Skill {
         if (run) {
             listener.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
         }
+
+        return true;
     }
 
     private class Listener extends BukkitRunnable {
@@ -79,13 +81,13 @@ public final class Leap extends Skill {
                 player.getWorld().playSound(lastLocation, Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.7F, 0.5F);
                 player.addPotionEffect(REGENERATION);
                 AtomicInteger count = new AtomicInteger();
-                player.getNearbyEntities(RANGE, RANGE, RANGE).stream()
+                EntityUtil.getNearbyEntities(player, RANGE).stream()
+                        .filter(entity -> entity instanceof LivingEntity)
                         .filter(entity -> !(entity instanceof Wither))
                         .filter(entity -> !PlayerUtil.isValidAllies(player, entity))
-                        .filter(entity -> entity instanceof LivingEntity)
                         .forEach(entity -> {
                             ((LivingEntity) entity).addPotionEffect(SLOWNESS);
-                            ((LivingEntity) entity).damage(BASE_DAMAGE + bonusDamage() - reduceDamage(entity));
+                            ((LivingEntity) entity).damage(BASE_DAMAGE + bonusDamage() - reduceDamage(entity), player);
                             count.getAndIncrement();
                         });
                 int i = count.get();

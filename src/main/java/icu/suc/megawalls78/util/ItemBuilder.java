@@ -1,11 +1,15 @@
 package icu.suc.megawalls78.util;
 
+import com.destroystokyo.paper.profile.CraftPlayerProfile;
+import com.destroystokyo.paper.profile.PlayerProfile;
+import com.destroystokyo.paper.profile.ProfileProperty;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import net.skinsrestorer.api.property.SkinProperty;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -15,11 +19,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.components.FoodComponent;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class ItemBuilder {
 
@@ -41,6 +47,8 @@ public class ItemBuilder {
     private Multimap<Attribute, AttributeModifier> attributeMap;
 
     private List<ItemFlag> itemFlagList;
+
+    private PlayerProfile profile;
 
     private List<Component> prefixList;
     private List<Component> suffixList;
@@ -136,6 +144,16 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setSkullSkin(String value, String signature) {
+        if (this.profile == null) {
+            this.profile = new CraftPlayerProfile(UUID.randomUUID(), "");
+        }
+        Set<ProfileProperty> properties = this.profile.getProperties();
+        properties.removeIf(property -> property.getName().equals(SkinProperty.TEXTURES_NAME));
+        properties.add(new ProfileProperty(SkinProperty.TEXTURES_NAME, value, signature));
+        return this;
+    }
+
     public ItemBuilder addPrefix(Component prefix) {
         if (this.prefixList == null) {
             this.prefixList = Lists.newArrayList();
@@ -212,15 +230,17 @@ public class ItemBuilder {
 
         if (itemFlagList != null) {
             for (ItemFlag itemFlag : itemFlagList) {
-                switch (itemFlag) {
-                    case HIDE_ATTRIBUTES -> {
-                        if (attributeMap == null) {
-                            itemMeta.setAttributeModifiers(type.getDefaultAttributeModifiers());
-                        }
-                    }
+                if (itemFlag.equals(ItemFlag.HIDE_ATTRIBUTES) && attributeMap == null) {
+                    itemMeta.setAttributeModifiers(type.getDefaultAttributeModifiers());
                 }
                 itemMeta.addItemFlags(itemFlag);
             }
+        }
+
+        if (profile != null) {
+            try {
+                ((SkullMeta) itemMeta).setPlayerProfile(profile);
+            } catch (ClassCastException ignored) {}
         }
 
         if (prefixList != null) {

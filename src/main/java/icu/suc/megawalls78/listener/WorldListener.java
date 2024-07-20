@@ -1,9 +1,8 @@
 package icu.suc.megawalls78.listener;
 
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.management.GameManager;
-import icu.suc.megawalls78.util.ItemUtil;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.inventory.ItemStack;
 
 public class WorldListener implements Listener {
 
@@ -23,7 +21,8 @@ public class WorldListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        switch (gameManager.getState()) {
+        GameState state = gameManager.getState();
+        switch (state) {
             case WAITING:
             case COUNTDOWN:
             case OPENING:
@@ -31,10 +30,12 @@ public class WorldListener implements Listener {
                 event.setCancelled(true);
                 return;
             default: {
-                if (gameManager.getRunner().getProtectedBlocks().contains(event.getBlock().getLocation())) {
+                if (!gameManager.getRunner().getAllowedBlocks().contains(event.getBlock().getLocation())) {
                     event.setCancelled(true);
-                } else if (ItemUtil.isEnderChest(event.getItemInHand())) {
-                    event.setCancelled(true);
+                } else if (state.equals(GameState.PREPARING)) {
+                    if (!gameManager.getRunner().getTeamRegion(gameManager.getPlayer(player).getTeam()).contains(event.getBlock().getLocation())) {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }
@@ -48,7 +49,8 @@ public class WorldListener implements Listener {
             event.setCancelled(true);
             return;
         }
-        switch (gameManager.getState()) {
+        GameState state = gameManager.getState();
+        switch (state) {
             case WAITING:
             case COUNTDOWN:
             case OPENING:
@@ -56,15 +58,18 @@ public class WorldListener implements Listener {
                 event.setCancelled(true);
                 return;
             default: {
-                Block block = event.getBlock();
-                if (gameManager.getRunner().getProtectedBlocks().contains(block.getLocation())) {
+                if (!gameManager.getRunner().getAllowedBlocks().contains(event.getBlock().getLocation())) {
                     event.setCancelled(true);
+                } else if (state.equals(GameState.PREPARING)) {
+                    if (!gameManager.getRunner().getTeamRegion(gameManager.getPlayer(player).getTeam()).contains(event.getBlock().getLocation())) {
+                        event.setCancelled(true);
+                    }
                 }
             }
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityExplode(EntityExplodeEvent event) {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         switch (gameManager.getState()) {
@@ -74,7 +79,7 @@ public class WorldListener implements Listener {
                 event.setCancelled(true);
                 return;
             default: {
-                event.blockList().removeIf(block -> gameManager.getRunner().getProtectedBlocks().contains(block.getLocation()));
+                event.blockList().removeIf(block -> !gameManager.getRunner().getAllowedBlocks().contains(block.getLocation()));
             }
         }
     }

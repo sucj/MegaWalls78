@@ -1,5 +1,6 @@
 package icu.suc.megawalls78.identity.impl.herebrine.passive;
 
+import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Passive;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -27,12 +28,11 @@ public final class Power extends Passive implements IActionbar {
     }
 
     @EventHandler
-    public void onPlayerKill(PlayerDeathEvent event) {
+    public void onPlayerKill(IncreaseStatsEvent.Kill event) {
         if (event.isCancelled()) {
             return;
         }
-        Player killer = EntityUtil.getKiller(event.getPlayer(), event.getDamageSource());
-        if (shouldPassive(killer)) {
+        if (shouldPassive(event.getUuid())) {
             lastMills = System.currentTimeMillis();
         }
     }

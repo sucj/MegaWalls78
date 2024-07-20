@@ -5,6 +5,8 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
+import java.util.UUID;
+
 public abstract class Passive extends Trait implements Listener {
 
     private GamePlayer player;
@@ -14,7 +16,11 @@ public abstract class Passive extends Trait implements Listener {
     }
 
     protected boolean shouldPassive(Player player) {
-        return player != null && player.getUniqueId().equals(this.player.getUuid());
+        return player != null && shouldPassive(player.getUniqueId());
+    }
+
+    protected boolean shouldPassive(UUID uuid) {
+        return this.player.getUuid().equals(uuid);
     }
 
     public abstract void unregister();

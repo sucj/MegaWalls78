@@ -3,6 +3,7 @@ package icu.suc.megawalls78.listener;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.event.IdentitySelectEvent;
 import icu.suc.megawalls78.gui.IdentityGui;
+import icu.suc.megawalls78.gui.SkinGui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,5 +27,6 @@ public class IdentityListener implements Listener {
             return;
         }
         player.getInventory().setItem(0, IdentityGui.trigger(player));
+        player.getInventory().setItem(1, SkinGui.trigger(player));
     }
 }

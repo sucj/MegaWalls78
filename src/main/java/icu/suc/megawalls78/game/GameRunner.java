@@ -17,9 +17,9 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.CraftOfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
 
 import java.util.List;
@@ -28,83 +28,65 @@ import java.util.Set;
 
 public class GameRunner implements Runnable {
 
+    private long tick;
     private long timer;
     private boolean dm;
     private long dmTimer;
     private boolean dmC;
 
-    private Set<Block> barriers;
+    private boolean init;
+    private boolean initializing;
 
-    private Set<Location> protectedBlocks;
+    private Set<Block> barriers;
+    private final Set<Location> allowedBlocks;
     private final Map<GameTeam, Set<Location>> palaces;
     private final Set<Location> spawns;
     private final Set<Location> walls;
     private final Set<Location> region;
+    private final Map<GameTeam, Set<Location>> regions;
 
     public GameRunner() {
         this.barriers = Sets.newHashSet();
-
+        this.allowedBlocks = Sets.newHashSet();
         this.palaces = Maps.newHashMap();
         this.spawns = Sets.newHashSet();
         this.walls = Sets.newHashSet();
         this.region = Sets.newHashSet();
+        this.regions = Maps.newHashMap();
+    }
+
+    private void init(GameManager gameManager) {
+        initializing = true;
+        Bukkit.getScheduler().runTaskAsynchronously(MegaWalls78.getInstance(), () -> {
+            MegaWalls78.getInstance().getLogger().info("Map initializing...");
+            for (GameTeam team : gameManager.getTeams()) {
+                Set<Location> palace = Sets.newHashSet();
+                palaces.put(team, palace);
+                addRegionsBlock(team.palace(), palace);
+                addRegionsBlock(team.spawn(), spawns);
+                Set<Location> region = Sets.newHashSet();
+                regions.put(team, region);
+                addRegionsBlock(team.region(), region);
+            }
+            addRegionsBlock(gameManager.getMap().wall(), walls);
+            addRegionsBlock(gameManager.getMap().region(), region);
+            init = true;
+            MegaWalls78.getInstance().getLogger().info("Map initialized.");
+        });
     }
 
     @Override
     public void run() {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-        GameState state = gameManager.getState();
-        if (!state.equals(GameState.WAITING) && !state.equals(GameState.ENDING)) {
-            if (timer <= 1000L) {
-                next(state);
-            } else {
-                if (dmC) {
-                    if (dmTimer <= 0L) {
-                        dmC = false;
-                        dm = true;
-                        //TODO DM message
-                        Bukkit.broadcast(Component.text("dm"));
-                    } else {
-                        dmTimer -= 1000L;
-                    }
-                } else {
-                    timer -= 1000L;
-                }
-                switch (state) {
-                    case COUNTDOWN -> {
-                        if (timer == 10000L || timer <= 5000L) {
-                            Component seconds = ComponentUtil.second(timer);
-                            ComponentUtil.sendMessage(Component.translatable("mw78.start.in", NamedTextColor.AQUA, Component.translatable("mw78.seconds", seconds)), Bukkit.getOnlinePlayers());
-                            ComponentUtil.sendTitle(Component.empty(), seconds, ComponentUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
-                        }
-                    }
-                    case OPENING -> {
-                        if (timer == 10000L || timer <= 5000L) {
-                            ComponentUtil.sendMessage(Component.translatable("mw78.gates", NamedTextColor.AQUA, Component.translatable("mw78.seconds", ComponentUtil.second(timer))), Bukkit.getOnlinePlayers());
-                        }
-                    }
-                }
-            }
-        }
-        if (gameManager.inFighting() && !state.equals(GameState.OPENING) && !state.equals(GameState.PREPARING) && !state.equals(GameState.COUNTDOWN)) {
-            for (GamePlayer gamePlayer : gameManager.getPlayers().values()) {
-                if (gamePlayer.getFinalDeaths() == 0) {
-                    Player bukkitPlayer = gamePlayer.getBukkitPlayer();
-                    if (bukkitPlayer != null && bukkitPlayer.isOnline()) {
-                        gamePlayer.increaseEnergy(isDm() ? EnergyWay.DM : EnergyWay.GAME);
-                    }
-                }
-            }
-        }
-    }
-
-    public void update() {
-        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-        ConfigManager configManager = MegaWalls78.getInstance().getConfigManager();
-        switch (gameManager.getState()) {
-            case WAITING -> {
-                if (gameManager.getPlayers().size() >= configManager.minPlayer) {
-                    Bukkit.getScheduler().runTaskLater(MegaWalls78.getInstance(), () -> {
+        if (init) {
+            ConfigManager configManager = MegaWalls78.getInstance().getConfigManager();
+            GameState state = gameManager.getState();
+            boolean flag = true;
+            switch (state) {
+                case WAITING -> {
+                    if (gameManager.getPlayers().size() >= configManager.minPlayer) {
+                        tick = 1;
+                        flag = false;
                         this.timer = configManager.waitingTime;
                         gameManager.setState(GameState.COUNTDOWN);
                         if (timer >= 10000L || timer >= 5000L) {
@@ -112,16 +94,65 @@ public class GameRunner implements Runnable {
                             ComponentUtil.sendMessage(Component.translatable("mw78.start.in", NamedTextColor.AQUA, Component.translatable("mw78.seconds", seconds)), Bukkit.getOnlinePlayers());
                             ComponentUtil.sendTitle(Component.empty(), seconds, ComponentUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
                         }
-                    }, 20L);
+                    }
+                }
+                case COUNTDOWN -> {
+                    if (gameManager.getPlayers().size() < configManager.minPlayer) {
+                        gameManager.setState(GameState.WAITING);
+                        ComponentUtil.sendMessage(Component.translatable("mw78.start.cancel", NamedTextColor.RED), Bukkit.getOnlinePlayers());
+                        ComponentUtil.sendTitle(Component.empty(), Component.translatable("mw78.start.wait", NamedTextColor.RED), ComponentUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
+                    }
                 }
             }
-            case COUNTDOWN -> {
-                if (gameManager.getPlayers().size() < configManager.minPlayer) {
-                    gameManager.setState(GameState.WAITING);
-                    ComponentUtil.sendMessage(Component.translatable("mw78.start.cancel", NamedTextColor.RED), Bukkit.getOnlinePlayers());
-                    ComponentUtil.sendTitle(Component.empty(), Component.translatable("mw78.start.wait", NamedTextColor.RED), ComponentUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
+            if (flag && tick % 20 == 0) {
+                if (!state.equals(GameState.WAITING) && !state.equals(GameState.ENDING)) {
+                    if (timer <= 1000L) {
+                        next(state);
+                    } else {
+                        if (dmC) {
+                            if (dmTimer <= 0L) {
+                                dmC = false;
+                                dm = true;
+                                //TODO DM message
+                                Bukkit.broadcast(Component.text("dm"));
+                            } else {
+                                dmTimer -= 1000L;
+                            }
+                        } else {
+                            timer -= 1000L;
+                        }
+                        switch (state) {
+                            case COUNTDOWN -> {
+                                if (timer == 10000L || timer <= 5000L) {
+                                    Component seconds = ComponentUtil.second(timer);
+                                    ComponentUtil.sendMessage(Component.translatable("mw78.start.in", NamedTextColor.AQUA, Component.translatable("mw78.seconds", seconds)), Bukkit.getOnlinePlayers());
+                                    ComponentUtil.sendTitle(Component.empty(), seconds, ComponentUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
+                                }
+                            }
+                            case OPENING -> {
+                                if (timer == 10000L || timer <= 5000L) {
+                                    ComponentUtil.sendMessage(Component.translatable("mw78.gates", NamedTextColor.AQUA, Component.translatable("mw78.seconds", ComponentUtil.second(timer))), Bukkit.getOnlinePlayers());
+                                }
+                            }
+                        }
+                    }
+                }
+                if (gameManager.inFighting() && !state.equals(GameState.OPENING) && !state.equals(GameState.PREPARING) && !state.equals(GameState.COUNTDOWN)) {
+                    for (GamePlayer gamePlayer : gameManager.getPlayers().values()) {
+                        if (gamePlayer.getFinalDeaths() == 0) {
+                            Player bukkitPlayer = gamePlayer.getBukkitPlayer();
+                            if (bukkitPlayer != null && bukkitPlayer.isOnline()) {
+                                gamePlayer.increaseEnergy(isDm() ? EnergyWay.DM : EnergyWay.GAME);
+                            }
+                        }
+                    }
                 }
             }
+            if (flag) {
+                tick++;
+            }
+        } else if (!initializing) {
+            init(gameManager);
         }
     }
 
@@ -131,6 +162,9 @@ public class GameRunner implements Runnable {
         ConfigManager configManager = instance.getConfigManager();
         switch (state) {
             case COUNTDOWN -> {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.setHealth(0);
+                }
                 distributeTeams();
                 gameManager.setState(GameState.OPENING);
                 timer = configManager.openingTime;
@@ -148,14 +182,7 @@ public class GameRunner implements Runnable {
                 }
                 for (GameTeam team : gameManager.getTeams()) {
                     placeTeamGate(team);
-                    for (GamePlayer gamePlayer : gameManager.getTeamPlayersMap().get(team)) {
-                        Player bukkitPlayer = gamePlayer.getBukkitPlayer();
-                        if (bukkitPlayer != null && bukkitPlayer.isOnline()) {
-                            bukkitPlayer.setHealth(0);
-                        }
-                    }
                 }
-                protectBlocks();
             }
             case OPENING -> {
                 gameManager.setState(GameState.PREPARING);
@@ -167,17 +194,22 @@ public class GameRunner implements Runnable {
                 }
                 destroyTeamGate();
                 ComponentUtil.sendMessage(Component.translatable("mw78.prepare", NamedTextColor.RED).decorate(TextDecoration.BOLD), Bukkit.getOnlinePlayers());
+                Bukkit.getScheduler().runTaskAsynchronously(MegaWalls78.getInstance(), () -> {
+                    for (GameTeam team : gameManager.getTeams()) {
+                        allowedBlocks.addAll(regions.get(team));
+                        allowedBlocks.removeAll(palaces.get(team));
+                    }
+                    allowedBlocks.removeAll(spawns);
+                });
             }
             case PREPARING -> {
                 gameManager.setState(GameState.BUFFING);
                 timer = configManager.buffingTime;
                 destroyWalls();
-                if (protectedBlocks != null) {
-                    protectedBlocks.removeAll(walls);
-                    protectedBlocks.removeAll(region);
-                }
-                walls.clear();
-                region.clear();
+                Bukkit.getScheduler().runTaskAsynchronously(MegaWalls78.getInstance(), () -> {
+                    allowedBlocks.addAll(walls);
+                    allowedBlocks.addAll(region);
+                });
             }
             case BUFFING -> {
                 gameManager.setState(GameState.FIGHTING);
@@ -185,20 +217,9 @@ public class GameRunner implements Runnable {
             }
             case FIGHTING -> {
                 gameManager.setState(GameState.ENDING);
+                allowedBlocks.clear();
             }
         }
-    }
-
-    private void protectBlocks() {
-        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-        for (GameTeam team : gameManager.getTeams()) {
-            Set<Location> palace = Sets.newHashSet();
-            palaces.put(team, palace);
-            addRegionsBlock(team.palace(), palace);
-            addRegionsBlock(team.spawn(), spawns);
-        }
-        addRegionsBlock(gameManager.getMap().wall(), walls);
-        addRegionsBlock(gameManager.getMap().region(), region);
     }
 
     private void addRegionsBlock(Location[][] regions, Set<Location> locations) {
@@ -258,12 +279,12 @@ public class GameRunner implements Runnable {
 
     private void placeTeamGate(GameTeam team) {
         for (Location[] region : team.spawn()) {
-            double minX = Math.min(region[0].getX(), region[1].getX()) - 1;
-            double maxX = Math.max(region[0].getX(), region[1].getX()) + 1;
-            double minY = Math.min(region[0].getY(), region[1].getY()) - 1;
-            double maxY = Math.max(region[0].getY(), region[1].getY()) + 1;
-            double minZ = Math.min(region[0].getZ(), region[1].getZ()) - 1;
-            double maxZ = Math.max(region[0].getZ(), region[1].getZ()) + 1;
+            double minX = Math.min(region[0].getX(), region[1].getX());
+            double maxX = Math.max(region[0].getX(), region[1].getX());
+            double minY = Math.min(region[0].getY(), region[1].getY());
+            double maxY = Math.max(region[0].getY(), region[1].getY());
+            double minZ = Math.min(region[0].getZ(), region[1].getZ());
+            double maxZ = Math.max(region[0].getZ(), region[1].getZ());
             for (double y = minY; y <= maxY; y++) {
                 for (double x = minX; x <= maxX; x++) {
                     placeBarrierBlock(x, y, minZ);
@@ -304,17 +325,12 @@ public class GameRunner implements Runnable {
         return dmC ? dmTimer : timer;
     }
 
-    public Set<Location> getProtectedBlocks() {
-        if (protectedBlocks == null) {
-            protectedBlocks = Sets.newHashSet();
-            for (Set<Location> palace : palaces.values()) {
-                protectedBlocks.addAll(palace);
-            }
-            protectedBlocks.addAll(spawns);
-            protectedBlocks.addAll(walls);
-            protectedBlocks.addAll(region);
-        }
-        return protectedBlocks;
+    public Set<Location> getAllowedBlocks() {
+        return allowedBlocks;
+    }
+
+    public Set<Location> getTeamRegion(GameTeam team) {
+        return regions.get(team);
     }
 
     public GameTeam inPalace(Location location) {

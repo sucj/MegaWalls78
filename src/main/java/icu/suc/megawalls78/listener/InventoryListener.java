@@ -3,6 +3,7 @@ package icu.suc.megawalls78.listener;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.gui.IdentityGui;
+import icu.suc.megawalls78.gui.SkinGui;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.ItemUtil;
 import org.bukkit.Sound;
@@ -32,26 +33,26 @@ public class InventoryListener implements Listener {
                 switch (event.getClick()) {
                     case SHIFT_LEFT:
                     case SHIFT_RIGHT: {
-                        if (inventory != null && inventory.getType().equals(InventoryType.PLAYER) && !event.getInventory().getType().equals(InventoryType.CRAFTING) && ItemUtil.isSoulBound(event.getCurrentItem())) {
+                        if (inventory != null && inventory.getType().equals(InventoryType.PLAYER) && !event.getInventory().getType().equals(InventoryType.CRAFTING) && ItemUtil.mw78SoulBound(event.getCurrentItem())) {
                             event.setCancelled(true);
                         }
                         return;
                     }
                     case NUMBER_KEY: {
-                        if (inventory != null && !inventory.getType().equals(InventoryType.PLAYER) && ItemUtil.isSoulBound(player.getInventory().getItem(event.getHotbarButton()))) {
+                        if (inventory != null && !inventory.getType().equals(InventoryType.PLAYER) && ItemUtil.mw78SoulBound(player.getInventory().getItem(event.getHotbarButton()))) {
                             event.setCancelled(true);
                         }
                         return;
                     }
                     case SWAP_OFFHAND: {
-                        if (inventory != null && !inventory.getType().equals(InventoryType.PLAYER) && ItemUtil.isSoulBound(player.getInventory().getItemInOffHand())) {
+                        if (inventory != null && !inventory.getType().equals(InventoryType.PLAYER) && ItemUtil.mw78SoulBound(player.getInventory().getItemInOffHand())) {
                             event.setCancelled(true);
                         }
                         return;
                     }
                     case DROP:
                     case CONTROL_DROP: {
-                        if (inventory != null && inventory.getType().equals(InventoryType.PLAYER) && ItemUtil.isSoulBound(event.getCurrentItem())) {
+                        if (inventory != null && inventory.getType().equals(InventoryType.PLAYER) && ItemUtil.mw78SoulBound(event.getCurrentItem())) {
                             InventoryType.SlotType slotType = event.getSlotType();
                             if (slotType.equals(InventoryType.SlotType.ARMOR) || slotType.equals(InventoryType.SlotType.QUICKBAR)) {
                                 int empty = 0;
@@ -71,14 +72,14 @@ public class InventoryListener implements Listener {
                         return;
                     }
                 }
-                if ((inventory == null || !inventory.getType().equals(InventoryType.PLAYER)) && ItemUtil.isSoulBound(event.getCursor())) {
+                if ((inventory == null || !inventory.getType().equals(InventoryType.PLAYER)) && ItemUtil.mw78SoulBound(event.getCursor())) {
                     event.setCancelled(true);
                     return;
                 }
                 if (inventory instanceof PlayerInventory) {
-                    if (ItemUtil.isSoulBound(event.getCurrentItem()) && !LAST_SLOTS.containsKey(player.getUniqueId())) {
+                    if (ItemUtil.mw78SoulBound(event.getCurrentItem()) && !LAST_SLOTS.containsKey(player.getUniqueId())) {
                         LAST_SLOTS.put(player.getUniqueId(), event.getSlot());
-                    } else if (!ItemUtil.isSoulBound(event.getCurrentItem()) && LAST_SLOTS.containsKey(player.getUniqueId())) {
+                    } else if (!ItemUtil.mw78SoulBound(event.getCurrentItem()) && LAST_SLOTS.containsKey(player.getUniqueId())) {
                         LAST_SLOTS.put(player.getUniqueId(), event.getSlot());
                     }
                 }
@@ -87,6 +88,8 @@ public class InventoryListener implements Listener {
                 Inventory inventory = event.getClickedInventory();
                 if (IdentityGui.INVENTORIES.containsKey(inventory)) {
                     IdentityGui.handle(player, inventory, event.getSlot());
+                } else if (SkinGui.INVENTORIES.containsKey(inventory)) {
+                    SkinGui.handle(player, inventory, event.getSlot());
                 }
             } else if (gameManager.isSpectator(player)) {
                 event.setCancelled(true);
@@ -104,7 +107,7 @@ public class InventoryListener implements Listener {
                 Map<Integer, ItemStack> newItems = event.getNewItems();
                 Inventory inventory = event.getInventory();
                 for (int slot : newItems.keySet()) {
-                    if (slot < inventory.getSize() && ItemUtil.isSoulBound(newItems.get(slot))) {
+                    if (slot < inventory.getSize() && ItemUtil.mw78SoulBound(newItems.get(slot))) {
                         event.setCancelled(true);
                         return;
                     }
