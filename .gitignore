@@ -113,7 +113,7 @@ gradle-app.setting
 
 # Common working directory
 run/
-!run/plugins/MegaWalls78/lang/*
+!run/plugins/MegaWalls78/lang/en_us.properties
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
