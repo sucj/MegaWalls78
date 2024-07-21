@@ -15,21 +15,20 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
 
-public class Enderblocks extends Gathering {
+public final class Enderblocks extends Gathering {
 
     public Enderblocks() {
         super("enderblocks", Internal.class);
     }
 
-    public static class Internal extends Passive implements IActionbar {
+    public static final class Internal extends Passive implements IActionbar {
 
         private static final int MAX = 3;
 
-        private int count;
+        private int count = 1;
 
         public Internal() {
             super("enderblocks");
@@ -41,7 +40,7 @@ public class Enderblocks extends Gathering {
             Block block = event.getBlock();
             Location location = block.getLocation();
             Material type = block.getType();
-            if (shouldPassive(player) && BlockUtil.isNatural(type) && !MegaWalls78.getInstance().getGameManager().getRunner().isDm()) {
+            if (shouldPassive(player) && isAvailable() && BlockUtil.isNatural(type)) {
                 if (++count > MAX) {
                     Set<Location> adjLocations = Sets.newHashSet();
 
@@ -61,19 +60,23 @@ public class Enderblocks extends Gathering {
                         }
                     }
 
-                    count = 0;
+                    count = 1;
                 }
             }
         }
 
         @Override
         public Component acb() {
-            return Type.COMBO_DISABLE.accept(count, MAX, MegaWalls78.getInstance().getGameManager().getRunner().isDm());
+            return Type.COMBO_DISABLE.accept(count, MAX, isAvailable());
         }
 
         @Override
         public void unregister() {
-            count = 0;
+            count = 1;
+        }
+
+        private boolean isAvailable() {
+            return !MegaWalls78.getInstance().getGameManager().getRunner().isDm();
         }
     }
 }

@@ -44,6 +44,18 @@ public class ItemUtil {
         }
     }
 
+    public static String getMW78Id(ItemStack itemStack) {
+        if (itemStack == null) {
+            return null;
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta == null) {
+            return null;
+        } else {
+            return itemMeta.getPersistentDataContainer().get(ID, PersistentDataType.STRING);
+        }
+    }
+
     public static boolean mw78SoulBound(ItemStack itemStack) {
         return hasMW78Tag(itemStack, SOUL_B0UND);
     }

@@ -13,13 +13,13 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class WellTrained extends Gathering {
+public final class WellTrained extends Gathering {
 
     public WellTrained() {
         super("well_trained", null);
     }
 
-    public static class Internal extends Passive {
+    public static final class Internal extends Passive {
 
         private static final PotionEffect HASTE_2 = new PotionEffect(PotionEffectType.HASTE, 100, 1);
         private static final PotionEffect HASTE_3 = new PotionEffect(PotionEffectType.HASTE, PotionEffect.INFINITE_DURATION, 2);

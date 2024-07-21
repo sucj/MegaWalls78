@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Dig extends Skill {
+public final class Dig extends Skill {
 
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 40, 0);
     private static final double FORWARD = 8.0D;
@@ -59,7 +59,7 @@ public class Dig extends Skill {
         return true;
     }
 
-    private class Task extends BukkitRunnable {
+    private final class Task extends BukkitRunnable {
 
         private final Player player;
 

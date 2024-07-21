@@ -10,13 +10,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class Shortcut extends Passive implements IActionbar {
+public final class Shortcut extends Passive implements IActionbar {
 
     private static final int MAX = 3;
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 80, 1);
     private static final PotionEffect HASTE = new PotionEffect(PotionEffectType.HASTE, 80, 1);
 
-    private int count;
+    private int count = 1;
 
     public Shortcut() {
         super("shortcut");
@@ -29,14 +29,14 @@ public class Shortcut extends Passive implements IActionbar {
             if (++count > MAX) {
                 player.addPotionEffect(SPEED);
                 player.addPotionEffect(HASTE);
-                count = 0;
+                count = 1;
             }
         }
     }
 
     @Override
     public void unregister() {
-        count = 0;
+        count = 1;
     }
 
     @Override

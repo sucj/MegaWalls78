@@ -4,14 +4,13 @@ import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.Passive;
 import icu.suc.megawalls78.util.PlayerUtil;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Set;
-
-public class IronRush extends Gathering {
+public final class IronRush extends Gathering {
 
     public IronRush() {
         super("iron_rush", Internal.class);
@@ -19,15 +18,13 @@ public class IronRush extends Gathering {
 
     public static class Internal extends Passive {
 
-        private static final Set<Material> MATERIALS = Set.of(Material.WOODEN_SHOVEL, Material.STONE_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.DIAMOND_SHOVEL, Material.NETHERITE_SHOVEL);
-
         public Internal() {
             super("iron_rush");
         }
         @EventHandler
         public void onBlockBreak(BlockBreakEvent event) {
             Player player = event.getPlayer();
-            if (shouldPassive(player) && MATERIALS.contains(PlayerUtil.getPlayerMainHand(player).getType())) {
+            if (shouldPassive(player) && Tag.ITEMS_SHOVELS.isTagged(PlayerUtil.getPlayerMainHand(player).getType())) {
                 player.getInventory().addItem(ItemStack.of(Material.IRON_INGOT));
             }
         }

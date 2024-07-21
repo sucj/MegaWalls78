@@ -12,6 +12,7 @@ import icu.suc.megawalls78.util.ItemUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.persistence.PersistentDataType;
@@ -25,9 +26,14 @@ public final class UltraPasteurized extends Gathering {
     public static class Internal extends Passive implements IActionbar {
 
         private static final int MAX = 60;
-        private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET).setAmount(2).addPrefix(Identity.COW.getName().append(Component.space())).addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE).setMaxStackSize(64).addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.COW_MILK);
+        private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET)
+                .setAmount(2)
+                .addPrefix(Identity.COW.getName().append(Component.space()))
+                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                .setMaxStackSize(64)
+                .addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.COW_MILK);
 
-        private int count;
+        private int count = 1;
 
         public Internal() {
             super("ultra_pasteurized");
@@ -35,22 +41,27 @@ public final class UltraPasteurized extends Gathering {
 
         @EventHandler
         public void onBlockBreak(BlockBreakEvent event) {
-            if (shouldPassive(event.getPlayer()) && BlockUtil.isStone(event.getBlock().getType()) && MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING)) {
+            Player player = event.getPlayer();
+            if (shouldPassive(player) && isAvailable() && BlockUtil.isStone(event.getBlock().getType())) {
                 if (++count > MAX) {
-                    event.getPlayer().getInventory().addItem(MILK.build());
-                    count = 0;
+                    player.getInventory().addItem(MILK.build());
+                    count = 1;
                 }
             }
         }
 
         @Override
         public void unregister() {
-            count = 0;
+            count = 1;
         }
 
         @Override
         public Component acb() {
-            return Type.COMBO_DISABLE.accept(count, MAX, !MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING));
+            return Type.COMBO_DISABLE.accept(count, MAX, !isAvailable());
+        }
+
+        private boolean isAvailable() {
+            return MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING);
         }
     }
 }

@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-public class Teleport extends Skill {
+public final class Teleport extends Skill {
 
     private static final double RANGE = 25.0D;
     private static final int THICKNESS = 10;

@@ -12,7 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class SoulCharge extends Passive implements IActionbar {
+public final class SoulCharge extends Passive implements IActionbar {
 
     private static final long COOLDOWN = 15000L;
     private static final int ENERGY = 100;

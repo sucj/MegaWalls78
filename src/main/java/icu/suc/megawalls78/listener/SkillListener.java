@@ -44,6 +44,8 @@ public class SkillListener implements Listener {
 
     public static final PotionEffect COW_MILK_RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 100, 0, false);
     public static final PotionEffect COW_MILK_REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1, false);
+    public static final int MOLEMAN_COOKIE_ENERGY = 3;
+    public static final int MOLEMAN_PIE_ENERGY = 12;
 
     private static final JoinConfiguration ACBE_JOIN = JoinConfiguration.builder().separator(Component.space()).build();
     private static final JoinConfiguration ACTIONBAR_JOIN = JoinConfiguration.builder().separator(Component.text("   ")).build();
@@ -112,9 +114,14 @@ public class SkillListener implements Listener {
     @EventHandler
     public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
-        if (ItemUtil.isMW78Item(event.getItem(), ItemUtil.COW_MILK)) {
-            player.addPotionEffect(COW_MILK_RESISTANCE);
-            player.addPotionEffect(COW_MILK_REGENERATION);
+        GamePlayer gamePlayer = MegaWalls78.getInstance().getGameManager().getPlayer(player);
+        switch (ItemUtil.getMW78Id(event.getItem())) {
+            case ItemUtil.COW_MILK -> {
+                player.addPotionEffect(COW_MILK_RESISTANCE);
+                player.addPotionEffect(COW_MILK_REGENERATION);
+            }
+            case ItemUtil.MOLEMAN_COOKIE -> gamePlayer.increaseEnergy(MOLEMAN_COOKIE_ENERGY);
+            case ItemUtil.MOLEMAN_PIE -> gamePlayer.increaseEnergy(MOLEMAN_PIE_ENERGY);
         }
     }
 

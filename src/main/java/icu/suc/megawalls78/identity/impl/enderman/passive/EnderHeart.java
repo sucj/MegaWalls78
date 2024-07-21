@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-public class EnderHeart extends Passive implements IActionbar {
+public final class EnderHeart extends Passive implements IActionbar {
 
     private static final int MAX = 3;
     private static final double KILL = 3.0D;

@@ -59,7 +59,7 @@ public final class Leap extends Skill {
         return true;
     }
 
-    private class Task extends BukkitRunnable {
+    private final class Task extends BukkitRunnable {
 
         private final Player player;
 
