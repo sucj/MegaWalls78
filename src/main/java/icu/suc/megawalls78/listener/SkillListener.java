@@ -112,7 +112,7 @@ public class SkillListener implements Listener {
     @EventHandler
     public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
-        if (ItemUtil.mw78CowMilk(event.getItem())) {
+        if (ItemUtil.isMW78Item(event.getItem(), ItemUtil.COW_MILK)) {
             player.addPotionEffect(COW_MILK_RESISTANCE);
             player.addPotionEffect(COW_MILK_REGENERATION);
         }

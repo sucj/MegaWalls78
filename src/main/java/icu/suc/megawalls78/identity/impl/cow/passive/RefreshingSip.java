@@ -72,7 +72,7 @@ public final class RefreshingSip extends Passive implements IActionbar {
     }
 
     @Override
-    public Component acbValue() {
+    public Component acb() {
         return Type.COOLDOWN.accept(System.currentTimeMillis(), lastMills, COOLDOWN);
     }
 }

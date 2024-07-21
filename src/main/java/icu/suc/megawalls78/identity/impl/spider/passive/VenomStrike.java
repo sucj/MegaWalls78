@@ -46,7 +46,7 @@ public final class VenomStrike extends Passive implements IActionbar {
     }
 
     @Override
-    public Component acbValue() {
+    public Component acb() {
         return Type.COMBO_COOLDOWN.accept(System.currentTimeMillis(), lastMills, COOLDOWN, hit, MAX);
     }
 }

@@ -34,7 +34,7 @@ public abstract class Skill extends Trait implements IActionbar {
     }
 
     @Override
-    public Component acbValue() {
+    public Component acb() {
         return Type.COOLDOWN.accept(System.currentTimeMillis(), lastMills, cooldown);
     }
 

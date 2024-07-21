@@ -121,7 +121,7 @@ public final class BucketBarrier extends Passive implements IActionbar {
     }
 
     @Override
-    public Component acbValue() {
+    public Component acb() {
         return Type.DURATION_COOLDOWN.accept(System.currentTimeMillis(), lastMills, COOLDOWN, duration);
     }
 }

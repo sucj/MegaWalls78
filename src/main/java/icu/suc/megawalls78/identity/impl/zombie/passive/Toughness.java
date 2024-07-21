@@ -41,7 +41,7 @@ public final class Toughness extends Passive implements IActionbar {
     }
 
     @Override
-    public Component acbValue() {
+    public Component acb() {
         return Type.COMBO.accept(hit, MAX);
     }
 }

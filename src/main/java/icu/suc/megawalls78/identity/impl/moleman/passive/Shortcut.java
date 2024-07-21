@@ -40,7 +40,7 @@ public class Shortcut extends Passive implements IActionbar {
     }
 
     @Override
-    public Component acbValue() {
+    public Component acb() {
         return Type.COMBO.accept(count, MAX);
     }
 }

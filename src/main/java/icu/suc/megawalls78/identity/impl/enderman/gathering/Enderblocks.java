@@ -67,7 +67,7 @@ public class Enderblocks extends Gathering {
         }
 
         @Override
-        public Component acbValue() {
+        public Component acb() {
             return Type.COMBO_DISABLE.accept(count, MAX, MegaWalls78.getInstance().getGameManager().getRunner().isDm());
         }
 

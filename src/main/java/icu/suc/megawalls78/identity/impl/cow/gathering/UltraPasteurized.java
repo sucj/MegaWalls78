@@ -49,7 +49,7 @@ public final class UltraPasteurized extends Gathering {
         }
 
         @Override
-        public Component acbValue() {
+        public Component acb() {
             return Type.COMBO_DISABLE.accept(count, MAX, !MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING));
         }
     }

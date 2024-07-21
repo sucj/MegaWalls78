@@ -265,7 +265,7 @@ public class PlayerListener implements Listener {
                 switch (event.getAction()) {
                     case RIGHT_CLICK_BLOCK:
                     case RIGHT_CLICK_AIR: {
-                        if (ItemUtil.mw78EnderChest(event.getItem())) {
+                        if (ItemUtil.isMW78Item(event.getItem(), ItemUtil.ENDER_CHEST)) {
                             InventoryUtil.openEnderChest(player);
                             event.setCancelled(true);
                         }

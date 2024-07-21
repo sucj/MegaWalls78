@@ -7,7 +7,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 
 public interface IActionbar {
 
-    Component acbValue();
+    Component acb();
 
     enum Type {
         COOLDOWN,

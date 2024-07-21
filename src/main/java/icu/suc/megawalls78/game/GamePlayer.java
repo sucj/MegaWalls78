@@ -148,13 +148,13 @@ public class GamePlayer {
         for (Skill skill : skills.values()) {
             Class<? extends Skill> skillClass = skill.getClass();
             if (!skillClasses.contains(skillClass)) {
-                add2Actionbar(Component.translatable("mw78.acb." + skill.getId(), identity.getColor(), TextDecoration.BOLD), SupplierComponent.create(skill::acbValue));
+                add2Actionbar(Component.translatable("mw78.acb." + skill.getId(), identity.getColor(), TextDecoration.BOLD), SupplierComponent.create(skill::acb));
                 skillClasses.add(skillClass);
             }
         }
         for (Passive passive : passives) {
             if (passive instanceof IActionbar) {
-                add2Actionbar(Component.translatable("mw78.acb." + passive.getId(), identity.getColor(), TextDecoration.BOLD), SupplierComponent.create(((IActionbar) passive)::acbValue));
+                add2Actionbar(Component.translatable("mw78.acb." + passive.getId(), identity.getColor(), TextDecoration.BOLD), SupplierComponent.create(((IActionbar) passive)::acb));
             }
         }
 

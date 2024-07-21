@@ -23,7 +23,7 @@ public final class Power extends Passive implements IActionbar {
     }
 
     @Override
-    public Component acbValue() {
+    public Component acb() {
         return Type.DURATION.accept(System.currentTimeMillis(), lastMills, DURATION);
     }
 

@@ -54,7 +54,7 @@ public final class Skitter extends Passive implements IActionbar {
     }
 
     @Override
-    public Component acbValue() {
+    public Component acb() {
         return Type.MODE.accept(getMode(getPlayer().getUuid()).getName());
     }
 
