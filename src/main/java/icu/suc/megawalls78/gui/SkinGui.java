@@ -48,7 +48,7 @@ public class SkinGui {
             ItemBuilder itemBuilder = ItemBuilder.of(Material.PLAYER_HEAD)
                     .setDisplayName(skin.name().color(NamedTextColor.WHITE))
                     .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                    .setSkullSkin(skin.value());
+                    .setSkullSkin(skin.value(), skin.signature());
             if (flag && selectedSkin.equals(skin)) {
                 itemBuilder.addSuffix(Component.space().append(Component.translatable("mw78.gui.selected", NamedTextColor.GRAY))).setEnchantmentGlintOverride(true);
                 flag = false;
@@ -131,7 +131,7 @@ public class SkinGui {
         return ItemBuilder.of(Material.PLAYER_HEAD)
                 .setDisplayName(Component.translatable("mw78.gui.skin", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.skin.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setSkullSkin(skin.value())
+                .setSkullSkin(skin.value(), skin.signature())
                 .build();
     }
 }

@@ -62,7 +62,7 @@ public class SkinManager {
 
     public Skin getPlayerSelectedSkin(Player player, Identity identity) {
         // TODO DATABASE
-        return playerSelectedSkin.computeIfAbsent(player, k -> Maps.newHashMap()).computeIfAbsent(identity, k -> skins.get(identity).iterator().next());
+        return playerSelectedSkin.computeIfAbsent(player, k -> Maps.newHashMap()).computeIfAbsent(identity, k -> skins.get(identity).getFirst());
     }
 
     public Skin setPlayerSelectedSkin(Player player, Identity identity, Skin skin) {
@@ -75,7 +75,7 @@ public class SkinManager {
 
     public void addSkin(Identity identity, Skin skin) {
         skins.get(identity).add(skin);
-        SkinsRestorerProvider.get().getSkinStorage().setCustomSkinData(customSkin(identity, skin), SkinProperty.of(skin.value(), ""));
+        SkinsRestorerProvider.get().getSkinStorage().setCustomSkinData(customSkin(identity, skin), SkinProperty.of(skin.value(), skin.signature()));
     }
 
     public List<Skin> getSkins(Identity identity) {

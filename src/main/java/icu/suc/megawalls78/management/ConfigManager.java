@@ -115,7 +115,8 @@ public class ConfigManager {
                 continue;
             }
             for (String s : section.getKeys(false)) {
-                instance.getSkinManager().addSkin(identity, new Skin(key + "." + s, section.getString(s)));
+                ConfigurationSection sc = Objects.requireNonNull(section.getConfigurationSection(s));
+                instance.getSkinManager().addSkin(identity, new Skin(key + "." + s, sc.getString("value"), sc.getString("signature")));
             }
         }
     }

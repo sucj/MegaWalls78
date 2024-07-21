@@ -144,10 +144,6 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setSkullSkin(String value) {
-        return setSkullSkin(value, "");
-    }
-
     public ItemBuilder setSkullSkin(String value, String signature) {
         if (this.profile == null) {
             this.profile = new CraftPlayerProfile(UUID.randomUUID(), "");

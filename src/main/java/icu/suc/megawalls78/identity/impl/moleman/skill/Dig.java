@@ -48,6 +48,7 @@ public class Dig extends Skill {
             run = true;
         }
 
+        player.addPotionEffect(RESISTANCE);
         task.resetTimer();
         task.updateVector();
 

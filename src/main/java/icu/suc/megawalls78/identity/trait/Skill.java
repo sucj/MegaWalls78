@@ -3,6 +3,7 @@ package icu.suc.megawalls78.identity.trait;
 import com.google.common.collect.Sets;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -48,20 +49,20 @@ public abstract class Skill extends Trait implements IActionbar {
     }
 
     public enum Trigger {
-        SWORD(Action.RIGHT, Material.WOODEN_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.DIAMOND_SWORD, Material.NETHERITE_SWORD),
-        BOW(Action.LEFT, Material.BOW, Material.CROSSBOW),
-        SHOVEL(Action.RIGHT, Material.WOODEN_SHOVEL, Material.STONE_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.DIAMOND_SHOVEL, Material.NETHERITE_SHOVEL);
+        SWORD(Action.RIGHT, Tag.ITEMS_SWORDS),
+        BOW(Action.LEFT, Tag.ITEMS_ENCHANTABLE_BOW),
+        SHOVEL(Action.RIGHT, Tag.ITEMS_SHOVELS);
 
         private final Action action;
-        private final Set<Material> materials;
+        private final Tag<Material> tag;
 
-        Trigger(Action action, Material... materials) {
+        Trigger(Action action, Tag<Material> tag) {
             this.action = action;
-            this.materials = Set.of(materials);
+            this.tag = tag;
         }
 
         private boolean isTriggered(org.bukkit.event.block.Action action, Material material) {
-            return this.action.equals(Action.getAction(action)) && this.materials.contains(material);
+            return this.action.equals(Action.getAction(action)) && this.tag.isTagged(material);
         }
 
         public static Trigger getTrigger(org.bukkit.event.block.Action action, Material material) {
@@ -75,8 +76,7 @@ public abstract class Skill extends Trait implements IActionbar {
 
         enum Action {
             LEFT(org.bukkit.event.block.Action.LEFT_CLICK_AIR, org.bukkit.event.block.Action.LEFT_CLICK_BLOCK),
-            RIGHT(org.bukkit.event.block.Action.RIGHT_CLICK_AIR, org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK),
-            ;
+            RIGHT(org.bukkit.event.block.Action.RIGHT_CLICK_AIR, org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK);
 
             private final Set<org.bukkit.event.block.Action> actions;
 
