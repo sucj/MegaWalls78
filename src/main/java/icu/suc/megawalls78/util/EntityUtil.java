@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.util;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import de.myzelyam.api.vanish.VanishAPI;
 import icu.suc.megawalls78.entity.HerobrineLightning;
 import icu.suc.megawalls78.entity.TeamWither;
@@ -17,6 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftServer;
@@ -26,11 +28,14 @@ import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class EntityUtil {
@@ -82,17 +87,36 @@ public class EntityUtil {
         return movement.y() != vec3.y() && movement.y() < 0.0D;
     }
 
-    public static List<Entity> getNearbyEntities(Entity entity, double x, double y, double z) {
-        List<Entity> entities = entity.getNearbyEntities(x, y, z);
+    public static Collection<Entity> getNearbyEntities(Entity entity, double x, double y, double z) {
+        return filterVanished(entity.getNearbyEntities(x, y, z));
+    }
+
+    public static Collection<Entity> getNearbyEntities(Entity entity, double radius) {
+        Location location = entity.getLocation();
+        Collection<Entity> entities = getNearbyEntities(entity, radius, radius, radius);
+        entities.removeIf(e -> location.distance(e.getLocation()) > radius);
+        return filterVanished(entities);
+    }
+
+    public static Collection <Entity> getNearbyEntities(World world, BoundingBox box) {
+        return filterVanished(world.getNearbyEntities(box));
+    }
+
+    private static Collection<Entity> filterVanished(Collection<Entity> entities) {
         entities.removeIf(e -> (e instanceof Player && VanishAPI.isInvisible((Player) e)));
         return entities;
     }
 
-    public static List<Entity> getNearbyEntities(Entity entity, double radius) {
-        Location location = entity.getLocation();
-        List<Entity> nearbyEntities = getNearbyEntities(entity, radius, radius, radius);
-        nearbyEntities.removeIf(e -> location.distance(e.getLocation()) > radius);
-        return nearbyEntities;
+    public static Set<Location> getLocations(World world, BoundingBox box) {
+        Set<Location> locations = Sets.newHashSet();
+        for (int x = (int) box.getMinX(); x <= box.getMaxX(); x++) {
+            for (int y = (int) box.getMinY(); y <= box.getMaxY(); y++) {
+                for (int z = (int) box.getMinZ(); z <= box.getMaxZ(); z++) {
+                    locations.add(new Location(world, x, y, z));
+                }
+            }
+        }
+        return locations;
     }
 
     private static Vec3 adjustMovementForCollisions(ServerLevel world, net.minecraft.world.entity.Entity entity, Vec3 movement) {

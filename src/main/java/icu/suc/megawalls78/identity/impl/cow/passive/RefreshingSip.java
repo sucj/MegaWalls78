@@ -41,7 +41,7 @@ public final class RefreshingSip extends Passive implements IActionbar {
                 lastMills = currentMillis;
 
                 ParticleUtil.playExpandingCircleParticle(player.getLocation(), Particle.ENTITY_EFFECT, 64, RANGE, 500L, Color.FUCHSIA);
-                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_COW_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_COW_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
                 AtomicInteger count = new AtomicInteger();
                 player.heal(HEALTH);

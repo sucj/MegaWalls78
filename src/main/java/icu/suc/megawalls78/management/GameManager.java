@@ -99,7 +99,10 @@ public class GameManager {
     public Set<Player> getTeammates(Player player) {
         Set<Player> players = Sets.newHashSet();
         for (GamePlayer gamePlayer : teamPlayersMap.get(getPlayer(player).getTeam())) {
-            players.add(gamePlayer.getBukkitPlayer());
+            Player bukkitPlayer = gamePlayer.getBukkitPlayer();
+            if (bukkitPlayer != null) {
+                players.add(bukkitPlayer);
+            }
         }
         return players;
     }

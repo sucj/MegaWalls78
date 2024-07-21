@@ -33,12 +33,13 @@ public class Teleport extends Skill {
         AtomicReference<Player> aNearestPlayer = new AtomicReference<>();
         AtomicReference<Double> nearestDistance = new AtomicReference<>(Double.MAX_VALUE);
 
-        Location from = player.getLocation();
+        Location fromF = player.getLocation();
+        Location fromH = player.getEyeLocation();
         EntityUtil.getNearbyEntities(player, RANGE).stream()
                 .filter(entity -> entity instanceof Player)
                 .filter(entity -> !isValidAllies(player, entity))
                 .forEach(entity -> {
-                    double distance = from.distance(entity.getLocation());
+                    double distance = fromF.distance(entity.getLocation());
                     if (distance < nearestDistance.get()) {
                         aNearestPlayer.set(((Player) entity));
                         nearestDistance.set(distance);
@@ -55,20 +56,22 @@ public class Teleport extends Skill {
         }
 
         ParticleUtil.spawnParticleRandomBody(player, Particle.PORTAL, 8);
-        player.getWorld().playSound(from, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        player.getWorld().playSound(fromH, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
-        Location to = nearestPlayer.getLocation();
-        to.setYaw(from.getYaw());
-        to.setPitch(from.getPitch());
+        Location toF = nearestPlayer.getLocation();
+        Location toH = nearestPlayer.getEyeLocation();
+        toF.setYaw(fromF.getYaw());
+        toF.setPitch(fromF.getPitch());
 
-        player.teleport(to);
+        player.setFallDistance(0);
+        player.teleport(toF);
 
         ParticleUtil.spawnParticleRandomBody(player, Particle.PORTAL, 8);
-        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        player.getWorld().playSound(toH, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
         player.addPotionEffect(SPEED);
 
-        if (shouldWeakness(from, to) || shouldWeakness(from.add(0, 1, 0), to.add(0, 1, 0))) {
+        if (shouldWeakness(fromF, toF) || shouldWeakness(fromH, toH)) {
             player.addPotionEffect(WEAKNESS);
         }
 

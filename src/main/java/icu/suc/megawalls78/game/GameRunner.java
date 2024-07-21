@@ -137,12 +137,16 @@ public class GameRunner implements Runnable {
                         }
                     }
                 }
-                if (gameManager.inFighting() && !state.equals(GameState.OPENING) && !state.equals(GameState.PREPARING) && !state.equals(GameState.COUNTDOWN)) {
+                if (gameManager.inFighting() && !state.equals(GameState.OPENING) && !state.equals(GameState.COUNTDOWN)) {
                     for (GamePlayer gamePlayer : gameManager.getPlayers().values()) {
                         if (gamePlayer.getFinalDeaths() == 0) {
                             Player bukkitPlayer = gamePlayer.getBukkitPlayer();
                             if (bukkitPlayer != null && bukkitPlayer.isOnline()) {
-                                gamePlayer.increaseEnergy(isDm() ? EnergyWay.DM : EnergyWay.GAME);
+                                if (state.equals(GameState.PREPARING)) {
+                                    gamePlayer.increaseEnergy(EnergyWay.PREPARATION);
+                                } else {
+                                    gamePlayer.increaseEnergy(isDm() ? EnergyWay.DM : EnergyWay.GAME);
+                                }
                             }
                         }
                     }

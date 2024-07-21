@@ -23,7 +23,7 @@ public final class CircleOfHealing extends Skill {
     @Override
     protected boolean use0(Player player) {
         ParticleUtil.playExpandingCircleParticle(player.getLocation(), Particle.ENTITY_EFFECT, 64, RANGE, 500L, Color.GREEN);
-        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
         AtomicInteger count = new AtomicInteger();
         player.heal(SELF);

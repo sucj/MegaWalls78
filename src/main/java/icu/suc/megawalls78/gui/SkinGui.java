@@ -2,12 +2,10 @@ package icu.suc.megawalls78.gui;
 
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.Skin;
 import icu.suc.megawalls78.management.SkinManager;
 import icu.suc.megawalls78.util.ItemBuilder;
-import icu.suc.megawalls78.util.RandomUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -18,7 +16,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SkinGui {
 
@@ -51,7 +48,7 @@ public class SkinGui {
             ItemBuilder itemBuilder = ItemBuilder.of(Material.PLAYER_HEAD)
                     .setDisplayName(skin.name().color(NamedTextColor.WHITE))
                     .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                    .setSkullSkin(skin.value(), skin.signature());
+                    .setSkullSkin(skin.value());
             if (flag && selectedSkin.equals(skin)) {
                 itemBuilder.addSuffix(Component.space().append(Component.translatable("mw78.gui.selected", NamedTextColor.GRAY))).setEnchantmentGlintOverride(true);
                 flag = false;
@@ -134,7 +131,7 @@ public class SkinGui {
         return ItemBuilder.of(Material.PLAYER_HEAD)
                 .setDisplayName(Component.translatable("mw78.gui.skin", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.skin.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setSkullSkin(skin.value(), skin.signature())
+                .setSkullSkin(skin.value())
                 .build();
     }
 }

@@ -147,10 +147,10 @@ public class GamePlayer {
         Set<Class<? extends Skill>> skillClasses = Sets.newHashSet();
         for (Skill skill : skills.values()) {
             Class<? extends Skill> skillClass = skill.getClass();
-            if (skillClasses.contains(skillClass)) {
+            if (!skillClasses.contains(skillClass)) {
                 add2Actionbar(Component.translatable("mw78.acb." + skill.getId(), identity.getColor(), TextDecoration.BOLD), SupplierComponent.create(skill::acbValue));
+                skillClasses.add(skillClass);
             }
-            skillClasses.add(skillClass);
         }
         for (Passive passive : passives) {
             if (passive instanceof IActionbar) {

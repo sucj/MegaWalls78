@@ -30,7 +30,7 @@ public final class SoothingMoo extends Skill {
     @Override
     protected boolean use0(Player player) {
         ParticleUtil.playExpandingCircleParticle(player.getLocation(), Particle.ENTITY_EFFECT, 64, RANGE, 500L, Color.FUCHSIA);
-        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_COW_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F, 0);
+        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_COW_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F, 0);
 
         AtomicInteger count = new AtomicInteger();
         player.addPotionEffect(RESISTANCE);

@@ -52,10 +52,12 @@ public class Enderblocks extends Gathering {
                     }
 
                     for (Location adjLocation : adjLocations) {
-                        Block adjBlock = adjLocation.getBlock();
-                        if (adjBlock.getType().equals(type)) {
-                            InventoryUtil.addItem(player.getInventory(), adjBlock.getDrops(PlayerUtil.getPlayerMainHand(player)));
-                            BlockUtil.breakNaturallyNoDrops(adjBlock);
+                        if (MegaWalls78.getInstance().getGameManager().getRunner().getAllowedBlocks().contains(adjLocation)) {
+                            Block adjBlock = adjLocation.getBlock();
+                            if (adjBlock.getType().equals(type)) {
+                                InventoryUtil.addItem(player.getInventory(), adjBlock.getDrops(PlayerUtil.getPlayerMainHand(player)));
+                                BlockUtil.breakNaturallyNoDrops(adjBlock);
+                            }
                         }
                     }
 

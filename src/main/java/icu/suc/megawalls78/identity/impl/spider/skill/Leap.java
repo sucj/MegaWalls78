@@ -31,7 +31,7 @@ public final class Leap extends Skill {
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1);
     private static final float SCALE = 0.5F;
 
-    private Listener listener;
+    private Task task;
 
     public Leap() {
         super("leap", 100, 1000L);
@@ -39,12 +39,12 @@ public final class Leap extends Skill {
 
     @Override
     protected boolean use0(Player player) {
-        Location location = player.getLocation();
+        Location location = player.getEyeLocation();
         player.getWorld().playSound(location, Sound.ENTITY_SPIDER_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F);
 
         boolean run = false; // For continuous jump
-        if (listener == null || listener.isCancelled()) {
-            listener = new Listener(player);
+        if (task == null || task.isCancelled()) {
+            task = new Task(player);
             run = true;
         }
 
@@ -53,21 +53,23 @@ public final class Leap extends Skill {
         player.setVelocity(vector);
 
         if (run) {
-            listener.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
+            task.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
         }
 
         return true;
     }
 
-    private class Listener extends BukkitRunnable {
+    private class Task extends BukkitRunnable {
 
         private final Player player;
+
         private Location lastLocation;
         private double travelLength;
 
-        private Listener(Player player) {
+        private Task(Player player) {
             this.player = player;
-            this.lastLocation = player.getLocation();
+
+            this.lastLocation = player.getEyeLocation();
         }
 
         @Override
@@ -120,17 +122,18 @@ public final class Leap extends Skill {
         }
 
         private void updateTravelLength() {
-            Location location = player.getLocation();
+            Location location = player.getEyeLocation();
             travelLength += lastLocation.distance(location);
             lastLocation = location;
         }
 
         private void spawnWebs(int count) {
+            Location location = player.getLocation();
             count = Math.max(8, Math.min(count, 10));
             for (int j = 0; j < count; j++) {
-                double angle = Math.toRadians(j * 360.0D / count + lastLocation.getYaw());
+                double angle = Math.toRadians(j * 360.0D / count + location.getYaw());
                 Vector vector = new Vector(Math.cos(angle), 1, Math.sin(angle)).normalize().multiply(travelLength / 40.0D);
-                player.getWorld().spawnEntity(lastLocation, EntityType.FALLING_BLOCK, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
+                player.getWorld().spawnEntity(location, EntityType.FALLING_BLOCK, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
                     FallingBlock fallingBlock = (FallingBlock) entity;
                     fallingBlock.setBlockData(Material.COBWEB.createBlockData());
                     fallingBlock.setCancelDrop(true);

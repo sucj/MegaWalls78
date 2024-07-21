@@ -4,6 +4,7 @@ import com.destroystokyo.paper.profile.ProfileProperty;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.gui.SkinGui;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.Skin;
 import net.skinsrestorer.api.SkinsRestorer;
@@ -66,12 +67,15 @@ public class SkinManager {
 
     public Skin setPlayerSelectedSkin(Player player, Identity identity, Skin skin) {
         // TODO DATABASE
-        return playerSelectedSkin.computeIfAbsent(player, k -> Maps.newHashMap()).put(identity, skin);
+        applySkin(player, identity, skin);
+        Skin put = playerSelectedSkin.computeIfAbsent(player, k -> Maps.newHashMap()).put(identity, skin);
+        player.getInventory().setItem(1, SkinGui.trigger(player));
+        return put;
     }
 
     public void addSkin(Identity identity, Skin skin) {
         skins.get(identity).add(skin);
-        SkinsRestorerProvider.get().getSkinStorage().setCustomSkinData(customSkin(identity, skin), SkinProperty.of(skin.value(), skin.signature()));
+        SkinsRestorerProvider.get().getSkinStorage().setCustomSkinData(customSkin(identity, skin), SkinProperty.of(skin.value(), ""));
     }
 
     public List<Skin> getSkins(Identity identity) {

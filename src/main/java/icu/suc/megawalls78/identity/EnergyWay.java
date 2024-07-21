@@ -5,6 +5,7 @@ public enum EnergyWay {
     BOW_PER,
     MELEE_WHEN,
     BOW_WHEN,
+    PREPARATION,
     GAME,
     DM
 }

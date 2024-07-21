@@ -30,6 +30,10 @@ public class BlockUtil {
         return isStone(material) || isWood(material) || isOre(material);
     }
 
+    public static boolean breakNaturally(Block block) {
+        return block.breakNaturally();
+    }
+
     public static boolean breakNaturallyNoDrops(Block block) {
         net.minecraft.world.level.block.state.BlockState iblockdata = ((CraftBlock) block).getNMS();
         net.minecraft.world.level.block.Block mcBlock = iblockdata.getBlock();
@@ -56,5 +60,9 @@ public class BlockUtil {
             }
         }
         return destroyed && result;
+    }
+
+    public static boolean isDestroyable(Block block) {
+        return ((CraftBlock) block).getNMS().isDestroyable();
     }
 }

@@ -30,7 +30,7 @@ public class SoulCharge extends Passive implements IActionbar {
         Player player = gamePlayer.getBukkitPlayer();
         long currentMillis = System.currentTimeMillis();
         if (shouldPassive(player) && currentMillis - lastMills >= COOLDOWN && gamePlayer.getEnergy() == ENERGY) {
-            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_SCREAM, SoundCategory.PLAYERS, 1.0F, 1.0F);
+            player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMAN_SCREAM, SoundCategory.PLAYERS, 1.0F, 1.0F);
             player.addPotionEffect(REGENERATION);
             lastMills = currentMillis;
         }

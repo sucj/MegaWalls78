@@ -15,6 +15,10 @@ import icu.suc.megawalls78.identity.impl.herebrine.gathering.TreasureHunter;
 import icu.suc.megawalls78.identity.impl.herebrine.passive.Flurry;
 import icu.suc.megawalls78.identity.impl.herebrine.passive.Power;
 import icu.suc.megawalls78.identity.impl.herebrine.skill.Wrath;
+import icu.suc.megawalls78.identity.impl.moleman.gathering.Stockpile;
+import icu.suc.megawalls78.identity.impl.moleman.passive.JunkFood;
+import icu.suc.megawalls78.identity.impl.moleman.passive.Shortcut;
+import icu.suc.megawalls78.identity.impl.moleman.skill.Dig;
 import icu.suc.megawalls78.identity.impl.spider.gathering.IronRush;
 import icu.suc.megawalls78.identity.impl.spider.passive.Skitter;
 import icu.suc.megawalls78.identity.impl.spider.passive.VenomStrike;
@@ -41,7 +45,8 @@ public enum Identity {
     HEROBRINE("herobrine", NamedTextColor.YELLOW, Material.DIAMOND_SWORD, icu.suc.megawalls78.identity.impl.herebrine.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 25, EnergyWay.BOW_PER, 25), Map.of(Trigger.SWORD, Wrath.class, Trigger.BOW, Wrath.class), List.of(Power.class, Flurry.class), TreasureHunter.class),
     ZOMBIE("zombie", NamedTextColor.DARK_GREEN, Material.ROTTEN_FLESH, icu.suc.megawalls78.identity.impl.zombie.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 12, EnergyWay.BOW_PER, 12, EnergyWay.MELEE_WHEN, 1, EnergyWay.BOW_WHEN, 2), Map.of(Trigger.SWORD, CircleOfHealing.class, Trigger.BOW, CircleOfHealing.class), List.of(Toughness.class, Berserk.class), WellTrained.class),
     ENDERMAN("enderman", NamedTextColor.DARK_PURPLE, Material.ENDER_PEARL, icu.suc.megawalls78.identity.impl.enderman.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 20, EnergyWay.BOW_PER, 20), Map.of(Trigger.SWORD, Teleport.class, Trigger.BOW, Teleport.class), List.of(EnderHeart.class, SoulCharge.class), Enderblocks.class),
-    SPIDER("spider", NamedTextColor.DARK_PURPLE, Material.COBWEB, icu.suc.megawalls78.identity.impl.spider.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 8, EnergyWay.BOW_PER, 8, EnergyWay.GAME, 4, EnergyWay.DM, 4), Map.of(Trigger.SWORD, Leap.class, Trigger.BOW, Leap.class), List.of(VenomStrike.class, Skitter.class), IronRush.class);
+    SPIDER("spider", NamedTextColor.DARK_PURPLE, Material.COBWEB, icu.suc.megawalls78.identity.impl.spider.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 8, EnergyWay.BOW_PER, 8, EnergyWay.GAME, 4, EnergyWay.DM, 4), Map.of(Trigger.SWORD, Leap.class, Trigger.BOW, Leap.class), List.of(VenomStrike.class, Skitter.class), IronRush.class),
+    MOLEMAN("moleman", NamedTextColor.YELLOW, Material.GOLDEN_SHOVEL, icu.suc.megawalls78.identity.impl.moleman.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10, EnergyWay.BOW_PER, 10, EnergyWay.PREPARATION, 5, EnergyWay.GAME, 3, EnergyWay.DM, 3), Map.of(Trigger.SWORD, Dig.class, Trigger.BOW, Dig.class, Trigger.SHOVEL, Dig.class), List.of(Shortcut.class, JunkFood.class), Stockpile.class);
 
     private final String id;
     private final TextColor color;
