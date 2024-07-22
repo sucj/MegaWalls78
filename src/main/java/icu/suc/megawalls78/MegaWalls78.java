@@ -3,6 +3,7 @@ package icu.suc.megawalls78;
 import icu.suc.megawalls78.command.IdCommand;
 import icu.suc.megawalls78.command.MapCommand;
 import icu.suc.megawalls78.command.ShoutCommand;
+import icu.suc.megawalls78.command.SuicideCommand;
 import icu.suc.megawalls78.listener.*;
 import icu.suc.megawalls78.management.*;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
@@ -61,6 +62,7 @@ public final class MegaWalls78 extends JavaPlugin {
         Objects.requireNonNull(getCommand("id")).setExecutor(new IdCommand());
         Objects.requireNonNull(getCommand("map")).setExecutor(new MapCommand());
         Objects.requireNonNull(getCommand("shout")).setExecutor(new ShoutCommand());
+        Objects.requireNonNull(getCommand("suicide")).setExecutor(new SuicideCommand());
     }
 
     private void registerListeners() {

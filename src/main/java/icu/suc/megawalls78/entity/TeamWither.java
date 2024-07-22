@@ -35,8 +35,6 @@ public class TeamWither extends WitherBoss {
     private final int[] nextHeadUpdate0;
     private final int[] idleHeadUpdates0;
 
-    private int count;
-
     public TeamWither(Level world) {
         super(EntityType.WITHER, world);
         Objects.requireNonNull(getAttribute(Attributes.MAX_HEALTH)).setBaseValue(MegaWalls78.getInstance().getConfigManager().witherHealth);

@@ -28,6 +28,8 @@ import java.util.Set;
 
 public class GameRunner implements Runnable {
 
+    private static final Set<Location> EMPTY = Set.of();
+
     private long tick;
     private long timer;
     private boolean dm;
@@ -40,16 +42,16 @@ public class GameRunner implements Runnable {
     private Set<Block> barriers;
     private final Set<Location> allowedBlocks;
     private final Map<GameTeam, Set<Location>> palaces;
-    private final Set<Location> spawns;
+    private final Map<GameTeam, Set<Location>> spawns;
     private final Set<Location> walls;
     private final Set<Location> region;
     private final Map<GameTeam, Set<Location>> regions;
 
     public GameRunner() {
         this.barriers = Sets.newHashSet();
-        this.allowedBlocks = Sets.newHashSet();
+        this.allowedBlocks = Sets.newConcurrentHashSet();
         this.palaces = Maps.newHashMap();
-        this.spawns = Sets.newHashSet();
+        this.spawns = Maps.newHashMap();
         this.walls = Sets.newHashSet();
         this.region = Sets.newHashSet();
         this.regions = Maps.newHashMap();
@@ -63,7 +65,9 @@ public class GameRunner implements Runnable {
                 Set<Location> palace = Sets.newHashSet();
                 palaces.put(team, palace);
                 addRegionsBlock(team.palace(), palace);
-                addRegionsBlock(team.spawn(), spawns);
+                Set<Location> spawn = Sets.newHashSet();
+                spawns.put(team, spawn);
+                addRegionsBlock(team.spawn(), spawn);
                 Set<Location> region = Sets.newHashSet();
                 regions.put(team, region);
                 addRegionsBlock(team.region(), region);
@@ -90,6 +94,7 @@ public class GameRunner implements Runnable {
                         this.timer = configManager.waitingTime;
                         gameManager.setState(GameState.COUNTDOWN);
                         if (timer >= 10000L || timer >= 5000L) {
+                            MegaWalls78.getInstance().getLogger().info("Game starts in " + timer + " ms.");
                             Component seconds = ComponentUtil.second(timer);
                             ComponentUtil.sendMessage(Component.translatable("mw78.start.in", NamedTextColor.AQUA, Component.translatable("mw78.seconds", seconds)), Bukkit.getOnlinePlayers());
                             ComponentUtil.sendTitle(Component.empty(), seconds, ComponentUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
@@ -98,6 +103,7 @@ public class GameRunner implements Runnable {
                 }
                 case COUNTDOWN -> {
                     if (gameManager.getPlayers().size() < configManager.minPlayer) {
+                        MegaWalls78.getInstance().getLogger().info("Game starts cancelled.");
                         gameManager.setState(GameState.WAITING);
                         ComponentUtil.sendMessage(Component.translatable("mw78.start.cancel", NamedTextColor.RED), Bukkit.getOnlinePlayers());
                         ComponentUtil.sendTitle(Component.empty(), Component.translatable("mw78.start.wait", NamedTextColor.RED), ComponentUtil.ONE_SEC_TIMES, Bukkit.getOnlinePlayers());
@@ -113,10 +119,13 @@ public class GameRunner implements Runnable {
                             if (dmTimer <= 0L) {
                                 dmC = false;
                                 dm = true;
-                                //TODO DM message
-                                Bukkit.broadcast(Component.text("dm"));
+                                ComponentUtil.sendMessage(Component.translatable("mw78.dm.started", NamedTextColor.RED, TextDecoration.BOLD), Bukkit.getOnlinePlayers());
                             } else {
                                 dmTimer -= 1000L;
+                                if (dmTimer == 10000L || dmTimer <= 5000L && dmTimer > 0) {
+                                    Component seconds = ComponentUtil.second(dmTimer, NamedTextColor.AQUA);
+                                    ComponentUtil.sendMessage(Component.translatable("mw78.dm.countdown", NamedTextColor.RED, seconds), Bukkit.getOnlinePlayers());
+                                }
                             }
                         } else {
                             timer -= 1000L;
@@ -166,6 +175,7 @@ public class GameRunner implements Runnable {
         ConfigManager configManager = instance.getConfigManager();
         switch (state) {
             case COUNTDOWN -> {
+                instance.getLogger().info("Game started.");
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     player.setHealth(0);
                 }
@@ -200,10 +210,10 @@ public class GameRunner implements Runnable {
                 ComponentUtil.sendMessage(Component.translatable("mw78.prepare", NamedTextColor.RED).decorate(TextDecoration.BOLD), Bukkit.getOnlinePlayers());
                 Bukkit.getScheduler().runTaskAsynchronously(MegaWalls78.getInstance(), () -> {
                     for (GameTeam team : gameManager.getTeams()) {
-                        allowedBlocks.addAll(regions.get(team));
-                        allowedBlocks.removeAll(palaces.get(team));
+                        allowedBlocks.addAll(getTeamRegion(team));
+                        allowedBlocks.removeAll(getPalace(team));
+                        allowedBlocks.removeAll(getSpawn(team));
                     }
-                    allowedBlocks.removeAll(spawns);
                 });
             }
             case PREPARING -> {
@@ -274,7 +284,7 @@ public class GameRunner implements Runnable {
             }
             EntityUtil.spawn(gameTeam.wither(), EntityUtil.Type.TEAM_WITHER, entity -> {
                 Wither wither = (Wither) entity;
-                wither.customName((gameTeam.name().append(Component.space()).append(Component.translatable("entity.minecraft.wither"))).color(gameTeam.color()));
+                wither.customName(Component.translatable("mw78.wither.name", gameTeam.color(), gameTeam.name(), wither.name()));
                 mcTeam.addEntity(wither);
                 ((TeamWither) entity.getHandle()).setBossBar(gameManager.addWither(gameTeam, wither));
             });
@@ -334,7 +344,7 @@ public class GameRunner implements Runnable {
     }
 
     public Set<Location> getTeamRegion(GameTeam team) {
-        return regions.get(team);
+        return regions.getOrDefault(team, EMPTY);
     }
 
     public GameTeam inPalace(Location location) {
@@ -354,6 +364,11 @@ public class GameRunner implements Runnable {
         dmTimer = MegaWalls78.getInstance().getConfigManager().dmTime;
         timer -= dmTimer;
         dmC = true;
+        ComponentUtil.sendMessage(Component.translatable("mw78.dm.start", NamedTextColor.RED, TextDecoration.BOLD), Bukkit.getOnlinePlayers());
+        if (dmTimer == 10000L || dmTimer <= 5000L) {
+            Component seconds = ComponentUtil.second(dmTimer, NamedTextColor.AQUA);
+            ComponentUtil.sendMessage(Component.translatable("mw78.dm.countdown", NamedTextColor.RED, seconds), Bukkit.getOnlinePlayers());
+        }
     }
 
     public boolean isDm() {
@@ -362,5 +377,13 @@ public class GameRunner implements Runnable {
 
     public boolean isDmC() {
         return dmC;
+    }
+
+    public Set<Location> getPalace(GameTeam team) {
+        return palaces.getOrDefault(team, EMPTY);
+    }
+
+    public Set<Location> getSpawn(GameTeam team) {
+        return spawns.getOrDefault(team, EMPTY);
     }
 }

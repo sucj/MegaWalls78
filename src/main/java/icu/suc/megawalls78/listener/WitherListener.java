@@ -1,13 +1,23 @@
 package icu.suc.megawalls78.listener;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
+import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.game.GameRunner;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.management.GameManager;
+import icu.suc.megawalls78.util.ComponentUtil;
 import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.MutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
@@ -17,7 +27,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 public class WitherListener implements Listener {
+
+    private static final Map<GameTeam, MutablePair<Long, Boolean>> WITHER_WARNING = Maps.newHashMap();
+    private static final Map<UUID, Long> WITHER_LIVES = Maps.newHashMap();
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onWitherDamage(EntityDamageEvent event) {
@@ -27,7 +44,19 @@ public class WitherListener implements Listener {
             if (team == null || gameManager.getPlayer(player).getTeam().equals(team)) {
                 event.setCancelled(true);
             }
-//            gameManager.getBossBar(team).progress((float) (wither.getHealth() / wither.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue()));
+            long currentMillis = System.currentTimeMillis();
+            MutablePair<Long, Boolean> pair = WITHER_WARNING.computeIfAbsent(team, t -> MutablePair.of(currentMillis, false));
+            if (currentMillis - pair.getLeft() > 1500L) {
+                boolean flag = pair.getRight();
+                for (GamePlayer gamePlayer : gameManager.getTeamPlayersMap().get(team)) {
+                    Player bukkitPlayer = gamePlayer.getBukkitPlayer();
+                    if (bukkitPlayer != null) {
+                        ComponentUtil.sendTitle(Component.empty(), Component.translatable("mw78.wither.attacked", flag ? NamedTextColor.DARK_RED : NamedTextColor.RED), ComponentUtil.ONE_SEC_TIMES_FADE, bukkitPlayer);
+                    }
+                }
+                pair.setLeft(currentMillis);
+                pair.setRight(!flag);
+            }
         }
     }
 
@@ -36,15 +65,22 @@ public class WitherListener implements Listener {
         if (event.getEntity() instanceof Wither wither) {
             GameManager gameManager = MegaWalls78.getInstance().getGameManager();
             GameTeam team = gameManager.getWitherTeam(wither);
+
+            GameRunner runner = gameManager.getRunner();
+            Bukkit.getScheduler().runTaskAsynchronously(MegaWalls78.getInstance(), () -> runner.getAllowedBlocks().addAll(runner.getTeamRegion(team)));
+
             BossBar bossBar = gameManager.getBossBar(team);
-            for (GamePlayer gamePlayer : gameManager.getTeamPlayersMap().get(team)) {
+            Set<GamePlayer> gamePlayers = gameManager.getTeamPlayersMap().get(team);
+            for (GamePlayer gamePlayer : gamePlayers) {
                 Player bukkitPlayer = gamePlayer.getBukkitPlayer();
-                if (bukkitPlayer == null || !bukkitPlayer.isOnline()) {
+                if (bukkitPlayer == null) {
                     gamePlayer.increaseFinalDeaths();
+                } else {
+                    ComponentUtil.sendTitle(Component.translatable("mw78.wither.died", NamedTextColor.RED), Component.translatable("mw78.respawn.cant", NamedTextColor.YELLOW), ComponentUtil.DEFAULT_TIMES, bukkitPlayer);
                 }
             }
             boolean eliminated = true;
-            for (GamePlayer gamePlayer : gameManager.getTeamPlayersMap().get(team)) {
+            for (GamePlayer gamePlayer : gamePlayers) {
                 if (gamePlayer.getFinalDeaths() == 0) {
                     eliminated = false;
                     break;
@@ -52,6 +88,7 @@ public class WitherListener implements Listener {
             }
             gameManager.setTeamEliminate(team, eliminated);
             for (Player player : Bukkit.getOnlinePlayers()) {
+                ComponentUtil.sendMessage(Component.translatable("death.attack.generic", wither.name()).decorate(TextDecoration.BOLD), player);
                 for (BossBar activeBossBar : player.activeBossBars()) {
                     if (activeBossBar == bossBar) {
                         player.hideBossBar(bossBar);
@@ -65,8 +102,9 @@ public class WitherListener implements Listener {
                     break;
                 }
             }
+
             if (dm) {
-                gameManager.getRunner().startDm();
+                runner.startDm();
             }
         }
     }
@@ -77,8 +115,10 @@ public class WitherListener implements Listener {
         GameState state = gameManager.getState();
         if (!state.equals(GameState.OPENING) && !state.equals(GameState.PREPARING)) {
             for (Wither wither : gameManager.getWithers()) {
-                if (!wither.isDead() && wither.getTicksLived() % 100 == 0) {
-                    wither.heal(-4.0D);
+                UUID uuid = wither.getUniqueId();
+                WITHER_LIVES.put(uuid, WITHER_LIVES.computeIfAbsent(uuid, id -> 0L) + 1);
+                if (!wither.isDead() && WITHER_LIVES.get(uuid) % 100 == 0) {
+                    wither.setHealth(Math.max(wither.getHealth() - 4.0D, 0));
                 }
             }
         }

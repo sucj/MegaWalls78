@@ -11,7 +11,6 @@ import icu.suc.megawalls78.gui.SkinGui;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
-import io.papermc.paper.event.player.PlayerItemCooldownEvent;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -34,8 +33,6 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.List;
@@ -65,6 +62,7 @@ public class PlayerListener implements Listener {
         } else {
             event.joinMessage(null);
         }
+        player.sendPlayerListHeaderAndFooter(Component.text("QQ GROUP 748889666", NamedTextColor.LIGHT_PURPLE, TextDecoration.BOLD), Component.text("MC.SUC.ICU", NamedTextColor.AQUA, TextDecoration.BOLD));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -166,10 +164,10 @@ public class PlayerListener implements Listener {
                     if (gamePlayer != null && gamePlayer.getFinalDeaths() != 0) {
                         ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), Component.empty(), ComponentUtil.DEFAULT_TIMES, player);
                     }
-                    player.setGameMode(GameMode.ADVENTURE);
-                    player.setAllowFlight(true);
-                    player.setFlying(true);
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, PotionEffect.INFINITE_DURATION, 1));
+                    player.setGameMode(GameMode.SPECTATOR);
+//                    player.setAllowFlight(true);
+//                    player.setFlying(true);
+//                    player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, PotionEffect.INFINITE_DURATION, 1));
                 });
             } else if (gamePlayer.getFinalDeaths() == 0) {
                 event.setSpawnLocation(RandomUtil.getRandomSpawn(gamePlayer.getTeam().spawn()));
@@ -200,10 +198,10 @@ public class PlayerListener implements Listener {
                 MegaWalls78.getInstance().getSkinManager().resetSkin(player);
             }
             event.setRespawnLocation(gameManager.getMap().spectator());
-            player.setGameMode(GameMode.ADVENTURE);
-            player.setAllowFlight(true);
-            player.setFlying(true);
-            Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, PotionEffect.INFINITE_DURATION, 1)));
+            player.setGameMode(GameMode.SPECTATOR);
+//            player.setAllowFlight(true);
+//            player.setFlying(true);
+//            Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> player.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, PotionEffect.INFINITE_DURATION, 1)));
         } else {
             GamePlayer gamePlayer = gameManager.getPlayer(player);
             event.setRespawnLocation(RandomUtil.getRandomSpawn(gamePlayer.getTeam().spawn()));

@@ -10,8 +10,11 @@ import icu.suc.megawalls78.game.GameRunner;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameMap;
 import icu.suc.megawalls78.game.record.GameTeam;
+import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.ExpiringValue;
 import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -208,6 +211,9 @@ public class GameManager {
 
     public void setTeamEliminate(GameTeam team, boolean eliminated) {
         teamEliminateMap.put(team, eliminated);
+        if (eliminated) {
+            Bukkit.getScheduler().runTaskLater(MegaWalls78.getInstance(), () -> ComponentUtil.sendMessage(Component.translatable("mw78.team.eliminated", team.name().color(team.color())).decorate(TextDecoration.BOLD), Bukkit.getOnlinePlayers()), 20L);
+        }
     }
 
     public boolean isEliminated(GameTeam team) {

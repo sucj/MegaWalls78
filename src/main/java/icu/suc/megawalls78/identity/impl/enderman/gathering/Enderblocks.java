@@ -28,7 +28,7 @@ public final class Enderblocks extends Gathering {
 
     public static final class Internal extends Passive implements IActionbar {
 
-        private int count = 1;
+        private int count = MAX;
 
         public Internal() {
             super("enderblocks");
@@ -72,7 +72,7 @@ public final class Enderblocks extends Gathering {
 
         @Override
         public void unregister() {
-            count = 1;
+
         }
 
         private boolean isAvailable() {

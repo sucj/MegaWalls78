@@ -41,8 +41,8 @@ public final class JunkFood extends Passive implements IActionbar {
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 0, false);
     private static final int RECYCLE = 5;
 
-    private int max = COOKIE_APPEAR;
-    private int count = 1;
+    private int max = JUNK_APPLE_APPEAR;
+    private int count = max;
     private int recycle = 1;
 
     public JunkFood() {
@@ -96,7 +96,7 @@ public final class JunkFood extends Passive implements IActionbar {
 
     @Override
     public void unregister() {
-        count = 1;
+
     }
 
     @Override

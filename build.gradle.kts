@@ -66,6 +66,9 @@ bukkitPluginYaml {
     register("mw78.shout") {
       default = Permission.Default.TRUE
     }
+    register("mw78.suicide") {
+      default = Permission.Default.TRUE
+    }
   }
   commands {
     register("id") {
@@ -79,6 +82,11 @@ bukkitPluginYaml {
     register("shout") {
       permission = "mw78.shout"
       usage = "/shout <message>"
+    }
+    register("suicide") {
+      permission = "mw78.suicide"
+      aliases = listOf("kill", "die")
+      usage = "/suicide"
     }
   }
 }

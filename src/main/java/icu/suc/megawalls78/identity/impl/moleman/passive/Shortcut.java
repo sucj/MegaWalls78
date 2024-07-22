@@ -16,7 +16,7 @@ public final class Shortcut extends Passive implements IActionbar {
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 80, 1);
     private static final PotionEffect HASTE = new PotionEffect(PotionEffectType.HASTE, 80, 1);
 
-    private int count = 1;
+    private int count = MAX;
 
     public Shortcut() {
         super("shortcut");
@@ -39,7 +39,7 @@ public final class Shortcut extends Passive implements IActionbar {
 
     @Override
     public void unregister() {
-        count = 1;
+
     }
 
     @Override

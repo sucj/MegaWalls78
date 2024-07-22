@@ -14,6 +14,7 @@ public class ComponentUtil {
 
     public static final Title.Times ONE_SEC_TIMES = Title.Times.times(Duration.ZERO, Duration.ofSeconds(1L), Duration.ZERO);
     public static final Title.Times DEFAULT_TIMES = Title.Times.times(Ticks.duration(10L), Ticks.duration(70L), Ticks.duration(20L));
+    public static final Title.Times ONE_SEC_TIMES_FADE = Title.Times.times(Duration.ofMillis(200L), Duration.ofMillis(800L), Duration.ofMillis(200L));
 
     private static TextColor secondColor(long millis) {
         TextColor color = NamedTextColor.GREEN;
@@ -28,7 +29,11 @@ public class ComponentUtil {
     }
 
     public static Component second(long millis) {
-        return Component.text(millis / 1000L, secondColor(millis));
+        return second(millis, secondColor(millis));
+    }
+
+    public static Component second(long millis, TextColor color) {
+        return Component.text(millis / 1000L, color);
     }
 
     public static Component mmss(long millis) {
