@@ -34,7 +34,7 @@ import java.util.UUID;
 public class WitherListener implements Listener {
 
     private static final Map<GameTeam, MutablePair<Long, Boolean>> WITHER_WARNING = Maps.newHashMap();
-    private static final Map<UUID, Long> WITHER_LIVES = Maps.newHashMap();
+    private static final Map<UUID, Integer> WITHER_LIVES = Maps.newHashMap();
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onWitherDamage(EntityDamageEvent event) {
@@ -116,7 +116,7 @@ public class WitherListener implements Listener {
         if (!state.equals(GameState.OPENING) && !state.equals(GameState.PREPARING)) {
             for (Wither wither : gameManager.getWithers()) {
                 UUID uuid = wither.getUniqueId();
-                WITHER_LIVES.put(uuid, WITHER_LIVES.computeIfAbsent(uuid, id -> 0L) + 1);
+                WITHER_LIVES.put(uuid, WITHER_LIVES.computeIfAbsent(uuid, id -> 0) + 1);
                 if (!wither.isDead() && WITHER_LIVES.get(uuid) % 100 == 0) {
                     wither.setHealth(Math.max(wither.getHealth() - 4.0D, 0));
                 }

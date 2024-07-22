@@ -19,8 +19,11 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.*;
+import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.Map;
@@ -47,6 +50,9 @@ public class GameRunner implements Runnable {
     private final Set<Location> region;
     private final Map<GameTeam, Set<Location>> regions;
 
+    private final Set<BoundingBox> mid;
+    private final PotionEffect HUNGER = new PotionEffect(PotionEffectType.HUNGER, 20, 1, true, false);
+
     public GameRunner() {
         this.barriers = Sets.newHashSet();
         this.allowedBlocks = Sets.newConcurrentHashSet();
@@ -55,6 +61,7 @@ public class GameRunner implements Runnable {
         this.walls = Sets.newHashSet();
         this.region = Sets.newHashSet();
         this.regions = Maps.newHashMap();
+        this.mid = Sets.newHashSet();
     }
 
     private void init(GameManager gameManager) {
@@ -73,7 +80,13 @@ public class GameRunner implements Runnable {
                 addRegionsBlock(team.region(), region);
             }
             addRegionsBlock(gameManager.getMap().wall(), walls);
-            addRegionsBlock(gameManager.getMap().region(), region);
+            Location[][] midRegion = gameManager.getMap().region();
+            addRegionsBlock(midRegion, region);
+            for (Location[] locations : midRegion) {
+                Location locA = locations[0];
+                Location locB = locations[1];
+                mid.add(new BoundingBox(locA.getX(), locA.getY(), locA.getZ(), locB.getX(), locB.getY(), locB.getZ()));
+            }
             init = true;
             MegaWalls78.getInstance().getLogger().info("Map initialized.");
         });
@@ -114,7 +127,8 @@ public class GameRunner implements Runnable {
                 if (!state.equals(GameState.WAITING) && !state.equals(GameState.ENDING)) {
                     if (timer <= 1000L) {
                         next(state);
-                    } else {
+                    }
+                    else {
                         if (dmC) {
                             if (dmTimer <= 0L) {
                                 dmC = false;
@@ -150,11 +164,20 @@ public class GameRunner implements Runnable {
                     for (GamePlayer gamePlayer : gameManager.getPlayers().values()) {
                         if (gamePlayer.getFinalDeaths() == 0) {
                             Player bukkitPlayer = gamePlayer.getBukkitPlayer();
-                            if (bukkitPlayer != null && bukkitPlayer.isOnline()) {
+                            if (bukkitPlayer != null) {
                                 if (state.equals(GameState.PREPARING)) {
                                     gamePlayer.increaseEnergy(EnergyWay.PREPARATION);
                                 } else {
                                     gamePlayer.increaseEnergy(isDm() ? EnergyWay.DM : EnergyWay.GAME);
+                                }
+                                if (isDm()) {
+                                    Vector playerLocation = bukkitPlayer.getLocation().toVector();
+                                    for (BoundingBox box : mid) {
+                                        if (box.contains(playerLocation)) {
+                                            bukkitPlayer.addPotionEffect(HUNGER);
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -164,7 +187,8 @@ public class GameRunner implements Runnable {
             if (flag) {
                 tick++;
             }
-        } else if (!initializing) {
+        }
+        else if (!initializing) {
             init(gameManager);
         }
     }
