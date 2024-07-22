@@ -31,15 +31,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class SkillListener implements Listener {
 
@@ -132,11 +130,17 @@ public class SkillListener implements Listener {
 
     @EventHandler
     public void onBlockDropItem(BlockDropItemEvent event) {
-        event.setCancelled(true);
         Player player = event.getPlayer();
-        for (Item item : event.getItems()) {
-            player.getInventory().addItem(item.getItemStack());
+        List<Item> items = event.getItems();
+        for (Item item : items) {
+            HashMap<Integer, ItemStack> over = player.getInventory().addItem(item.getItemStack());
+            if (over.isEmpty()) {
+                item.remove();
+            } else {
+                item.setItemStack(over.get(0));
+            }
         }
+
         if (BlockUtil.isNatural(event.getBlockState().getType())) {
             Block block = event.getBlock();
 

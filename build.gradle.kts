@@ -60,6 +60,9 @@ bukkitPluginYaml {
     register("mw78.id") {
       default = Permission.Default.TRUE
     }
+    register("mw78.map") {
+      default = Permission.Default.TRUE
+    }
     register("mw78.shout") {
       default = Permission.Default.TRUE
     }
@@ -68,6 +71,10 @@ bukkitPluginYaml {
     register("id") {
       permission = "mw78.id"
       usage = "/id <identity>"
+    }
+    register("map") {
+      permission = "mw78.map"
+      usage = "/map"
     }
     register("shout") {
       permission = "mw78.shout"

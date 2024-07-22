@@ -1,6 +1,7 @@
 package icu.suc.megawalls78;
 
 import icu.suc.megawalls78.command.IdCommand;
+import icu.suc.megawalls78.command.MapCommand;
 import icu.suc.megawalls78.command.ShoutCommand;
 import icu.suc.megawalls78.listener.*;
 import icu.suc.megawalls78.management.*;
@@ -58,6 +59,7 @@ public final class MegaWalls78 extends JavaPlugin {
 
     private void registerCommands() {
         Objects.requireNonNull(getCommand("id")).setExecutor(new IdCommand());
+        Objects.requireNonNull(getCommand("map")).setExecutor(new MapCommand());
         Objects.requireNonNull(getCommand("shout")).setExecutor(new ShoutCommand());
     }
 
