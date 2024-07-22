@@ -15,14 +15,14 @@ import org.bukkit.potion.PotionEffectType;
 
 public final class WellTrained extends Gathering {
 
+    private static final PotionEffect HASTE_2 = new PotionEffect(PotionEffectType.HASTE, 100, 1);
+    private static final PotionEffect HASTE_3 = new PotionEffect(PotionEffectType.HASTE, PotionEffect.INFINITE_DURATION, 2);
+
     public WellTrained() {
-        super("well_trained", null);
+        super("well_trained", Internal.class);
     }
 
     public static final class Internal extends Passive {
-
-        private static final PotionEffect HASTE_2 = new PotionEffect(PotionEffectType.HASTE, 100, 1);
-        private static final PotionEffect HASTE_3 = new PotionEffect(PotionEffectType.HASTE, PotionEffect.INFINITE_DURATION, 2);
 
         public Internal() {
             super("well_trained");

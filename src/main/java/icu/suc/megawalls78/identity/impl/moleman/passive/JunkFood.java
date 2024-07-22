@@ -51,6 +51,10 @@ public final class JunkFood extends Passive implements IActionbar {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
         Player player = event.getPlayer();
         if (shouldPassive(player) && isAvailable() && Tag.MINEABLE_SHOVEL.isTagged(event.getBlock().getType())) {
             if (++count > max) {
@@ -71,6 +75,9 @@ public final class JunkFood extends Passive implements IActionbar {
 
     @EventHandler
     public void onEatApple(PlayerItemConsumeEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         Player player = event.getPlayer();
         if (shouldPassive(player)) {
             ItemStack itemStack = event.getItem();
@@ -94,7 +101,7 @@ public final class JunkFood extends Passive implements IActionbar {
 
     @Override
     public Component acb() {
-        return Type.COMBO_DISABLE.accept(count, max, isAvailable());
+        return Type.COMBO_DISABLE.accept(count, max, !isAvailable());
     }
 
     private boolean isAvailable() {

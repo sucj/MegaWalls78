@@ -8,25 +8,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class IdentitySelectEvent extends Event {
+public abstract class IdentitySelectEvent extends Event {
 
     private final UUID uuid;
     private Identity identity;
 
-    private static final HandlerList handlers = new HandlerList();
-
     protected IdentitySelectEvent(UUID uuid, Identity identity) {
         this.uuid = uuid;
         this.identity = identity;
-    }
-
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     public UUID getUuid() {
@@ -43,6 +32,8 @@ public class IdentitySelectEvent extends Event {
 
     public static class Pre extends IdentitySelectEvent implements Cancellable {
 
+        private static final HandlerList handlers = new HandlerList();
+
         private boolean cancelled;
 
         public Pre(UUID uuid, Identity identity) {
@@ -58,11 +49,32 @@ public class IdentitySelectEvent extends Event {
         public void setCancelled(boolean b) {
             cancelled = b;
         }
+
+        @Override
+        public @NotNull HandlerList getHandlers() {
+            return handlers;
+        }
+
+        public static HandlerList getHandlerList() {
+            return handlers;
+        }
     }
 
     public static class Post extends IdentitySelectEvent {
+
+        private static final HandlerList handlers = new HandlerList();
+
         public Post(UUID uuid, Identity identity) {
             super(uuid, identity);
+        }
+
+        @Override
+        public @NotNull HandlerList getHandlers() {
+            return handlers;
+        }
+
+        public static HandlerList getHandlerList() {
+            return handlers;
         }
     }
 }

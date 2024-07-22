@@ -261,7 +261,9 @@ public class PlayerListener implements Listener {
         if (gameManager.isSpectator(player)) {
             event.setCancelled(true);
         } else if (gameManager.inFighting()) {
-            if (!gameManager.getPlayer(player).useSkill(event.getAction(), event.getMaterial())) {
+            if (gameManager.getPlayer(player).useSkill(event.getAction(), event.getMaterial())) {
+                event.setCancelled(true);
+            } else {
                 switch (event.getAction()) {
                     case RIGHT_CLICK_BLOCK:
                     case RIGHT_CLICK_AIR: {

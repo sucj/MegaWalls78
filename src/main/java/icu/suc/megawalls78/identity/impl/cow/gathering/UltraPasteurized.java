@@ -19,19 +19,19 @@ import org.bukkit.persistence.PersistentDataType;
 
 public final class UltraPasteurized extends Gathering {
 
+    private static final int MAX = 60;
+    private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET)
+            .setAmount(2)
+            .addPrefix(Identity.COW.getName().append(Component.space()))
+            .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            .setMaxStackSize(64)
+            .addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.COW_MILK);
+
     public UltraPasteurized() {
         super("ultra_pasteurized", Internal.class);
     }
 
     public static class Internal extends Passive implements IActionbar {
-
-        private static final int MAX = 60;
-        private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET)
-                .setAmount(2)
-                .addPrefix(Identity.COW.getName().append(Component.space()))
-                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setMaxStackSize(64)
-                .addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.COW_MILK);
 
         private int count = 1;
 

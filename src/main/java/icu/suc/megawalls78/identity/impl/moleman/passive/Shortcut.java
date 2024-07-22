@@ -24,6 +24,9 @@ public final class Shortcut extends Passive implements IActionbar {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
         Player player = event.getPlayer();
         if (shouldPassive(player) && Tag.MINEABLE_SHOVEL.isTagged(event.getBlock().getType())) {
             if (++count > MAX) {

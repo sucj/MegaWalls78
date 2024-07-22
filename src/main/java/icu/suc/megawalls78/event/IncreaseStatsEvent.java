@@ -7,27 +7,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-public class IncreaseStatsEvent extends Event implements Cancellable {
+public abstract class IncreaseStatsEvent extends Event implements Cancellable {
 
     private final UUID uuid;
     private final boolean isFinal;
 
     private boolean cancelled;
 
-    private static final HandlerList handlers = new HandlerList();
-
     protected IncreaseStatsEvent(UUID uuid, boolean isFinal) {
         this.uuid = uuid;
         this.isFinal = isFinal;
-    }
-
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     public UUID getUuid() {
@@ -49,20 +38,56 @@ public class IncreaseStatsEvent extends Event implements Cancellable {
     }
 
     public static class Kill extends IncreaseStatsEvent {
+
+        private static final HandlerList handlers = new HandlerList();
+
         public Kill(UUID uuid, boolean isFinal) {
             super(uuid, isFinal);
+        }
+
+        @Override
+        public @NotNull HandlerList getHandlers() {
+            return handlers;
+        }
+
+        public static HandlerList getHandlerList() {
+            return handlers;
         }
     }
 
     public static class Death extends IncreaseStatsEvent {
+
+        private static final HandlerList handlers = new HandlerList();
+
         public Death(UUID uuid, boolean isFinal) {
             super(uuid, isFinal);
+        }
+
+        @Override
+        public @NotNull HandlerList getHandlers() {
+            return handlers;
+        }
+
+        public static HandlerList getHandlerList() {
+            return handlers;
         }
     }
 
     public static class Assist extends IncreaseStatsEvent {
+
+        private static final HandlerList handlers = new HandlerList();
+
         public Assist(UUID uuid, boolean isFinal) {
             super(uuid, isFinal);
+        }
+
+        @Override
+        public @NotNull HandlerList getHandlers() {
+            return handlers;
+        }
+
+        public static HandlerList getHandlerList() {
+            return handlers;
         }
     }
 }

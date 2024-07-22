@@ -5,10 +5,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.event.ChestRollEvent;
 import icu.suc.megawalls78.event.EnergyChangeEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
-import icu.suc.megawalls78.identity.impl.herebrine.gathering.TreasureHunter;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -30,6 +30,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
 import org.bukkit.potion.PotionEffect;
@@ -115,7 +116,11 @@ public class SkillListener implements Listener {
     public void onPlayerItemConsume(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
         GamePlayer gamePlayer = MegaWalls78.getInstance().getGameManager().getPlayer(player);
-        switch (ItemUtil.getMW78Id(event.getItem())) {
+        String mw78Id = ItemUtil.getMW78Id(event.getItem());
+        if (mw78Id == null) {
+            return;
+        }
+        switch (mw78Id) {
             case ItemUtil.COW_MILK -> {
                 player.addPotionEffect(COW_MILK_RESISTANCE);
                 player.addPotionEffect(COW_MILK_REGENERATION);
@@ -132,28 +137,31 @@ public class SkillListener implements Listener {
         for (Item item : event.getItems()) {
             player.getInventory().addItem(item.getItemStack());
         }
-        if (BlockUtil.isNatural(event.getBlockState().getType()) && roll(player)) {
+        if (BlockUtil.isNatural(event.getBlockState().getType())) {
             Block block = event.getBlock();
+
+            ChestRollEvent.Pre pre = new ChestRollEvent.Pre(player, block, MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING) ? BEFORE_PBB : AFTER_PBB);
+            Bukkit.getPluginManager().callEvent(pre);
+            if (pre.isCancelled() || RandomUtil.RANDOM.nextDouble() > pre.getProbability()) {
+                return;
+            }
+
             block.setType(Material.TRAPPED_CHEST);
             Chest chest = (Chest) block.getState();
             Directional data = (Directional) chest.getBlockData();
             data.setFacing(EntityUtil.getFacingTowards(block, player));
             chest.setBlockData(data);
             chest.update();
+            Inventory inventory = chest.getBlockInventory();
             if (NO_NEWBEE.contains(player.getUniqueId())) {
-                NORMAL_CHEST.fillInventory(chest.getBlockInventory(), RandomUtil.RANDOM, new LootContext.Builder(block.getLocation()).build());
+                NORMAL_CHEST.fillInventory(inventory, RandomUtil.RANDOM, new LootContext.Builder(block.getLocation()).build());
             } else {
-                NEWBEE_CHEST.fillInventory(chest.getBlockInventory(), RandomUtil.RANDOM, new LootContext.Builder(block.getLocation()).build());
+                NEWBEE_CHEST.fillInventory(inventory, RandomUtil.RANDOM, new LootContext.Builder(block.getLocation()).build());
                 NO_NEWBEE.add(player.getUniqueId());
             }
-        }
-    }
 
-    private boolean roll(Player player) {
-        double p = MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING) ? BEFORE_PBB : AFTER_PBB;
-        if (MegaWalls78.getInstance().getGameManager().getPlayer(player).getGathering() instanceof TreasureHunter) {
-            p *= 3;
+            ChestRollEvent.Post post = new ChestRollEvent.Post(player, block, inventory);
+            Bukkit.getPluginManager().callEvent(post);
         }
-        return RandomUtil.RANDOM.nextDouble() < p;
     }
 }

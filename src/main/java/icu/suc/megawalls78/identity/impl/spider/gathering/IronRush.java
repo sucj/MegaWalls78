@@ -21,6 +21,7 @@ public final class IronRush extends Gathering {
         public Internal() {
             super("iron_rush");
         }
+
         @EventHandler
         public void onBlockBreak(BlockBreakEvent event) {
             Player player = event.getPlayer();

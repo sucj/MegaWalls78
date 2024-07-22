@@ -20,13 +20,13 @@ import java.util.Set;
 
 public final class Enderblocks extends Gathering {
 
+    private static final int MAX = 3;
+
     public Enderblocks() {
         super("enderblocks", Internal.class);
     }
 
     public static final class Internal extends Passive implements IActionbar {
-
-        private static final int MAX = 3;
 
         private int count = 1;
 
