@@ -5,14 +5,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.level.Level;
-import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 
 public class HerobrineLightning extends LightningBolt {
 
-    private Entity target;
+    private final Entity target;
 
-    public HerobrineLightning(Level world) {
+    public HerobrineLightning(Level world, CraftPlayer target) {
         super(EntityType.LIGHTNING_BOLT, world);
+        this.target = target.getHandle();
     }
 
     @Override
@@ -28,9 +29,5 @@ public class HerobrineLightning extends LightningBolt {
                 target.thunderHit(((ServerLevel) this.level()), this);
             }
         }
-    }
-
-    public void setTarget(org.bukkit.entity.Entity target) {
-        this.target = ((CraftEntity) target).getHandle();
     }
 }

@@ -3,10 +3,8 @@ package icu.suc.megawalls78.identity.impl.squid.skill;
 import com.google.common.util.concurrent.AtomicDouble;
 import icu.suc.megawalls78.identity.trait.Skill;
 import icu.suc.megawalls78.util.EntityUtil;
-import icu.suc.megawalls78.util.PlayerUtil;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import icu.suc.megawalls78.util.ParticleUtil;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -31,9 +29,6 @@ public class SquidSplash extends Skill {
     @Override
     protected boolean use0(Player player) {
         Location location = player.getLocation();
-
-        player.getWorld().playSound(location, Sound.ENTITY_FISHING_BOBBER_SPLASH, SoundCategory.PLAYERS, 1.0F, 1.0F, 0);
-
         AtomicInteger count = new AtomicInteger();
         AtomicDouble heal = new AtomicDouble();
         EntityUtil.getNearbyEntities(player, RANGE).stream()
@@ -41,17 +36,38 @@ public class SquidSplash extends Skill {
                 .filter(entity -> !(entity instanceof Wither))
                 .filter(entity -> !isValidAllies(player, entity))
                 .forEach(entity -> {
-                    entity.setVelocity(NuggetMC_Vec(location, entity));
                     ((LivingEntity) entity).damage(DAMAGE, player);
+                    entity.setVelocity(vector(location, entity));
                     count.getAndIncrement();
                     heal.getAndAdd(DAMAGE * SCALE);
                 });
         int i = count.get();
         if (i == 0) {
             return noTarget(player);
+        } else {
+            player.heal(Math.min(heal.get(), MAX));
+            playSkillEffects(player);
         }
-        player.heal(Math.min(heal.get(), MAX));
         return summaryHit(player, i);
+    }
+
+    private void playSkillEffects(Player player) {
+        ParticleUtil.playContractingCircleParticle(player.getLocation(), Particle.SPLASH, 64, RANGE, 525L);
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_FISHING_BOBBER_SPLASH, SoundCategory.PLAYERS, 1.0F, 1.0F);
+    }
+
+    private static Vector vector(Location to, Entity entity) {
+        double distance = to.distance(entity.getLocation());
+        Vector vector = to.toVector().subtract(entity.getLocation().toVector()).normalize();
+        vector.multiply(Math.min(distance / RANGE * 2, 1.0D));
+        double y = vector.getY();
+        if (y > 0) {
+            vector.setY(Math.min(y, 0.2D));
+        } else {
+            vector.setY(Math.max(y, -0.2D));
+        }
+        vector.add(entity.getVelocity());
+        return vector;
     }
 
     private static Vector NuggetMC_Vec(Location to, Entity entity) {
@@ -61,8 +77,8 @@ public class SquidSplash extends Skill {
             vector.setY(0.4D / y);
         }
         double length = vector.length();
-        if (length > 0.9) {
-            vector.multiply(0.9 / length);
+        if (length > 0.9D) {
+            vector.multiply(0.9D / length);
         }
         vector.add(entity.getVelocity());
         return vector;

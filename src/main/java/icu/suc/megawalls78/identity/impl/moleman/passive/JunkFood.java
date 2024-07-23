@@ -101,7 +101,7 @@ public final class JunkFood extends Passive implements IActionbar {
 
     @Override
     public Component acb() {
-        return Type.COMBO_DISABLE.accept(count, max, !isAvailable());
+        return Type.COMBO_STATE.accept(count, max, isAvailable());
     }
 
     private boolean isAvailable() {

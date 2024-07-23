@@ -31,7 +31,7 @@ public final class RefreshingSip extends Passive implements IActionbar {
     }
 
     @EventHandler
-    public void onDrinkMilk(PlayerItemConsumeEvent event) {
+    public void drunkMilk(PlayerItemConsumeEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -44,14 +44,8 @@ public final class RefreshingSip extends Passive implements IActionbar {
             if (currentMillis - lastMills >= COOLDOWN) {
                 lastMills = currentMillis;
 
-                ParticleUtil.playExpandingCircleParticle(player.getLocation(), Particle.ENTITY_EFFECT, 64, RANGE, 500L, Color.FUCHSIA);
-                player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_COW_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F);
-
                 AtomicInteger count = new AtomicInteger();
-                player.heal(HEALTH);
-                player.setFoodLevel(FOOD);
-                PlayerUtil.setStarvation(player, FOOD);
-                ParticleUtil.spawnParticleOverhead(player, Particle.HEART, (int) (HEALTH / 2));
+                heal(player);
                 count.getAndIncrement();
 
                 EntityUtil.getNearbyEntities(player, RANGE).stream()
@@ -59,15 +53,31 @@ public final class RefreshingSip extends Passive implements IActionbar {
                         .filter(entity -> isValidAllies(player, entity))
                         .filter(entity -> !getIdentity((Player) entity).equals(Identity.COW))
                         .forEach(entity -> {
-                            ((Player) entity).heal(HEALTH);
-                            ((Player) entity).setFoodLevel(FOOD);
-                            PlayerUtil.setStarvation(((Player) entity), FOOD);
-                            ParticleUtil.spawnParticleOverhead((Player) entity, Particle.HEART, (int) (HEALTH / 2));
+                            heal((Player) entity);
                             count.getAndIncrement();
                         });
+
+                playSkillEffect(player);
+
                 summaryHeal(player, count.get());
             }
         }
+    }
+
+    private void heal(Player player) {
+        player.heal(HEALTH);
+        player.setFoodLevel(FOOD);
+        PlayerUtil.setStarvation(player, FOOD);
+        playHealEffect(player);
+    }
+
+    private void playHealEffect(Player player) {
+        ParticleUtil.spawnParticleOverhead(player, Particle.HEART, 2);
+    }
+
+    private void playSkillEffect(Player player) {
+        ParticleUtil.playExpandingCircleParticle(player.getLocation(), Particle.ENTITY_EFFECT, 64, RANGE, 700L, Color.FUCHSIA);
+        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_COW_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F);
     }
 
     @Override

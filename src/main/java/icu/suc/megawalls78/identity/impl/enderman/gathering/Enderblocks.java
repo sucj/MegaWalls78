@@ -35,7 +35,10 @@ public final class Enderblocks extends Gathering {
         }
 
         @EventHandler
-        public void onBlockBreak(BlockBreakEvent event) {
+        public void brokenBlock(BlockBreakEvent event) {
+            if (event.isCancelled()) {
+                return;
+            }
             Player player = event.getPlayer();
             Block block = event.getBlock();
             Location location = block.getLocation();
@@ -67,7 +70,7 @@ public final class Enderblocks extends Gathering {
 
         @Override
         public Component acb() {
-            return Type.COMBO_DISABLE.accept(count, MAX, isAvailable());
+            return Type.COMBO_STATE.accept(count, MAX, isAvailable());
         }
 
         @Override

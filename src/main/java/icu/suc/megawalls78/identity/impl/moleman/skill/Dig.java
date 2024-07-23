@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.Skill;
 import icu.suc.megawalls78.util.BlockUtil;
+import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.PlayerUtil;
 import org.bukkit.Location;
@@ -11,6 +12,7 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
@@ -112,13 +114,11 @@ public final class Dig extends Skill {
                     .filter(entity -> entity instanceof LivingEntity)
                     .filter(entity -> !(entity instanceof Wither))
                     .filter(entity -> !PlayerUtil.isValidAllies(player, entity))
+                    .filter(entity -> !victims.contains(entity.getUniqueId()))
                     .forEach(entity -> {
-                        UUID uuid = entity.getUniqueId();
-                        if (!victims.contains(uuid)) {
-                            ((LivingEntity) entity).damage(DAMAGE);
-                            victims.add(uuid);
-                            count.getAndIncrement();
-                        }
+                        ((LivingEntity) entity).damage(DAMAGE, DamageSource.of(DamageType.STALAGMITE, player));
+                        victims.add(entity.getUniqueId());
+                        count.getAndIncrement();
                     });
 
             tick++;

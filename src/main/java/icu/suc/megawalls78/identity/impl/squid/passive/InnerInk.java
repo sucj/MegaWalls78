@@ -25,7 +25,7 @@ public class InnerInk extends Passive {
     }
 
     @EventHandler
-    public void onDrinkPotion(PlayerItemConsumeEvent event) {
+    public void drunkPotion(PlayerItemConsumeEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -34,8 +34,6 @@ public class InnerInk extends Passive {
 
         AtomicInteger count = new AtomicInteger();
         if (shouldPassive(player) && event.getItem().getType().equals(Material.POTION)) {
-            player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F);
-
             EntityUtil.getNearbyEntities(player, RANGE).stream()
                     .filter(entity -> entity instanceof Player)
                     .filter(entity -> !isValidAllies(player, entity))
@@ -43,8 +41,13 @@ public class InnerInk extends Passive {
                         ((Player) entity).addPotionEffect(BLINDNESS);
                         count.getAndIncrement();
                     });
+            playSoundEffect(player);
             summaryHit(player, count.get());
         }
+    }
+
+    private void playSoundEffect(Player player) {
+        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F);
     }
 
     @Override

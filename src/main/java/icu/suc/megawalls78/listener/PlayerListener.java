@@ -264,6 +264,16 @@ public class PlayerListener implements Listener {
         if (gameManager.isSpectator(player)) {
             event.setCancelled(true);
         } else if (gameManager.inFighting()) {
+            switch (event.getAction()) {
+                case RIGHT_CLICK_BLOCK:
+                case RIGHT_CLICK_AIR: {
+                    if (ItemUtil.isMW78Item(event.getItem(), ItemUtil.ENDER_CHEST)) {
+                        InventoryUtil.openEnderChest(player);
+                        event.setCancelled(true);
+                        return;
+                    }
+                }
+            }
             boolean useSkill = true;
             Block clickedBlock = event.getClickedBlock();
             if (clickedBlock != null && clickedBlock.getState() instanceof TileState) {
@@ -271,17 +281,6 @@ public class PlayerListener implements Listener {
             }
             if (useSkill) {
                 gameManager.getPlayer(player).useSkill(event.getAction(), event.getMaterial());
-            }
-            else {
-                switch (event.getAction()) {
-                    case RIGHT_CLICK_BLOCK:
-                    case RIGHT_CLICK_AIR: {
-                        if (ItemUtil.isMW78Item(event.getItem(), ItemUtil.ENDER_CHEST)) {
-                            InventoryUtil.openEnderChest(player);
-                            event.setCancelled(true);
-                        }
-                    }
-                }
             }
         } else if (gameManager.inWaiting()) {
             switch (event.getAction()) {

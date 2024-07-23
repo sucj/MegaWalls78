@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.world.PortalCreateEvent;
 
 public class WorldListener implements Listener {
 
@@ -82,5 +83,10 @@ public class WorldListener implements Listener {
                 event.blockList().removeIf(block -> !gameManager.getRunner().getAllowedBlocks().contains(block.getLocation()));
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPortalCreate(PortalCreateEvent event) {
+        event.setCancelled(true);
     }
 }

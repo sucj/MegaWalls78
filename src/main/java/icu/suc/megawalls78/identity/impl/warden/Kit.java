@@ -5,7 +5,7 @@ import icu.suc.megawalls78.identity.Identity;
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.FIRE_PROTECTION;
 
-public class Kit extends icu.suc.megawalls78.identity.Kit {
+public final class Kit extends icu.suc.megawalls78.identity.Kit {
 
     public Kit(Identity identity) {
         super(identity);
@@ -16,8 +16,10 @@ public class Kit extends icu.suc.megawalls78.identity.Kit {
         addTool(NETHERITE_AXE);
         addEnderChest();
         addPickaxe();
+        addTool(BOW);
+        addItem(COOKED_BEEF, 3);
         addHealingPotion(4, 2);
         addCompass();
-        setChestplate(NETHERITE_CHESTPLATE).addEnchantment(FIRE_PROTECTION, 10, true);
+        setChestplate(NETHERITE_CHESTPLATE).addEnchantment(FIRE_PROTECTION, 4, true);
     }
 }

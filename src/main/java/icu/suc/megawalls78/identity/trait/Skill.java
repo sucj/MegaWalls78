@@ -51,7 +51,8 @@ public abstract class Skill extends Trait implements IActionbar {
     public enum Trigger {
         SWORD(Action.RIGHT, Tag.ITEMS_SWORDS),
         BOW(Action.LEFT, Tag.ITEMS_ENCHANTABLE_BOW),
-        SHOVEL(Action.RIGHT, Tag.ITEMS_SHOVELS);
+        SHOVEL(Action.RIGHT, Tag.ITEMS_SHOVELS),
+        AXE(Action.RIGHT, Tag.ITEMS_AXES);
 
         private final Action action;
         private final Tag<Material> tag;

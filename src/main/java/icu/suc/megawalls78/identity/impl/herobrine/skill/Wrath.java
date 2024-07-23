@@ -1,6 +1,5 @@
-package icu.suc.megawalls78.identity.impl.herebrine.skill;
+package icu.suc.megawalls78.identity.impl.herobrine.skill;
 
-import icu.suc.megawalls78.entity.HerobrineLightning;
 import icu.suc.megawalls78.identity.trait.Skill;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.entity.Player;
@@ -24,7 +23,7 @@ public final class Wrath extends Skill {
                 .filter(entity -> entity instanceof Player)
                 .filter(entity -> !isValidAllies(player, entity))
                 .forEach(entity -> {
-                    EntityUtil.spawn(entity.getLocation(), EntityUtil.Type.HEROBRINE_LIGHTNING, lightning -> ((HerobrineLightning) lightning.getHandle()).setTarget(entity));
+                    EntityUtil.spawn(entity.getLocation(), EntityUtil.Type.HEROBRINE_LIGHTNING, null, entity);
                     count.getAndIncrement();
                 });
         int i = count.get();

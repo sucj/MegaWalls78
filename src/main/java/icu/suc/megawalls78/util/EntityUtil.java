@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.util;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.myzelyam.api.vanish.VanishAPI;
 import icu.suc.megawalls78.entity.HerobrineLightning;
@@ -32,22 +33,25 @@ import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class EntityUtil {
 
-    public static Entity spawn(Location location, Type type) {
-        return spawn(location, type, null);
+    public static Entity spawn(Location location, Type type, Object... data) {
+        return spawn(location, type, null, data);
     }
 
-    public static Entity spawn(Location location, Type type, Consumer<? super CraftEntity> consumer) {
+    public static Entity spawn(Location location, Type type, Consumer<? super CraftEntity> consumer, Object... data) {
         try {
             ServerLevel world = ((CraftWorld) location.getWorld()).getHandle();
-            net.minecraft.world.entity.Entity entity = type.getClazz().getConstructor(Level.class).newInstance(world);
+            List<Class<?>> parameterTypes = Lists.newArrayList(Level.class);
+            List<Object> initArgs = Lists.newArrayList(world);
+            for (Object object : data) {
+                parameterTypes.add(object.getClass());
+                initArgs.add(object);
+            }
+            net.minecraft.world.entity.Entity entity = type.getClazz().getConstructor(parameterTypes.toArray(Class[]::new)).newInstance(initArgs.toArray());
             entity.absMoveTo(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
             CraftEntity bukkitEntity = CraftEntity.getEntity(((CraftServer) Bukkit.getServer()), entity);
             if (consumer != null) {

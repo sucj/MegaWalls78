@@ -10,12 +10,13 @@ public interface IActionbar {
     Component acb();
 
     enum Type {
+        STATE,
         COOLDOWN,
         DURATION,
         DURATION_COOLDOWN,
         COMBO,
         COMBO_COOLDOWN,
-        COMBO_DISABLE,
+        COMBO_STATE,
         MODE;
 
         private static final Component A = Component.translatable("mw78.actionbar.activate", NamedTextColor.GREEN);
@@ -26,6 +27,11 @@ public interface IActionbar {
 
         public Component accept(Object... args) {
             switch (this) {
+                case STATE -> {
+                    boolean state = (boolean) args[0];
+
+                    return state ? A : D;
+                }
                 case COOLDOWN -> {
                     long currentMills = ((long) args[0]);
                     long lastMills = ((long) args[1]);
@@ -72,12 +78,12 @@ public interface IActionbar {
 
                     return cd == 0 ? (count >= max ? A : combo(count, max)) : cooldown(cd);
                 }
-                case COMBO_DISABLE -> {
+                case COMBO_STATE -> {
                     int count = (int) args[0];
                     int max = (int) args[1];
-                    boolean disable = (boolean) args[2];
+                    boolean state = (boolean) args[2];
 
-                    return disable ? D : count >= max ? A : combo(count, max);
+                    return state ? count >= max ? A : combo(count, max) : D;
                 }
                 case MODE -> {
                     Component mode = (Component) args[0];

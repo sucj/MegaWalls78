@@ -1,4 +1,4 @@
-package icu.suc.megawalls78.identity.impl.herebrine.passive;
+package icu.suc.megawalls78.identity.impl.herobrine.passive;
 
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Passive;

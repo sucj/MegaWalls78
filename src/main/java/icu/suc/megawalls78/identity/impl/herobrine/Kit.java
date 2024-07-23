@@ -1,4 +1,4 @@
-package icu.suc.megawalls78.identity.impl.herebrine;
+package icu.suc.megawalls78.identity.impl.herobrine;
 
 import icu.suc.megawalls78.identity.Identity;
 import org.bukkit.potion.PotionEffect;

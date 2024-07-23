@@ -4,6 +4,8 @@ import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Passive;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,7 +30,7 @@ public final class Berserk extends Passive implements IActionbar {
     }
 
     @EventHandler
-    public void onPlayerDamage(EntityDamageByEntityEvent event) {
+    public void damaged(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -39,6 +41,7 @@ public final class Berserk extends Passive implements IActionbar {
                     lastMills = currentMillis;
                     duration = DURATION;
                     player.addPotionEffect(SPEED);
+                    playSoundEffect(player);
                 }
             }
         } else if (event.getDamager() instanceof Player player) {
@@ -49,10 +52,14 @@ public final class Berserk extends Passive implements IActionbar {
     }
 
     @EventHandler
-    public void onPlayerTickEnd(ServerTickEndEvent event) {
+    public void tickEnd(ServerTickEndEvent event) {
         if (duration > 0) {
             duration -= 50L;
         }
+    }
+
+    private void playSoundEffect(Player player) {
+        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ZOMBIE_HURT, SoundCategory.PLAYERS, 1.0F, 1.0F);
     }
 
     @Override

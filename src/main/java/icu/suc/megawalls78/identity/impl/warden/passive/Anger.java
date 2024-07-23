@@ -1,0 +1,107 @@
+package icu.suc.megawalls78.identity.impl.warden.passive;
+
+import com.destroystokyo.paper.event.server.ServerTickStartEvent;
+import icu.suc.megawalls78.event.EnergyChangeEvent;
+import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.trait.IActionbar;
+import icu.suc.megawalls78.identity.trait.Passive;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+public final class Anger extends Passive implements IActionbar {
+
+    private static final int MIN = 10;
+    private static final int DECREASE = 1;
+    private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 0);
+    private static final PotionEffect SLOWNESS = new PotionEffect(PotionEffectType.SLOWNESS, PotionEffect.INFINITE_DURATION, 0);
+
+    private boolean state;
+    private int tick;
+
+    public Anger() {
+        super("anger");
+    }
+
+    @EventHandler
+    public void tickStart(ServerTickStartEvent event) {
+        if (state) {
+            GamePlayer gamePlayer = getPlayer();
+            Player player = gamePlayer.getBukkitPlayer();
+            if (!player.isSprinting()) {
+                deactivate(player);
+            }
+            if (tick % 20 == 0) {
+                if (gamePlayer.getEnergy() > 0) {
+                    gamePlayer.decreaseEnergy(DECREASE);
+                    playSoundEffect(player);
+                }
+            }
+            tick++;
+        }
+    }
+
+    @EventHandler
+    public void changedEnergy(EnergyChangeEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        Player player = event.getPlayer();
+        if (shouldPassive(player) && event.getEnergy() == 0) {
+            deactivate(player);
+        }
+    }
+
+    @EventHandler
+    public void sprint(PlayerMoveEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        Player player = event.getPlayer();
+        if (shouldPassive(player) && player.isSprinting() && !state) {
+            activate(player);
+        }
+    }
+
+    private void playSoundEffect(Player player) {
+        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+    }
+
+    private void speed(Player player) {
+        player.removePotionEffect(PotionEffectType.SLOWNESS);
+        player.addPotionEffect(SPEED);
+    }
+
+    private void slow(Player player) {
+        player.removePotionEffect(PotionEffectType.SPEED);
+        player.addPotionEffect(SLOWNESS);
+    }
+
+    private void activate(Player player) {
+        if (getPlayer().getEnergy() >= MIN) {
+            state = true;
+            tick = 0;
+            speed(player);
+        }
+    }
+
+    private void deactivate(Player player) {
+        state = false;
+        slow(player);
+    }
+
+    @Override
+    public void unregister() {
+
+    }
+
+    @Override
+    public Component acb() {
+        return Type.STATE.accept(state);
+    }
+}

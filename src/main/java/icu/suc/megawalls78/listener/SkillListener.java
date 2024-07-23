@@ -27,6 +27,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -128,7 +129,7 @@ public class SkillListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockDropItem(BlockDropItemEvent event) {
         Player player = event.getPlayer();
         List<Item> items = event.getItems();

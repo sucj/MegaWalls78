@@ -19,6 +19,15 @@ public class ParticleUtil {
         }
     }
 
+    public static <T> void spawnParticleOverhead(LivingEntity entity, Particle particle, int count, T data) {
+        Location location = entity.getEyeLocation().add(0.0D, 1.0D, 0.0D);
+        World world = entity.getWorld();
+        spawnParticle(world, particle, location, 1, data);
+        for (int i = 0; i < count; i++) {
+            spawnParticle(world, particle, location.clone().add(RandomUtil.RANDOM.nextDouble(0.5D), RandomUtil.RANDOM.nextDouble(0.5D), RandomUtil.RANDOM.nextDouble(0.5D)), 1, data);
+        }
+    }
+
     public static void spawnParticleRandomBody(Entity entity, Particle particle, int count) {
         World world = entity.getWorld();
         for (int i = 0; i < count; i++) {
@@ -36,6 +45,10 @@ public class ParticleUtil {
 
     private static double getParticleZ(Entity entity, double widthScale) {
         return entity.getZ() + entity.getWidth() * (2.0 * RandomUtil.RANDOM.nextDouble() - 1.0) * widthScale;
+    }
+
+    public static <T> void spawnParticle(World world, Particle particle, Location location, int count, T data) {
+        world.spawnParticle(particle, location, count, data);
     }
 
     public static void spawnParticle(World world, Particle particle, Location location, int count) {
@@ -61,7 +74,34 @@ public class ParticleUtil {
                     this.cancel();
                     return;
                 }
-                double radius = (maxRadius * elapsedTime) / duration;
+                double radius = maxRadius * elapsedTime / duration;
+                for (int i = 0; i < count; i++) {
+                    double angle = i * angleCount;
+                    double x = center.getX() + radius * Math.cos(angle);
+                    double z = center.getZ() + radius * Math.sin(angle);
+                    Location location = new Location(center.getWorld(), x, center.getY(), z);
+                    center.getWorld().spawnParticle(particle, location, 1, 0, 0, 0, 0, data);
+                }
+            }
+        }.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
+    }
+
+    public static void playContractingCircleParticle(Location center, Particle particle, int count, double maxRadius, long duration) {
+        playContractingCircleParticle(center, particle, count, maxRadius, duration, null);
+    }
+
+    public static <T> void playContractingCircleParticle(Location center, Particle particle, int count, double maxRadius, long duration, T data) {
+        new BukkitRunnable() {
+            private final double angleCount = (2 * Math.PI) / count;
+            private final long startTime = System.currentTimeMillis();
+            @Override
+            public void run() {
+                long elapsedTime = System.currentTimeMillis() - startTime;
+                if (elapsedTime > duration) {
+                    this.cancel();
+                    return;
+                }
+                double radius = maxRadius * (1 - (double) elapsedTime / duration);
                 for (int i = 0; i < count; i++) {
                     double angle = i * angleCount;
                     double x = center.getX() + radius * Math.cos(angle);

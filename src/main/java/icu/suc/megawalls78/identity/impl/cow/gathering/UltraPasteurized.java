@@ -12,10 +12,16 @@ import icu.suc.megawalls78.util.ItemUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.persistence.PersistentDataType;
+
+import java.util.List;
 
 public final class UltraPasteurized extends Gathering {
 
@@ -40,14 +46,35 @@ public final class UltraPasteurized extends Gathering {
         }
 
         @EventHandler
-        public void onBlockBreak(BlockBreakEvent event) {
+        public void brokenBlock(BlockDropItemEvent event) {
+            if (event.isCancelled()) {
+                return;
+            }
             Player player = event.getPlayer();
-            if (shouldPassive(player) && isAvailable() && BlockUtil.isStone(event.getBlock().getType())) {
+            Block block = event.getBlock();
+            if (shouldPassive(player) && isAvailable() && isTrigger(block)) {
                 if (++count > MAX) {
-                    player.getInventory().addItem(MILK.build());
+                    dropMilk(event.getItems(), player, block);
                     count = 1;
                 }
             }
+        }
+
+        private void playSoundEffect(Block block) {
+            block.getWorld().playSound(block.getLocation(), Sound.BLOCK_WET_SPONGE_DRIES, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        }
+
+        private void dropMilk(List<Item> items, Player player, Block block) {
+            items.add(player.getWorld().dropItemNaturally(block.getLocation(), MILK.build()));
+            playSoundEffect(block);
+        }
+
+        private boolean isTrigger(Block block) {
+            return BlockUtil.isStone(block.getType());
+        }
+
+        private boolean isAvailable() {
+            return MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING);
         }
 
         @Override
@@ -57,11 +84,7 @@ public final class UltraPasteurized extends Gathering {
 
         @Override
         public Component acb() {
-            return Type.COMBO_DISABLE.accept(count, MAX, !isAvailable());
-        }
-
-        private boolean isAvailable() {
-            return MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING);
+            return Type.COMBO_STATE.accept(count, MAX, isAvailable());
         }
     }
 }

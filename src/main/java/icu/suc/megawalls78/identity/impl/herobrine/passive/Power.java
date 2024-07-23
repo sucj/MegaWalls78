@@ -1,15 +1,13 @@
-package icu.suc.megawalls78.identity.impl.herebrine.passive;
+package icu.suc.megawalls78.identity.impl.herobrine.passive;
 
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Passive;
-import icu.suc.megawalls78.util.EntityUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 
 public final class Power extends Passive implements IActionbar {
 

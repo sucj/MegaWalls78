@@ -36,52 +36,100 @@ public final class BucketBarrier extends Passive implements IActionbar {
     }
 
     @EventHandler
-    public void onPlayerDamage(EntityDamageEvent event) {
+    public void damaged(EntityDamageEvent event) {
         if (event.isCancelled()) {
             return;
         }
-        if (event.getEntity() instanceof Player player) {
-            if (shouldPassive(player) && duration > 0) {
-                double damage = event.getFinalDamage();
-                if (damage >= DAMAGE) {
-                    event.setDamage(damage * SCALE);
-                    player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.PLAYERS, 1.0F, 2.5F - ((float) duration / DURATION));
-                    duration -= PER;
-                }
+        if (event.getEntity() instanceof Player player && shouldPassive(player) && duration > 0 && reduceDamage(event)) {
+            playSoundEffect(player);
+            duration -= PER;
+        }
+    }
+
+    @EventHandler
+    public void tickStart(ServerTickStartEvent event) {
+        if (duration <= 0) {
+            long currentMillis = System.currentTimeMillis();
+            Player player = getPlayer().getBukkitPlayer();
+            if (currentMillis - lastMills >= COOLDOWN && spawnBarriers(player)) {
+                lastMills = currentMillis;
+                duration = DURATION;
+            }
+            else {
+                removeBarriers();
             }
         }
     }
 
     @EventHandler
-    public void onPlayerTickStart(ServerTickStartEvent event) {
-        if (duration <= 0) {
-            long currentMillis = System.currentTimeMillis();
-            Player player = getPlayer().getBukkitPlayer();
-            if (currentMillis - lastMills >= COOLDOWN && player.getHealth() < HEALTH) {
-                lastMills = currentMillis;
-                duration = DURATION;
-                if (barriers == null) {
-                    barriers = new ItemDisplay[4];
-                    center = player.getLocation().clone().add(0, 1.0D, 0);
-                    for (int i = 0; i < 4; i++) {
-                        barriers[i] = (ItemDisplay) center.getWorld().spawnEntity(barrierLocation(i), EntityType.ITEM_DISPLAY);
-                        barriers[i].setItemStack(ItemStack.of(Material.MILK_BUCKET));
-                        Transformation transformation = barriers[i].getTransformation();
-                        barriers[i].setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(), transformation.getScale().set(0.8F), transformation.getRightRotation()));
-                    }
-                } else {
-                    for (int i = 0; i < 4; i++) {
-                        barriers[i].spawnAt(barrierLocation(i));
-                    }
+    public void tickEnd(ServerTickEndEvent event) {
+        if (duration > 0) {
+            updateBarriers();
+        }
+    }
+
+    @EventHandler
+    public void moved(PlayerMoveEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (shouldPassive(event.getPlayer()) && duration > 0) {
+            updateCenter(event.getTo());
+        }
+    }
+
+    private boolean reduceDamage(EntityDamageEvent event) {
+        double damage = event.getFinalDamage();
+        if (damage >= DAMAGE) {
+            event.setDamage(damage * SCALE);
+            return true;
+        }
+        return false;
+    }
+
+    private void playSoundEffect(Player player) {
+        player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.PLAYERS, 1.0F, 2.5F - ((float) duration / DURATION));
+    }
+
+    private boolean spawnBarriers(Player player) {
+        if (player.getHealth() < HEALTH) {
+            if (barriers == null) {
+                barriers = new ItemDisplay[4];
+                center = player.getLocation().clone().add(0, 1.0D, 0);
+                for (int i = 0; i < 4; i++) {
+                    barriers[i] = (ItemDisplay) center.getWorld().spawnEntity(barrierLocation(i), EntityType.ITEM_DISPLAY);
+                    barriers[i].setItemStack(ItemStack.of(Material.MILK_BUCKET));
+                    Transformation transformation = barriers[i].getTransformation();
+                    barriers[i].setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(), transformation.getScale().set(0.8F), transformation.getRightRotation()));
+                }
+            } else {
+                for (int i = 0; i < 4; i++) {
+                    barriers[i].spawnAt(barrierLocation(i));
                 }
             }
-            else if (barriers != null) {
-                for (ItemDisplay barrier : barriers) {
-                    barrier.remove();
-                }
-                this.barriers = null;
+            return true;
+        }
+        return false;
+    }
+
+    private void removeBarriers() {
+        if (barriers != null) {
+            for (ItemDisplay barrier : barriers) {
+                barrier.remove();
             }
         }
+    }
+
+    private void updateBarriers() {
+        duration -= 50L;
+        for (ItemDisplay barrier : barriers) {
+            double angle = Math.toRadians(barrier.getLocation().getYaw()) + SPEED;
+            barrier.teleport(new Location(center.getWorld(), center.getX() + RADIUS * Math.cos(angle), center.getY(), center.getZ() + RADIUS * Math.sin(angle), (float) Math.toDegrees(angle) + 90.0F, 0));
+        }
+    }
+
+    private void updateCenter(Location location) {
+        center = location.clone().add(0, 1.0D, 0);
     }
 
     private Location barrierLocation(int i) {
@@ -90,29 +138,6 @@ public final class BucketBarrier extends Passive implements IActionbar {
         double z = center.getZ() + RADIUS * Math.sin(angle);
         float yaw = (float) Math.toDegrees(angle) + 90.0F;
         return new Location(center.getWorld(), x, center.getY(), z, yaw, 0);
-    }
-
-    @EventHandler
-    public void onPlayerTickEnd(ServerTickEndEvent event) {
-        if (duration > 0) {
-            duration -= 50L;
-            for (ItemDisplay barrier : barriers) {
-                double angle = Math.toRadians(barrier.getLocation().getYaw()) + SPEED;
-                barrier.teleport(new Location(center.getWorld(), center.getX() + RADIUS * Math.cos(angle), center.getY(), center.getZ() + RADIUS * Math.sin(angle), (float) Math.toDegrees(angle) + 90.0F, 0));
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-        if (shouldPassive(event.getPlayer())) {
-            if (duration > 0) {
-                center = event.getTo().clone().add(0, 1.0D, 0);
-            }
-        }
     }
 
     @Override

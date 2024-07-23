@@ -29,7 +29,10 @@ public final class WellTrained extends Gathering {
         }
 
         @EventHandler
-        public void onBlockBreak(BlockBreakEvent event) {
+        public void brokenBlock(BlockBreakEvent event) {
+            if (event.isCancelled()) {
+                return;
+            }
             if (shouldPassive(event.getPlayer()) && BlockUtil.isNatural(event.getBlock().getType())) {
                 event.getPlayer().addPotionEffect(HASTE_2);
             }

@@ -3,12 +3,14 @@ package icu.suc.megawalls78.identity.impl.spider.skill;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.impl.spider.passive.Skitter;
 import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.PlayerUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.potion.PotionEffect;
@@ -89,7 +91,7 @@ public final class Leap extends Skill {
                         .filter(entity -> !PlayerUtil.isValidAllies(player, entity))
                         .forEach(entity -> {
                             ((LivingEntity) entity).addPotionEffect(SLOWNESS);
-                            ((LivingEntity) entity).damage(BASE_DAMAGE + bonusDamage() - reduceDamage(entity), player);
+                            ((LivingEntity) entity).damage(BASE_DAMAGE + bonusDamage() - reduceDamage(entity), DamageSource.of(DamageType.EXPLOSION, player));
                             count.getAndIncrement();
                         });
                 int i = count.get();

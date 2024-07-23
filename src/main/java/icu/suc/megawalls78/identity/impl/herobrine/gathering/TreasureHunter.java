@@ -1,4 +1,4 @@
-package icu.suc.megawalls78.identity.impl.herebrine.gathering;
+package icu.suc.megawalls78.identity.impl.herobrine.gathering;
 
 import icu.suc.megawalls78.event.ChestRollEvent;
 import icu.suc.megawalls78.identity.trait.Gathering;

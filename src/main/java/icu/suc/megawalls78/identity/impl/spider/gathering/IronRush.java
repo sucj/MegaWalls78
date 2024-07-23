@@ -23,7 +23,10 @@ public final class IronRush extends Gathering {
         }
 
         @EventHandler
-        public void onBlockBreak(BlockBreakEvent event) {
+        public void brokenBlock(BlockBreakEvent event) {
+            if (event.isCancelled()) {
+                return;
+            }
             Player player = event.getPlayer();
             if (shouldPassive(player) && Tag.ITEMS_SHOVELS.isTagged(PlayerUtil.getPlayerMainHand(player).getType())) {
                 player.getInventory().addItem(ItemStack.of(Material.IRON_INGOT));

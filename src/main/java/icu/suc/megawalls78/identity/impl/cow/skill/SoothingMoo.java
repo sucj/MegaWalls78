@@ -29,23 +29,40 @@ public final class SoothingMoo extends Skill {
 
     @Override
     protected boolean use0(Player player) {
-        ParticleUtil.playExpandingCircleParticle(player.getLocation(), Particle.ENTITY_EFFECT, 64, RANGE, 500L, Color.FUCHSIA);
-        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_COW_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F, 0);
-
         AtomicInteger count = new AtomicInteger();
-        player.addPotionEffect(RESISTANCE);
-        player.addPotionEffect(REGENERATION_2);
-        ParticleUtil.spawnParticleOverhead(player, Particle.HEART, 2);
+        healSelf(player);
         count.incrementAndGet();
 
         EntityUtil.getNearbyEntities(player, RANGE).stream()
                 .filter(entity -> entity instanceof Player)
                 .filter(entity -> isValidAllies(player, entity))
                 .forEach(entity -> {
-                    ((Player) entity).addPotionEffect(REGENERATION_3);
-                    ParticleUtil.spawnParticleOverhead(((Player) entity), Particle.HEART, 3);
+                    healOther((Player) entity);
                     count.getAndIncrement();
                 });
+
+        playSkillEffect(player);
+
         return summaryHeal(player, count.get());
+    }
+
+    private void healSelf(Player player) {
+        player.addPotionEffect(RESISTANCE);
+        player.addPotionEffect(REGENERATION_2);
+        playHealEffect(player, 2);
+    }
+
+    private void healOther(Player player) {
+        player.addPotionEffect(REGENERATION_3);
+        playHealEffect(player, 3);
+    }
+
+    private void playSkillEffect(Player player) {
+        ParticleUtil.playExpandingCircleParticle(player.getLocation(), Particle.ENTITY_EFFECT, 64, RANGE, 700L, Color.FUCHSIA);
+        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_COW_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F, 0);
+    }
+
+    private void playHealEffect(Player player, int count) {
+        ParticleUtil.spawnParticleOverhead(player, Particle.HEART, count);
     }
 }
