@@ -3,6 +3,10 @@ package icu.suc.megawalls78.identity;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.impl.assassin.gathering.ArrowCatch;
+import icu.suc.megawalls78.identity.impl.assassin.passive.MasterAlchemist;
+import icu.suc.megawalls78.identity.impl.assassin.passive.ShadowStep;
+import icu.suc.megawalls78.identity.impl.assassin.skill.ShadowCloak;
 import icu.suc.megawalls78.identity.impl.cow.gathering.UltraPasteurized;
 import icu.suc.megawalls78.identity.impl.cow.passive.BucketBarrier;
 import icu.suc.megawalls78.identity.impl.cow.passive.RefreshingSip;
@@ -56,7 +60,8 @@ public enum Identity {
     SQUID("squid", NamedTextColor.BLUE, Material.INK_SAC, icu.suc.megawalls78.identity.impl.squid.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10, EnergyWay.BOW_PER, 10), Map.of(Trigger.SWORD, SquidSplash.class, Trigger.BOW, SquidSplash.class), List.of(InnerInk.class, Rejuvenate.class), LuckOfTheSea.class),
     SPIDER("spider", NamedTextColor.DARK_PURPLE, Material.COBWEB, icu.suc.megawalls78.identity.impl.spider.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 8, EnergyWay.BOW_PER, 8, EnergyWay.GAME, 4, EnergyWay.DM, 4), Map.of(Trigger.SWORD, Leap.class, Trigger.BOW, Leap.class), List.of(VenomStrike.class, Skitter.class), IronRush.class),
     MOLEMAN("moleman", NamedTextColor.YELLOW, Material.GOLDEN_SHOVEL, icu.suc.megawalls78.identity.impl.moleman.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10, EnergyWay.BOW_PER, 10, EnergyWay.PREPARATION, 5, EnergyWay.GAME, 3, EnergyWay.DM, 3), Map.of(Trigger.SWORD, Dig.class, Trigger.BOW, Dig.class, Trigger.SHOVEL, Dig.class), List.of(Shortcut.class, JunkFood.class), Stockpile.class),
-    WARDEN("warden", NamedTextColor.BLACK, Material.ECHO_SHARD, icu.suc.megawalls78.identity.impl.warden.Kit.class, 150, Map.of(EnergyWay.MELEE_WHEN, 10, EnergyWay.BOW_WHEN, 5), Map.of(Trigger.SWORD, SonicBoom.class, Trigger.BOW, SonicBoom.class, Trigger.AXE, SonicBoom.class), List.of(Sniffs.class, Anger.class), Spreads.class);
+    WARDEN("warden", NamedTextColor.BLACK, Material.ECHO_SHARD, icu.suc.megawalls78.identity.impl.warden.Kit.class, 150, Map.of(EnergyWay.MELEE_WHEN, 10, EnergyWay.BOW_WHEN, 5), Map.of(Trigger.SWORD, SonicBoom.class, Trigger.BOW, SonicBoom.class, Trigger.AXE, SonicBoom.class), List.of(Sniffs.class, Anger.class), Spreads.class),
+    ASSASSIN("assassin", NamedTextColor.GRAY, Material.BLACK_STAINED_GLASS, icu.suc.megawalls78.identity.impl.assassin.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10, EnergyWay.BOW_PER, 10, EnergyWay.PREPARATION, 2, EnergyWay.GAME, 2, EnergyWay.DM, 2), Map.of(Trigger.SWORD, ShadowCloak.class, Trigger.BOW, ShadowCloak.class), List.of(MasterAlchemist.class, ShadowStep.class), ArrowCatch.class);
 
     private final String id;
     private final TextColor color;

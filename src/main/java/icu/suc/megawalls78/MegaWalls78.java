@@ -1,20 +1,12 @@
 package icu.suc.megawalls78;
 
-import icu.suc.megawalls78.command.IdCommand;
-import icu.suc.megawalls78.command.MapCommand;
-import icu.suc.megawalls78.command.ShoutCommand;
-import icu.suc.megawalls78.command.SuicideCommand;
+import icu.suc.megawalls78.command.*;
 import icu.suc.megawalls78.listener.*;
 import icu.suc.megawalls78.management.*;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -62,6 +54,7 @@ public final class MegaWalls78 extends JavaPlugin {
         Objects.requireNonNull(getCommand("id")).setExecutor(new IdCommand());
         Objects.requireNonNull(getCommand("map")).setExecutor(new MapCommand());
         Objects.requireNonNull(getCommand("shout")).setExecutor(new ShoutCommand());
+        Objects.requireNonNull(getCommand("energy")).setExecutor(new EnergyCommand());
         Objects.requireNonNull(getCommand("suicide")).setExecutor(new SuicideCommand());
     }
 

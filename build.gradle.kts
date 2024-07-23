@@ -3,7 +3,7 @@ import xyz.jpenilla.resourcefactory.bukkit.Permission
 
 plugins {
   `java-library`
-  id("io.papermc.paperweight.userdev").version("1.7.2-SNAPSHOT")
+  id("io.papermc.paperweight.userdev").version("1.7.1")
   id("xyz.jpenilla.run-paper").version("2.3.0")
   id("xyz.jpenilla.resource-factory-bukkit-convention").version("1.1.1")
 }
@@ -69,6 +69,9 @@ bukkitPluginYaml {
     register("mw78.suicide") {
       default = Permission.Default.TRUE
     }
+    register("mw78.energy") {
+      default = Permission.Default.OP
+    }
   }
   commands {
     register("id") {
@@ -87,6 +90,10 @@ bukkitPluginYaml {
       permission = "mw78.suicide"
       aliases = listOf("kill", "die")
       usage = "/suicide"
+    }
+    register("energy") {
+      permission = "mw78.energy"
+      usage = "/energy"
     }
   }
 }
