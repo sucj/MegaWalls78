@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerClientOptionsChangeEvent;
 import com.google.common.collect.Lists;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.game.GameRunner;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.gui.IdentityGui;
@@ -22,7 +23,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.block.Block;
+import org.bukkit.block.TileState;
+import org.bukkit.craftbukkit.block.impl.CraftAnvil;
 import org.bukkit.entity.*;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -259,9 +264,15 @@ public class PlayerListener implements Listener {
         if (gameManager.isSpectator(player)) {
             event.setCancelled(true);
         } else if (gameManager.inFighting()) {
-            if (gameManager.getPlayer(player).useSkill(event.getAction(), event.getMaterial())) {
-                event.setCancelled(true);
-            } else {
+            boolean useSkill = true;
+            Block clickedBlock = event.getClickedBlock();
+            if (clickedBlock != null && clickedBlock.getState() instanceof TileState) {
+                useSkill = false;
+            }
+            if (useSkill) {
+                gameManager.getPlayer(player).useSkill(event.getAction(), event.getMaterial());
+            }
+            else {
                 switch (event.getAction()) {
                     case RIGHT_CLICK_BLOCK:
                     case RIGHT_CLICK_AIR: {
@@ -337,7 +348,8 @@ public class PlayerListener implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         if (gameManager.inFighting()) {
-            GameTeam team = gameManager.getRunner().inPalace(event.getTo());
+            GameRunner runner = gameManager.getRunner();
+            GameTeam team = runner.inPalace(event.getTo());
             Player player = event.getPlayer();
             if (team == null) {
                 for (BossBar bossBar : player.activeBossBars()) {

@@ -31,7 +31,7 @@ public final class UltraPasteurized extends Gathering {
         super("ultra_pasteurized", Internal.class);
     }
 
-    public static class Internal extends Passive implements IActionbar {
+    public static final class Internal extends Passive implements IActionbar {
 
         private int count = MAX;
 

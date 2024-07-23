@@ -32,6 +32,10 @@ public final class RefreshingSip extends Passive implements IActionbar {
 
     @EventHandler
     public void onDrinkMilk(PlayerItemConsumeEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
         Player player = event.getPlayer();
 
         if (shouldPassive(player) && event.getItem().getType().equals(Material.MILK_BUCKET)) {

@@ -70,12 +70,12 @@ public final class Skitter extends Passive implements IActionbar {
         ARROW("arrow", vector -> {
             double y = vector.getY();
             vector.multiply(2.4D);
-            vector.setY(nuggetMC_Y(y, 0.8D));
+            vector.setY(NuggetMC_Y(y, 0.8D));
         }),
         ARCED("arced", vector -> {
             double y = vector.getY();
             vector.multiply(1.8D);
-            vector.setY(nuggetMC_Y(y, 1.2D));
+            vector.setY(NuggetMC_Y(y, 1.2D));
         });
 
         private final String id;
@@ -100,7 +100,7 @@ public final class Skitter extends Passive implements IActionbar {
             return name;
         }
 
-        private static double nuggetMC_Y(double oldY, double newY) {
+        private static double NuggetMC_Y(double oldY, double newY) {
             return 0.2D * Math.pow(oldY, 2) + newY;
         }
     }

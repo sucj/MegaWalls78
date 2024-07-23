@@ -22,8 +22,6 @@ import org.bukkit.entity.Wither;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.*;
-import org.bukkit.util.BoundingBox;
-import org.bukkit.util.Vector;
 
 import java.util.List;
 import java.util.Map;
@@ -50,8 +48,7 @@ public class GameRunner implements Runnable {
     private final Set<Location> region;
     private final Map<GameTeam, Set<Location>> regions;
 
-    private final Set<BoundingBox> mid;
-    private final PotionEffect HUNGER = new PotionEffect(PotionEffectType.HUNGER, 20, 1, true, false);
+    private final PotionEffect HUNGER = new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 1, true, false);
 
     public GameRunner() {
         this.barriers = Sets.newHashSet();
@@ -61,7 +58,6 @@ public class GameRunner implements Runnable {
         this.walls = Sets.newHashSet();
         this.region = Sets.newHashSet();
         this.regions = Maps.newHashMap();
-        this.mid = Sets.newHashSet();
     }
 
     private void init(GameManager gameManager) {
@@ -82,11 +78,6 @@ public class GameRunner implements Runnable {
             addRegionsBlock(gameManager.getMap().wall(), walls);
             Location[][] midRegion = gameManager.getMap().region();
             addRegionsBlock(midRegion, region);
-            for (Location[] locations : midRegion) {
-                Location locA = locations[0];
-                Location locB = locations[1];
-                mid.add(new BoundingBox(locA.getX(), locA.getY(), locA.getZ(), locB.getX(), locB.getY(), locB.getZ()));
-            }
             init = true;
             MegaWalls78.getInstance().getLogger().info("Map initialized.");
         });
@@ -133,6 +124,7 @@ public class GameRunner implements Runnable {
                             if (dmTimer <= 0L) {
                                 dmC = false;
                                 dm = true;
+                                MegaWalls78.getInstance().getScoreboardManager().updateSidebar(GameState.FIGHTING);
                                 ComponentUtil.sendMessage(Component.translatable("mw78.dm.started", NamedTextColor.RED, TextDecoration.BOLD), Bukkit.getOnlinePlayers());
                             } else {
                                 dmTimer -= 1000L;
@@ -171,11 +163,14 @@ public class GameRunner implements Runnable {
                                     gamePlayer.increaseEnergy(isDm() ? EnergyWay.DM : EnergyWay.GAME);
                                 }
                                 if (isDm()) {
-                                    Vector playerLocation = bukkitPlayer.getLocation().toVector();
-                                    for (BoundingBox box : mid) {
-                                        if (box.contains(playerLocation)) {
+                                    if (inMid(bukkitPlayer) && bukkitPlayer.hasPotionEffect(PotionEffectType.HUNGER)) {
+                                        bukkitPlayer.removePotionEffect(PotionEffectType.HUNGER);
+                                    } else {
+                                        if (!bukkitPlayer.hasPotionEffect(PotionEffectType.HUNGER)) {
                                             bukkitPlayer.addPotionEffect(HUNGER);
-                                            break;
+                                        }
+                                        if (timer % 10000 == 0) {
+                                            ComponentUtil.sendMessage(Component.translatable("mw78.hunger", NamedTextColor.RED), bukkitPlayer);
                                         }
                                     }
                                 }
@@ -388,6 +383,7 @@ public class GameRunner implements Runnable {
         dmTimer = MegaWalls78.getInstance().getConfigManager().dmTime;
         timer -= dmTimer;
         dmC = true;
+        MegaWalls78.getInstance().getScoreboardManager().updateSidebar(GameState.FIGHTING);
         ComponentUtil.sendMessage(Component.translatable("mw78.dm.start", NamedTextColor.RED, TextDecoration.BOLD), Bukkit.getOnlinePlayers());
         if (dmTimer == 10000L || dmTimer <= 5000L) {
             Component seconds = ComponentUtil.second(dmTimer, NamedTextColor.AQUA);
@@ -409,5 +405,12 @@ public class GameRunner implements Runnable {
 
     public Set<Location> getSpawn(GameTeam team) {
         return spawns.getOrDefault(team, EMPTY);
+    }
+
+    public boolean inMid(Player player) {
+        Location location = player.getLocation().toBlockLocation();
+        location.setYaw(0);
+        location.setPitch(0);
+        return region.contains(location);
     }
 }

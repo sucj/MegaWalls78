@@ -16,7 +16,7 @@ public final class IronRush extends Gathering {
         super("iron_rush", Internal.class);
     }
 
-    public static class Internal extends Passive {
+    public static final class Internal extends Passive {
 
         public Internal() {
             super("iron_rush");

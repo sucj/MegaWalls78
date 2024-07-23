@@ -92,6 +92,10 @@ public final class MegaWalls78 extends JavaPlugin {
         return skinManager;
     }
 
+    public ScoreboardManager getScoreboardManager() {
+        return scoreboardManager;
+    }
+
     public static MegaWalls78 getInstance() {
         return instance;
     }
