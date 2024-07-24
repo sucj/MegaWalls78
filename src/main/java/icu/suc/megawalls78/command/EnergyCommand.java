@@ -3,6 +3,10 @@ package icu.suc.megawalls78.command;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.management.GameManager;
+import icu.suc.megawalls78.util.LP;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,14 +17,17 @@ public class EnergyCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if (commandSender instanceof Player player && player.isOp() && MegaWalls78.getInstance().getGameManager().inFighting()) {
-            if (strings.length == 0) {
+        if (commandSender instanceof Player player) {
+            if (strings.length == 1) {
                 GameManager gameManager = MegaWalls78.getInstance().getGameManager();
                 if (gameManager.isSpectator(player)) {
                     return true;
                 }
-                GamePlayer gp = MegaWalls78.getInstance().getGameManager().getPlayer(player);
-                gp.setEnergy(gp.getIdentity().getEnergy());
+                if (gameManager.inFighting()) {
+                    GamePlayer gamePlayer = gameManager.getPlayer(player);
+                    gamePlayer.setEnergy(Integer.parseInt(strings[0]));
+                }
+                return true;
             }
         }
         return false;

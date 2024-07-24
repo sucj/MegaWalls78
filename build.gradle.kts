@@ -70,7 +70,7 @@ bukkitPluginYaml {
       default = Permission.Default.TRUE
     }
     register("mw78.energy") {
-      default = Permission.Default.OP
+      default = Permission.Default.FALSE
     }
   }
   commands {
