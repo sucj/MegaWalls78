@@ -13,7 +13,7 @@ import org.bukkit.util.Vector;
 
 public final class ShadowStep extends Passive implements IActionbar {
 
-    private static final long COOLDOWN = 200L;
+    private static final long COOLDOWN = 10000L;
     private static final double RANGE = 25.0D; // 25格内的远程伤害
 
     private long lastMills;
