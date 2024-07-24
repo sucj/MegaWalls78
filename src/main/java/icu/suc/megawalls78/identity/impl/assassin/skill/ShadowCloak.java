@@ -14,7 +14,7 @@ public class ShadowCloak extends Skill {
     public boolean inShadowCloak = false;
 
     public ShadowCloak() {
-        super("shadow_cloak", 100, 0L);
+        super("shadow_cloak", 100, 1000L);
     }
 
     @Override
