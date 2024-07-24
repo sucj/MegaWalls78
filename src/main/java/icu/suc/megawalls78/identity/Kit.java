@@ -111,10 +111,6 @@ public abstract class Kit {
         return addPotion("healing", amount).addCustomEffect(new PotionEffect(PotionEffectType.INSTANT_HEALTH, 0, level - 1), false);
     }
 
-    protected ItemBuilder addAssassinPotion(int amount) {
-        return addPotion("Regen III and Speed II", amount).addCustomEffect(new PotionEffect(PotionEffectType.REGENERATION, 6 * 20, 2), false).addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 6 * 20, 1), false);
-    }
-
     protected ItemBuilder addCompass() {
         return addItem(Material.COMPASS, 1);
     }
