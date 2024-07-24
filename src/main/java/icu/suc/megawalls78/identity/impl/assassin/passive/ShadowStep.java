@@ -40,6 +40,7 @@ public final class ShadowStep extends Passive implements IActionbar {
                     player.teleport(getBlockBehindPlayer(damager));
                     ParticleUtil.spawnParticleRandomBody(damager, Particle.PORTAL, 8);
                     player.getWorld().playSound(damager.getEyeLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                    event.setCancelled(true);
                 }
             }
         }
