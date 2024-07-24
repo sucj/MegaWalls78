@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.event;
 
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -11,19 +12,19 @@ import org.jetbrains.annotations.NotNull;
 public abstract class ChestRollEvent extends Event {
 
     private final Player player;
-    private final Block block;
+    private final BlockState blockState;
 
-    protected ChestRollEvent(Player player, Block block) {
+    protected ChestRollEvent(Player player, BlockState blockState) {
         this.player = player;
-        this.block = block;
+        this.blockState = blockState;
     }
 
     public Player getPlayer() {
         return player;
     }
 
-    public Block getBlock() {
-        return block;
+    public BlockState getBlockState() {
+        return blockState;
     }
 
     public static class Pre extends ChestRollEvent implements Cancellable {
@@ -34,8 +35,8 @@ public abstract class ChestRollEvent extends Event {
 
         private boolean cancelled;
 
-        public Pre(Player player, Block block, double probability) {
-            super(player, block);
+        public Pre(Player player, BlockState blockState, double probability) {
+            super(player, blockState);
             this.probability = probability;
         }
 
@@ -73,8 +74,8 @@ public abstract class ChestRollEvent extends Event {
 
         private final Inventory inventory;
 
-        public Post(Player player, Block block, Inventory inventory) {
-            super(player, block);
+        public Post(Player player, BlockState blockState, Inventory inventory) {
+            super(player, blockState);
             this.inventory = inventory;
         }
 

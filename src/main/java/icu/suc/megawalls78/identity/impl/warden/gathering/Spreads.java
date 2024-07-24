@@ -5,9 +5,10 @@ import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.Passive;
 import icu.suc.megawalls78.util.BlockUtil;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
-import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,7 +19,7 @@ import java.util.Set;
 public final class Spreads extends Gathering {
 
     public Spreads() {
-        super("spreads", null);
+        super("spreads", Internal.class);
     }
 
     public static final class Internal extends Passive {
@@ -33,29 +34,29 @@ public final class Spreads extends Gathering {
                 return;
             }
             Player player = event.getPlayer();
-            Block block = event.getBlock();
-            if (shouldPassive(player) && isTrigger(block)) {
-                int spreads = spreads(block);
+            BlockState blockState = event.getBlockState();
+            if (shouldPassive(player) && isTrigger(blockState.getType())) {
+                Location location = blockState.getLocation();
+                int spreads = spreads(location);
                 if (spreads > 0) {
                     for (Item item : event.getItems()) {
                         item.getItemStack().add(spreads);
                     }
-                    playSoundEffect(block);
+                    playSoundEffect(location);
                 }
             }
         }
 
-        private void playSoundEffect(Block block) {
-            block.getWorld().playSound(block.getLocation(), Sound.BLOCK_SCULK_SPREAD, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        private void playSoundEffect(Location location) {
+            location.getWorld().playSound(location, Sound.BLOCK_SCULK_SPREAD, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
 
-        private boolean isTrigger(Block block) {
-            return BlockUtil.isOre(block.getType());
+        private boolean isTrigger(Material material) {
+            return BlockUtil.isOre(material);
         }
 
-        private int spreads(Block block) {
+        private int spreads(Location center) {
             Set<Location> locations = Sets.newHashSet();
-            Location center = block.getLocation();
             for (int i = -1; i < 2; i += 2) {
                 locations.add(center.clone().add(i, 0, 0));
                 locations.add(center.clone().add(0, i, 0));

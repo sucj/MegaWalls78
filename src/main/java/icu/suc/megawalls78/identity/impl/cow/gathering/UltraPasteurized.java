@@ -11,10 +11,12 @@ import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.ItemUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,26 +53,26 @@ public final class UltraPasteurized extends Gathering {
                 return;
             }
             Player player = event.getPlayer();
-            Block block = event.getBlock();
-            if (shouldPassive(player) && isAvailable() && isTrigger(block)) {
+            BlockState blockState = event.getBlockState();
+            if (shouldPassive(player) && isAvailable() && isTrigger(blockState.getType())) {
                 if (++count > MAX) {
-                    dropMilk(event.getItems(), player, block);
+                    dropMilk(event.getItems(), player, blockState.getLocation());
                     count = 1;
                 }
             }
         }
 
-        private void playSoundEffect(Block block) {
-            block.getWorld().playSound(block.getLocation(), Sound.BLOCK_WET_SPONGE_DRIES, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        private void playSoundEffect(Location location) {
+            location.getWorld().playSound(location, Sound.BLOCK_WET_SPONGE_DRIES, SoundCategory.BLOCKS, 1.0F, 1.0F);
         }
 
-        private void dropMilk(List<Item> items, Player player, Block block) {
-            items.add(player.getWorld().dropItemNaturally(block.getLocation(), MILK.build()));
-            playSoundEffect(block);
+        private void dropMilk(List<Item> items, Player player, Location location) {
+            items.add(player.getWorld().dropItemNaturally(location, MILK.build()));
+            playSoundEffect(location);
         }
 
-        private boolean isTrigger(Block block) {
-            return BlockUtil.isStone(block.getType());
+        private boolean isTrigger(Material material) {
+            return BlockUtil.isStone(material);
         }
 
         private boolean isAvailable() {

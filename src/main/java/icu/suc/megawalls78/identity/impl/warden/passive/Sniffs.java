@@ -20,7 +20,8 @@ public final class Sniffs extends Passive implements IActionbar {
 
     private static final long COOLDOWN = 10000L;
     private static final double RANGE = 20.0D;
-    private static final int MAX = 10;
+    private static final int PER = 2;
+    private static final int MAX = 20;
 
     private long lastMills;
 
@@ -45,7 +46,7 @@ public final class Sniffs extends Passive implements IActionbar {
                 .filter(entity -> entity instanceof Player)
                 .filter(entity -> !isValidAllies(player, entity))
                 .forEach(entity -> {
-                    energy.getAndIncrement();
+                    energy.getAndAdd(PER);
                     playSniffedEffect(entity, player);
                 });
         gamePlayer.increaseEnergy(Math.min(energy.get(), MAX));

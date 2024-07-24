@@ -145,7 +145,7 @@ public class SkillListener implements Listener {
         if (BlockUtil.isNatural(event.getBlockState().getType())) {
             Block block = event.getBlock();
 
-            ChestRollEvent.Pre pre = new ChestRollEvent.Pre(player, block, MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING) ? BEFORE_PBB : AFTER_PBB);
+            ChestRollEvent.Pre pre = new ChestRollEvent.Pre(player, event.getBlockState(), MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING) ? BEFORE_PBB : AFTER_PBB);
             Bukkit.getPluginManager().callEvent(pre);
             if (pre.isCancelled() || RandomUtil.RANDOM.nextDouble() > pre.getProbability()) {
                 return;
@@ -165,7 +165,7 @@ public class SkillListener implements Listener {
                 NO_NEWBEE.add(player.getUniqueId());
             }
 
-            ChestRollEvent.Post post = new ChestRollEvent.Post(player, block, inventory);
+            ChestRollEvent.Post post = new ChestRollEvent.Post(player, event.getBlockState(), inventory);
             Bukkit.getPluginManager().callEvent(post);
         }
     }

@@ -33,13 +33,15 @@ public final class SonicBoom extends Skill {
     private static final long CHARGE = 1700L;
     private static final int TICK = (int) (CHARGE / 50);
     private static final PotionEffect SLOWNESS = new PotionEffect(PotionEffectType.SLOWNESS, TICK, 2);
+    private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, TICK, 2);
     private static final double RADIUS = 1D;
-    private static final double SCALE = 0.5D;
+    private static final double SCALE = 0.6D;
+    private static final PotionEffect DARKNESS = new PotionEffect(PotionEffectType.DARKNESS, 100, 0);
 
     private Task task;
 
     public SonicBoom() {
-        super("sonic_boom", 100, 13000L);
+        super("sonic_boom", 50, 13000L);
     }
 
     @Override
@@ -103,6 +105,7 @@ public final class SonicBoom extends Skill {
 
         public void resetCharge() {
             player.addPotionEffect(SLOWNESS);
+            player.addPotionEffect(RESISTANCE);
             playChargeSoundEffect();
             charge = 0;
         }
@@ -124,6 +127,7 @@ public final class SonicBoom extends Skill {
                         } else {
                             ((LivingEntity) entity).damage(DAMAGE, DamageSource.of(DamageType.SONIC_BOOM, player));
                         }
+                        ((LivingEntity) entity).addPotionEffect(DARKNESS);
                         victims.add(entity.getUniqueId());
                         count.getAndIncrement();
                     });
