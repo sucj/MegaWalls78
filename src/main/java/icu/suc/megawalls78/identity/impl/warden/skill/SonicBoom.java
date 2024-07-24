@@ -6,7 +6,6 @@ import icu.suc.megawalls78.identity.trait.Skill;
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ParticleUtil;
-import icu.suc.megawalls78.util.PlayerUtil;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -25,6 +24,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
+
 public final class SonicBoom extends Skill {
 
     private static final double RANGE = 7.5D;
@@ -32,7 +33,7 @@ public final class SonicBoom extends Skill {
     private static final long CHARGE = 1700L;
     private static final int TICK = (int) (CHARGE / 50);
     private static final PotionEffect SLOWNESS = new PotionEffect(PotionEffectType.SLOWNESS, TICK, 2);
-    private static final double RADIUS = 0.5D;
+    private static final double RADIUS = 1D;
     private static final double SCALE = 0.5D;
 
     private Task task;
@@ -115,7 +116,7 @@ public final class SonicBoom extends Skill {
             EntityUtil.getNearbyEntities(location.getWorld(), BoundingBox.of(location, RADIUS, RADIUS, RADIUS)).stream()
                     .filter(entity -> entity instanceof LivingEntity)
                     .filter(entity -> !(entity instanceof Wither))
-                    .filter(entity -> !PlayerUtil.isValidAllies(player, entity))
+                    .filter(entity -> !isValidAllies(player, entity))
                     .filter(entity -> !victims.contains(entity.getUniqueId()))
                     .forEach(entity -> {
                         if (entity instanceof Player) {
