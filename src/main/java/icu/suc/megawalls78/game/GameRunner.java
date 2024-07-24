@@ -163,8 +163,10 @@ public class GameRunner implements Runnable {
                                     gamePlayer.increaseEnergy(isDm() ? EnergyWay.DM : EnergyWay.GAME);
                                 }
                                 if (isDm()) {
-                                    if (inMid(bukkitPlayer) && bukkitPlayer.hasPotionEffect(PotionEffectType.HUNGER)) {
-                                        bukkitPlayer.removePotionEffect(PotionEffectType.HUNGER);
+                                    if (inMid(bukkitPlayer)) {
+                                        if (bukkitPlayer.hasPotionEffect(PotionEffectType.HUNGER)) {
+                                            bukkitPlayer.removePotionEffect(PotionEffectType.HUNGER);
+                                        }
                                     } else {
                                         if (!bukkitPlayer.hasPotionEffect(PotionEffectType.HUNGER)) {
                                             bukkitPlayer.addPotionEffect(HUNGER);

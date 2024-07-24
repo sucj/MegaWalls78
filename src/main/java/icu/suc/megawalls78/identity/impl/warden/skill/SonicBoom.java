@@ -11,6 +11,7 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.damage.DamageType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
@@ -127,6 +128,7 @@ public final class SonicBoom extends Skill {
                         } else {
                             ((LivingEntity) entity).damage(DAMAGE, DamageSource.of(DamageType.SONIC_BOOM, player));
                         }
+                        setVelocity(entity);
                         ((LivingEntity) entity).addPotionEffect(DARKNESS);
                         victims.add(entity.getUniqueId());
                         count.getAndIncrement();
@@ -137,6 +139,19 @@ public final class SonicBoom extends Skill {
             Location old = location.clone();
             location.add(vector);
             distance += old.distance(location);
+        }
+
+        private void setVelocity(Entity entity) {
+            Vector velocity = vector.clone().multiply(7.0D - 7.0D * count.get() * SCALE);
+            double y = velocity.getY();
+            if (Math.abs(y) > 0.5D) {
+                velocity.setY(0.5D / y);
+            }
+            double length = velocity.length();
+            if (length > 7.0D) {
+                velocity.multiply(length / 7.0D);
+            }
+            entity.setVelocity(velocity.add(entity.getVelocity()));
         }
 
         private double reduceDamage() {
