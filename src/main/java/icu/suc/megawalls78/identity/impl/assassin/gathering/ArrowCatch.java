@@ -1,25 +1,15 @@
 package icu.suc.megawalls78.identity.impl.assassin.gathering;
 
-import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.game.GamePlayer;
-import icu.suc.megawalls78.identity.impl.assassin.Kit;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Passive;
-import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.EntityUtil;
-import icu.suc.megawalls78.util.InventoryUtil;
-import icu.suc.megawalls78.util.PlayerUtil;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.inventory.ItemStack;
 
 public final class ArrowCatch extends Gathering {
 

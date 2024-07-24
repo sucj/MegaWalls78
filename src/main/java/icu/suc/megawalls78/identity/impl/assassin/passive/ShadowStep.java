@@ -3,7 +3,6 @@ package icu.suc.megawalls78.identity.impl.assassin.passive;
 import icu.suc.megawalls78.identity.impl.assassin.skill.ShadowCloak;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Passive;
-import icu.suc.megawalls78.util.ParticleUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -81,7 +80,7 @@ public final class ShadowStep extends Passive implements IActionbar {
         return Type.COOLDOWN.accept(System.currentTimeMillis(), lastMills, COOLDOWN);
     }
 
-    private Location getBlockBehindPlayer(Player player) {
+    private Location getBlockBehindPlayer(Player player) { // TODO check to is safe
         Vector inverseDirectionVec = player.getLocation().getDirection().normalize().multiply(-1);
         return player.getLocation().add(inverseDirectionVec);
     }
