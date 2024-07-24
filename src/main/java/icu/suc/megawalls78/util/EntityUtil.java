@@ -30,10 +30,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class EntityUtil {
@@ -81,6 +85,11 @@ public class EntityUtil {
         } else {
             return z > 0 ? BlockFace.SOUTH : BlockFace.WEST;
         }
+    }
+
+    public static boolean isEntityInFront(Entity a, Entity b) {
+        Location aLoc = a.getLocation();
+        return aLoc.getDirection().dot(b.getLocation().toVector().subtract(aLoc.toVector()).normalize()) > 0;
     }
 
     public static boolean isOnGround(Entity entity) {
