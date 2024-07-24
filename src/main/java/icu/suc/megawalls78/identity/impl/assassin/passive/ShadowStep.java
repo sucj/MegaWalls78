@@ -29,18 +29,20 @@ public final class ShadowStep extends Passive implements IActionbar {
         }
         if (event.getEntity() instanceof Player player && shouldPassive(player) // 无论何时都应该改先判断shouldPassive
                 && event.getDamageSource().getCausingEntity() instanceof Player damager) {
-            // 这三句是当前判断是否cd的通用代码
+            // 判断是否cd的通用代码
             long currentMillis = System.currentTimeMillis();
             if (currentMillis - lastMills >= COOLDOWN) {
-                lastMills = currentMillis;
 
                 // 一般情况下，计算cd后再进入技能触发条件判断
                 if (player.isSneaking() && player.getLocation().distance(damager.getLocation()) <= RANGE && !ShadowCloak.getState(player.getUniqueId())) {
+                    lastMills = currentMillis; // 这里因为要触发才计算cd
                     player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
                     player.teleport(getBlockBehindPlayer(damager));
                     ParticleUtil.spawnParticleRandomBody(damager, Particle.PORTAL, 8);
                     player.getWorld().playSound(damager.getEyeLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+
                     event.setCancelled(true);
+//                    event.setDamage(0); // 这里之所以设置为0而不是cancel是因为cancel后箭矢掉落还有可能击中player // TODO ArrowCatch
                 }
             }
         }

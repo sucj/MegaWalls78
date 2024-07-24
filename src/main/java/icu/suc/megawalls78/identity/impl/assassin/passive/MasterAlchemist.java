@@ -44,7 +44,6 @@ public final class MasterAlchemist extends Passive implements IActionbar {
         if (event.getEntity() instanceof Player player && shouldPassive(player)) {
             long currentMillis = System.currentTimeMillis();
             if (currentMillis - lastMills >= COOLDOWN) {
-                lastMills = currentMillis;
 
                 double damage = event.getFinalDamage();
                 long currentTimeMillis = System.currentTimeMillis();
@@ -56,6 +55,7 @@ public final class MasterAlchemist extends Passive implements IActionbar {
                 }
 
                 if (lastDamage.getRight() > DAMAGE) {
+                    lastMills = currentMillis;
                     player.addPotionEffect(REGENERATION);
                     lastDamage.setLeft(0L);
                 }
