@@ -21,14 +21,13 @@ public final class ArrowCatch extends Gathering {
 
 
     public ArrowCatch() {
-        super("arrowcatch", Internal.class);
+        super("arrow_catch", Internal.class);
     }
 
     public static final class Internal extends Passive {
 
-
         public Internal() {
-            super("arrowcatch");
+            super("arrow_catch");
         }
 
         @EventHandler
