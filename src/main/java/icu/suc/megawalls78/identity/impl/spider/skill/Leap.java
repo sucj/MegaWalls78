@@ -6,6 +6,7 @@ import icu.suc.megawalls78.identity.trait.Skill;
 import icu.suc.megawalls78.util.*;
 import icu.suc.megawalls78.util.Effect;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -25,9 +26,11 @@ public final class Leap extends Skill {
     private static final double MAX_BONUS_DAMAGE = 5.0D;
     private static final double REDUCE_DAMAGE = 1.0D;
     private static final double REDUCE_DISTANCE = 2.0D;
+    private static final float SCALE = 0.5F;
+    private static final float DIRECT = 1.5F;
+
     private static final PotionEffect SLOWNESS = new PotionEffect(PotionEffectType.SLOWNESS, 80, 0);
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1);
-    private static final float SCALE = 0.5F;
 
     private static final Effect<Player> EFFECT_JUMP = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_SPIDER_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F));
     private static final Effect<Player> EFFECT_LAND = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.7F, 0.5F));
@@ -89,7 +92,11 @@ public final class Leap extends Skill {
                         .filter(entity -> !PlayerUtil.isValidAllies(player, entity))
                         .forEach(entity -> {
                             ((LivingEntity) entity).addPotionEffect(SLOWNESS);
-                            ((LivingEntity) entity).damage(BASE_DAMAGE + bonusDamage() - reduceDamage(entity), DamageSource.of(DamageType.EXPLOSION, player));
+                            double damage = BASE_DAMAGE + bonusDamage() - reduceDamage(entity);
+                            if (entity.getBoundingBox().overlaps(player.getBoundingBox())) {
+                                damage *= DIRECT;
+                            }
+                            ((LivingEntity) entity).damage(damage, DamageSource.of(DamageType.PLAYER_EXPLOSION, player));
                             count.getAndIncrement();
                         });
                 int i = count.get();
@@ -97,6 +104,10 @@ public final class Leap extends Skill {
                     adjustFallDistance();
                 }
                 spawnWebs(i);
+                Location location = player.getLocation();
+                breakBlock(location.clone().add(0, 1, 0));
+                breakBlock(location);
+                breakBlock(location.clone().add(0, -1, 0));
                 summaryHit(player, i);
                 this.cancel();
             } else {
@@ -140,6 +151,16 @@ public final class Leap extends Skill {
                     fallingBlock.setHurtEntities(false);
                     fallingBlock.setVelocity(vector);
                 });
+            }
+        }
+
+        private void breakBlock(Location location) {
+            for (Block block : BlockUtil.getRoundBlocks(location, RADIUS)) {
+                if (MegaWalls78.getInstance().getGameManager().getRunner().getAllowedBlocks().contains(block.getLocation())) {
+                    if (BlockUtil.isDestroyable(block)) {
+                        BlockUtil.breakNaturally(block);
+                    }
+                }
             }
         }
     }

@@ -1,12 +1,15 @@
 package icu.suc.megawalls78.util;
 
+import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.block.CraftBlock;
 
+import java.util.List;
 import java.util.Set;
 
 public class BlockUtil {
@@ -64,5 +67,17 @@ public class BlockUtil {
 
     public static boolean isDestroyable(Block block) {
         return ((CraftBlock) block).getNMS().isDestroyable();
+    }
+
+    public static List<Block> getRoundBlocks(Location location, double radius) {
+        List<Block> blocks = Lists.newArrayList();
+        for (double x = -radius; x <= radius; x++) {
+            for (double z = -radius; z <= radius; z++) {
+                if (Math.sqrt(x * x + z * z) <= radius) {
+                    blocks.add(location.clone().add(x, 0, z).getBlock());
+                }
+            }
+        }
+        return blocks;
     }
 }

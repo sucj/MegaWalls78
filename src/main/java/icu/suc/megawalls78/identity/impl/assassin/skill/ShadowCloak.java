@@ -10,6 +10,7 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
+import com.comphenix.protocol.wrappers.WrappedDataValue;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
@@ -19,6 +20,7 @@ import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;
 import net.kyori.adventure.translation.GlobalTranslator;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.damage.DamageType;
@@ -29,6 +31,8 @@ import org.bukkit.entity.Wither;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -87,7 +91,7 @@ public class ShadowCloak extends Skill {
     }
 
     // 按照技能开发条例第六章第四条：主动技能如有持续效果必须使用Runnable
-    private final class Task extends BukkitRunnable {
+    private static final class Task extends BukkitRunnable {
 
         private final Player player;
 
@@ -133,31 +137,32 @@ public class ShadowCloak extends Skill {
         }
 
         public void updateArmor() {
-            PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
-            packet.getIntegers().write(0, player.getEntityId());
-            List<Pair<EnumWrappers.ItemSlot, ItemStack>> slotStackPairList = Lists.newArrayList();
-            ItemStack helmet = player.getEquipment().getHelmet();
-            if (helmet != null && !helmet.isEmpty()) {
-                slotStackPairList.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, helmet));
+            if (player.isDead()) {
+                return;
             }
-            ItemStack chestplate = player.getEquipment().getChestplate();
-            if (chestplate != null && !chestplate.isEmpty()) {
-                slotStackPairList.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, chestplate));
+            EntityEquipment equipment = player.getEquipment();
+            ItemStack helmet = equipment.getHelmet();
+            ItemStack chestplate = equipment.getChestplate();
+            ItemStack leggings = equipment.getLeggings();
+            ItemStack boots = equipment.getBoots();
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if (onlinePlayer.getUniqueId().equals(player.getUniqueId())) {
+                    continue;
+                }
+                if (helmet != null) {
+                    onlinePlayer.sendEquipmentChange(player, EquipmentSlot.HEAD, helmet);
+                }
+                if (chestplate != null) {
+                    onlinePlayer.sendEquipmentChange(player, EquipmentSlot.CHEST, chestplate);
+                }
+                if (leggings != null) {
+                    onlinePlayer.sendEquipmentChange(player, EquipmentSlot.LEGS, leggings);
+                }
+                if (boots != null) {
+                    onlinePlayer.sendEquipmentChange(player, EquipmentSlot.FEET, boots);
+                }
+                onlinePlayer.sendEquipmentChange(player, EquipmentSlot.OFF_HAND, equipment.getItemInOffHand());
             }
-            ItemStack leggings = player.getEquipment().getLeggings();
-            if (leggings != null && !leggings.isEmpty()) {
-                slotStackPairList.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, leggings));
-            }
-            ItemStack boots = player.getEquipment().getBoots();
-            if (boots != null && !boots.isEmpty()) {
-                slotStackPairList.add(new Pair<>(EnumWrappers.ItemSlot.FEET, boots));
-            }
-            ItemStack offHand = player.getEquipment().getItemInOffHand();
-            if (!offHand.isEmpty()) {
-                slotStackPairList.add(new Pair<>(EnumWrappers.ItemSlot.OFFHAND, offHand));
-            }
-            packet.getSlotStackPairLists().write(0, slotStackPairList);
-            ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
         }
 
         @Override
