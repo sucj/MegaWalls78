@@ -14,6 +14,7 @@ import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.ExpiringValue;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -193,10 +194,10 @@ public class GameManager {
         getAssists(player).add(new ExpiringValue<>(assist.getUniqueId(), 10000L));
     }
 
-    public void saveAssists(Player player, Player killer, boolean wither) {
+    public void saveAssists(Player player, UUID killerId, boolean wither) {
         Set<ExpiringValue<UUID>> assists = getAssists(player);
         for (ExpiringValue<UUID> value : assists) {
-            if (value.getValue().equals(killer.getUniqueId()) || value.isExpired()) {
+            if (value.getValue().equals(killerId) || value.isExpired()) {
                 continue;
             }
             GamePlayer assist = getPlayer(value.getValue());

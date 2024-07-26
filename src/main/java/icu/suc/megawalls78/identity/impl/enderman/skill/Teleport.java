@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.identity.impl.enderman.skill;
 
 import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ParticleUtil;
 import org.bukkit.Location;
@@ -19,10 +20,16 @@ import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
 public final class Teleport extends Skill {
 
-    private static final double RANGE = 25.0D;
+    private static final double RADIUS = 25.0D;
     private static final int THICKNESS = 10;
+
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 100, 2);
     private static final PotionEffect WEAKNESS = new PotionEffect(PotionEffectType.WEAKNESS, 100, 3);
+
+    private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> {
+        ParticleUtil.spawnParticleRandomBody(player, Particle.PORTAL, 8);
+        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+    });
 
     public Teleport() {
         super("teleport", 100, 8000L);
@@ -35,7 +42,7 @@ public final class Teleport extends Skill {
 
         Location fromF = player.getLocation();
         Location fromH = player.getEyeLocation();
-        EntityUtil.getNearbyEntities(player, RANGE).stream()
+        EntityUtil.getNearbyEntities(player, RADIUS).stream()
                 .filter(entity -> entity instanceof Player)
                 .filter(entity -> !isValidAllies(player, entity))
                 .forEach(entity -> {
@@ -55,8 +62,7 @@ public final class Teleport extends Skill {
             return noTarget(player);
         }
 
-        ParticleUtil.spawnParticleRandomBody(player, Particle.PORTAL, 8);
-        player.getWorld().playSound(fromH, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        EFFECT_SKILL.play(player);
 
         Location toF = nearestPlayer.getLocation();
         Location toH = nearestPlayer.getEyeLocation();
@@ -66,23 +72,22 @@ public final class Teleport extends Skill {
         player.setFallDistance(0);
         player.teleport(toF);
 
-        ParticleUtil.spawnParticleRandomBody(player, Particle.PORTAL, 8);
-        player.getWorld().playSound(toH, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+        EFFECT_SKILL.play(player);
 
         player.addPotionEffect(SPEED);
 
-        if (shouldWeakness(fromF, toF) || shouldWeakness(fromH, toH)) {
+        if (weakness(fromF, toF) || weakness(fromH, toH)) {
             player.addPotionEffect(WEAKNESS);
         }
 
         return true;
     }
 
-    private boolean shouldWeakness(Location from, Location to) {
+    private static boolean weakness(Location from, Location to) {
         if (from.equals(to)) {
             return false;
         }
-        int distance = (int) Math.min(from.distance(to), RANGE);
+        int distance = (int) Math.min(from.distance(to), RADIUS);
         if (distance >= THICKNESS) {
             int count = 0;
             Vector start = from.toVector();

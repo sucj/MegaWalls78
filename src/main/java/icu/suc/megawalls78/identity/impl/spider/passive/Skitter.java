@@ -2,7 +2,7 @@ package icu.suc.megawalls78.identity.impl.spider.passive;
 
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -32,7 +32,7 @@ public final class Skitter extends Passive implements IActionbar {
 //            return;
 //        }
         Player player = event.getPlayer();
-        if (shouldPassive(player)) {
+        if (PASSIVE(player)) {
             switch (event.getAction()) {
                 case RIGHT_CLICK_BLOCK:
                 case RIGHT_CLICK_AIR: {
@@ -49,13 +49,8 @@ public final class Skitter extends Passive implements IActionbar {
     }
 
     @Override
-    public void unregister() {
-
-    }
-
-    @Override
     public Component acb() {
-        return Type.MODE.accept(getMode(getPlayer().getUuid()).getName());
+        return Type.MODE.accept(getMode(PLAYER().getUuid()).getName());
     }
 
     public static Mode getMode(UUID uuid) {

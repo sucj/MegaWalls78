@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.identity.impl.squid.passive;
 
-import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -17,15 +18,18 @@ import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
 public class InnerInk extends Passive {
 
-    private static final double RANGE = 5.0D;
+    private static final double RADIUS = 5.0D;
+
     private static final PotionEffect BLINDNESS = new PotionEffect(PotionEffectType.BLINDNESS, 60, 0);
+
+    private static final Effect<Player> EFFECT_SOUND = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F));
 
     public InnerInk() {
         super("inner_ink");
     }
 
     @EventHandler
-    public void drunkPotion(PlayerItemConsumeEvent event) {
+    public void onPotionConsume(PlayerItemConsumeEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -33,25 +37,26 @@ public class InnerInk extends Passive {
         Player player = event.getPlayer();
 
         AtomicInteger count = new AtomicInteger();
-        if (shouldPassive(player) && event.getItem().getType().equals(Material.POTION)) {
-            EntityUtil.getNearbyEntities(player, RANGE).stream()
+        if (PASSIVE(player) && condition(event)) {
+
+            EntityUtil.getNearbyEntities(player, RADIUS).stream()
                     .filter(entity -> entity instanceof Player)
                     .filter(entity -> !isValidAllies(player, entity))
                     .forEach(entity -> {
-                        ((Player) entity).addPotionEffect(BLINDNESS);
+                        potion(player);
                         count.getAndIncrement();
                     });
-            playSoundEffect(player);
+
+            EFFECT_SOUND.play(player);
             summaryHit(player, count.get());
         }
     }
 
-    private void playSoundEffect(Player player) {
-        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+    private static boolean condition(PlayerItemConsumeEvent event) {
+        return event.getItem().getType().equals(Material.POTION);
     }
 
-    @Override
-    public void unregister() {
-
+    private static void potion(Player player) {
+        player.addPotionEffect(BLINDNESS);
     }
 }

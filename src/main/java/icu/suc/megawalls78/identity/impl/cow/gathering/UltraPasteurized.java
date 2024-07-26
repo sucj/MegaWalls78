@@ -5,17 +5,12 @@ import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
-import icu.suc.megawalls78.util.BlockUtil;
-import icu.suc.megawalls78.util.ItemBuilder;
-import icu.suc.megawalls78.util.ItemUtil;
+import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
+import icu.suc.megawalls78.util.*;
+import icu.suc.megawalls78.util.Effect;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.block.Block;
+import org.bukkit.*;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -27,7 +22,6 @@ import java.util.List;
 
 public final class UltraPasteurized extends Gathering {
 
-    private static final int MAX = 60;
     private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET)
             .setAmount(2)
             .addPrefix(Identity.COW.getName().append(Component.space()))
@@ -35,16 +29,16 @@ public final class UltraPasteurized extends Gathering {
             .setMaxStackSize(64)
             .addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.COW_MILK);
 
+    private static final Effect<Location> EFFECT_SKILL = Effect.create(location -> location.getWorld().playSound(location, Sound.BLOCK_WET_SPONGE_DRIES, SoundCategory.BLOCKS, 1.0F, 1.0F));
+
     public UltraPasteurized() {
         super("ultra_pasteurized", Internal.class);
     }
 
-    public static final class Internal extends Passive implements IActionbar {
-
-        private int count = MAX;
+    public static final class Internal extends ChargePassive implements IActionbar {
 
         public Internal() {
-            super("ultra_pasteurized");
+            super("ultra_pasteurized", 60);
         }
 
         @EventHandler
@@ -54,39 +48,28 @@ public final class UltraPasteurized extends Gathering {
             }
             Player player = event.getPlayer();
             BlockState blockState = event.getBlockState();
-            if (shouldPassive(player) && isAvailable() && isTrigger(blockState.getType())) {
-                if (++count > MAX) {
-                    dropMilk(event.getItems(), player, blockState.getLocation());
-                    count = 1;
-                }
+            if (PASSIVE(player) && condition_available() && condition_stone(blockState) && CHARGE()) {
+                handle(event.getItems(), player, blockState.getLocation());
+                CHARGE_RESET();
             }
         }
 
-        private void playSoundEffect(Location location) {
-            location.getWorld().playSound(location, Sound.BLOCK_WET_SPONGE_DRIES, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        }
-
-        private void dropMilk(List<Item> items, Player player, Location location) {
+        private static void handle(List<Item> items, Player player, Location location) {
             items.add(player.getWorld().dropItemNaturally(location, MILK.build()));
-            playSoundEffect(location);
+            EFFECT_SKILL.play(location);
         }
 
-        private boolean isTrigger(Material material) {
-            return BlockUtil.isStone(material);
+        private static boolean condition_stone(BlockState blockState) {
+            return BlockUtil.isStone(blockState.getType());
         }
 
-        private boolean isAvailable() {
+        private static boolean condition_available() {
             return MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING);
         }
 
         @Override
-        public void unregister() {
-
-        }
-
-        @Override
         public Component acb() {
-            return Type.COMBO_STATE.accept(count, MAX, isAvailable());
+            return Type.CHARGE_STATE.accept(CHARGE_COUNT(), CHARGE, condition_available());
         }
     }
 }

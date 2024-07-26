@@ -2,8 +2,9 @@ package icu.suc.megawalls78.identity.impl.warden.gathering;
 
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.identity.trait.Gathering;
-import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.BlockUtil;
+import icu.suc.megawalls78.util.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -18,6 +19,8 @@ import java.util.Set;
 
 public final class Spreads extends Gathering {
 
+    private static final Effect<Location> EFFECT_SOUND = Effect.create(location -> location.getWorld().playSound(location, Sound.BLOCK_SCULK_SPREAD, SoundCategory.BLOCKS, 1.0F, 1.0F));
+
     public Spreads() {
         super("spreads", Internal.class);
     }
@@ -29,33 +32,29 @@ public final class Spreads extends Gathering {
         }
 
         @EventHandler
-        public void brokenBlock(BlockDropItemEvent event) {
+        public void onBlockBreak(BlockDropItemEvent event) {
             if (event.isCancelled()) {
                 return;
             }
             Player player = event.getPlayer();
             BlockState blockState = event.getBlockState();
-            if (shouldPassive(player) && isTrigger(blockState.getType())) {
+            if (PASSIVE(player) && condition(blockState)) {
                 Location location = blockState.getLocation();
                 int spreads = spreads(location);
                 if (spreads > 0) {
                     for (Item item : event.getItems()) {
                         item.getItemStack().add(spreads);
                     }
-                    playSoundEffect(location);
+                    EFFECT_SOUND.play(location);
                 }
             }
         }
 
-        private void playSoundEffect(Location location) {
-            location.getWorld().playSound(location, Sound.BLOCK_SCULK_SPREAD, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        private static boolean condition(BlockState blockState) {
+            return BlockUtil.isOre(blockState.getType());
         }
 
-        private boolean isTrigger(Material material) {
-            return BlockUtil.isOre(material);
-        }
-
-        private int spreads(Location center) {
+        private static int spreads(Location center) {
             Set<Location> locations = Sets.newHashSet();
             for (int i = -1; i < 2; i += 2) {
                 locations.add(center.clone().add(i, 0, 0));
@@ -69,11 +68,6 @@ public final class Spreads extends Gathering {
                 }
             }
             return i;
-        }
-
-        @Override
-        public void unregister() {
-
         }
     }
 }

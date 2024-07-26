@@ -29,8 +29,9 @@ import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BoundingBox;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -66,14 +67,6 @@ public class EntityUtil {
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    public static Player getKiller(LivingEntity entity, DamageSource source) {
-        if (source.getCausingEntity() instanceof Player player) {
-            return player;
-        } else {
-            return entity.getKiller();
         }
     }
 
@@ -249,6 +242,18 @@ public class EntityUtil {
         }
 
         return maxDist;
+    }
+
+    public static boolean hasPotionEffect(LivingEntity entity, PotionEffect effect) {
+        return hasPotionEffect(entity, effect.getType(), effect.getAmplifier());
+    }
+
+    public static boolean hasPotionEffect(LivingEntity entity, PotionEffectType type, int amplifier) {
+        PotionEffect effect = entity.getPotionEffect(type);
+        if (effect == null) {
+            return false;
+        }
+        return effect.getAmplifier() == amplifier;
     }
 
     public enum Type {

@@ -1,47 +1,38 @@
 package icu.suc.megawalls78.identity.impl.assassin.passive;
 
 import icu.suc.megawalls78.identity.impl.assassin.skill.ShadowCloak;
-import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
-import net.kyori.adventure.text.Component;
+import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.util.Vector;
 
-public final class ShadowStep extends Passive implements IActionbar {
+public final class ShadowStep extends CooldownPassive {
 
-    private static final long COOLDOWN = 10000L;
-    private static final double RANGE = 25.0D; // 25格内的远程伤害
-
-    private long lastMills;
+    private static final double RADIUS = 25.0D; // 25格内的远程伤害
 
     public ShadowStep() {
-        super("shadow_step");
+        super("shadow_step", 10000L);
     }
 
     @EventHandler
-    public void damaged(EntityDamageByEntityEvent event) {
+    public void onPlayerDamage(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
             return;
         }
-        if (event.getEntity() instanceof Player player && shouldPassive(player) // 无论何时都应该改先判断shouldPassive
-                && event.getDamageSource().getCausingEntity() instanceof Player damager) {
-            // 判断是否cd的通用代码
-            long currentMillis = System.currentTimeMillis();
-            if (currentMillis - lastMills >= COOLDOWN) {
+        if (event.getEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() &&
+                event.getDamageSource().getCausingEntity() instanceof Player damager &&
+                player.isSneaking() &&
+                player.getLocation().distance(damager.getLocation()) <= RADIUS &&
+                !ShadowCloak.getState(player.getUniqueId())) {
 
-                // 一般情况下，计算cd后再进入技能触发条件判断
-                if (player.isSneaking() && player.getLocation().distance(damager.getLocation()) <= RANGE && !ShadowCloak.getState(player.getUniqueId())) {
-                    lastMills = currentMillis; // 这里因为要触发才计算cd
-                    player.setFallDistance(0);
-                    player.teleport(getBlockBehindPlayer(damager));
+            player.setFallDistance(0);
+            player.teleport(getBlockBehindPlayer(damager));
 
-                    event.setCancelled(true);
-//                    event.setDamage(0); // 这里之所以设置为0而不是cancel是因为cancel后箭矢掉落还有可能击中player // TODO ArrowCatch
-                }
-            }
+            event.setCancelled(true);
+
+            COOLDOWN_RESET();
         }
     }
 
@@ -69,16 +60,6 @@ public final class ShadowStep extends Passive implements IActionbar {
 //            }
 //        }
 //    }
-
-    @Override
-    public void unregister() {
-
-    }
-
-    @Override
-    public Component acb() {
-        return Type.COOLDOWN.accept(System.currentTimeMillis(), lastMills, COOLDOWN);
-    }
 
     private Location getBlockBehindPlayer(Player player) { // TODO check to is safe
         Vector inverseDirectionVec = player.getLocation().getDirection().normalize().multiply(-1);

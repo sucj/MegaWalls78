@@ -2,11 +2,11 @@ package icu.suc.megawalls78.identity.impl.warden.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.game.GamePlayer;
-import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
+import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ParticleUtil;
-import net.kyori.adventure.text.Component;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -16,58 +16,50 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-public final class Sniffs extends Passive implements IActionbar {
+public final class Sniffs extends CooldownPassive {
 
-    private static final long COOLDOWN = 10000L;
-    private static final double RANGE = 20.0D;
+    private static final double RADIUS = 20.0D;
     private static final int PER = 2;
     private static final int MAX = 20;
 
-    private long lastMills;
+    private static final Effect<Player> EFFECT_SOUND = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_WARDEN_LISTENING, SoundCategory.PLAYERS, 1.0F, 1.0F));
+    private static final Effect<Pair<Entity, Player>> EFFECT_SNIFFED = Effect.create(pair -> {
+        Entity entity = pair.getLeft();
+        Player player = pair.getRight();
+        ParticleUtil.spawnParticle(entity.getWorld(), Particle.VIBRATION, entity.getLocation(), 1, new Vibration(new Vibration.Destination.EntityDestination(player), 20));
+    });
 
     public Sniffs() {
-        super("sniffs");
+        super("sniffs", 10000L);
     }
 
     @EventHandler
-    public void tickStart(ServerTickStartEvent event) {
-        long currentMillis = System.currentTimeMillis();
-        if (currentMillis - lastMills >= COOLDOWN) {
-            lastMills = currentMillis;
+    public void onPlayerTick(ServerTickStartEvent event) {
+        if (COOLDOWN()) {
             sniff();
+            COOLDOWN_RESET();
         }
     }
 
     private void sniff() {
-        GamePlayer gamePlayer = getPlayer();
+        GamePlayer gamePlayer = PLAYER();
         Player player = gamePlayer.getBukkitPlayer();
         AtomicInteger energy = new AtomicInteger();
-        EntityUtil.getNearbyEntities(player, RANGE).stream()
+        EntityUtil.getNearbyEntities(player, RADIUS).stream()
                 .filter(entity -> entity instanceof Player)
                 .filter(entity -> !isValidAllies(player, entity))
                 .forEach(entity -> {
                     energy.getAndAdd(PER);
-                    playSniffedEffect(entity, player);
+                    EFFECT_SNIFFED.play(Pair.of(entity, player));
                 });
-        gamePlayer.increaseEnergy(Math.min(energy.get(), MAX));
-        playSoundEffect(player);
-    }
 
-    private void playSniffedEffect(Entity entity, Player player) {
-        ParticleUtil.spawnParticle(entity.getWorld(), Particle.VIBRATION, entity.getLocation(), 1, new Vibration(new Vibration.Destination.EntityDestination(player), 20));
-    }
+        int i = energy.get();
+        if (i == 0) {
+            return;
+        }
 
-    private void playSoundEffect(Player player) {
-        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_WARDEN_LISTENING, SoundCategory.PLAYERS, 1.0F, 1.0F);
-    }
+        gamePlayer.increaseEnergy(Math.min(i, MAX));
 
-    @Override
-    public void unregister() {
-
-    }
-
-    @Override
-    public Component acb() {
-        return Type.COOLDOWN.accept(System.currentTimeMillis(), lastMills, COOLDOWN);
+        EFFECT_SOUND.play(player);
     }
 }

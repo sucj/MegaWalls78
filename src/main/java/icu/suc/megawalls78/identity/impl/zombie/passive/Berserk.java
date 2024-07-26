@@ -1,9 +1,7 @@
 package icu.suc.megawalls78.identity.impl.zombie.passive;
 
-import com.destroystokyo.paper.event.server.ServerTickEndEvent;
-import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
-import net.kyori.adventure.text.Component;
+import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
+import icu.suc.megawalls78.util.Effect;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Arrow;
@@ -14,61 +12,57 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public final class Berserk extends Passive implements IActionbar {
+public final class Berserk extends DurationCooldownPassive {
 
-    private static final long COOLDOWN = 15000L;
-
-    private static final long DURATION = 6000L;
     private static final double SCALE = 1.75D;
+
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 120, 1);
 
-    private long lastMills;
-    private long duration;
+    private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ZOMBIE_HURT, SoundCategory.PLAYERS, 1.0F, 1.0F));
 
     public Berserk() {
-        super("berserk");
+        super("berserk", 15000L, 6000L);
     }
 
     @EventHandler
-    public void damaged(EntityDamageByEntityEvent event) {
+    public void onPlayerDamage(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
             return;
         }
-        if (event.getEntity() instanceof Player player && event.getDamager() instanceof Arrow) {
-            if (shouldPassive(player)) {
-                long currentMillis = System.currentTimeMillis();
-                if (currentMillis - lastMills >= COOLDOWN) {
-                    lastMills = currentMillis;
-                    duration = DURATION;
-                    player.addPotionEffect(SPEED);
-                    playSoundEffect(player);
-                }
-            }
-        } else if (event.getDamager() instanceof Player player) {
-            if (shouldPassive(player) && duration > 0 && (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK))) {
-                event.setDamage(event.getDamage() * SCALE);
-            }
+        if (event.getEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() && condition_damage(event)) {
+            COOLDOWN_RESET();
+            DURATION_RESET();
+            potion(player);
+            EFFECT_SKILL.play(player);
         }
     }
 
     @EventHandler
-    public void tickEnd(ServerTickEndEvent event) {
-        if (duration > 0) {
-            duration -= 50L;
+    public void onPlayerAttack(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Player player && PASSIVE(player) && DURATION() && condition_attack(event)) {
+            power(event);
         }
     }
 
-    private void playSoundEffect(Player player) {
-        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ZOMBIE_HURT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+    private static boolean condition_damage(EntityDamageByEntityEvent event) {
+        return event.getDamager() instanceof Arrow;
+    }
+
+    private static boolean condition_attack(EntityDamageByEntityEvent event) {
+        EntityDamageEvent.DamageCause cause = event.getCause();
+        return cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || cause.equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK);
+    }
+
+    private static void potion(Player player) {
+        player.addPotionEffect(SPEED);
+    }
+
+    private static void power(EntityDamageByEntityEvent event) {
+        event.setDamage(event.getDamage() * SCALE);
     }
 
     @Override
     public void unregister() {
-        duration = 0;
-    }
-
-    @Override
-    public Component acb() {
-        return Type.DURATION_COOLDOWN.accept(System.currentTimeMillis(), lastMills, COOLDOWN, duration);
+        DURATION_END();
     }
 }

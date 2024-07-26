@@ -40,7 +40,7 @@ import icu.suc.megawalls78.identity.impl.zombie.passive.Berserk;
 import icu.suc.megawalls78.identity.impl.zombie.passive.Toughness;
 import icu.suc.megawalls78.identity.impl.zombie.skill.CircleOfHealing;
 import icu.suc.megawalls78.identity.trait.Gathering;
-import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.Skill;
 import icu.suc.megawalls78.identity.trait.Skill.Trigger;
 import net.kyori.adventure.text.Component;
@@ -146,7 +146,7 @@ public enum Identity {
         return this.energyWay.getOrDefault(way, 0);
     }
 
-    public Map<Skill.Trigger, Skill> getSkills() {
+    public Map<Skill.Trigger, Skill> getSkills(GamePlayer player, List<Passive> passives) {
         try {
             Map<Skill.Trigger, Skill> skills = Maps.newHashMap();
             for (Skill.Trigger trigger : skillClasses.keySet()) {
@@ -159,7 +159,14 @@ public enum Identity {
                             break add;
                         }
                     }
-                    skills.put(trigger, skillClass.getConstructor().newInstance());
+                    Skill skill = skillClass.getConstructor().newInstance();
+                    Class<? extends Passive> passiveClass = skill.getInternal();
+                    if (passiveClass != null) {
+                        Passive passive = passiveClass.getConstructor().newInstance();
+                        passive.PLAYER(player);
+                        passives.add(passive);
+                    }
+                    skills.put(trigger, skill);
                 }
             }
             return skills;
@@ -174,7 +181,7 @@ public enum Identity {
             List<Passive> passives = Lists.newArrayList();
             for (Class<? extends Passive> passiveClass : passiveClasses) {
                 Passive passive = passiveClass.getConstructor().newInstance();
-                passive.setPlayer(player);
+                passive.PLAYER(player);
                 passives.add(passive);
             }
             return passives;
@@ -190,7 +197,7 @@ public enum Identity {
             Class<? extends Passive> passiveClass = gathering.getInternal();
             if (passiveClass != null) {
                 Passive passive = passiveClass.getConstructor().newInstance();
-                passive.setPlayer(player);
+                passive.PLAYER(player);
                 passives.add(passive);
             }
             return gathering;

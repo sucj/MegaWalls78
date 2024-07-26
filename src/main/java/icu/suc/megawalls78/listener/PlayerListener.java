@@ -17,17 +17,17 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.TranslationArgument;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
-import org.bukkit.craftbukkit.block.impl.CraftAnvil;
 import org.bukkit.entity.*;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -42,6 +42,7 @@ import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class PlayerListener implements Listener {
 
@@ -67,7 +68,7 @@ public class PlayerListener implements Listener {
         } else {
             event.joinMessage(null);
         }
-        player.sendPlayerListHeaderAndFooter(Component.text("QQ GROUP 748889666", NamedTextColor.LIGHT_PURPLE, TextDecoration.BOLD), Component.text("MC.SUC.ICU", NamedTextColor.AQUA, TextDecoration.BOLD));
+        player.sendPlayerListHeaderAndFooter(Component.text("748889666", NamedTextColor.LIGHT_PURPLE, TextDecoration.BOLD), Component.text("MC.SUC.ICU", NamedTextColor.AQUA, TextDecoration.BOLD));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -103,6 +104,7 @@ public class PlayerListener implements Listener {
                 Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(20);
                 GameTeam team = gamePlayer.getTeam();
                 boolean dead = gameManager.isWitherDead(team);
+                UUID killerId = null;
                 if (event.deathMessage() instanceof TranslatableComponent component) {
                     Component deathMessage = component;
                     String key = component.key();
@@ -116,15 +118,31 @@ public class PlayerListener implements Listener {
                         deathMessage = deathMessage.append(Component.space()).append(Component.translatable("mw78.kill.final", NamedTextColor.AQUA, TextDecoration.BOLD));
                     }
                     event.deathMessage(deathMessage.color(NamedTextColor.GRAY));
+
+                    List<TranslationArgument> arguments = component.arguments();
+                    if (arguments.size() == 2 && arguments.getLast().value() instanceof Component last) {
+                        HoverEvent<?> hoverEvent = last.hoverEvent();
+                        if (hoverEvent != null && hoverEvent.value() instanceof HoverEvent.ShowEntity killer) {
+                            killerId = killer.id();
+                        }
+                    }
                 }
                 Player killer = player.getKiller();
-                if (killer != null) {
-                    if (dead) {
-                        gameManager.getPlayer(killer).increaseFinalKills();
-                    } else {
-                        gameManager.getPlayer(killer).increaseKills();
+                if (killer == null) {
+                    GamePlayer gamePlayerKiller = gameManager.getPlayer(killerId);
+                    if (gamePlayerKiller == null) {
+                        killerId = null;
                     }
-                    gameManager.saveAssists(player, killer, dead);
+                } else {
+                    killerId = killer.getUniqueId();
+                }
+                if (killerId != null) {
+                    if (dead) {
+                        gameManager.getPlayer(killerId).increaseFinalKills();
+                    } else {
+                        gameManager.getPlayer(killerId).increaseKills();
+                    }
+                    gameManager.saveAssists(player, killerId, dead);
                 }
                 if (dead) {
                     gamePlayer.increaseFinalDeaths();
@@ -276,7 +294,7 @@ public class PlayerListener implements Listener {
             }
             boolean useSkill = true;
             Block clickedBlock = event.getClickedBlock();
-            if (clickedBlock != null && clickedBlock.getState() instanceof TileState) {
+            if (clickedBlock != null && (clickedBlock.getState() instanceof TileState || clickedBlock.getType().equals(Material.CRAFTING_TABLE))) {
                 useSkill = false;
             }
             if (useSkill) {

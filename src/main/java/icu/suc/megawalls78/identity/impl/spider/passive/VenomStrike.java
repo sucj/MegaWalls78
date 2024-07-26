@@ -1,8 +1,6 @@
 package icu.suc.megawalls78.identity.impl.spider.passive;
 
-import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
-import net.kyori.adventure.text.Component;
+import icu.suc.megawalls78.identity.trait.passive.ChargeCooldownPassive;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -10,43 +8,35 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public final class VenomStrike extends Passive implements IActionbar {
+public final class VenomStrike extends ChargeCooldownPassive {
 
-    private static final int MAX = 4;
-    private static final long COOLDOWN = 7000L;
     private static final PotionEffect POISON = new PotionEffect(PotionEffectType.POISON, 125, 0);
 
-    private int hit = MAX;
-    private long lastMills;
-
     public VenomStrike() {
-        super("venom_strike");
+        super("venom_strike", 7000L, 4);
     }
 
     @EventHandler
-    public void onPlayerDamage(EntityDamageByEntityEvent event) {
+    public void onPlayerAttack(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
             return;
         }
-        if (event.getEntity() instanceof Player player && event.getDamageSource().getCausingEntity() instanceof Player damager) {
-            if (shouldPassive(damager) && !event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK)) {
-                long currentMillis = System.currentTimeMillis();
-                if (currentMillis - lastMills >= COOLDOWN && hit++ >= MAX) {
-                    player.addPotionEffect(POISON);
-                    lastMills = currentMillis;
-                    hit = 1;
-                }
-            }
+        if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() && condition(event) && CHARGE()) {
+            potion((Player) event.getEntity());
+            CHARGE_RESET();
         }
+    }
+
+    private static boolean condition(EntityDamageByEntityEvent event) {
+        return event.getEntity() instanceof Player && !event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK);
+    }
+
+    private static void potion(Player player) {
+        player.addPotionEffect(POISON);
     }
 
     @Override
     public void unregister() {
-        hit = MAX;
-    }
-
-    @Override
-    public Component acb() {
-        return Type.COMBO_COOLDOWN.accept(System.currentTimeMillis(), lastMills, COOLDOWN, hit, MAX);
+        CHARGE_MAX();
     }
 }

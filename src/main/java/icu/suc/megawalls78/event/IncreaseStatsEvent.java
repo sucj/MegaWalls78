@@ -1,5 +1,6 @@
 package icu.suc.megawalls78.event;
 
+import icu.suc.megawalls78.game.GamePlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -9,18 +10,18 @@ import java.util.UUID;
 
 public abstract class IncreaseStatsEvent extends Event implements Cancellable {
 
-    private final UUID uuid;
+    private final GamePlayer player;
     private final boolean isFinal;
 
     private boolean cancelled;
 
-    protected IncreaseStatsEvent(UUID uuid, boolean isFinal) {
-        this.uuid = uuid;
+    protected IncreaseStatsEvent(GamePlayer player, boolean isFinal) {
+        this.player = player;
         this.isFinal = isFinal;
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public GamePlayer getPlayer() {
+        return player;
     }
 
     public boolean isFinal() {
@@ -41,8 +42,8 @@ public abstract class IncreaseStatsEvent extends Event implements Cancellable {
 
         private static final HandlerList handlers = new HandlerList();
 
-        public Kill(UUID uuid, boolean isFinal) {
-            super(uuid, isFinal);
+        public Kill(GamePlayer player, boolean isFinal) {
+            super(player, isFinal);
         }
 
         @Override
@@ -59,8 +60,8 @@ public abstract class IncreaseStatsEvent extends Event implements Cancellable {
 
         private static final HandlerList handlers = new HandlerList();
 
-        public Death(UUID uuid, boolean isFinal) {
-            super(uuid, isFinal);
+        public Death(GamePlayer player, boolean isFinal) {
+            super(player, isFinal);
         }
 
         @Override
@@ -77,8 +78,8 @@ public abstract class IncreaseStatsEvent extends Event implements Cancellable {
 
         private static final HandlerList handlers = new HandlerList();
 
-        public Assist(UUID uuid, boolean isFinal) {
-            super(uuid, isFinal);
+        public Assist(GamePlayer player, boolean isFinal) {
+            super(player, isFinal);
         }
 
         @Override

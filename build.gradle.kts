@@ -24,6 +24,7 @@ repositories {
   maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
   maven("https://repo.codemc.org/repository/maven-public/")
   maven("https://jitpack.io")
+  maven("https://repo.dmulloy2.net/repository/public/")
   mavenCentral()
 }
 
@@ -33,6 +34,7 @@ dependencies {
   compileOnly("com.github.LeonMangler", "SuperVanish", "6.2.19")
   compileOnly("net.luckperms", "api", "5.4")
   compileOnly("net.megavex", "scoreboard-library-api", "2.1.10")
+  compileOnly("com.comphenix.protocol", "ProtocolLib", "5.3.0-SNAPSHOT")
 }
 
 tasks {
@@ -49,7 +51,7 @@ bukkitPluginYaml {
   authors = listOf("557")
   apiVersion = "1.21"
   load = BukkitPluginYaml.PluginLoadOrder.POSTWORLD
-  depend = listOf("SkinsRestorer", "SuperVanish", "LuckPerms")
+  depend = listOf("SkinsRestorer", "SuperVanish", "LuckPerms", "ProtocolLib")
   libraries = listOf("net.megavex:scoreboard-library-api:2.1.10", "net.megavex:scoreboard-library-implementation:2.1.10", "net.megavex:scoreboard-library-modern:2.1.10")
   prefix = "MW78"
   defaultPermission = Permission.Default.OP
@@ -66,10 +68,19 @@ bukkitPluginYaml {
     register("mw78.shout") {
       default = Permission.Default.TRUE
     }
+    register("mw78.surface") {
+      default = Permission.Default.TRUE
+    }
     register("mw78.suicide") {
       default = Permission.Default.TRUE
     }
     register("mw78.energy") {
+      default = Permission.Default.FALSE
+    }
+    register("mw78.start") {
+      default = Permission.Default.FALSE
+    }
+    register("mw78.cancel") {
       default = Permission.Default.FALSE
     }
   }
@@ -86,6 +97,11 @@ bukkitPluginYaml {
       permission = "mw78.shout"
       usage = "/shout <message>"
     }
+    register("surface") {
+      permission = "mw78.surface"
+      aliases = listOf("spawn")
+      usage = "/surface"
+    }
     register("suicide") {
       permission = "mw78.suicide"
       aliases = listOf("kill", "die")
@@ -94,6 +110,14 @@ bukkitPluginYaml {
     register("energy") {
       permission = "mw78.energy"
       usage = "/energy"
+    }
+    register("start") {
+      permission = "mw78.start"
+      usage = "/start"
+    }
+    register("cancel") {
+      permission = "mw78.cancel"
+      usage = "/cancel"
     }
   }
 }

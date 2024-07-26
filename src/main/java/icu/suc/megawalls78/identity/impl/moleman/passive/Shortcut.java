@@ -1,8 +1,6 @@
 package icu.suc.megawalls78.identity.impl.moleman.passive;
 
-import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
-import net.kyori.adventure.text.Component;
+import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,16 +8,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public final class Shortcut extends Passive implements IActionbar {
+public final class Shortcut extends ChargePassive {
 
-    private static final int MAX = 3;
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 80, 1);
     private static final PotionEffect HASTE = new PotionEffect(PotionEffectType.HASTE, 80, 1);
 
-    private int count = MAX;
-
     public Shortcut() {
-        super("shortcut");
+        super("shortcut", 3);
     }
 
     @EventHandler
@@ -28,22 +23,18 @@ public final class Shortcut extends Passive implements IActionbar {
             return;
         }
         Player player = event.getPlayer();
-        if (shouldPassive(player) && Tag.MINEABLE_SHOVEL.isTagged(event.getBlock().getType())) {
-            if (++count > MAX) {
-                player.addPotionEffect(SPEED);
-                player.addPotionEffect(HASTE);
-                count = 1;
-            }
+        if (PASSIVE(player) && condition(event) && CHARGE()) {
+            potion(player);
+            CHARGE_RESET();
         }
     }
 
-    @Override
-    public void unregister() {
-
+    private static boolean condition(BlockBreakEvent event) {
+        return Tag.MINEABLE_SHOVEL.isTagged(event.getBlock().getType());
     }
 
-    @Override
-    public Component acb() {
-        return Type.COMBO.accept(count, MAX);
+    private static void potion(Player player) {
+        player.addPotionEffect(SPEED);
+        player.addPotionEffect(HASTE);
     }
 }

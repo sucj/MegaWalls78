@@ -3,13 +3,9 @@ package icu.suc.megawalls78.identity.impl.spider.skill;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.impl.spider.passive.Skitter;
 import icu.suc.megawalls78.identity.trait.Skill;
-import icu.suc.megawalls78.util.DamageSource;
-import icu.suc.megawalls78.util.EntityUtil;
-import icu.suc.megawalls78.util.PlayerUtil;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import icu.suc.megawalls78.util.*;
+import icu.suc.megawalls78.util.Effect;
+import org.bukkit.*;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -22,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Leap extends Skill {
 
-    private static final double RANGE = 4.0D;
+    private static final double RADIUS = 4.0D;
     private static final double BASE_DAMAGE = 3.0D;
     private static final double BONUS_DAMAGE = 1.0D;
     private static final double BONUS_DISTANCE = 4.0D;
@@ -33,6 +29,9 @@ public final class Leap extends Skill {
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1);
     private static final float SCALE = 0.5F;
 
+    private static final Effect<Player> EFFECT_JUMP = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_SPIDER_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F));
+    private static final Effect<Player> EFFECT_LAND = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.7F, 0.5F));
+
     private Task task;
 
     public Leap() {
@@ -41,16 +40,15 @@ public final class Leap extends Skill {
 
     @Override
     protected boolean use0(Player player) {
-        Location location = player.getEyeLocation();
-        player.getWorld().playSound(location, Sound.ENTITY_SPIDER_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F);
-
         boolean run = false; // For continuous jump
         if (task == null || task.isCancelled()) {
             task = new Task(player);
             run = true;
         }
 
-        Vector vector = location.getDirection();
+        EFFECT_JUMP.play(player);
+
+        Vector vector = player.getLocation().getDirection();
         Skitter.getMode(player.getUniqueId()).accept(vector);
         player.setVelocity(vector);
 
@@ -82,10 +80,10 @@ public final class Leap extends Skill {
             }
             if (EntityUtil.isOnGround(player)) {
                 updateTravelLength();
-                player.getWorld().playSound(lastLocation, Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.7F, 0.5F);
+                EFFECT_LAND.play(player);
                 player.addPotionEffect(REGENERATION);
                 AtomicInteger count = new AtomicInteger();
-                EntityUtil.getNearbyEntities(player, RANGE).stream()
+                EntityUtil.getNearbyEntities(player, RADIUS).stream()
                         .filter(entity -> entity instanceof LivingEntity)
                         .filter(entity -> !(entity instanceof Wither))
                         .filter(entity -> !PlayerUtil.isValidAllies(player, entity))

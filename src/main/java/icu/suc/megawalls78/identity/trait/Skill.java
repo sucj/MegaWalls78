@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.identity.trait;
 
 import com.google.common.collect.Sets;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -13,19 +14,26 @@ public abstract class Skill extends Trait implements IActionbar {
     private final int cost;
 
     private final long cooldown;
-    private long lastMills;
+    private long last;
+
+    private final Class<? extends Passive> internal;
 
     public Skill(String id, int cost, long cooldown) {
+        this(id, cost, cooldown, null);
+    }
+
+    public Skill(String id, int cost, long cooldown, Class<? extends Passive> internal) {
         super(id, Component.translatable("mw78.skill." + id));
         this.cost = cost;
         this.cooldown = cooldown;
+        this.internal = internal;
     }
 
     public boolean use(Player player) {
         long currentMillis = System.currentTimeMillis();
-        if (currentMillis - lastMills >= cooldown) {
+        if (currentMillis - last >= cooldown) {
             if (use0(player)) {
-                lastMills = currentMillis;
+                last = currentMillis;
                 return true;
             }
             return false;
@@ -35,7 +43,7 @@ public abstract class Skill extends Trait implements IActionbar {
 
     @Override
     public Component acb() {
-        return Type.COOLDOWN.accept(System.currentTimeMillis(), lastMills, cooldown);
+        return Type.COOLDOWN.accept(cooldown - System.currentTimeMillis() + last);
     }
 
     protected abstract boolean use0(Player player);
@@ -46,6 +54,10 @@ public abstract class Skill extends Trait implements IActionbar {
 
     public long getCooldown() {
         return cooldown;
+    }
+
+    public Class<? extends Passive> getInternal() {
+        return internal;
     }
 
     public enum Trigger {

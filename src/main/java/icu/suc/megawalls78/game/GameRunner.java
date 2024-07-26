@@ -31,6 +31,8 @@ public class GameRunner implements Runnable {
 
     private static final Set<Location> EMPTY = Set.of();
 
+    public static boolean force;
+
     private long tick;
     private long timer;
     private boolean dm;
@@ -49,6 +51,7 @@ public class GameRunner implements Runnable {
     private final Map<GameTeam, Set<Location>> regions;
 
     private final PotionEffect HUNGER = new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 1, true, false);
+    private final PotionEffect GLOWING = new PotionEffect(PotionEffectType.GLOWING, PotionEffect.INFINITE_DURATION, 0, true, false);
 
     public GameRunner() {
         this.barriers = Sets.newHashSet();
@@ -92,7 +95,7 @@ public class GameRunner implements Runnable {
             boolean flag = true;
             switch (state) {
                 case WAITING -> {
-                    if (gameManager.getPlayers().size() >= configManager.minPlayer) {
+                    if (gameManager.getPlayers().size() >= configManager.minPlayer || force) {
                         tick = 1;
                         flag = false;
                         this.timer = configManager.waitingTime;
@@ -106,7 +109,7 @@ public class GameRunner implements Runnable {
                     }
                 }
                 case COUNTDOWN -> {
-                    if (gameManager.getPlayers().size() < configManager.minPlayer) {
+                    if (gameManager.getPlayers().size() < configManager.minPlayer && !force) {
                         MegaWalls78.getInstance().getLogger().info("Game starts cancelled.");
                         gameManager.setState(GameState.WAITING);
                         ComponentUtil.sendMessage(Component.translatable("mw78.start.cancel", NamedTextColor.RED), Bukkit.getOnlinePlayers());
@@ -125,7 +128,12 @@ public class GameRunner implements Runnable {
                                 dmC = false;
                                 dm = true;
                                 MegaWalls78.getInstance().getScoreboardManager().updateSidebar(GameState.FIGHTING);
-                                ComponentUtil.sendMessage(Component.translatable("mw78.dm.started", NamedTextColor.RED, TextDecoration.BOLD), Bukkit.getOnlinePlayers());
+                                for (Player player : Bukkit.getOnlinePlayers()) {
+                                    ComponentUtil.sendMessage(Component.translatable("mw78.dm.started", NamedTextColor.RED, TextDecoration.BOLD), player);
+//                                    if (!gameManager.isSpectator(player)) {
+//                                        player.addPotionEffect(GLOWING);
+//                                    }
+                                }
                             } else {
                                 dmTimer -= 1000L;
                                 if (dmTimer == 10000L || dmTimer <= 5000L && dmTimer > 0) {
@@ -164,11 +172,11 @@ public class GameRunner implements Runnable {
                                 }
                                 if (isDm()) {
                                     if (inMid(bukkitPlayer)) {
-                                        if (bukkitPlayer.hasPotionEffect(PotionEffectType.HUNGER)) {
+                                        if (EntityUtil.hasPotionEffect(bukkitPlayer, HUNGER)) {
                                             bukkitPlayer.removePotionEffect(PotionEffectType.HUNGER);
                                         }
                                     } else {
-                                        if (!bukkitPlayer.hasPotionEffect(PotionEffectType.HUNGER)) {
+                                        if (!EntityUtil.hasPotionEffect(bukkitPlayer, HUNGER)) {
                                             bukkitPlayer.addPotionEffect(HUNGER);
                                         }
                                         if (timer % 10000 == 0) {

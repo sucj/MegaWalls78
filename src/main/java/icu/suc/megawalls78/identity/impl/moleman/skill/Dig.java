@@ -3,10 +3,7 @@ package icu.suc.megawalls78.identity.impl.moleman.skill;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.Skill;
-import icu.suc.megawalls78.util.BlockUtil;
-import icu.suc.megawalls78.util.DamageSource;
-import icu.suc.megawalls78.util.EntityUtil;
-import icu.suc.megawalls78.util.PlayerUtil;
+import icu.suc.megawalls78.util.*;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -28,12 +25,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Dig extends Skill {
 
-    private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 40, 0);
     private static final double FORWARD = 8.0D;
     private static final double DAMAGE = 7.0D;
-    private static final double RANGE = 1.0D;
+    private static final double RADIUS = 1.0D;
     private static final long TICK = 8L;
     private static final double STEP = 1.0;
+
+    private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 40, 0);
+
+    private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 0.5F, 1.0F));
 
     private Task task;
 
@@ -91,15 +91,14 @@ public final class Dig extends Skill {
                 return;
             }
 
-            World world = player.getWorld();
-
             if (tick % 2L == 0) {
-                world.playSound(player.getEyeLocation(), Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 0.5F, 1.0F);
+                EFFECT_SKILL.play(player);
             }
 
             setVector(vector);
 
-            BoundingBox box = player.getBoundingBox().expand(RANGE);
+            BoundingBox box = player.getBoundingBox().expand(RADIUS);
+            World world = player.getWorld();
 
             for (Location location : EntityUtil.getLocations(world, box)) {
                 if (MegaWalls78.getInstance().getGameManager().getRunner().getAllowedBlocks().contains(location)) {

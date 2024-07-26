@@ -2,7 +2,7 @@ package icu.suc.megawalls78.identity.impl.herobrine.gathering;
 
 import icu.suc.megawalls78.event.ChestRollEvent;
 import icu.suc.megawalls78.identity.trait.Gathering;
-import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
 import org.bukkit.event.EventHandler;
 
 public final class TreasureHunter extends Gathering {
@@ -20,19 +20,18 @@ public final class TreasureHunter extends Gathering {
         }
 
         @EventHandler
-        public void onChestRollPre(ChestRollEvent.Pre event) {
+        public void onChestRoll(ChestRollEvent.Pre event) {
             if (event.isCancelled()) {
                 return;
             }
 
-            if (shouldPassive(event.getPlayer())) {
-                event.setProbability(event.getProbability() * SCALE);
+            if (PASSIVE(event.getPlayer())) {
+                handle(event);
             }
         }
 
-        @Override
-        public void unregister() {
-
+        private static void handle(ChestRollEvent.Pre event) {
+            event.setProbability(event.getProbability() * SCALE);
         }
     }
 }

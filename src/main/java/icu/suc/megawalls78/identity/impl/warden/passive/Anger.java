@@ -4,7 +4,7 @@ import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.event.EnergyChangeEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -18,6 +18,7 @@ public final class Anger extends Passive implements IActionbar {
 
     private static final int MIN = 10;
     private static final int DECREASE = 1;
+
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 0);
     private static final PotionEffect SLOWNESS = new PotionEffect(PotionEffectType.SLOWNESS, PotionEffect.INFINITE_DURATION, 0);
 
@@ -29,9 +30,9 @@ public final class Anger extends Passive implements IActionbar {
     }
 
     @EventHandler
-    public void tickStart(ServerTickStartEvent event) {
+    public void onPlayerTick(ServerTickStartEvent event) {
         if (state) {
-            GamePlayer gamePlayer = getPlayer();
+            GamePlayer gamePlayer = PLAYER();
             Player player = gamePlayer.getBukkitPlayer();
             if (!player.isSprinting()) {
                 deactivate(player);
@@ -47,23 +48,23 @@ public final class Anger extends Passive implements IActionbar {
     }
 
     @EventHandler
-    public void changedEnergy(EnergyChangeEvent event) {
+    public void onEnergyChange(EnergyChangeEvent event) {
         if (event.isCancelled()) {
             return;
         }
         Player player = event.getPlayer();
-        if (shouldPassive(player) && event.getEnergy() == 0) {
+        if (PASSIVE(player) && event.getEnergy() == 0) {
             deactivate(player);
         }
     }
 
     @EventHandler
-    public void sprint(PlayerMoveEvent event) {
+    public void onPlayerSprint(PlayerMoveEvent event) {
         if (event.isCancelled()) {
             return;
         }
         Player player = event.getPlayer();
-        if (shouldPassive(player) && player.isSprinting() && !state) {
+        if (PASSIVE(player) && player.isSprinting() && !state) {
             activate(player);
         }
     }
@@ -83,7 +84,7 @@ public final class Anger extends Passive implements IActionbar {
     }
 
     private void activate(Player player) {
-        if (getPlayer().getEnergy() >= MIN) {
+        if (PLAYER().getEnergy() >= MIN) {
             state = true;
             tick = 0;
             speed(player);
@@ -93,11 +94,6 @@ public final class Anger extends Passive implements IActionbar {
     private void deactivate(Player player) {
         state = false;
         slow(player);
-    }
-
-    @Override
-    public void unregister() {
-
     }
 
     @Override

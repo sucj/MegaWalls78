@@ -2,9 +2,9 @@ package icu.suc.megawalls78.identity.impl.cow.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
-import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
-import net.kyori.adventure.text.Component;
+import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
+import icu.suc.megawalls78.util.Effect;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemDisplay;
@@ -15,10 +15,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 
-public final class BucketBarrier extends Passive implements IActionbar {
+public final class BucketBarrier extends DurationCooldownPassive {
 
-    private static final long COOLDOWN = 30000L;
-    private static final long DURATION = 20000L;
     private static final long PER = 5000L;
     private static final double HEALTH = 20.0D;
     private static final double DAMAGE = 2.0D;
@@ -26,69 +24,69 @@ public final class BucketBarrier extends Passive implements IActionbar {
     private static final double RADIUS = 0.6D;
     private static final double SPEED = 0.1D;
 
-    private long lastMills;
-    private long duration;
+    private static final Effect<Pair<Player, Float>> EFFECT_SKILL = Effect.create(pair -> {
+        Player player = pair.getLeft();
+        Float progress = pair.getRight();
+        player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.PLAYERS, 1.0F, 2.5F - progress);
+    });
+
     private Location center;
     private ItemDisplay[] barriers;
 
     public BucketBarrier() {
-        super("bucket_barrier");
+        super("bucket_barrier", 30000L, 20000L);
     }
 
     @EventHandler
-    public void damaged(EntityDamageEvent event) {
+    public void onPlayerDamage(EntityDamageEvent event) {
         if (event.isCancelled()) {
             return;
         }
-        if (event.getEntity() instanceof Player player && shouldPassive(player) && duration > 0 && reduceDamage(event)) {
-            playSoundEffect(player);
-            duration -= PER;
+        if (event.getEntity() instanceof Player player && PASSIVE(player) && DURATION() && block(event)) {
+            EFFECT_SKILL.play(Pair.of(player, (float) DURATION_REMAIN() / DURATION));
+            DURATION(PER);
         }
     }
 
     @EventHandler
-    public void tickStart(ServerTickStartEvent event) {
-        if (duration <= 0) {
-            long currentMillis = System.currentTimeMillis();
-            Player player = getPlayer().getBukkitPlayer();
-            if (currentMillis - lastMills >= COOLDOWN && spawnBarriers(player)) {
-                lastMills = currentMillis;
-                duration = DURATION;
-            }
-            else {
-                removeBarriers();
-            }
+    public void onPLayerTickStart(ServerTickStartEvent event) {
+        if (DURATION()) {
+            return;
+        }
+
+        if (COOLDOWN() && spawnBarriers(PLAYER().getBukkitPlayer())) {
+            COOLDOWN_RESET();
+            DURATION_RESET();
+        } else {
+            removeBarriers();
         }
     }
 
+
     @EventHandler
-    public void tickEnd(ServerTickEndEvent event) {
-        if (duration > 0) {
+    public void onPLayerTickEnd(ServerTickEndEvent event) {
+        if (DURATION()) {
             updateBarriers();
         }
     }
 
     @EventHandler
-    public void moved(PlayerMoveEvent event) {
+    public void onPlayerMove(PlayerMoveEvent event) {
         if (event.isCancelled()) {
             return;
         }
-        if (shouldPassive(event.getPlayer()) && duration > 0) {
+        if (PASSIVE(event.getPlayer()) && DURATION()) {
             updateCenter(event.getTo());
         }
     }
 
-    private boolean reduceDamage(EntityDamageEvent event) {
+    private static boolean block(EntityDamageEvent event) {
         double damage = event.getFinalDamage();
         if (damage >= DAMAGE) {
             event.setDamage(damage * SCALE);
             return true;
         }
         return false;
-    }
-
-    private void playSoundEffect(Player player) {
-        player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_LAND, SoundCategory.PLAYERS, 1.0F, 2.5F - ((float) duration / DURATION));
     }
 
     private boolean spawnBarriers(Player player) {
@@ -121,7 +119,7 @@ public final class BucketBarrier extends Passive implements IActionbar {
     }
 
     private void updateBarriers() {
-        duration -= 50L;
+        DURATION(50L);
         for (ItemDisplay barrier : barriers) {
             double angle = Math.toRadians(barrier.getLocation().getYaw()) + SPEED;
             barrier.teleport(new Location(center.getWorld(), center.getX() + RADIUS * Math.cos(angle), center.getY(), center.getZ() + RADIUS * Math.sin(angle), (float) Math.toDegrees(angle) + 90.0F, 0));
@@ -142,11 +140,6 @@ public final class BucketBarrier extends Passive implements IActionbar {
 
     @Override
     public void unregister() {
-        duration = 0;
-    }
-
-    @Override
-    public Component acb() {
-        return Type.DURATION_COOLDOWN.accept(System.currentTimeMillis(), lastMills, COOLDOWN, duration);
+        DURATION_END();
     }
 }

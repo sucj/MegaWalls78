@@ -51,11 +51,14 @@ public final class MegaWalls78 extends JavaPlugin {
     }
 
     private void registerCommands() {
+        Objects.requireNonNull(getCommand("cancel")).setExecutor(new CancelCommand());
         Objects.requireNonNull(getCommand("id")).setExecutor(new IdCommand());
         Objects.requireNonNull(getCommand("map")).setExecutor(new MapCommand());
         Objects.requireNonNull(getCommand("shout")).setExecutor(new ShoutCommand());
         Objects.requireNonNull(getCommand("energy")).setExecutor(new EnergyCommand());
+        Objects.requireNonNull(getCommand("start")).setExecutor(new StartCommand());
         Objects.requireNonNull(getCommand("suicide")).setExecutor(new SuicideCommand());
+        Objects.requireNonNull(getCommand("surface")).setExecutor(new SurfaceCommand());
     }
 
     private void registerListeners() {

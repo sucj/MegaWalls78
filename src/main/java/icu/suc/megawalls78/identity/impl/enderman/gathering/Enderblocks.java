@@ -3,12 +3,10 @@ package icu.suc.megawalls78.identity.impl.enderman.gathering;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.Gathering;
-import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.PlayerUtil;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -20,22 +18,18 @@ import java.util.Set;
 
 public final class Enderblocks extends Gathering {
 
-    private static final int MAX = 3;
-
     public Enderblocks() {
         super("enderblocks", Internal.class);
     }
 
-    public static final class Internal extends Passive implements IActionbar {
-
-        private int count = MAX;
+    public static final class Internal extends ChargePassive {
 
         public Internal() {
-            super("enderblocks");
+            super("enderblocks", 3);
         }
 
         @EventHandler
-        public void brokenBlock(BlockBreakEvent event) {
+        public void onBlockBreak(BlockBreakEvent event) {
             if (event.isCancelled()) {
                 return;
             }
@@ -43,42 +37,34 @@ public final class Enderblocks extends Gathering {
             Block block = event.getBlock();
             Location location = block.getLocation();
             Material type = block.getType();
-            if (shouldPassive(player) && isAvailable() && BlockUtil.isNatural(type)) {
-                if (++count > MAX) {
-                    Set<Location> adjLocations = Sets.newHashSet();
+            if (PASSIVE(player) && condition_available() && condition_natural(type) && CHARGE()) {
+                Set<Location> adjLocations = Sets.newHashSet();
 
-                    for (int i = -1; i < 2; i += 2) {
-                        adjLocations.add(location.clone().add(i, 0, 0));
-                        adjLocations.add(location.clone().add(0, i, 0));
-                        adjLocations.add(location.clone().add(0, 0, i));
-                    }
+                for (int i = -1; i < 2; i += 2) {
+                    adjLocations.add(location.clone().add(i, 0, 0));
+                    adjLocations.add(location.clone().add(0, i, 0));
+                    adjLocations.add(location.clone().add(0, 0, i));
+                }
 
-                    for (Location adjLocation : adjLocations) {
-                        if (MegaWalls78.getInstance().getGameManager().getRunner().getAllowedBlocks().contains(adjLocation)) {
-                            Block adjBlock = adjLocation.getBlock();
-                            if (adjBlock.getType().equals(type)) {
-                                InventoryUtil.addItem(player.getInventory(), adjBlock.getDrops(PlayerUtil.getPlayerMainHand(player)));
-                                BlockUtil.breakNaturallyNoDrops(adjBlock);
-                            }
+                for (Location adjLocation : adjLocations) {
+                    if (MegaWalls78.getInstance().getGameManager().getRunner().getAllowedBlocks().contains(adjLocation)) {
+                        Block adjBlock = adjLocation.getBlock();
+                        if (adjBlock.getType().equals(type)) {
+                            InventoryUtil.addItem(player.getInventory(), adjBlock.getDrops(PlayerUtil.getPlayerMainHand(player)));
+                            BlockUtil.breakNaturallyNoDrops(adjBlock);
                         }
                     }
-
-                    count = 1;
                 }
+
+                CHARGE_RESET();
             }
         }
 
-        @Override
-        public Component acb() {
-            return Type.COMBO_STATE.accept(count, MAX, isAvailable());
+        private static boolean condition_natural(Material type) {
+            return BlockUtil.isNatural(type);
         }
 
-        @Override
-        public void unregister() {
-
-        }
-
-        private boolean isAvailable() {
+        private static boolean condition_available() {
             return !MegaWalls78.getInstance().getGameManager().getRunner().isDm();
         }
     }

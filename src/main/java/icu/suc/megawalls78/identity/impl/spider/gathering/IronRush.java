@@ -1,13 +1,15 @@
 package icu.suc.megawalls78.identity.impl.spider.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
-import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.PlayerUtil;
 import org.bukkit.Material;
 import org.bukkit.Tag;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 public final class IronRush extends Gathering {
@@ -23,19 +25,23 @@ public final class IronRush extends Gathering {
         }
 
         @EventHandler
-        public void brokenBlock(BlockBreakEvent event) {
+        public void onBlockBreak(BlockDropItemEvent event) {
             if (event.isCancelled()) {
                 return;
             }
             Player player = event.getPlayer();
-            if (shouldPassive(player) && Tag.ITEMS_SHOVELS.isTagged(PlayerUtil.getPlayerMainHand(player).getType())) {
-                player.getInventory().addItem(ItemStack.of(Material.IRON_INGOT));
+            if (PASSIVE(player) && condition(player)) {
+                handle(event);
             }
         }
 
-        @Override
-        public void unregister() {
+        private static boolean condition(Player player) {
+            return Tag.ITEMS_SHOVELS.isTagged(PlayerUtil.getPlayerMainHand(player).getType());
+        }
 
+        private static void handle(BlockDropItemEvent event) {
+            BlockState block = event.getBlockState();
+            event.getItems().add(block.getWorld().dropItemNaturally(block.getLocation(), ItemStack.of(Material.IRON_INGOT)));
         }
     }
 }

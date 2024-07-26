@@ -1,14 +1,43 @@
 package icu.suc.megawalls78.identity.impl.assassin.skill;
 
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.events.ListenerPriority;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.reflect.StructureModifier;
+import com.comphenix.protocol.wrappers.BukkitConverters;
+import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.Pair;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.util.DamageSource;
+import icu.suc.megawalls78.util.EntityUtil;
+import net.kyori.adventure.translation.GlobalTranslator;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.damage.DamageType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wither;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -32,7 +61,7 @@ public class ShadowCloak extends Skill {
     private Task task;
 
     public ShadowCloak() {
-        super("shadow_cloak", 100, 1000L);
+        super("shadow_cloak", 100, 1000L, Internal.class);
     }
 
     @Override
@@ -82,34 +111,142 @@ public class ShadowCloak extends Skill {
                 return;
             }
 
+            if (!getState(player.getUniqueId())) {
+                player.removePotionEffect(PotionEffectType.INVISIBILITY);
+                if (EntityUtil.hasPotionEffect(player, RESISTANCE)) {
+                    player.removePotionEffect(PotionEffectType.RESISTANCE);
+                }
+                MegaWalls78.getInstance().getGameManager().getPlayer(player).increaseEnergy(remain() / REMAIN * RETURN);
+                cancel();
+            }
+
             tick++;
         }
 
         public void resetTimer() {
             this.tick = 0;
+            updateArmor();
         }
 
-        // 主动破隐时调用
-        public void appear() {
-            int remain = tick - TICK;
-            if (remain > 0) {
-                MegaWalls78.getInstance().getGameManager().getPlayer(player).increaseEnergy(remain / REMAIN * RETURN);
-                this.cancel();
+        public int remain() {
+            return tick - TICK;
+        }
+
+        public void updateArmor() {
+            PacketContainer packet = ProtocolLibrary.getProtocolManager().createPacket(PacketType.Play.Server.ENTITY_EQUIPMENT);
+            packet.getIntegers().write(0, player.getEntityId());
+            List<Pair<EnumWrappers.ItemSlot, ItemStack>> slotStackPairList = Lists.newArrayList();
+            ItemStack helmet = player.getEquipment().getHelmet();
+            if (helmet != null && !helmet.isEmpty()) {
+                slotStackPairList.add(new Pair<>(EnumWrappers.ItemSlot.HEAD, helmet));
             }
+            ItemStack chestplate = player.getEquipment().getChestplate();
+            if (chestplate != null && !chestplate.isEmpty()) {
+                slotStackPairList.add(new Pair<>(EnumWrappers.ItemSlot.CHEST, chestplate));
+            }
+            ItemStack leggings = player.getEquipment().getLeggings();
+            if (leggings != null && !leggings.isEmpty()) {
+                slotStackPairList.add(new Pair<>(EnumWrappers.ItemSlot.LEGS, leggings));
+            }
+            ItemStack boots = player.getEquipment().getBoots();
+            if (boots != null && !boots.isEmpty()) {
+                slotStackPairList.add(new Pair<>(EnumWrappers.ItemSlot.FEET, boots));
+            }
+            ItemStack offHand = player.getEquipment().getItemInOffHand();
+            if (!offHand.isEmpty()) {
+                slotStackPairList.add(new Pair<>(EnumWrappers.ItemSlot.OFFHAND, offHand));
+            }
+            packet.getSlotStackPairLists().write(0, slotStackPairList);
+            ProtocolLibrary.getProtocolManager().broadcastServerPacket(packet);
         }
 
         @Override
         public synchronized void cancel() throws IllegalStateException {
             setState(player.getUniqueId(), false);
+            updateArmor();
             super.cancel();
         }
     }
 
     public static boolean getState(UUID uuid) {
-        return PLAYER_STATE.computeIfAbsent(uuid, t -> false);
+        return PLAYER_STATE.getOrDefault(uuid, false);
     }
 
     public static void setState(UUID uuid, boolean state) {
         PLAYER_STATE.put(uuid, state);
+    }
+
+    public static final class Internal extends Passive {
+
+        private final PacketAdapter adapter = new PacketAdapter(MegaWalls78.getInstance(), ListenerPriority.LOWEST, PacketType.Play.Server.ENTITY_EQUIPMENT) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                GamePlayer gamePlayer = PLAYER();
+                if (gamePlayer == null) {
+                    return;
+                }
+                if (event.getPlayer().getUniqueId().equals(gamePlayer.getUuid())) {
+                    return;
+                }
+                Player player = gamePlayer.getBukkitPlayer();
+                if (player == null) {
+                    return;
+                }
+                PacketContainer packet = event.getPacket();
+                if (player.getEntityId() != packet.getIntegers().read(0)) {
+                    return;
+                }
+                if (!ShadowCloak.getState(player.getUniqueId())) {
+                    return;
+                }
+                StructureModifier<List<Pair<EnumWrappers.ItemSlot, ItemStack>>> modifier = packet.getSlotStackPairLists();
+                for (int i = 0; i < modifier.getValues().size(); i++) {
+                    List<Pair<EnumWrappers.ItemSlot, ItemStack>> pairs = modifier.read(i);
+                    for (Pair<EnumWrappers.ItemSlot, ItemStack> pair : pairs) {
+                        if (pair.getFirst().equals(EnumWrappers.ItemSlot.MAINHAND)) {
+                            continue;
+                        }
+                        if (pair.getSecond().isEmpty()) {
+                            continue;
+                        }
+                        pair.setSecond(ItemStack.empty());
+                    }
+                    modifier.write(i, pairs);
+                }
+            }
+        };
+
+        public Internal() {
+            super("shadow_cloak");
+        }
+
+        @EventHandler
+        public void onPlayerDamage(EntityDamageByEntityEvent event) {
+            if (event.isCancelled()) {
+                return;
+            }
+
+            if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && ShadowCloak.getState(player.getUniqueId()) && condition(event)) {
+                LivingEntity entity = (LivingEntity) event.getEntity();
+                double v = (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() - entity.getHealth()) * SCALE;
+                event.setDamage(event.getFinalDamage() + Math.max(v, MIN));
+                ShadowCloak.setState(player.getUniqueId(), false);
+            }
+        }
+
+        private static boolean condition(EntityDamageByEntityEvent event) {
+            Entity entity = event.getEntity();
+            return entity instanceof Player || entity instanceof Wither;
+        }
+
+        @Override
+        public void register() {
+            ProtocolLibrary.getProtocolManager().addPacketListener(adapter);
+        }
+
+        @Override
+        public void unregister() {
+            ProtocolLibrary.getProtocolManager().removePacketListener(adapter);
+        }
     }
 }

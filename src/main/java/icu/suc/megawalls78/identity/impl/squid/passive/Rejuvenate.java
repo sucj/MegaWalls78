@@ -1,45 +1,40 @@
 package icu.suc.megawalls78.identity.impl.squid.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
-import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
-import net.kyori.adventure.text.Component;
+import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class Rejuvenate extends Passive implements IActionbar {
+public class Rejuvenate extends CooldownPassive {
 
-    private static final long COOLDOWN = 40000L;
     private static final double HEALTH = 21.0D;
+
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 30, 4);
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 30, 0);
 
-    private long lastMills;
-
     public Rejuvenate() {
-        super("rejuvenate");
+        super("rejuvenate", 40000L);
     }
 
     @EventHandler
-    public void onPlayerTickStart(ServerTickStartEvent event) {
-        long currentMillis = System.currentTimeMillis();
-        Player player = getPlayer().getBukkitPlayer();
-        if (currentMillis - lastMills >= COOLDOWN && player.getHealth() < HEALTH) {
-            lastMills = currentMillis;
-            player.addPotionEffect(REGENERATION);
-            player.addPotionEffect(RESISTANCE);
+    public void onPlayerTick(ServerTickStartEvent event) {
+        if (COOLDOWN()) {
+            Player player = PLAYER().getBukkitPlayer();
+            if (condition(player)) {
+                potion(player);
+                COOLDOWN_RESET();
+            }
         }
     }
 
-    @Override
-    public void unregister() {
-
+    private static boolean condition(Player player) {
+        return player.getHealth() < HEALTH;
     }
 
-    @Override
-    public Component acb() {
-        return Type.COOLDOWN.accept(System.currentTimeMillis(), lastMills, COOLDOWN);
+    private static void potion(Player player) {
+        player.addPotionEffect(REGENERATION);
+        player.addPotionEffect(RESISTANCE);
     }
 }

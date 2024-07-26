@@ -11,11 +11,13 @@ import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Passive;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.SupplierComponent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -56,6 +58,7 @@ public class GamePlayer {
 
     public void enablePassives() {
         for (Passive passive : passives) {
+            passive.register();
             Bukkit.getPluginManager().registerEvents(passive, MegaWalls78.getInstance());
         }
     }
@@ -139,8 +142,8 @@ public class GamePlayer {
         }
 
         this.identity = pre.getIdentity();
-        this.skills = identity.getSkills();
         this.passives = identity.getPassives(this);
+        this.skills = identity.getSkills(this, passives);
         this.gathering = identity.getGathering(this, passives);
 
         this.actionbar = Lists.newArrayList();
@@ -199,17 +202,24 @@ public class GamePlayer {
     }
 
     public void increaseKills() {
-        IncreaseStatsEvent.Kill event = new IncreaseStatsEvent.Kill(uuid, false);
+        IncreaseStatsEvent.Kill event = new IncreaseStatsEvent.Kill(this, false);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
         }
 
         kills++;
+
+        Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+            Player player = getBukkitPlayer();
+            if (player != null) {
+                ComponentUtil.sendMessage(Component.translatable("mw78.message.kill", NamedTextColor.AQUA), player);
+            }
+        });
     }
 
     public void increaseDeaths() {
-        IncreaseStatsEvent.Death event = new IncreaseStatsEvent.Death(uuid, false);
+        IncreaseStatsEvent.Death event = new IncreaseStatsEvent.Death(this, false);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
@@ -219,27 +229,41 @@ public class GamePlayer {
     }
 
     public void increaseAssists() {
-        IncreaseStatsEvent.Assist event = new IncreaseStatsEvent.Assist(uuid, false);
+        IncreaseStatsEvent.Assist event = new IncreaseStatsEvent.Assist(this, false);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
         }
 
         assists++;
+
+        Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+            Player player = getBukkitPlayer();
+            if (player != null) {
+                ComponentUtil.sendMessage(Component.translatable("mw78.message.assist", NamedTextColor.AQUA), player);
+            }
+        });
     }
 
     public void increaseFinalKills() {
-        IncreaseStatsEvent.Kill event = new IncreaseStatsEvent.Kill(uuid, true);
+        IncreaseStatsEvent.Kill event = new IncreaseStatsEvent.Kill(this, true);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
         }
 
         finalKills++;
+
+        Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+            Player player = getBukkitPlayer();
+            if (player != null) {
+                ComponentUtil.sendMessage(Component.translatable("mw78.message.final_kill", NamedTextColor.AQUA), player);
+            }
+        });
     }
 
     public void increaseFinalDeaths() {
-        IncreaseStatsEvent.Death event = new IncreaseStatsEvent.Death(uuid, true);
+        IncreaseStatsEvent.Death event = new IncreaseStatsEvent.Death(this, true);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
@@ -249,13 +273,19 @@ public class GamePlayer {
     }
 
     public void increaseFinalAssists() {
-        IncreaseStatsEvent.Assist event = new IncreaseStatsEvent.Assist(uuid, true);
+        IncreaseStatsEvent.Assist event = new IncreaseStatsEvent.Assist(this, true);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
         }
 
         finalAssists++;
+        Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+            Player player = getBukkitPlayer();
+            if (player != null) {
+                ComponentUtil.sendMessage(Component.translatable("mw78.message.final_assist", NamedTextColor.AQUA), player);
+            }
+        });
     }
 
     private void add2Actionbar(Component name, ComponentLike value) {
