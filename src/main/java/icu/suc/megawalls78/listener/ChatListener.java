@@ -51,14 +51,14 @@ public class ChatListener implements Listener, ChatRenderer {
                 color = gamePlayer.getTeam().color();
                 chat = gamePlayer.getTeam().chat();
             }
-            name = Component.translatable("ms78.brackets", color, chat )
+            name = Component.translatable("ms78.brackets", color, chat)
                     .append(Component.space())
-                    .append(LP.getPrefix(player))
-                    .append(player.teamDisplayName().color(LP.getNameColor(player)));
+                    .append(LP.getPrefix(player.getUniqueId()))
+                    .append(player.teamDisplayName().color(LP.getNameColor(player.getUniqueId())));
         } else {
-            name = LP.getPrefix(player)
-                    .append(player.teamDisplayName().color(LP.getNameColor(player)));
+            name = LP.getPrefix(player.getUniqueId())
+                    .append(player.teamDisplayName().color(LP.getNameColor(player.getUniqueId())));
         }
-        return Component.translatable("mw78.chat", NamedTextColor.GRAY, name, component1.color(LP.getChatColor(player)));
+        return Component.translatable("mw78.chat", NamedTextColor.GRAY, name, component1.color(LP.getChatColor(player.getUniqueId())));
     }
 }

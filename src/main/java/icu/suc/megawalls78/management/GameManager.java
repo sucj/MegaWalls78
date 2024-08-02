@@ -19,6 +19,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -232,11 +233,11 @@ public class GameManager {
                     s--;
                 }
             }
-            if (s == 1) {
-                setState(GameState.ENDING);
-            }
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.sendPlayerListFooter(MegaWalls78.getInstance().getGameManager().footer().appendNewline().append(Component.text("MC.SUC.ICU", NamedTextColor.AQUA, TextDecoration.BOLD)));
+            }
+            if (s == 1) {
+                runner.next(GameState.FIGHTING);
             }
         }
     }
@@ -260,26 +261,45 @@ public class GameManager {
     }
 
     public Component footer() {
-        List<Map.Entry<Integer, Component>> entries = Lists.newArrayList();
+        List<Component> list = Lists.newArrayList();
+        for (Map.Entry<GameTeam, Pair<Integer, Integer>> entry : teamScore()) {
+            GameTeam team = entry.getKey();
+            Integer score = entry.getValue().getLeft();
+            list.add(Component.translatable("mw78.team.score", NamedTextColor.GRAY, team.name().color(team.color()), Component.text(score, NamedTextColor.WHITE)));
+        }
+        return Component.join(FOOTER_JOIN, list);
+    }
+
+    public List<Map.Entry<GameTeam, Pair<Integer, Integer>>> teamScore() {
+        List<Map.Entry<GameTeam, Pair<Integer, Integer>>> list = Lists.newArrayList();
         for (GameTeam team : teamPlayersMap.keySet()) {
             if (isEliminated(team)) {
                 continue;
             }
             int score = 0;
+            int asc = 0;
             for (GamePlayer gamePlayer : teamPlayersMap.get(team)) {
                 if (gamePlayer.getFinalDeaths() == 0) {
-                    score += gamePlayer.getFinalKills() * 2;
+                    int i = gamePlayer.getFinalKills() * 2;
+                    score += i;
+                    asc += i;
                 } else {
                     score += gamePlayer.getFinalKills();
                 }
             }
-            entries.add(new AbstractMap.SimpleEntry<>(score, Component.translatable("mw78.team.score", NamedTextColor.GRAY, team.name().color(team.color()), Component.text(score, NamedTextColor.WHITE))));
+            list.add(new AbstractMap.SimpleEntry<>(team, Pair.of(score, asc)));
         }
-        entries.sort((o1, o2) -> o2.getKey().compareTo(o1.getKey()));
-        List<Component> list = Lists.newArrayList();
-        for (Map.Entry<Integer, Component> entry : entries) {
-            list.add(entry.getValue());
-        }
-        return Component.join(FOOTER_JOIN, list);
+        list.sort((o1, o2) -> {
+            Pair<Integer, Integer> p1 = o1.getValue();
+            Pair<Integer, Integer> p2 = o2.getValue();
+
+            int cmp = Integer.compare(p2.getLeft(), p1.getLeft());
+            if (cmp != 0) {
+                return cmp;
+            }
+
+            return Integer.compare(p2.getRight(), p1.getRight());
+        });
+        return list;
     }
 }

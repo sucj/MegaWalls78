@@ -8,26 +8,28 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class LP {
     private static final LuckPerms API = LuckPermsProvider.get();
 
-    public static Component getPrefix(Player player) {
-        String prefix = API.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getPrefix();
+    public static Component getPrefix(UUID uuid) {
+        String prefix = API.getUserManager().getUser(uuid).getCachedData().getMetaData().getPrefix();
         if (prefix == null) {
             return Component.empty();
         }
         return MiniMessage.miniMessage().deserialize(prefix).append(Component.space());
     }
 
-    public static String getPerm(Player player) {
-        return API.getUserManager().getUser(player.getUniqueId()).getPrimaryGroup();
+    public static String getPerm(UUID uuid) {
+        return API.getUserManager().getUser(uuid).getPrimaryGroup();
     }
 
-    public static NamedTextColor getNameColor(Player player) {
-        return NamedTextColor.NAMES.value(API.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("color"));
+    public static NamedTextColor getNameColor(UUID uuid) {
+        return NamedTextColor.NAMES.value(API.getUserManager().getUser(uuid).getCachedData().getMetaData().getMetaValue("color"));
     }
 
-    public static TextColor getChatColor(Player player) {
-        return TextColor.fromHexString(API.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("chat"));
+    public static TextColor getChatColor(UUID uuid) {
+        return TextColor.fromHexString(API.getUserManager().getUser(uuid).getCachedData().getMetaData().getMetaValue("chat"));
     }
 }

@@ -39,21 +39,35 @@ public class WitherListener implements Listener {
             GameTeam team = gameManager.getWitherTeam(wither);
             if (team == null || gameManager.getPlayer(player).getTeam().equals(team)) {
                 event.setCancelled(true);
-            } else {
-                long currentMillis = System.currentTimeMillis();
-                MutablePair<Long, Boolean> pair = WITHER_WARNING.computeIfAbsent(team, t -> MutablePair.of(currentMillis, false));
-                if (currentMillis - pair.getLeft() > 1500L) {
-                    boolean flag = pair.getRight();
-                    for (GamePlayer gamePlayer : gameManager.getTeamPlayersMap().get(team)) {
-                        Player bukkitPlayer = gamePlayer.getBukkitPlayer();
-                        if (bukkitPlayer != null) {
-                            ComponentUtil.sendTitle(Component.empty(), Component.translatable("mw78.wither.attacked", flag ? NamedTextColor.DARK_RED : NamedTextColor.RED), ComponentUtil.ONE_SEC_TIMES_FADE, bukkitPlayer);
-                        }
-                    }
-                    pair.setLeft(currentMillis);
-                    pair.setRight(!flag);
-                }
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onWitherDamagePost(EntityDamageEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (event.getEntity() instanceof Wither wither && event.getDamageSource().getCausingEntity() instanceof Player player) {
+            GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+            GameTeam team = gameManager.getWitherTeam(wither);
+
+            long currentMillis = System.currentTimeMillis();
+            MutablePair<Long, Boolean> pair = WITHER_WARNING.computeIfAbsent(team, t -> MutablePair.of(currentMillis, false));
+            if (currentMillis - pair.getLeft() > 1500L) {
+                boolean flag = pair.getRight();
+                for (GamePlayer gamePlayer : gameManager.getTeamPlayersMap().get(team)) {
+                    Player bukkitPlayer = gamePlayer.getBukkitPlayer();
+                    if (bukkitPlayer != null) {
+                        ComponentUtil.sendTitle(Component.empty(), Component.translatable("mw78.wither.attacked", flag ? NamedTextColor.DARK_RED : NamedTextColor.RED), ComponentUtil.ONE_SEC_TIMES_FADE, bukkitPlayer);
+                    }
+                }
+                pair.setLeft(currentMillis);
+                pair.setRight(!flag);
+            }
+
+            GamePlayer gamePlayer = gameManager.getPlayer(player);
+            gamePlayer.increaseDamageWither(Math.min(wither.getHealth(), event.getFinalDamage()));
         }
     }
 

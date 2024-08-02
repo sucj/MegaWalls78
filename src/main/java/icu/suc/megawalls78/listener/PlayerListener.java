@@ -52,7 +52,7 @@ public class PlayerListener implements Listener {
             player.getInventory().setItem(0, IdentityGui.trigger(player));
             player.getInventory().setItem(1, SkinGui.trigger(player));
             MegaWalls78.getInstance().getSkinManager().applySkin(player);
-            event.joinMessage(Component.translatable("multiplayer.player.joined", player.displayName().color(LP.getNameColor(player)))
+            event.joinMessage(Component.translatable("multiplayer.player.joined", player.displayName().color(LP.getNameColor(player.getUniqueId())))
                     .append(Component.space())
                     .append(Component.translatable("mw78.online", Component.text(gameManager.getPlayers().values().size(), NamedTextColor.WHITE), Component.text(MegaWalls78.getInstance().getConfigManager().maxPlayer, NamedTextColor.WHITE)))
                     .color(NamedTextColor.AQUA));
@@ -81,7 +81,7 @@ public class PlayerListener implements Listener {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         Player player = event.getPlayer();
         if (gameManager.inWaiting()) {
-            event.quitMessage(Component.translatable("multiplayer.player.left", NamedTextColor.AQUA, player.displayName().color(LP.getNameColor(player))));
+            event.quitMessage(Component.translatable("multiplayer.player.left", NamedTextColor.AQUA, player.displayName().color(LP.getNameColor(player.getUniqueId()))));
             gameManager.removePlayer(player);
         } else if (gameManager.inFighting()) {
             if (gameManager.isSpectator(player)) {
@@ -246,31 +246,75 @@ public class PlayerListener implements Listener {
             if (gameManager.isSpectator(player)) {
                 event.setCancelled(true);
             } else if (!gameManager.getState().equals(GameState.OPENING) && gameManager.inFighting()) {
-                GamePlayer gamePlayer = gameManager.getPlayer(player);
                 Entity causingEntity = event.getDamageSource().getCausingEntity();
                 if (causingEntity != null) {
                     Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-                    if (scoreboard.getEntityTeam(causingEntity) == scoreboard.getPlayerTeam(player)) {
+                    if (Objects.equals(scoreboard.getEntityTeam(causingEntity), scoreboard.getPlayerTeam(player))) {
                         event.setCancelled(true);
-                        return;
                     }
-                    if (causingEntity instanceof Player causingPlayer && !causingPlayer.equals(player)) {
-                        if (event.getDamageSource().getDirectEntity() instanceof AbstractArrow) {
-                            gamePlayer.increaseEnergy(EnergyWay.BOW_WHEN);
-                            gameManager.getPlayer(causingPlayer).increaseEnergy(EnergyWay.BOW_PER);
-                        } else if (!event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK)) {
-                            gamePlayer.increaseEnergy(EnergyWay.MELEE_WHEN);
-                            gameManager.getPlayer(causingPlayer).increaseEnergy(EnergyWay.MELEE_PER);
-                        }
-                        gameManager.addAssist(player, causingPlayer);
-                    } else if (causingEntity instanceof Wither wither) {
-                        if (gamePlayer.getTeam().equals(gameManager.getWitherTeam(wither))) {
-                            event.setCancelled(true);
-                        }
-                    }
+//                    if (causingEntity instanceof Player causingPlayer && !causingPlayer.equals(player)) {
+//                        GamePlayer gamePlayerCause = gameManager.getPlayer(causingPlayer);
+//                        if (event.getDamageSource().getDirectEntity() instanceof AbstractArrow) {
+//                            gamePlayer.increaseEnergy(EnergyWay.BOW_WHEN);
+//                            gamePlayerCause.increaseEnergy(EnergyWay.BOW_PER);
+//                        } else if (!event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK)) {
+//                            gamePlayer.increaseEnergy(EnergyWay.MELEE_WHEN);
+//                            gamePlayerCause.increaseEnergy(EnergyWay.MELEE_PER);
+//                        }
+//                        gameManager.addAssist(player, causingPlayer);
+//                    }
                 }
             } else {
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerDamagePost(EntityDamageEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+        GamePlayer gamePlayer = null;
+        GamePlayer gamePlayerCause = null;
+        Entity causingEntity = event.getDamageSource().getCausingEntity();
+        if (causingEntity == null) {
+            return;
+        }
+        if (event.getEntity() instanceof LivingEntity entity) {
+            if (causingEntity.equals(entity)) {
+                return;
+            }
+            Player player = null;
+            if (entity instanceof Player) {
+                player = (Player) entity;
+                gamePlayer = gameManager.getPlayer(player);
+            }
+            Player causingPlayer = null;
+            if (causingEntity instanceof Player) {
+                causingPlayer = (Player) causingEntity;
+                gamePlayerCause = gameManager.getPlayer(causingPlayer);
+            }
+            if (gamePlayer != null && gamePlayerCause != null) {
+                if (event.getDamageSource().getDirectEntity() instanceof AbstractArrow) {
+                    gamePlayer.increaseEnergy(EnergyWay.BOW_WHEN);
+                    gamePlayerCause.increaseEnergy(EnergyWay.BOW_PER);
+                } else if (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
+                    gamePlayer.increaseEnergy(EnergyWay.MELEE_WHEN);
+                    gamePlayerCause.increaseEnergy(EnergyWay.MELEE_PER);
+                }
+                gameManager.addAssist(player, causingPlayer);
+            }
+            double damage = Math.min(entity.getHealth(), event.getFinalDamage());
+            if (gamePlayer != null) {
+                gamePlayer.increaseDamageTaken(damage);
+            }
+            if (gamePlayerCause != null) {
+                gamePlayerCause.increaseDamageDealt(damage);
+                if (gamePlayerCause.getTeam().equals(gameManager.getRunner().inPalace(causingPlayer.getLocation()))) {
+                    gamePlayerCause.increaseDamageGuard(damage);
+                }
             }
         }
     }

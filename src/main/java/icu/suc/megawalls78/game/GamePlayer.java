@@ -55,6 +55,12 @@ public class GamePlayer {
 
     private GameTeam tracking;
 
+    private double damageDealt;
+    private double damageTaken;
+    private double damageGuard;
+    private double damageWither;
+    private double healed;
+
     public GamePlayer(Player player) {
         this.uuid = player.getUniqueId();
         setIdentity(MegaWalls78.getInstance().getIdentityManager().getPlayerIdentity(uuid));
@@ -332,5 +338,41 @@ public class GamePlayer {
 
     public void setTracking(GameTeam tracking) {
         this.tracking = tracking;
+    }
+
+    public double getDamageDealt() {
+        return damageDealt;
+    }
+
+    public double getDamageTaken() {
+        return damageTaken;
+    }
+
+    public double getDamageGuard() {
+        return damageGuard;
+    }
+
+    public double getDamageWither() {
+        return damageWither;
+    }
+
+    public double getHealed() {
+        return healed;
+    }
+
+    public void increaseDamageDealt(double damageDealt) {
+        this.damageDealt += damageDealt;
+    }
+
+    public void increaseDamageTaken(double damageTaken) {
+        this.damageTaken += damageTaken;
+    }
+
+    public void increaseDamageWither(double damageWither) {
+        this.damageWither += damageWither;
+    }
+
+    public void increaseDamageGuard(double damageGuard) {
+        this.damageGuard += damageGuard;
     }
 }

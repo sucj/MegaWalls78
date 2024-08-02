@@ -107,12 +107,12 @@ public class ScoreboardManager implements Listener {
         if (MegaWalls78.getInstance().getGameManager().inWaiting()) {
             TeamDisplay teamDisplay = teamManager.createIfAbsent(String.valueOf(player.getUniqueId())).defaultDisplay();
             teamDisplay.canSeeFriendlyInvisibles(true);
-            teamDisplay.prefix(LP.getPrefix(player));
+            teamDisplay.prefix(LP.getPrefix(player.getUniqueId()));
             Identity identity = MegaWalls78.getInstance().getIdentityManager().getRankedIdentity(player.getUniqueId());
             if (identity != null) {
                 teamDisplay.suffix(Component.space().append(identity.getIcon().color(MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
             }
-            teamDisplay.playerColor(LP.getNameColor(player));
+            teamDisplay.playerColor(LP.getNameColor(player.getUniqueId()));
             teamDisplay.addEntry(player.getName());
         } else {
             GamePlayer gamePlayer = MegaWalls78.getInstance().getGameManager().getPlayer(player);
