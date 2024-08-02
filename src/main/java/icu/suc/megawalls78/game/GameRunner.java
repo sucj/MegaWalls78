@@ -11,6 +11,7 @@ import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.RandomUtil;
+import icu.suc.megawalls78.util.Redis;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -22,6 +23,7 @@ import org.bukkit.entity.Wither;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.*;
+import redis.clients.jedis.Jedis;
 
 import java.util.List;
 import java.util.Map;
@@ -50,8 +52,7 @@ public class GameRunner implements Runnable {
     private final Set<Location> region;
     private final Map<GameTeam, Set<Location>> regions;
 
-    private final PotionEffect HUNGER = new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 1, true, false);
-    private final PotionEffect GLOWING = new PotionEffect(PotionEffectType.GLOWING, PotionEffect.INFINITE_DURATION, 0, true, false);
+    private final PotionEffect HUNGER = new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 9, true, false);
 
     public GameRunner() {
         this.barriers = Sets.newHashSet();
@@ -83,6 +84,10 @@ public class GameRunner implements Runnable {
             addRegionsBlock(midRegion, region);
             init = true;
             MegaWalls78.getInstance().getLogger().info("Map initialized.");
+
+            try (Jedis pub = Redis.get()) {
+                pub.publish("mw78", String.join("|", "game", MegaWalls78.getInstance().getConfigManager().server, gameManager.getMap().id(), String.valueOf(true)));
+            }
         });
     }
 
@@ -130,10 +135,13 @@ public class GameRunner implements Runnable {
                                 MegaWalls78.getInstance().getScoreboardManager().updateSidebar(GameState.FIGHTING);
                                 for (Player player : Bukkit.getOnlinePlayers()) {
                                     ComponentUtil.sendMessage(Component.translatable("mw78.dm.started", NamedTextColor.RED, TextDecoration.BOLD), player);
+                                }
+//                                for (Player player : Bukkit.getOnlinePlayers()) {
 //                                    if (!gameManager.isSpectator(player)) {
 //                                        player.addPotionEffect(GLOWING);
 //                                    }
-                                }
+//                                }
+                                Bukkit.getWorlds().getFirst().setHardcore(true);
                             } else {
                                 dmTimer -= 1000L;
                                 if (dmTimer == 10000L || dmTimer <= 5000L && dmTimer > 0) {
@@ -204,6 +212,10 @@ public class GameRunner implements Runnable {
         ConfigManager configManager = instance.getConfigManager();
         switch (state) {
             case COUNTDOWN -> {
+                try (Jedis pub = Redis.get()) {
+                    pub.publish("mw78", String.join("|", "game", MegaWalls78.getInstance().getConfigManager().server, gameManager.getMap().id(), String.valueOf(false)));
+                }
+
                 instance.getLogger().info("Game started.");
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     player.setHealth(0);
@@ -244,6 +256,9 @@ public class GameRunner implements Runnable {
                         allowedBlocks.removeAll(getSpawn(team));
                     }
                 });
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.sendPlayerListFooter(MegaWalls78.getInstance().getGameManager().footer().appendNewline().append(Component.text("MC.SUC.ICU", NamedTextColor.AQUA, TextDecoration.BOLD)));
+                }
             }
             case PREPARING -> {
                 gameManager.setState(GameState.BUFFING);

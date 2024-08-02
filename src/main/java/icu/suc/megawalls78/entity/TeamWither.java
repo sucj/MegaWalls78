@@ -6,6 +6,8 @@ import icu.suc.megawalls78.game.GameState;
 import net.kyori.adventure.bossbar.BossBar;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.WitherSkull;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.scores.PlayerTeam;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.bukkit.craftbukkit.event.CraftEventFactory;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -110,6 +113,13 @@ public class TeamWither extends WitherBoss {
                         nearbyEntity.hurt(this.damageSources().wither(), random.nextFloat());
                     } else {
                         nearbyEntity.hurt(this.damageSources().wither(), health / 2);
+                    }
+                }
+                if (this.tickCount % 20 == 0) {
+                    PlayerTeam team = nearbyEntity.getTeam();
+                    if (team != null && team.equals(getTeam())) {
+                        nearbyEntity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 60, 1));
+                        nearbyEntity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 60, 1));
                     }
                 }
             }

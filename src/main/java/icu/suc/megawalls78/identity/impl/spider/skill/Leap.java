@@ -5,8 +5,8 @@ import icu.suc.megawalls78.identity.impl.spider.passive.Skitter;
 import icu.suc.megawalls78.identity.trait.Skill;
 import icu.suc.megawalls78.util.*;
 import icu.suc.megawalls78.util.Effect;
+import net.minecraft.world.level.Level;
 import org.bukkit.*;
-import org.bukkit.block.Block;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -72,7 +72,7 @@ public final class Leap extends Skill {
         private Task(Player player) {
             this.player = player;
 
-            this.lastLocation = player.getEyeLocation();
+            this.lastLocation = player.getLocation();
         }
 
         @Override
@@ -96,7 +96,7 @@ public final class Leap extends Skill {
                             if (entity.getBoundingBox().overlaps(player.getBoundingBox())) {
                                 damage *= DIRECT;
                             }
-                            ((LivingEntity) entity).damage(damage, DamageSource.of(DamageType.PLAYER_EXPLOSION, player));
+                            ((LivingEntity) entity).damage(damage, DamageSource.of(DamageType.THROWN, player));
                             count.getAndIncrement();
                         });
                 int i = count.get();
@@ -104,10 +104,7 @@ public final class Leap extends Skill {
                     adjustFallDistance();
                 }
                 spawnWebs(i);
-                Location location = player.getLocation();
-                breakBlock(location.clone().add(0, 1, 0));
-                breakBlock(location);
-                breakBlock(location.clone().add(0, -1, 0));
+                Explosion.create(player.getWorld(), player, Explosion.ONLY_BLOCK, lastLocation.getX(), lastLocation.getY(), lastLocation.getZ(), (float) RADIUS, false, Level.ExplosionInteraction.BLOCK, false);
                 summaryHit(player, i);
                 this.cancel();
             } else {
@@ -133,7 +130,7 @@ public final class Leap extends Skill {
         }
 
         private void updateTravelLength() {
-            Location location = player.getEyeLocation();
+            Location location = player.getLocation();
             travelLength += lastLocation.distance(location);
             lastLocation = location;
         }
@@ -151,16 +148,6 @@ public final class Leap extends Skill {
                     fallingBlock.setHurtEntities(false);
                     fallingBlock.setVelocity(vector);
                 });
-            }
-        }
-
-        private void breakBlock(Location location) {
-            for (Block block : BlockUtil.getRoundBlocks(location, RADIUS)) {
-                if (MegaWalls78.getInstance().getGameManager().getRunner().getAllowedBlocks().contains(block.getLocation())) {
-                    if (BlockUtil.isDestroyable(block)) {
-                        BlockUtil.breakNaturally(block);
-                    }
-                }
             }
         }
     }

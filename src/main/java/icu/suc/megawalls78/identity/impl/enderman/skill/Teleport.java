@@ -24,7 +24,7 @@ public final class Teleport extends Skill {
     private static final int THICKNESS = 10;
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 100, 2);
-    private static final PotionEffect WEAKNESS = new PotionEffect(PotionEffectType.WEAKNESS, 100, 3);
+    private static final PotionEffect WEAKNESS = new PotionEffect(PotionEffectType.WEAKNESS, 100, 0);
 
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> {
         ParticleUtil.spawnParticleRandomBody(player, Particle.PORTAL, 8);
@@ -39,20 +39,32 @@ public final class Teleport extends Skill {
     protected boolean use0(Player player) {
         AtomicReference<Player> aNearestPlayer = new AtomicReference<>();
         AtomicReference<Double> nearestDistance = new AtomicReference<>(Double.MAX_VALUE);
+        AtomicReference<Double> nearestAngle = new AtomicReference<>(Double.MAX_VALUE);
 
         Location fromF = player.getLocation();
         Location fromH = player.getEyeLocation();
+        Vector direction = fromH.getDirection();
         EntityUtil.getNearbyEntities(player, RADIUS).stream()
                 .filter(entity -> entity instanceof Player)
                 .filter(entity -> !isValidAllies(player, entity))
                 .forEach(entity -> {
-                    double distance = fromF.distance(entity.getLocation());
-                    if (distance < nearestDistance.get()) {
+                    Location location = entity.getLocation();
+                    double angle = direction.angle(location.toVector().subtract(fromF.toVector()));
+                    double distance = fromF.distance(location);
+                    double na = nearestAngle.get();
+                    if (angle < na) {
+                        nearestAngle.set(angle);
                         aNearestPlayer.set(((Player) entity));
                         nearestDistance.set(distance);
-                    } else if (distance == nearestDistance.get()) {
-                        if (aNearestPlayer.get().getHealth() > ((Player) entity).getHealth()) {
+                    } else if (angle == na) {
+                        double nd = nearestDistance.get();
+                        if (distance < nd) {
                             aNearestPlayer.set(((Player) entity));
+                            nearestDistance.set(distance);
+                        } else if (distance == nd) {
+                            if (aNearestPlayer.get().getHealth() > ((Player) entity).getHealth()) {
+                                aNearestPlayer.set(((Player) entity));
+                            }
                         }
                     }
                 });

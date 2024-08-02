@@ -14,15 +14,19 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.craftbukkit.persistence.CraftPersistentDataContainer;
+import org.bukkit.craftbukkit.persistence.CraftPersistentDataTypeRegistry;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -35,9 +39,14 @@ public class ItemBuilder {
     private Integer maxStackSize;
     private Component displayName;
     private Boolean unbreakable;
-    private Boolean hideToolTip;
+
+    private List<Component> lore;
+
+    private Integer durability;
+    private Integer maxDurability;
 
     private List<PersistentData> persistentDataList;
+    private CraftPersistentDataContainer mw78Tags;
 
     private Boolean enchantmentGlintOverride;
     private List<Enchant> enchantList;
@@ -86,8 +95,21 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setHideToolTip(Boolean hideToolTip) {
-        this.hideToolTip = hideToolTip;
+    public ItemBuilder addLore(Component... lore) {
+        if (this.lore == null) {
+            this.lore = Lists.newArrayList();
+        }
+        this.lore.addAll(Arrays.asList(lore));
+        return this;
+    }
+
+    public ItemBuilder setDurability(Integer durability) {
+        this.durability = durability;
+        return this;
+    }
+
+    public ItemBuilder setMaxDurability(Integer maxDurability) {
+        this.maxDurability = maxDurability;
         return this;
     }
 
@@ -98,6 +120,19 @@ public class ItemBuilder {
         this.persistentDataList.add(new PersistentData<>(namespacedKey, persistentDataType, c));
         return this;
     }
+
+    public ItemBuilder setMW78Id(String id) {
+        return addPersistentData(ItemUtil.ID, PersistentDataType.STRING, id);
+    }
+
+    public <P, C> ItemBuilder addMW78Tag(NamespacedKey namespacedKey, PersistentDataType<P, C> persistentDataType, C c) {
+        if (this.mw78Tags == null) {
+            this.mw78Tags = new CraftPersistentDataContainer(new CraftPersistentDataTypeRegistry());
+            addPersistentData(ItemUtil.TAG, PersistentDataType.TAG_CONTAINER, this.mw78Tags);
+        }
+        this.mw78Tags.set(namespacedKey, persistentDataType, c);
+        return this;
+     }
 
     public ItemBuilder setEnchantmentGlintOverride(Boolean enchantmentGlintOverride) {
         this.enchantmentGlintOverride = enchantmentGlintOverride;
@@ -199,8 +234,14 @@ public class ItemBuilder {
         if (unbreakable != null) {
             itemMeta.setUnbreakable(unbreakable);
         }
-        if (hideToolTip != null) {
-            itemMeta.setHideTooltip(hideToolTip);
+
+        itemMeta.lore(lore);
+
+        if (itemMeta instanceof Damageable damageable) {
+            if (durability != null) {
+                damageable.setDamage(durability);
+            }
+            damageable.setMaxDamage(maxDurability);
         }
 
         if (persistentDataList != null) {

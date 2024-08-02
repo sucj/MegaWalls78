@@ -30,6 +30,10 @@ public abstract class CooldownPassive extends TimerPassive implements IActionbar
         COOLDOWN_LAST = CURRENT();
     }
 
+    protected void COOLDOWN_END() {
+        COOLDOWN_LAST = 0;
+    }
+
     protected long COOLDOWN_REMAIN() {
         return COOLDOWN - CURRENT() + COOLDOWN_LAST();
     }

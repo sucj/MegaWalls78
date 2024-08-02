@@ -31,7 +31,7 @@ public class ShoutCommand implements CommandExecutor {
                             .append(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().chat()))
                             .append(Component.space())
                             .append(LP.getPrefix(player))
-                            .append(player.displayName().color(LP.getNameColor(player)))
+                            .append(player.teamDisplayName().color(LP.getNameColor(player)))
                             .append(Component.translatable("mw78.sb.colon", NamedTextColor.WHITE))
                             .append(Component.space())
                             .append(Component.text(String.join(" ", strings), NamedTextColor.WHITE)));

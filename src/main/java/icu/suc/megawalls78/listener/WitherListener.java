@@ -14,11 +14,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.MutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.EventHandler;
@@ -43,19 +39,20 @@ public class WitherListener implements Listener {
             GameTeam team = gameManager.getWitherTeam(wither);
             if (team == null || gameManager.getPlayer(player).getTeam().equals(team)) {
                 event.setCancelled(true);
-            }
-            long currentMillis = System.currentTimeMillis();
-            MutablePair<Long, Boolean> pair = WITHER_WARNING.computeIfAbsent(team, t -> MutablePair.of(currentMillis, false));
-            if (currentMillis - pair.getLeft() > 1500L) {
-                boolean flag = pair.getRight();
-                for (GamePlayer gamePlayer : gameManager.getTeamPlayersMap().get(team)) {
-                    Player bukkitPlayer = gamePlayer.getBukkitPlayer();
-                    if (bukkitPlayer != null) {
-                        ComponentUtil.sendTitle(Component.empty(), Component.translatable("mw78.wither.attacked", flag ? NamedTextColor.DARK_RED : NamedTextColor.RED), ComponentUtil.ONE_SEC_TIMES_FADE, bukkitPlayer);
+            } else {
+                long currentMillis = System.currentTimeMillis();
+                MutablePair<Long, Boolean> pair = WITHER_WARNING.computeIfAbsent(team, t -> MutablePair.of(currentMillis, false));
+                if (currentMillis - pair.getLeft() > 1500L) {
+                    boolean flag = pair.getRight();
+                    for (GamePlayer gamePlayer : gameManager.getTeamPlayersMap().get(team)) {
+                        Player bukkitPlayer = gamePlayer.getBukkitPlayer();
+                        if (bukkitPlayer != null) {
+                            ComponentUtil.sendTitle(Component.empty(), Component.translatable("mw78.wither.attacked", flag ? NamedTextColor.DARK_RED : NamedTextColor.RED), ComponentUtil.ONE_SEC_TIMES_FADE, bukkitPlayer);
+                        }
                     }
+                    pair.setLeft(currentMillis);
+                    pair.setRight(!flag);
                 }
-                pair.setLeft(currentMillis);
-                pair.setRight(!flag);
             }
         }
     }

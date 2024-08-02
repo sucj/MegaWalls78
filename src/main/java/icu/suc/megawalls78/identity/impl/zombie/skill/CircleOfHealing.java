@@ -38,7 +38,8 @@ public final class CircleOfHealing extends Skill {
                 .filter(entity -> entity instanceof Player)
                 .filter(entity -> isValidAllies(player, entity))
                 .forEach(entity -> {
-                    heal(player);
+                    heal((Player) entity);
+                    summaryHealBy(player, (Player) entity);
                     count.getAndIncrement();
                 });
 
@@ -47,7 +48,7 @@ public final class CircleOfHealing extends Skill {
         return summaryHeal(player, count.get());
     }
 
-    private static void heal(LivingEntity entity) {
+    private static void heal(Player entity) {
         entity.heal(SELF);
         EFFECT_HEAD.play(entity);
     }

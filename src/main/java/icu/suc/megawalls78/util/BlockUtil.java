@@ -1,21 +1,24 @@
 package icu.suc.megawalls78.util;
 
-import com.google.common.collect.Lists;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
-import org.bukkit.Location;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.block.CraftBlock;
 
-import java.util.List;
 import java.util.Set;
 
 public class BlockUtil {
     public static final Set<Material> STONES = Set.of(Material.STONE, Material.DEEPSLATE);
     public static final Set<Material> WOODS = Set.of(Material.OAK_WOOD, Material.SPRUCE_WOOD, Material.BIRCH_WOOD, Material.JUNGLE_WOOD, Material.ACACIA_WOOD, Material.CHERRY_WOOD, Material.DARK_OAK_WOOD, Material.MANGROVE_WOOD, Material.OAK_LOG, Material.SPRUCE_LOG, Material.BIRCH_LOG, Material.JUNGLE_LOG, Material.ACACIA_LOG, Material.CHERRY_LOG, Material.DARK_OAK_LOG, Material.MANGROVE_LOG);
     public static final Set<Material> ORES = Set.of(Material.COAL_ORE, Material.IRON_ORE, Material.GOLD_ORE, Material.DIAMOND_ORE, Material.COPPER_ORE, Material.EMERALD_ORE, Material.LAPIS_ORE, Material.REDSTONE_ORE, Material.NETHER_GOLD_ORE, Material.NETHER_QUARTZ_ORE, Material.DEEPSLATE_COAL_ORE, Material.DEEPSLATE_IRON_ORE, Material.DEEPSLATE_GOLD_ORE, Material.DEEPSLATE_DIAMOND_ORE, Material.DEEPSLATE_COPPER_ORE, Material.DEEPSLATE_EMERALD_ORE, Material.DEEPSLATE_LAPIS_ORE, Material.DEEPSLATE_REDSTONE_ORE);
+    public static final Set<Material> DIRT = Set.of(Material.DIRT, Material.COARSE_DIRT, Material.ROOTED_DIRT, Material.SAND, Material.RED_SAND, Material.MUD, Material.CLAY, Material.GRAVEL);
 
     public static boolean isStone(Material material) {
         return STONES.contains(material);
@@ -29,8 +32,12 @@ public class BlockUtil {
         return ORES.contains(material);
     }
 
+    public static boolean isDirt(Material material) {
+        return DIRT.contains(material);
+    }
+
     public static boolean isNatural(Material material) {
-        return isStone(material) || isWood(material) || isOre(material);
+        return isStone(material) || isWood(material) || isOre(material) || isDirt(material);
     }
 
     public static boolean breakNaturally(Block block) {
@@ -69,15 +76,22 @@ public class BlockUtil {
         return ((CraftBlock) block).getNMS().isDestroyable();
     }
 
-    public static List<Block> getRoundBlocks(Location location, double radius) {
-        List<Block> blocks = Lists.newArrayList();
-        for (double x = -radius; x <= radius; x++) {
-            for (double z = -radius; z <= radius; z++) {
-                if (Math.sqrt(x * x + z * z) <= radius) {
-                    blocks.add(location.clone().add(x, 0, z).getBlock());
-                }
-            }
+    public static boolean canInteract(Block block) {
+        if (block == null) {
+            return false;
         }
-        return blocks;
+        net.minecraft.world.level.block.Block nms = ((CraftBlock) block).getNMS().getBlock();
+        try {
+            nms.getClass().getDeclaredMethod("useWithoutItem", BlockState.class, Level.class, BlockPos.class, Player.class, BlockHitResult.class);
+            return true;
+        } catch (NoSuchMethodException ignored) {
+        }
+        try {
+            nms.getClass().getDeclaredMethod("useItemOn", net.minecraft.world.item.ItemStack.class, BlockState.class, Level.class, BlockPos.class, Player.class, InteractionHand.class, BlockHitResult.class);
+            return true;
+        }
+        catch (NoSuchMethodException ignored) {
+        }
+        return false;
     }
 }

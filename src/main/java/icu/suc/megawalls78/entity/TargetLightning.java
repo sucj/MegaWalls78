@@ -5,15 +5,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.level.Level;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.entity.CraftEntity;
 
-public class HerobrineLightning extends LightningBolt {
+public class TargetLightning extends LightningBolt {
 
     private final Entity target;
 
-    public HerobrineLightning(Level world, CraftPlayer target) {
+    public TargetLightning(Level world, Object target) {
         super(EntityType.LIGHTNING_BOLT, world);
-        this.target = target.getHandle();
+        this.target = ((CraftEntity) target).getHandle();
     }
 
     @Override

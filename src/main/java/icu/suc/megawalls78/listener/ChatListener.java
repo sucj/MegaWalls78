@@ -4,7 +4,6 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.LP;
-import icu.suc.megawalls78.util.ComponentUtil;
 import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
@@ -39,7 +38,7 @@ public class ChatListener implements Listener, ChatRenderer {
 
     @Override
     public @NotNull Component render(@NotNull Player player, @NotNull Component component, @NotNull Component component1, @NotNull Audience audience) {
-        Component formatted;
+        Component name;
         if (MegaWalls78.getInstance().getGameManager().inFighting()) {
             GameManager gameManager = MegaWalls78.getInstance().getGameManager();
             NamedTextColor color;
@@ -52,18 +51,14 @@ public class ChatListener implements Listener, ChatRenderer {
                 color = gamePlayer.getTeam().color();
                 chat = gamePlayer.getTeam().chat();
             }
-            formatted = Component.translatable("ms78.brackets", color, chat )
+            name = Component.translatable("ms78.brackets", color, chat )
                     .append(Component.space())
                     .append(LP.getPrefix(player))
-                    .append(player.displayName().color(LP.getNameColor(player)))
-                    .append(Component.translatable("mw78.sb.colon", NamedTextColor.GRAY))
-                    .append(Component.space());
+                    .append(player.teamDisplayName().color(LP.getNameColor(player)));
         } else {
-            formatted = LP.getPrefix(player)
-                    .append(player.displayName().color(LP.getNameColor(player)))
-                    .append(Component.translatable("mw78.sb.colon", NamedTextColor.GRAY))
-                    .append(Component.space());
+            name = LP.getPrefix(player)
+                    .append(player.teamDisplayName().color(LP.getNameColor(player)));
         }
-        return formatted.append(component1.color(LP.getChatColor(player)));
+        return Component.translatable("mw78.chat", NamedTextColor.GRAY, name, component1.color(LP.getChatColor(player)));
     }
 }

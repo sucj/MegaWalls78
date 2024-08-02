@@ -124,7 +124,7 @@ public final class SonicBoom extends Skill {
                     .filter(entity -> !victims.contains(entity.getUniqueId()))
                     .forEach(entity -> {
                         if (entity instanceof Player) {
-                            ((Player) entity).damage(reduceDamage(), DamageSource.of(DamageType.SONIC_BOOM, player));
+                            ((Player) entity).damage(damage(), DamageSource.of(DamageType.SONIC_BOOM, player));
                         } else {
                             ((LivingEntity) entity).damage(DAMAGE, DamageSource.of(DamageType.SONIC_BOOM, player));
                         }
@@ -154,8 +154,13 @@ public final class SonicBoom extends Skill {
             entity.setVelocity(velocity.add(entity.getVelocity()));
         }
 
-        private double reduceDamage() {
-            return DAMAGE - DAMAGE * players.getAndIncrement() * SCALE;
+        private double damage() {
+            int i = players.getAndIncrement();
+            if (i == 0) {
+                return DAMAGE;
+            } else {
+                return DAMAGE * i * SCALE;
+            }
         }
 
         private void playChargeEffect() {

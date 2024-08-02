@@ -18,9 +18,9 @@ public final class Kit extends icu.suc.megawalls78.identity.Kit {
         addPickaxe();
         addTool(BOW);
         addItem(COOKED_BEEF, 3);
-        addSpeedPotion(2, 15, 2);
         addHealingPotion(2, 3);
+        addSpeedPotion(2, 15, 2);
         addCompass();
-        setBoots(DIAMOND_BOOTS).addEnchantment(PROJECTILE_PROTECTION, 2, true);
+        setBoots(DIAMOND_BOOTS).addEnchantment(PROJECTILE_PROTECTION, 2, true).addEnchantment(FEATHER_FALLING, 2, true);
     }
 }

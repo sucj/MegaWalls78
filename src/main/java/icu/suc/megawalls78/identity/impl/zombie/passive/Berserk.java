@@ -4,7 +4,7 @@ import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
 import icu.suc.megawalls78.util.Effect;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
-import org.bukkit.entity.Arrow;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -45,7 +45,7 @@ public final class Berserk extends DurationCooldownPassive {
     }
 
     private static boolean condition_damage(EntityDamageByEntityEvent event) {
-        return event.getDamager() instanceof Arrow;
+        return event.getDamager() instanceof AbstractArrow;
     }
 
     private static boolean condition_attack(EntityDamageByEntityEvent event) {

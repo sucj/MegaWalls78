@@ -45,7 +45,11 @@ public final class EnderHeart extends ChargePassive {
     public void onPlayerKill(IncreaseStatsEvent.Kill event) {
         GamePlayer player = event.getPlayer();
         if (PASSIVE(player)) {
-            player.getBukkitPlayer().heal(KILL);
+            Player bukkitPlayer = player.getBukkitPlayer();
+            if (bukkitPlayer == null) {
+                return;
+            }
+            bukkitPlayer.heal(KILL);
         }
     }
 
@@ -53,6 +57,10 @@ public final class EnderHeart extends ChargePassive {
     public void onPlayerAssist(IncreaseStatsEvent.Assist event) {
         GamePlayer player = event.getPlayer();
         if (PASSIVE(player)) {
+            Player bukkitPlayer = player.getBukkitPlayer();
+            if (bukkitPlayer == null) {
+                return;
+            }
             player.getBukkitPlayer().heal(ASSIST);
         }
     }

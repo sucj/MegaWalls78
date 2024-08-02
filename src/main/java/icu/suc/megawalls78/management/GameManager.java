@@ -1,5 +1,6 @@
 package icu.suc.megawalls78.management;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.myzelyam.api.vanish.VanishAPI;
@@ -12,19 +13,24 @@ import icu.suc.megawalls78.game.record.GameMap;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.ExpiringValue;
+import icu.suc.megawalls78.util.Redis;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
+import redis.clients.jedis.Jedis;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameManager {
+
+    private static final JoinConfiguration FOOTER_JOIN = JoinConfiguration.builder().separator(Component.text("   ")).build();
 
     private GameMap map;
     private List<GameTeam> teams;
@@ -134,6 +140,11 @@ public class GameManager {
     public void setState(GameState state) {
         this.state = state;
         Bukkit.getPluginManager().callEvent(new StateChangeEvent(state));
+        if (state.equals(GameState.ENDING)) {
+            try (Jedis pub = Redis.get()) {
+                pub.publish("mw78", String.join("|", "remove", MegaWalls78.getInstance().getConfigManager().server));
+            }
+        }
     }
 
     public Map<UUID, GamePlayer> getPlayers() {
@@ -214,11 +225,24 @@ public class GameManager {
         teamEliminateMap.put(team, eliminated);
         if (eliminated) {
             Bukkit.getScheduler().runTaskLater(MegaWalls78.getInstance(), () -> ComponentUtil.sendMessage(Component.translatable("mw78.team.eliminated", team.name().color(team.color())).decorate(TextDecoration.BOLD), Bukkit.getOnlinePlayers()), 20L);
+
+            int s = teamEliminateMap.size();
+            for (GameTeam gameTeam : teamEliminateMap.keySet()) {
+                if (teamEliminateMap.get(gameTeam)) {
+                    s--;
+                }
+            }
+            if (s == 1) {
+                setState(GameState.ENDING);
+            }
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.sendPlayerListFooter(MegaWalls78.getInstance().getGameManager().footer().appendNewline().append(Component.text("MC.SUC.ICU", NamedTextColor.AQUA, TextDecoration.BOLD)));
+            }
         }
     }
 
     public boolean isEliminated(GameTeam team) {
-        return teamEliminateMap.get(team);
+        return teamEliminateMap.getOrDefault(team, true);
     }
 
     public int getAlive(GameTeam team) {
@@ -233,5 +257,29 @@ public class GameManager {
 
     public Collection<Wither> getWithers() {
         return witherMap.values();
+    }
+
+    public Component footer() {
+        List<Map.Entry<Integer, Component>> entries = Lists.newArrayList();
+        for (GameTeam team : teamPlayersMap.keySet()) {
+            if (isEliminated(team)) {
+                continue;
+            }
+            int score = 0;
+            for (GamePlayer gamePlayer : teamPlayersMap.get(team)) {
+                if (gamePlayer.getFinalDeaths() == 0) {
+                    score += gamePlayer.getFinalKills() * 2;
+                } else {
+                    score += gamePlayer.getFinalKills();
+                }
+            }
+            entries.add(new AbstractMap.SimpleEntry<>(score, Component.translatable("mw78.team.score", NamedTextColor.GRAY, team.name().color(team.color()), Component.text(score, NamedTextColor.WHITE))));
+        }
+        entries.sort((o1, o2) -> o2.getKey().compareTo(o1.getKey()));
+        List<Component> list = Lists.newArrayList();
+        for (Map.Entry<Integer, Component> entry : entries) {
+            list.add(entry.getValue());
+        }
+        return Component.join(FOOTER_JOIN, list);
     }
 }

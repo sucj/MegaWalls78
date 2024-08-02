@@ -33,9 +33,4 @@ public final class Toughness extends ChargePassive {
     private static void potion(Player player) {
         player.addPotionEffect(RESISTANCE);
     }
-
-    @Override
-    public void unregister() {
-        CHARGE_MAX();
-    }
 }

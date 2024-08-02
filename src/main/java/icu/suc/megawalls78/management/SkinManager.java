@@ -4,7 +4,6 @@ import com.destroystokyo.paper.profile.ProfileProperty;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.gui.SkinGui;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.Skin;
 import net.skinsrestorer.api.SkinsRestorer;
@@ -18,7 +17,7 @@ import java.util.*;
 public class SkinManager {
 
     private final Map<Identity, List<Skin>> skins;
-    private final Map<Player, Map<Identity, Skin>> playerSelectedSkin;
+    private final Map<UUID, Map<Identity, Skin>> playerSelectedSkin;
 
     private final Map<Player, SkinProperty> playerSkins;
 
@@ -36,12 +35,12 @@ public class SkinManager {
     }
 
     public void applySkin(Player player, Identity identity) {
-        this.applySkin(player, identity, getPlayerSelectedSkin(player, identity));
+        this.applySkin(player, getPlayerSelectedSkin(player.getUniqueId(), identity));
     }
 
-    public void applySkin(Player player, Identity identity, Skin skin) {
+    public void applySkin(Player player, Skin skin) {
         SkinsRestorer skinsRestorer = SkinsRestorerProvider.get();
-        Optional<InputDataResult> result = skinsRestorer.getSkinStorage().findSkinData(customSkin(identity, skin));
+        Optional<InputDataResult> result = skinsRestorer.getSkinStorage().findSkinData(skin.id());
         if (result.isEmpty()) {
             return;
         }
@@ -60,29 +59,22 @@ public class SkinManager {
         }
     }
 
-    public Skin getPlayerSelectedSkin(Player player, Identity identity) {
+    public Skin getPlayerSelectedSkin(UUID uuid, Identity identity) {
         // TODO DATABASE
-        return playerSelectedSkin.computeIfAbsent(player, k -> Maps.newHashMap()).computeIfAbsent(identity, k -> skins.get(identity).getFirst());
+        return playerSelectedSkin.computeIfAbsent(uuid, k -> Maps.newHashMap()).computeIfAbsent(identity, k -> skins.get(identity).getFirst());
     }
 
-    public Skin setPlayerSelectedSkin(Player player, Identity identity, Skin skin) {
+    public void setPlayerSelectedSkin(UUID uuid, Identity identity, Skin skin) {
         // TODO DATABASE
-        applySkin(player, identity, skin);
-        Skin put = playerSelectedSkin.computeIfAbsent(player, k -> Maps.newHashMap()).put(identity, skin);
-        player.getInventory().setItem(1, SkinGui.trigger(player));
-        return put;
+        playerSelectedSkin.computeIfAbsent(uuid, k -> Maps.newHashMap()).put(identity, skin);
     }
 
     public void addSkin(Identity identity, Skin skin) {
         skins.get(identity).add(skin);
-        SkinsRestorerProvider.get().getSkinStorage().setCustomSkinData(customSkin(identity, skin), SkinProperty.of(skin.value(), skin.signature()));
+        SkinsRestorerProvider.get().getSkinStorage().setCustomSkinData(skin.id(), SkinProperty.of(skin.value(), skin.signature()));
     }
 
     public List<Skin> getSkins(Identity identity) {
         return skins.get(identity);
-    }
-
-    private String customSkin(Identity identity, Skin skin) {
-        return identity.getId() + "." + skin.id();
     }
 }

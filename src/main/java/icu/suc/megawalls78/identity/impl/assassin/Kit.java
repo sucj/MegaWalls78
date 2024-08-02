@@ -23,8 +23,8 @@ public final class Kit extends icu.suc.megawalls78.identity.Kit {
         addTool(BOW);
         addItem(COOKED_BEEF, 3);
         addItem(POTION, 5).setDisplayName(Component.translatable("item.minecraft.potion"))
-                .addCustomEffect(new PotionEffect(REGENERATION, 6 * 20, 2), false)
-                .addCustomEffect(new PotionEffect(SPEED, 6 * 20, 1), false);
+                .addCustomEffect(new PotionEffect(REGENERATION, 120, 2), false)
+                .addCustomEffect(new PotionEffect(SPEED, 120, 1), false);
         addCompass();
         setBoots(IRON_BOOTS).addEnchantment(PROJECTILE_PROTECTION, 2, true).addEnchantment(FEATHER_FALLING, 2, true);
     }

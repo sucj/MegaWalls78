@@ -2,13 +2,12 @@ package icu.suc.megawalls78.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class EnergyChangeEvent extends Event implements Cancellable {
+public class EnergyChangeEvent extends PlayerEvent implements Cancellable {
 
-    private final Player player;
     private final int origin;
     private final int energy;
     private final int max;
@@ -18,14 +17,10 @@ public class EnergyChangeEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     public EnergyChangeEvent(Player player, int origin, int energy, int max) {
-        this.player = player;
+        super(player);
         this.origin = origin;
         this.energy = energy;
         this.max = max;
-    }
-
-    public Player getPlayer() {
-        return player;
     }
 
     public int getOrigin() {

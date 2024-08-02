@@ -51,6 +51,7 @@ public final class SoothingMoo extends Skill {
                 .filter(entity -> isValidAllies(player, entity))
                 .forEach(entity -> {
                     healOther((Player) entity);
+                    summaryHealBy(player, (Player) entity);
                     count.getAndIncrement();
                 });
 

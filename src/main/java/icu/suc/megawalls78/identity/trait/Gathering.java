@@ -6,6 +6,7 @@ import net.kyori.adventure.text.Component;
 public abstract class Gathering extends Trait {
 
     private final Class<? extends Passive> internal;
+    private Passive passive;
 
     public Gathering(String id) {
         this(id, null);
@@ -18,5 +19,13 @@ public abstract class Gathering extends Trait {
 
     public Class<? extends Passive> getInternal() {
         return internal;
+    }
+
+    public Passive getPassive() {
+        return passive;
+    }
+
+    public void setPassive(Passive passive) {
+        this.passive = passive;
     }
 }

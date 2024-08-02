@@ -28,6 +28,16 @@ public class EnergyCommand implements CommandExecutor {
                     gamePlayer.setEnergy(Integer.parseInt(strings[0]));
                 }
                 return true;
+            } else if (strings.length == 0) {
+                GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+                if (gameManager.isSpectator(player)) {
+                    return true;
+                }
+                if (gameManager.inFighting()) {
+                    GamePlayer gamePlayer = gameManager.getPlayer(player);
+                    gamePlayer.setEnergy(gamePlayer.getIdentity().getEnergy());
+                }
+                return true;
             }
         }
         return false;

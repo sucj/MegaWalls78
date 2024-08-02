@@ -34,6 +34,9 @@ public class ConfigManager {
     private final File mapFile;
     private final File skinFile;
 
+    public String host;
+    public int port;
+    public String server;
     public int maxPlayer;
     public int minPlayer;
     public int maxSpec;
@@ -53,7 +56,7 @@ public class ConfigManager {
     }
 
     public void load() {
-        saveFiles();
+        save();
 
         File langDir = new File(MegaWalls78.getInstance().getDataFolder(), "lang");
         if (langDir.exists()) {
@@ -73,6 +76,11 @@ public class ConfigManager {
             GlobalTranslator.translator().addSource(registry);
         }
 
+        ConfigurationSection redis = gameConfig.getConfigurationSection("redis");
+        host = redis.getString("host");
+        port = redis.getInt("port");
+
+        server = gameConfig.getString("server");
         maxPlayer = gameConfig.getInt("max-player", 100);
         minPlayer = gameConfig.getInt("min-player", 16);
         maxSpec = gameConfig.getInt("max-spec", 16);
@@ -122,21 +130,6 @@ public class ConfigManager {
     }
 
     public void save() {
-        gameConfig.set("max-player", maxPlayer);
-        gameConfig.set("min-player", minPlayer);
-        gameConfig.set("max-spec", maxSpec);
-        gameConfig.set("waiting-time", waitingTime);
-        gameConfig.set("opening-time", openingTime);
-        gameConfig.set("preparing-time", preparingTime);
-        gameConfig.set("buffing-time", buffingTime);
-        gameConfig.set("fighting-time", fightingTime);
-        gameConfig.set("dm-time", dmTime);
-        gameConfig.set("respawn-time", respawnTime);
-
-        saveFiles();
-    }
-
-    private void saveFiles() {
         MegaWalls78 instance = MegaWalls78.getInstance();
         instance.saveDefaultConfig();
         if (!mapFile.exists()) {

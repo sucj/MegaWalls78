@@ -39,7 +39,7 @@ public class SkinGui {
 
         Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.skin").append(Component.space()).append(Component.translatable("mw78.gui.skin.title", Component.text(page), Component.text(MAX_PAGE))));
 
-        Skin selectedSkin = MegaWalls78.getInstance().getSkinManager().getPlayerSelectedSkin(player, identity);
+        Skin selectedSkin = MegaWalls78.getInstance().getSkinManager().getPlayerSelectedSkin(player.getUniqueId(), identity);
         List<Skin> skinList = skins.stream().skip((page - 1L) * SLOT_COUNT).limit(SLOT_COUNT).toList();
 
         boolean flag = true;
@@ -97,7 +97,9 @@ public class SkinGui {
             case RESET_SLOT -> {
                 if (item != null) {
                     Skin skin = skins.getFirst();
-                    skinManager.setPlayerSelectedSkin(player, identity, skin);
+                    skinManager.setPlayerSelectedSkin(player.getUniqueId(), identity, skin);
+                    skinManager.applySkin(player, skin);
+                    player.getInventory().setItem(1, SkinGui.trigger(player));
                     player.sendMessage(Component.translatable("mw78.skin.reset", NamedTextColor.GREEN, skin.name().color(NamedTextColor.GRAY)));
                     INVENTORIES.remove(inventory);
                     player.closeInventory();
@@ -114,8 +116,10 @@ public class SkinGui {
                     int index = Arrays.binarySearch(ID_SLOT, slot);
                     if (index >= 0) {
                         Skin skin = skins.get((INVENTORIES.get(inventory) - 1) * SLOT_COUNT + index);
-                        if (!skinManager.getPlayerSelectedSkin(player, identity).equals(skin)) {
-                            skinManager.setPlayerSelectedSkin(player, identity, skin);
+                        if (!skinManager.getPlayerSelectedSkin(player.getUniqueId(), identity).equals(skin)) {
+                            skinManager.setPlayerSelectedSkin(player.getUniqueId(), identity, skin);
+                            skinManager.applySkin(player, skin);
+                            player.getInventory().setItem(1, SkinGui.trigger(player));
                             player.sendMessage(Component.translatable("mw78.skin", NamedTextColor.GREEN, skin.name().color(NamedTextColor.GRAY)));
                             INVENTORIES.remove(inventory);
                             player.closeInventory();
@@ -127,7 +131,7 @@ public class SkinGui {
     }
 
     public static ItemStack trigger(Player player) {
-        Skin skin = MegaWalls78.getInstance().getSkinManager().getPlayerSelectedSkin(player, MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity());
+        Skin skin = MegaWalls78.getInstance().getSkinManager().getPlayerSelectedSkin(player.getUniqueId(), MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity());
         return ItemBuilder.of(Material.PLAYER_HEAD)
                 .setDisplayName(Component.translatable("mw78.gui.skin", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.skin.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)

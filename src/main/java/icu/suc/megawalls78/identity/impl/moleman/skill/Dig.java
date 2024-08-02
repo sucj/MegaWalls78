@@ -3,6 +3,7 @@ package icu.suc.megawalls78.identity.impl.moleman.skill;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -101,7 +102,8 @@ public final class Dig extends Skill {
             World world = player.getWorld();
 
             for (Location location : EntityUtil.getLocations(world, box)) {
-                if (MegaWalls78.getInstance().getGameManager().getRunner().getAllowedBlocks().contains(location)) {
+                GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+                if (gameManager.getRunner().getAllowedBlocks().contains(location)) {
                     Block block = location.getBlock();
                     if (BlockUtil.isDestroyable(block)) {
                         BlockUtil.breakNaturally(block);
@@ -115,7 +117,7 @@ public final class Dig extends Skill {
                     .filter(entity -> !PlayerUtil.isValidAllies(player, entity))
                     .filter(entity -> !victims.contains(entity.getUniqueId()))
                     .forEach(entity -> {
-                        ((LivingEntity) entity).damage(DAMAGE, DamageSource.of(DamageType.STALAGMITE, player));
+                        ((LivingEntity) entity).damage(DAMAGE, DamageSource.of(DamageType.FLY_INTO_WALL, player));
                         victims.add(entity.getUniqueId());
                         count.getAndIncrement();
                     });

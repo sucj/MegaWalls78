@@ -21,8 +21,8 @@ public class Kit extends icu.suc.megawalls78.identity.Kit {
         addPickaxe();
         addTool(BOW);
         addItem(COOKED_SALMON, 6);
+        addHealingPotion(3, 2).addCustomEffect(new PotionEffect(REGENERATION, 6, 4), false);
         addSpeedPotion(1, 15, 2);
-        addHealingPotion(3, 2).addCustomEffect(new PotionEffect(REGENERATION, 0, 4), false);
         addCompass();
         setBoots(DIAMOND_BOOTS).addEnchantment(PROTECTION, 3, true).addEnchantment(DEPTH_STRIDER, 2, true);
     }

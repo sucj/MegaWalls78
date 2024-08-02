@@ -17,6 +17,7 @@ public abstract class Skill extends Trait implements IActionbar {
     private long last;
 
     private final Class<? extends Passive> internal;
+    private Passive passive;
 
     public Skill(String id, int cost, long cooldown) {
         this(id, cost, cooldown, null);
@@ -58,6 +59,14 @@ public abstract class Skill extends Trait implements IActionbar {
 
     public Class<? extends Passive> getInternal() {
         return internal;
+    }
+
+    public Passive getPassive() {
+        return passive;
+    }
+
+    public void setPassive(Passive passive) {
+        this.passive = passive;
     }
 
     public enum Trigger {

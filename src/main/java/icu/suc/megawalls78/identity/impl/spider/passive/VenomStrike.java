@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffectType;
 
 public final class VenomStrike extends ChargeCooldownPassive {
 
-    private static final PotionEffect POISON = new PotionEffect(PotionEffectType.POISON, 125, 0);
+    private static final PotionEffect POISON = new PotionEffect(PotionEffectType.POISON, 100, 0);
 
     public VenomStrike() {
         super("venom_strike", 7000L, 4);
@@ -24,11 +24,12 @@ public final class VenomStrike extends ChargeCooldownPassive {
         if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() && condition(event) && CHARGE()) {
             potion((Player) event.getEntity());
             CHARGE_RESET();
+            COOLDOWN_RESET();
         }
     }
 
     private static boolean condition(EntityDamageByEntityEvent event) {
-        return event.getEntity() instanceof Player && !event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK);
+        return event.getEntity() instanceof Player && event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK);
     }
 
     private static void potion(Player player) {

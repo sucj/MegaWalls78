@@ -9,10 +9,12 @@ import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Skin;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.SupplierComponent;
 import net.kyori.adventure.text.Component;
@@ -51,6 +53,8 @@ public class GamePlayer {
 
     private List<ComponentLike> actionbar;
 
+    private GameTeam tracking;
+
     public GamePlayer(Player player) {
         this.uuid = player.getUniqueId();
         setIdentity(MegaWalls78.getInstance().getIdentityManager().getPlayerIdentity(uuid));
@@ -70,7 +74,7 @@ public class GamePlayer {
         }
     }
 
-    public boolean useSkill(Action action, Material material) {
+    public boolean useSkill(Player player, Action action, Material material) {
         Skill skill = skills.get(Skill.Trigger.getTrigger(action, material));
         if (skill == null) {
             return false;
@@ -78,7 +82,6 @@ public class GamePlayer {
         if (energy < skill.getCost()) {
             return false;
         }
-        Player player = getBukkitPlayer();
         if (player.isSneaking()) {
             return false;
         }
@@ -95,6 +98,10 @@ public class GamePlayer {
             energy = max;
         } else if (energy < 0) {
             energy = 0;
+        }
+
+        if (this.energy == energy) {
+            return;
         }
 
         EnergyChangeEvent event = new EnergyChangeEvent(getBukkitPlayer(), this.energy, energy, max);
@@ -115,7 +122,13 @@ public class GamePlayer {
     }
 
     public void increaseEnergy(EnergyWay way) {
-        increaseEnergy(identity.getEnergyByWay(way));
+        if (way.equals(EnergyWay.DM)) {
+            if (getEnergy() >= 40) {
+                increaseEnergy(identity.getEnergyByWay(way));
+            }
+        } else {
+            increaseEnergy(identity.getEnergyByWay(way));
+        }
     }
 
     public int getEnergy() {
@@ -308,5 +321,16 @@ public class GamePlayer {
 
     public Gathering getGathering() {
         return gathering;
+    }
+
+    public GameTeam getTracking() {
+        if (tracking == null || MegaWalls78.getInstance().getGameManager().isEliminated(tracking)) {
+            setTracking(team);
+        }
+        return tracking;
+    }
+
+    public void setTracking(GameTeam tracking) {
+        this.tracking = tracking;
     }
 }

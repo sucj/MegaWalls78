@@ -48,14 +48,14 @@ import java.util.Map;
 import java.util.UUID;
 
 // 因为即将重构Passive的计时方式顺便加入Skill的监听实现，暂时推迟隐身时攻击的编写
-public class ShadowCloak extends Skill {
+public final class ShadowCloak extends Skill {
 
     private static final long DURATION = 10000L; // 持续10秒
     private static final int TICK = (int) (DURATION / 50);
     private static final PotionEffect INVISIBILITY = new PotionEffect(PotionEffectType.INVISIBILITY, TICK, 0); // 关于隐藏盔甲，将以后以Util形式提供发级别的隐藏
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, TICK, 0);
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, TICK, 0);
-    private static final int REMAIN = 200; // 每剩余1秒隐身时间
+    private static final int REMAIN = 20; // 每剩余1秒隐身时间
     private static final int RETURN = 4; // 返还4点能量
     private static final double SCALE = 0.1D; //损失的生命值10%
     private static final double MIN = 1.0D; // 至少造成1点真实伤害
@@ -90,8 +90,7 @@ public class ShadowCloak extends Skill {
         return true;
     }
 
-    // 按照技能开发条例第六章第四条：主动技能如有持续效果必须使用Runnable
-    private static final class Task extends BukkitRunnable {
+    private final class Task extends BukkitRunnable {
 
         private final Player player;
 
@@ -120,7 +119,7 @@ public class ShadowCloak extends Skill {
                 if (EntityUtil.hasPotionEffect(player, RESISTANCE)) {
                     player.removePotionEffect(PotionEffectType.RESISTANCE);
                 }
-                MegaWalls78.getInstance().getGameManager().getPlayer(player).increaseEnergy(remain() / REMAIN * RETURN);
+                ShadowCloak.this.refund(player, (int) (((double) remain() / REMAIN) * RETURN));
                 cancel();
             }
 
@@ -133,7 +132,7 @@ public class ShadowCloak extends Skill {
         }
 
         public int remain() {
-            return tick - TICK;
+            return TICK - tick;
         }
 
         public void updateArmor() {
@@ -161,6 +160,7 @@ public class ShadowCloak extends Skill {
                 if (boots != null) {
                     onlinePlayer.sendEquipmentChange(player, EquipmentSlot.FEET, boots);
                 }
+                onlinePlayer.sendEquipmentChange(player, EquipmentSlot.HAND, equipment.getItemInMainHand());
                 onlinePlayer.sendEquipmentChange(player, EquipmentSlot.OFF_HAND, equipment.getItemInOffHand());
             }
         }
@@ -208,9 +208,6 @@ public class ShadowCloak extends Skill {
                 for (int i = 0; i < modifier.getValues().size(); i++) {
                     List<Pair<EnumWrappers.ItemSlot, ItemStack>> pairs = modifier.read(i);
                     for (Pair<EnumWrappers.ItemSlot, ItemStack> pair : pairs) {
-                        if (pair.getFirst().equals(EnumWrappers.ItemSlot.MAINHAND)) {
-                            continue;
-                        }
                         if (pair.getSecond().isEmpty()) {
                             continue;
                         }
@@ -233,8 +230,8 @@ public class ShadowCloak extends Skill {
 
             if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && ShadowCloak.getState(player.getUniqueId()) && condition(event)) {
                 LivingEntity entity = (LivingEntity) event.getEntity();
-                double v = (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() - entity.getHealth()) * SCALE;
-                event.setDamage(event.getFinalDamage() + Math.max(v, MIN));
+                double damage = Math.max((entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() - entity.getHealth()) * SCALE, MIN);
+                event.setDamage(event.getFinalDamage() + damage);
                 ShadowCloak.setState(player.getUniqueId(), false);
             }
         }

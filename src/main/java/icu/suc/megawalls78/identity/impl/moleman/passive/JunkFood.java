@@ -31,15 +31,15 @@ public final class JunkFood extends ChargePassive implements IActionbar {
             .setAmount(3)
             .addPrefix(Identity.MOLEMAN.getName().append(Component.space()))
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.MOLEMAN_COOKIE);
+            .setMW78Id(ItemUtil.MOLEMAN_COOKIE);
     private static final ItemBuilder PIE = ItemBuilder.of(Material.PUMPKIN_PIE)
             .addPrefix(Identity.MOLEMAN.getName().append(Component.space()))
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.MOLEMAN_PIE);
+            .setMW78Id(ItemUtil.MOLEMAN_PIE);
     private static final ItemBuilder JUNK_APPLE = ItemBuilder.of(Material.APPLE)
             .addPrefix(Identity.MOLEMAN.getName().append(Component.space()))
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-            .addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.MOLEMAN_JUNK_APPLE);
+            .setMW78Id(ItemUtil.MOLEMAN_JUNK_APPLE);
 
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 0, false);
 

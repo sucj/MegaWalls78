@@ -67,7 +67,7 @@ public abstract class Kit {
                 .addPrefix(prefix())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .setColor(NamedTextColor.AQUA)
-                .addPersistentData(ItemUtil.TAG, PersistentDataType.STRING, ItemUtil.SOUL_B0UND)
+                .addMW78Tag(ItemUtil.SOUL_B0UND, PersistentDataType.BOOLEAN, true)
                 .setEnchantmentGlintOverride(true);
     }
 
@@ -92,7 +92,7 @@ public abstract class Kit {
     }
 
     protected ItemBuilder addEnderChest() {
-        return addItem(Material.ENDER_CHEST, 1).addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.ENDER_CHEST);
+        return addItem(Material.ENDER_CHEST, 1).setMW78Id(ItemUtil.ENDER_CHEST);
     }
 
     protected ItemBuilder addPotion(String name) {
@@ -103,16 +103,16 @@ public abstract class Kit {
         return addItem(Material.POTION, amount).setDisplayName(Component.translatable("item.minecraft.potion.effect." + name));
     }
 
-    protected ItemBuilder addSpeedPotion(int amount, int duration, int level) {
-        return addPotion("swiftness", amount).addCustomEffect(new PotionEffect(PotionEffectType.SPEED, duration * 20, level - 1), false);
-    }
-
     protected ItemBuilder addHealingPotion(int amount, int level) {
         return addPotion("healing", amount).addCustomEffect(new PotionEffect(PotionEffectType.INSTANT_HEALTH, 0, level - 1), false);
     }
 
+    protected ItemBuilder addSpeedPotion(int amount, int duration, int level) {
+        return addPotion("swiftness", amount).addCustomEffect(new PotionEffect(PotionEffectType.SPEED, duration * 20, level - 1), false);
+    }
+
     protected ItemBuilder addCompass() {
-        return addItem(Material.COMPASS, 1);
+        return addItem(Material.COMPASS, 1).setMW78Id(ItemUtil.COMPASS);
     }
 
     protected ItemBuilder setHelmet(Material material) {

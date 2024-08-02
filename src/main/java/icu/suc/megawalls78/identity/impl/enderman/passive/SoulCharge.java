@@ -1,7 +1,6 @@
 package icu.suc.megawalls78.identity.impl.enderman.passive;
 
-import com.destroystokyo.paper.event.server.ServerTickStartEvent;
-import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.event.EnergyChangeEvent;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.Effect;
 import org.bukkit.Sound;
@@ -24,18 +23,17 @@ public final class SoulCharge extends CooldownPassive {
     }
 
     @EventHandler
-    public void onPlayerTick(ServerTickStartEvent event) {
-        GamePlayer gamePlayer = PLAYER();
-        Player player = gamePlayer.getBukkitPlayer();
-        if (PASSIVE(player) && COOLDOWN() && condition(gamePlayer)) {
+    public void onEnergyChange(EnergyChangeEvent event) {
+        Player player = event.getPlayer();
+        if (PASSIVE(player) && COOLDOWN() && condition(event)) {
             EFFECT_SKILL.play(player);
             potion(player);
             COOLDOWN_RESET();
         }
     }
 
-    private static boolean condition(GamePlayer player) {
-        return player.getEnergy() == ENERGY;
+    private static boolean condition(EnergyChangeEvent event) {
+        return event.getEnergy() == ENERGY;
     }
 
     private static void potion(Player player) {

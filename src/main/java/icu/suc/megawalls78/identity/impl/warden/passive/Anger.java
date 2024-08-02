@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 
 public final class Anger extends Passive implements IActionbar {
 
-    private static final int MIN = 10;
+    private static final int MIN = 20;
     private static final int DECREASE = 1;
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 0);

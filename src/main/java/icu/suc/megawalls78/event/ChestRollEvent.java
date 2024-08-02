@@ -1,26 +1,20 @@
 package icu.suc.megawalls78.event;
 
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class ChestRollEvent extends Event {
+public abstract class ChestRollEvent extends PlayerEvent {
 
-    private final Player player;
     private final BlockState blockState;
 
     protected ChestRollEvent(Player player, BlockState blockState) {
-        this.player = player;
+        super(player);
         this.blockState = blockState;
-    }
-
-    public Player getPlayer() {
-        return player;
     }
 
     public BlockState getBlockState() {

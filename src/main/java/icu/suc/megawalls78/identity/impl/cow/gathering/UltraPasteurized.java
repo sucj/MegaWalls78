@@ -16,7 +16,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public final class UltraPasteurized extends Gathering {
             .addPrefix(Identity.COW.getName().append(Component.space()))
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .setMaxStackSize(64)
-            .addPersistentData(ItemUtil.ID, PersistentDataType.STRING, ItemUtil.COW_MILK);
+            .setMW78Id(ItemUtil.COW_MILK);
 
     private static final Effect<Location> EFFECT_SKILL = Effect.create(location -> location.getWorld().playSound(location, Sound.BLOCK_WET_SPONGE_DRIES, SoundCategory.BLOCKS, 1.0F, 1.0F));
 
@@ -42,7 +41,7 @@ public final class UltraPasteurized extends Gathering {
         }
 
         @EventHandler
-        public void brokenBlock(BlockDropItemEvent event) {
+        public void onBreakBlock(BlockDropItemEvent event) {
             if (event.isCancelled()) {
                 return;
             }

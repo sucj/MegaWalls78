@@ -53,6 +53,7 @@ public final class RefreshingSip extends CooldownPassive {
                     .filter(entity -> !getIdentity((Player) entity).equals(Identity.COW))
                     .forEach(entity -> {
                         heal((Player) entity);
+                        summaryHealBy(player, (Player) entity);
                         count.getAndIncrement();
                     });
 

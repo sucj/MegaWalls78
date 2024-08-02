@@ -18,7 +18,7 @@ public final class Flurry extends ChargePassive {
     }
 
     @EventHandler
-    public void onPlayerDamage(EntityDamageByEntityEvent event) {
+    public void onPlayerAttack(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -35,10 +35,5 @@ public final class Flurry extends ChargePassive {
     private static void potion(Player player) {
         player.addPotionEffect(SPEED);
         player.addPotionEffect(REGENERATION);
-    }
-
-    @Override
-    public void unregister() {
-        CHARGE_MAX();
     }
 }

@@ -1,11 +1,10 @@
 package icu.suc.megawalls78.util;
 
-import com.google.common.collect.ImmutableList;
+import  com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.myzelyam.api.vanish.VanishAPI;
-import icu.suc.megawalls78.entity.HerobrineLightning;
-import icu.suc.megawalls78.entity.TeamWither;
+import icu.suc.megawalls78.entity.*;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.floats.FloatArraySet;
 import it.unimi.dsi.fastutil.floats.FloatArrays;
@@ -25,13 +24,15 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
-import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.metadata.Metadatable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -53,7 +54,7 @@ public class EntityUtil {
             List<Class<?>> parameterTypes = Lists.newArrayList(Level.class);
             List<Object> initArgs = Lists.newArrayList(world);
             for (Object object : data) {
-                parameterTypes.add(object.getClass());
+                parameterTypes.add(Object.class);
                 initArgs.add(object);
             }
             net.minecraft.world.entity.Entity entity = type.getClazz().getConstructor(parameterTypes.toArray(Class[]::new)).newInstance(initArgs.toArray());
@@ -68,6 +69,20 @@ public class EntityUtil {
                  NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static <O> O getMetadata(Metadatable metadatable, String s, Class<O> clazz) {
+        List<MetadataValue> metadata = metadatable.getMetadata(s);
+        for (MetadataValue value : metadata) {
+            Object o = value.value();
+            if (o == null) {
+                continue;
+            }
+            if (clazz.isInstance(o)) {
+                return (O) o;
+            }
+        }
+        return null;
     }
 
     public static BlockFace getFacingTowards(Block block, Entity entity) {
@@ -256,9 +271,23 @@ public class EntityUtil {
         return effect.getAmplifier() == amplifier;
     }
 
+    public static Vector getPullVector(Entity from, Entity to) {
+        Location fromLoc = from.getLocation();
+        Location toLoc = to.getLocation();
+        Vector vector = toLoc.toVector().subtract(fromLoc.toVector());
+        vector.setX(vector.getX() / 4);
+        vector.setY(vector.getY() / 8);
+        vector.setZ(vector.getZ() / 4);
+        vector.add(from.getVelocity());
+        return vector;
+    }
+
     public enum Type {
+        EXPLOSIVE_ARROW(ExplosiveArrow.class),
+        GRAPPLING_HOOK(GrapplingHook.class),
+        SHADOW_BURST_SKULL(ShadowBurstSkull.class),
         TEAM_WITHER(TeamWither.class),
-        HEROBRINE_LIGHTNING(HerobrineLightning.class);
+        TARGET_LIGHTNING(TargetLightning.class);
 
         private final Class<? extends net.minecraft.world.entity.Entity> clazz;
 

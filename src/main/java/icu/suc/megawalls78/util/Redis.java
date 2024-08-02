@@ -1,12 +1,12 @@
-package icu.suc.kevin557.mw78lobby.util;
+package icu.suc.megawalls78.util;
 
-import icu.suc.kevin557.mw78lobby.MW78Lobby;
+import icu.suc.megawalls78.MegaWalls78;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 public class Redis {
 
-    private static final JedisPool POOL = new JedisPool(MW78Lobby.HOST, MW78Lobby.PORT);
+    private static final JedisPool POOL = new JedisPool(MegaWalls78.getInstance().getConfigManager().host, MegaWalls78.getInstance().getConfigManager().port);
 
     public static Jedis get() {
         return POOL.getResource();

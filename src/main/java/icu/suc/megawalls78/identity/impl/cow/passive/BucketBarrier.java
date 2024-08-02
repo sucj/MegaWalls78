@@ -75,8 +75,9 @@ public final class BucketBarrier extends DurationCooldownPassive {
         if (event.isCancelled()) {
             return;
         }
-        if (PASSIVE(event.getPlayer()) && DURATION()) {
-            updateCenter(event.getTo());
+        Player player = event.getPlayer();
+        if (PASSIVE(player) && DURATION()) {
+            center = event.getTo().clone().add(0, player.getEyeHeight() + 0.5, 0);
         }
     }
 
@@ -90,15 +91,15 @@ public final class BucketBarrier extends DurationCooldownPassive {
     }
 
     private boolean spawnBarriers(Player player) {
-        if (player.getHealth() < HEALTH) {
+        if (player != null && player.getHealth() < HEALTH) {
             if (barriers == null) {
                 barriers = new ItemDisplay[4];
-                center = player.getLocation().clone().add(0, 1.0D, 0);
+                center = player.getEyeLocation().clone().add(0, 0.5, 0);
                 for (int i = 0; i < 4; i++) {
                     barriers[i] = (ItemDisplay) center.getWorld().spawnEntity(barrierLocation(i), EntityType.ITEM_DISPLAY);
                     barriers[i].setItemStack(ItemStack.of(Material.MILK_BUCKET));
                     Transformation transformation = barriers[i].getTransformation();
-                    barriers[i].setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(), transformation.getScale().set(0.8F), transformation.getRightRotation()));
+                    barriers[i].setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(), transformation.getScale().set(0.5F), transformation.getRightRotation()));
                 }
             } else {
                 for (int i = 0; i < 4; i++) {

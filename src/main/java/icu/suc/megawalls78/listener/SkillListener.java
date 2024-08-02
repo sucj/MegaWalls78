@@ -5,36 +5,42 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.entity.GrapplingHook;
 import icu.suc.megawalls78.event.ChestRollEvent;
 import icu.suc.megawalls78.event.EnergyChangeEvent;
+import icu.suc.megawalls78.event.GrapplingHookEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
+import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.management.GameManager;
-import icu.suc.megawalls78.util.BlockUtil;
-import icu.suc.megawalls78.util.EntityUtil;
-import icu.suc.megawalls78.util.ItemUtil;
-import icu.suc.megawalls78.util.RandomUtil;
+import icu.suc.megawalls78.util.*;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.ints.IntIntMutablePair;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.JoinConfiguration;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.Directional;
+import org.bukkit.craftbukkit.entity.CraftFishHook;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -99,12 +105,53 @@ public class SkillListener implements Listener {
                     }
                     GamePlayer gamePlayer = gameManager.getPlayer(player);
                     if (gamePlayer != null) {
-                        List<ComponentLike> actionbar = gamePlayer.getActionbar();
-                        List<ComponentLike> components = Lists.newArrayList();
-                        for (int i = 0; i < actionbar.size(); i++) {
-                            components.add(Component.join(ACBE_JOIN, actionbar.get(i), actionbar.get(++i)));
+                        double nearest = Double.MAX_VALUE;
+                        Location location = player.getLocation();
+                        GameTeam tracking = gamePlayer.getTracking();
+                        Set<GamePlayer> targets = gameManager.getTeamPlayersMap().get(tracking);
+                        for (GamePlayer target : targets) {
+                            if (target.getUuid().equals(gamePlayer.getUuid())) {
+                                continue;
+                            }
+                            Player targetBukkitPlayer = target.getBukkitPlayer();
+                            if (targetBukkitPlayer == null || gameManager.isSpectator(targetBukkitPlayer)) {
+                                continue;
+                            }
+                            Location targetBukkitPlayerLocation = targetBukkitPlayer.getLocation();
+                            double distance = player.getLocation().distance(targetBukkitPlayerLocation);
+                            if (distance < nearest) {
+                                nearest = distance;
+                                location = targetBukkitPlayerLocation;
+                            }
                         }
-                        player.sendActionBar(Component.join(ACTIONBAR_JOIN, components));
+                        player.setCompassTarget(location);
+                        if (ItemUtil.isMW78Item(PlayerUtil.getPlayerMainHand(player), ItemUtil.COMPASS)) {
+                            List<ComponentLike> components = Lists.newArrayList();
+                            components.add(Component.translatable("mw78.compass.tracking", tracking.name().color(tracking.color())));
+                            Component distance;
+                            if (nearest == Double.MAX_VALUE) {
+                                distance = Component.translatable("mw78.compass.null");
+                            } else {
+                                Component dir;
+                                if (location.getY() > player.getY()) {
+                                    dir = Component.translatable("mw78.compass.up");
+                                } else if (location.getY() < player.getY()) {
+                                    dir = Component.translatable("mw78.compass.down");
+                                } else {
+                                    dir = Component.translatable("mw78.compass.equal");
+                                }
+                                distance = Component.translatable("mw78.compass.distance", Component.text(Formatters.COMPASS.format(nearest)), dir.color(NamedTextColor.WHITE));
+                            }
+                            components.add(Component.translatable("mw78.compass.nearest", distance.color(tracking.color())));
+                            player.sendActionBar(Component.join(ACTIONBAR_JOIN, components));
+                        } else {
+                            List<ComponentLike> actionbar = gamePlayer.getActionbar();
+                            List<ComponentLike> components = Lists.newArrayList();
+                            for (int i = 0; i < actionbar.size(); i++) {
+                                components.add(Component.join(ACBE_JOIN, actionbar.get(i), actionbar.get(++i)));
+                            }
+                            player.sendActionBar(Component.join(ACTIONBAR_JOIN, components));
+                        }
                     }
                 }
             }
@@ -134,7 +181,11 @@ public class SkillListener implements Listener {
         Player player = event.getPlayer();
         List<Item> items = event.getItems();
         for (Item item : items) {
-            HashMap<Integer, ItemStack> over = player.getInventory().addItem(item.getItemStack());
+            ItemStack itemStack = item.getItemStack();
+            if (itemStack.getType().equals(Material.DIAMOND)) {
+                continue;
+            }
+            HashMap<Integer, ItemStack> over = player.getInventory().addItem(itemStack);
             if (over.isEmpty()) {
                 item.remove();
             } else {
@@ -167,6 +218,76 @@ public class SkillListener implements Listener {
 
             ChestRollEvent.Post post = new ChestRollEvent.Post(player, event.getBlockState(), inventory);
             Bukkit.getPluginManager().callEvent(post);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void handleGrapplingHook(PlayerFishEvent event) {
+        EquipmentSlot hand = event.getHand();
+        if (hand == null) {
+            return;
+        }
+        Player player = event.getPlayer();
+        ItemStack itemStack = player.getEquipment().getItem(hand);
+        if (ItemUtil.isMW78Item(itemStack, ItemUtil.GRAPPLING_HOOK)) {
+            switch (event.getState()) {
+                case FISHING -> {
+                    Double max = ItemUtil.getMW78Tag(itemStack, ItemUtil.GRAPPLING_MAX, PersistentDataType.DOUBLE);
+                    if (max == null) {
+                        event.setCancelled(true);
+                        return;
+                    }
+
+                    GrapplingHookEvent grapplingHookEvent = new GrapplingHookEvent(player, null, GrapplingHookEvent.State.CAST, itemStack);
+                    Bukkit.getPluginManager().callEvent(grapplingHookEvent);
+                    if (grapplingHookEvent.isCancelled()) {
+                        event.setCancelled(true);
+                        return;
+                    }
+
+                    if (itemStack.getItemMeta() instanceof Damageable damageable) {
+                        event.getHook().remove();
+                        double maxDamage = damageable.getMaxDamage();
+                        max = (maxDamage - damageable.getDamage()) / maxDamage * max;
+                    }
+                    EntityUtil.spawn(player.getEyeLocation(), EntityUtil.Type.GRAPPLING_HOOK, null, player, max);
+                }
+                case CAUGHT_ENTITY -> {
+                    if (event.getHook() instanceof CraftFishHook hook && hook.getHandle() instanceof GrapplingHook gh && gh.inGround()) {
+
+                        GrapplingHookEvent grapplingHookEvent = new GrapplingHookEvent(player, hook, GrapplingHookEvent.State.PULL, itemStack);
+                        Bukkit.getPluginManager().callEvent(grapplingHookEvent);
+                        if (grapplingHookEvent.isCancelled()) {
+                            event.setCancelled(true);
+                            return;
+                        }
+
+                        if (itemStack.getItemMeta() instanceof Damageable damageable) {
+                            player.setFallDistance((float) damageable.getDamage() / damageable.getMaxDamage() * player.getFallDistance());
+                        }
+
+                        player.setVelocity(EntityUtil.getPullVector(player, hook));
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void handleGrapplingHook(PlayerItemDamageEvent event) {
+        ItemStack itemStack = event.getItem();
+        if (ItemUtil.isMW78Item(itemStack, ItemUtil.GRAPPLING_HOOK)) {
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            if (itemMeta.isUnbreakable()) {
+                return;
+            }
+            if (itemMeta instanceof Damageable damageable) {
+                int damage = damageable.getMaxDamage() / 2;
+                if (damageable.getDamage() >= damage) {
+                    return;
+                }
+                event.setDamage(damage);
+            }
         }
     }
 }

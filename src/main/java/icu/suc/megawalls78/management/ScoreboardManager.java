@@ -12,9 +12,12 @@ import icu.suc.megawalls78.util.Formatters;
 import icu.suc.megawalls78.util.LP;
 import icu.suc.megawalls78.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveDisplaySlot;
 import net.megavex.scoreboardlibrary.api.objective.ObjectiveManager;
+import net.megavex.scoreboardlibrary.api.objective.ScoreFormat;
 import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.sidebar.component.ComponentSidebarLayout;
@@ -45,15 +48,18 @@ public class ScoreboardManager implements Listener {
     private final Map<UUID, SidebarWrapper> sidebarMap;
     private final TeamManager teamManager;
     private final ObjectiveManager objectiveManager;
-    private final ScoreboardObjective objective;
+    private final ScoreboardObjective belowName;
+    private final ScoreboardObjective playerList;
 
     public ScoreboardManager() {
         sidebarMap = Maps.newHashMap();
         teamManager = MegaWalls78.getScoreboardLib().createTeamManager();
         objectiveManager = MegaWalls78.getScoreboardLib().createObjectiveManager();
-        objective = objectiveManager.create("HP");
-        objective.value(Component.translatable("mw78.hp", RED));
-        objectiveManager.display(ObjectiveDisplaySlot.belowName(), objective);
+        belowName = objectiveManager.create("below_name");
+        belowName.value(Component.translatable("mw78.hp", RED));
+        objectiveManager.display(ObjectiveDisplaySlot.belowName(), belowName);
+        playerList = objectiveManager.create("player_list");
+        objectiveManager.display(ObjectiveDisplaySlot.playerList(), playerList);
     }
 
     public void updateSidebar(GameState state) {
@@ -79,7 +85,16 @@ public class ScoreboardManager implements Listener {
             sidebar.tick();
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
-            objective.score(player.getName(), (int) player.getHealth());
+            int health = (int) player.getHealth();
+            belowName.score(player.getName(), health);
+
+            TextColor color;
+            if (health > 20) {
+                color = TextColor.lerp((float) (health - 20) / 20, YELLOW, GREEN);
+            } else {
+                color = TextColor.lerp((float) health / 20, RED, YELLOW);
+            }
+            playerList.score(player.getName(), health, ScoreFormat.styled(Style.style(color)));
         }
     }
 

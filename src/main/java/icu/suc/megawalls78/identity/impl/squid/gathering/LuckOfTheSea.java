@@ -21,6 +21,7 @@ import java.util.List;
 public class LuckOfTheSea extends Gathering {
 
     private static final ItemBuilder POTION = ItemBuilder.of(Material.POTION)
+            .setDisplayName(Component.translatable("item.minecraft.potion"))
             .setAmount(3)
             .addPrefix(Identity.SQUID.getName().append(Component.space()))
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)

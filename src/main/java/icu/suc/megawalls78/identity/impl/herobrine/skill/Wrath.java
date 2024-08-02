@@ -37,6 +37,6 @@ public final class Wrath extends Skill {
     }
 
     private static void thunder(Entity entity) {
-        EntityUtil.spawn(entity.getLocation(), EntityUtil.Type.HEROBRINE_LIGHTNING, null, entity);
+        EntityUtil.spawn(entity.getLocation(), EntityUtil.Type.TARGET_LIGHTNING, null, entity);
     }
 }

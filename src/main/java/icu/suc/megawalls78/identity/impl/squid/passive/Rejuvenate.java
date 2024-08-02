@@ -2,6 +2,11 @@ package icu.suc.megawalls78.identity.impl.squid.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
+import icu.suc.megawalls78.util.Effect;
+import icu.suc.megawalls78.util.ParticleUtil;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
@@ -14,6 +19,11 @@ public class Rejuvenate extends CooldownPassive {
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 30, 4);
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 30, 0);
 
+    private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> {
+        ParticleUtil.spawnParticleRandomBody(player, Particle.TOTEM_OF_UNDYING, 8);
+        player.getWorld().playSound(player.getLocation(), Sound.BLOCK_WATER_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+    });
+
     public Rejuvenate() {
         super("rejuvenate", 40000L);
     }
@@ -24,6 +34,7 @@ public class Rejuvenate extends CooldownPassive {
             Player player = PLAYER().getBukkitPlayer();
             if (condition(player)) {
                 potion(player);
+                EFFECT_SKILL.play(player);
                 COOLDOWN_RESET();
             }
         }
