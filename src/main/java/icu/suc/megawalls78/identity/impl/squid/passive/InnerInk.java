@@ -43,7 +43,7 @@ public class InnerInk extends Passive {
                     .filter(entity -> entity instanceof Player)
                     .filter(entity -> !isValidAllies(player, entity))
                     .forEach(entity -> {
-                        potion(player);
+                        potion((Player) entity);
                         count.getAndIncrement();
                     });
 

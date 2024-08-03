@@ -1,11 +1,12 @@
 package icu.suc.megawalls78.identity.impl.dreadlord.passive;
 
 import icu.suc.megawalls78.identity.trait.passive.ChargeCooldownPassive;
+import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.PlayerUtil;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 
 public final class SoulEater extends ChargeCooldownPassive {
 
@@ -29,7 +30,7 @@ public final class SoulEater extends ChargeCooldownPassive {
     }
 
     private static boolean condition(EntityDamageByEntityEvent event) {
-        return event.getEntity() instanceof Player && !event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK);
+        return event.getEntity() instanceof Player && (EntityUtil.isMeleeAttack(event) || event.getDamager() instanceof AbstractArrow);
     }
 
     private static void heal(Player player) {

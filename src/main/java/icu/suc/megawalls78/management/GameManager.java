@@ -225,7 +225,13 @@ public class GameManager {
     public void setTeamEliminate(GameTeam team, boolean eliminated) {
         teamEliminateMap.put(team, eliminated);
         if (eliminated) {
-            Bukkit.getScheduler().runTaskLater(MegaWalls78.getInstance(), () -> ComponentUtil.sendMessage(Component.translatable("mw78.team.eliminated", team.name().color(team.color())).decorate(TextDecoration.BOLD), Bukkit.getOnlinePlayers()), 20L);
+            Bukkit.getScheduler().runTaskLater(MegaWalls78.getInstance(), () -> {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    ComponentUtil.sendMessage(Component.empty(), player);
+                    ComponentUtil.sendMessage(Component.translatable("mw78.team.eliminated", team.name().color(team.color())).decorate(TextDecoration.BOLD), player);
+                    ComponentUtil.sendMessage(Component.empty(), player);
+                }
+            }, 20L);
 
             int s = teamEliminateMap.size();
             for (GameTeam gameTeam : teamEliminateMap.keySet()) {

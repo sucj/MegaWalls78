@@ -6,7 +6,6 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
-import org.bukkit.entity.Player;
 
 import java.util.UUID;
 

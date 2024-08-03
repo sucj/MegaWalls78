@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.identity.impl.skeleton.passive;
 
 import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.PlayerUtil;
 import org.bukkit.Material;
@@ -28,7 +29,7 @@ public final class Salvaging extends Passive {
     }
 
     private static boolean condition(EntityDamageByEntityEvent event) {
-        return event.getEntity() instanceof Player && event.getDamager() instanceof AbstractArrow;
+        return event.getEntity() instanceof Player && EntityUtil.isArrowAttack(event);
     }
 
     private static void food(Player player) {

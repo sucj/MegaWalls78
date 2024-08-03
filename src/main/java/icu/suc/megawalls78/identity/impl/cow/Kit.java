@@ -5,7 +5,7 @@ import icu.suc.megawalls78.util.ItemUtil;
 import org.bukkit.potion.PotionEffect;
 
 import static org.bukkit.Material.*;
-import static org.bukkit.enchantments.Enchantment.*;
+import static org.bukkit.enchantments.Enchantment.PROTECTION;
 import static org.bukkit.potion.PotionEffectType.REGENERATION;
 
 public final class Kit extends icu.suc.megawalls78.identity.Kit {

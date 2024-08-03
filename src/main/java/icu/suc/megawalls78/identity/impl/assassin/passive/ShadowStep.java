@@ -2,7 +2,7 @@ package icu.suc.megawalls78.identity.impl.assassin.passive;
 
 import icu.suc.megawalls78.identity.impl.assassin.skill.ShadowCloak;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
-import org.bukkit.*;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;

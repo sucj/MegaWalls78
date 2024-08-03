@@ -7,17 +7,16 @@ import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.*;
-import icu.suc.megawalls78.util.Effect;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.BlockState;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
-
-import java.util.List;
 
 public final class UltraPasteurized extends Gathering {
 
@@ -46,20 +45,19 @@ public final class UltraPasteurized extends Gathering {
                 return;
             }
             Player player = event.getPlayer();
-            BlockState blockState = event.getBlockState();
-            if (PASSIVE(player) && condition_available() && condition_stone(blockState) && CHARGE()) {
-                handle(event.getItems(), player, blockState.getLocation());
+            if (PASSIVE(player) && condition_available() && condition_stone(event) && CHARGE()) {
+                handle(event);
                 CHARGE_RESET();
             }
         }
 
-        private static void handle(List<Item> items, Player player, Location location) {
-            items.add(player.getWorld().dropItemNaturally(location, MILK.build()));
-            EFFECT_SKILL.play(location);
+        private static void handle(BlockDropItemEvent event) {
+            BlockUtil.addDrops(event, MILK.build());
+            EFFECT_SKILL.play(event.getBlockState().getLocation());
         }
 
-        private static boolean condition_stone(BlockState blockState) {
-            return BlockUtil.isStone(blockState.getType());
+        private static boolean condition_stone(BlockDropItemEvent event) {
+            return BlockUtil.isStone(event.getBlockState().getType());
         }
 
         private static boolean condition_available() {

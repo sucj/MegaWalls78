@@ -16,7 +16,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
@@ -120,7 +123,7 @@ public final class Rend extends Skill {
         }
 
         private static boolean condition(EntityDamageByEntityEvent event) {
-            return event.getEntity() instanceof Player && event.getDamager() instanceof AbstractArrow;
+            return event.getEntity() instanceof Player && EntityUtil.isArrowAttack(event);
         }
 
         @Override

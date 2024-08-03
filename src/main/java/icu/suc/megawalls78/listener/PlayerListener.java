@@ -24,6 +24,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -297,10 +298,10 @@ public class PlayerListener implements Listener {
                 gamePlayerCause = gameManager.getPlayer(causingPlayer);
             }
             if (gamePlayer != null && gamePlayerCause != null) {
-                if (event.getDamageSource().getDirectEntity() instanceof AbstractArrow) {
+                if (EntityUtil.isArrowAttack(event)) {
                     gamePlayer.increaseEnergy(EnergyWay.BOW_WHEN);
                     gamePlayerCause.increaseEnergy(EnergyWay.BOW_PER);
-                } else if (event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK)) {
+                } else if (EntityUtil.isMeleeAttack(event)) {
                     gamePlayer.increaseEnergy(EnergyWay.MELEE_WHEN);
                     gamePlayerCause.increaseEnergy(EnergyWay.MELEE_PER);
                 }

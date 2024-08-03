@@ -26,7 +26,7 @@ public class LuckOfTheSea extends Gathering {
             .addPrefix(Identity.SQUID.getName().append(Component.space()))
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .setMaxStackSize(64)
-            .addCustomEffect(new PotionEffect(PotionEffectType.ABSORPTION, 120, 1), false);
+            .addCustomEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1200, 1), false);
 
     public LuckOfTheSea() {
         super("luck_of_the_sea", Internal.class);

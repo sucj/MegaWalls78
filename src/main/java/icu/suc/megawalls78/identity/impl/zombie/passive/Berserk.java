@@ -2,6 +2,7 @@ package icu.suc.megawalls78.identity.impl.zombie.passive;
 
 import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
 import icu.suc.megawalls78.util.Effect;
+import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.AbstractArrow;
@@ -45,7 +46,7 @@ public final class Berserk extends DurationCooldownPassive {
     }
 
     private static boolean condition_damage(EntityDamageByEntityEvent event) {
-        return event.getDamager() instanceof AbstractArrow;
+        return EntityUtil.isArrowAttack(event);
     }
 
     private static boolean condition_attack(EntityDamageByEntityEvent event) {

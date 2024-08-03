@@ -8,9 +8,12 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.block.CraftBlock;
+import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
 
@@ -93,5 +96,10 @@ public class BlockUtil {
         catch (NoSuchMethodException ignored) {
         }
         return false;
+    }
+
+    public static void addDrops(BlockDropItemEvent event, ItemStack itemStack) {
+        Location location = event.getBlockState().getLocation();
+        event.getItems().add(location.getWorld().dropItemNaturally(location, itemStack));
     }
 }

@@ -1,7 +1,6 @@
 package icu.suc.megawalls78.util;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 
 import java.util.Collection;
 import java.util.Random;

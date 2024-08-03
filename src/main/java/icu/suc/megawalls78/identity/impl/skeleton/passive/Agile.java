@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.identity.impl.skeleton.passive;
 
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
+import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,6 +30,6 @@ public final class Agile extends CooldownPassive {
     }
 
     private static boolean condition(EntityDamageByEntityEvent event) {
-        return event.getEntity() instanceof Player && event.getDamager() instanceof AbstractArrow;
+        return event.getEntity() instanceof Player && EntityUtil.isArrowAttack(event);
     }
 }

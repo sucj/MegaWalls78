@@ -1,6 +1,6 @@
 package icu.suc.megawalls78.util;
 
-import  com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.myzelyam.api.vanish.VanishAPI;
@@ -24,9 +24,13 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.damage.DamageType;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.potion.PotionEffect;
@@ -282,12 +286,20 @@ public class EntityUtil {
         return vector;
     }
 
+    public static boolean isMeleeAttack(EntityDamageEvent event) {
+        return event.getDamageSource().getDamageType().equals(DamageType.PLAYER_ATTACK) && event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK);
+    }
+
+    public static boolean isArrowAttack(EntityDamageEvent event) {
+        return event.getDamageSource().getDirectEntity() instanceof AbstractArrow;
+    }
+
     public enum Type {
         EXPLOSIVE_ARROW(ExplosiveArrow.class),
         GRAPPLING_HOOK(GrapplingHook.class),
         SHADOW_BURST_SKULL(ShadowBurstSkull.class),
         TEAM_WITHER(TeamWither.class),
-        TARGET_LIGHTNING(TargetLightning.class);
+        FAKE_LIGHTNING(FakeLightning.class);
 
         private final Class<? extends net.minecraft.world.entity.Entity> clazz;
 

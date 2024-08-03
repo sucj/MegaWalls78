@@ -5,6 +5,7 @@ import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
+import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.ItemUtil;
 import net.kyori.adventure.text.Component;
@@ -13,10 +14,9 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -50,7 +50,7 @@ public final class JunkFood extends ChargePassive implements IActionbar {
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
+    public void onBlockBreak(BlockDropItemEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -58,14 +58,14 @@ public final class JunkFood extends ChargePassive implements IActionbar {
         Player player = event.getPlayer();
         if (PASSIVE(player) && condition_available() && condition_shovelable(event) && CHARGE()) {
             if (CHARGE_COUNT() > JUNK_APPLE_APPEAR) {
-                player.getInventory().addItem(JUNK_APPLE.build());
+                handle(event, JUNK_APPLE.build());
                 CHARGE = COOKIE_APPEAR;
                 CHARGE_RESET();
             } else if (CHARGE_COUNT() > PIE_APPEAR) {
-                player.getInventory().addItem(PIE.build());
+                handle(event, PIE.build());
                 CHARGE = JUNK_APPLE_APPEAR;
             } else if (CHARGE_COUNT() > COOKIE_APPEAR) {
-                player.getInventory().addItem(COOKIE.build());
+                handle(event, COOKIE.build());
                 CHARGE = PIE_APPEAR;
             }
         }
@@ -92,12 +92,16 @@ public final class JunkFood extends ChargePassive implements IActionbar {
         }
     }
 
-    private static boolean condition_shovelable(BlockBreakEvent event) {
-        return Tag.MINEABLE_SHOVEL.isTagged(event.getBlock().getType());
+    private static boolean condition_shovelable(BlockDropItemEvent event) {
+        return Tag.MINEABLE_SHOVEL.isTagged(event.getBlockState().getType());
     }
 
     private static boolean condition_available() {
         return MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING);
+    }
+
+    private static void handle(BlockDropItemEvent event, ItemStack itemStack) {
+        BlockUtil.addDrops(event, itemStack);
     }
 
     @Override

@@ -4,7 +4,6 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.LP;
-import icu.suc.megawalls78.util.ComponentUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;

@@ -3,7 +3,8 @@ package icu.suc.megawalls78.identity.impl.enderman;
 import icu.suc.megawalls78.identity.Identity;
 
 import static org.bukkit.Material.*;
-import static org.bukkit.enchantments.Enchantment.*;
+import static org.bukkit.enchantments.Enchantment.FEATHER_FALLING;
+import static org.bukkit.enchantments.Enchantment.PROJECTILE_PROTECTION;
 
 public final class Kit extends icu.suc.megawalls78.identity.Kit {
 

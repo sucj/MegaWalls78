@@ -13,7 +13,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.Set;
 
 public final class Enderblocks extends Gathering {
@@ -50,8 +52,11 @@ public final class Enderblocks extends Gathering {
                     if (MegaWalls78.getInstance().getGameManager().getRunner().getAllowedBlocks().contains(adjLocation)) {
                         Block adjBlock = adjLocation.getBlock();
                         if (adjBlock.getType().equals(type)) {
-                            InventoryUtil.addItem(player.getInventory(), adjBlock.getDrops(PlayerUtil.getPlayerMainHand(player)));
+                            List<ItemStack> leftover = InventoryUtil.addItem(player.getInventory(), adjBlock.getDrops(PlayerUtil.getPlayerMainHand(player)));
                             BlockUtil.breakNaturallyNoDrops(adjBlock);
+                            for (ItemStack itemStack : leftover) {
+                                adjBlock.getWorld().dropItemNaturally(adjBlock.getLocation(), itemStack);
+                            }
                         }
                     }
                 }

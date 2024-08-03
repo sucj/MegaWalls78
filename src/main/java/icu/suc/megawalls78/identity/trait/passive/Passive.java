@@ -3,7 +3,6 @@ package icu.suc.megawalls78.identity.trait.passive;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.Trait;
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -31,7 +30,7 @@ public abstract class Passive extends Trait implements Listener {
 
     public void register() {}
 
-    public void unregister() {};
+    public void unregister() {}
 
     public GamePlayer PLAYER() {
         return player;

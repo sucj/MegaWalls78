@@ -5,13 +5,13 @@ import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
 import icu.suc.megawalls78.util.Effect;
+import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ItemUtil;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.potion.PotionEffect;
@@ -108,7 +108,7 @@ public final class GrapplingHook extends DurationCooldownPassive {
     }
 
     private static boolean condition(EntityDamageByEntityEvent event) {
-        return event.getEntity() instanceof Player && event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK);
+        return event.getEntity() instanceof Player && EntityUtil.isMeleeAttack(event);
     }
 
     private static boolean repair(Player player) {

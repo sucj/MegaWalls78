@@ -9,12 +9,10 @@ import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.identity.Identity;
-import icu.suc.megawalls78.identity.Skin;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.Skill;
-import icu.suc.megawalls78.management.GameManager;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.SupplierComponent;
 import net.kyori.adventure.text.Component;
@@ -129,7 +127,7 @@ public class GamePlayer {
 
     public void increaseEnergy(EnergyWay way) {
         if (way.equals(EnergyWay.DM)) {
-            if (getEnergy() >= 40) {
+            if (getEnergy() >= Math.min(identity.getEnergyByWay(EnergyWay.MELEE_PER), identity.getEnergyByWay(EnergyWay.BOW_PER)) * 2) {
                 increaseEnergy(identity.getEnergyByWay(way));
             }
         } else {

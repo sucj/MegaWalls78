@@ -56,7 +56,7 @@ public class GrapplingHookEvent extends PlayerEvent implements Cancellable {
         cancelled = b;
     }
 
-    public static enum State {
+    public enum State {
         CAST, PULL
     }
 }

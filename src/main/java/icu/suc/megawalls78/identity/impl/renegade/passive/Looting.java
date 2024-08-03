@@ -4,6 +4,7 @@ import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
+import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.PlayerUtil;
 import net.kyori.adventure.text.Component;
@@ -16,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public final class Looting extends ChargePassive {
@@ -64,10 +64,7 @@ public final class Looting extends ChargePassive {
             event.getDrops().add(POTION.build());
             return;
         }
-        Map<Integer, ItemStack> leftover = player.getInventory().addItem(POTION.build());
-        for (ItemStack itemStack : leftover.values()) {
-            event.getDrops().add(itemStack);
-        }
+        InventoryUtil.addItem(player, event, POTION.build());
     }
 
     private static void heal(GamePlayer gamePlayer) {

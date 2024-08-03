@@ -10,7 +10,6 @@ import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableExcep
 import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 

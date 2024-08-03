@@ -4,7 +4,8 @@ import icu.suc.megawalls78.identity.Identity;
 import org.bukkit.enchantments.Enchantment;
 
 import static org.bukkit.Material.*;
-import static org.bukkit.enchantments.Enchantment.*;
+import static org.bukkit.enchantments.Enchantment.BLAST_PROTECTION;
+import static org.bukkit.enchantments.Enchantment.FIRE_PROTECTION;
 
 public final class Kit extends icu.suc.megawalls78.identity.Kit {
 

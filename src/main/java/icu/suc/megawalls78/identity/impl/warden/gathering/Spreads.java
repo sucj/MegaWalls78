@@ -6,7 +6,6 @@ import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.Effect;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.block.BlockState;

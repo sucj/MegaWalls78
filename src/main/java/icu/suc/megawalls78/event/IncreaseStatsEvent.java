@@ -6,8 +6,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
 public abstract class IncreaseStatsEvent extends Event implements Cancellable {
 
     private final GamePlayer player;

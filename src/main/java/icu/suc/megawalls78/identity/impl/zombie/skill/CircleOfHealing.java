@@ -4,7 +4,10 @@ import icu.suc.megawalls78.identity.trait.Skill;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ParticleUtil;
-import org.bukkit.*;
+import org.bukkit.Color;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
