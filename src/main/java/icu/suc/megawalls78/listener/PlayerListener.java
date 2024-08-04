@@ -134,9 +134,9 @@ public class PlayerListener implements Listener {
                 }
                 if (killerId != null) {
                     if (dead) {
-                        gameManager.getPlayer(killerId).increaseFinalKills();
+                        gameManager.getPlayer(killerId).increaseFinalKills(event);
                     } else {
-                        gameManager.getPlayer(killerId).increaseKills();
+                        gameManager.getPlayer(killerId).increaseKills(event);
                     }
                     gameManager.saveAssists(player, killerId, dead);
                 }
@@ -194,7 +194,7 @@ public class PlayerListener implements Listener {
                     player.setGameMode(GameMode.SURVIVAL);
                     Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(40);
                     player.setHealth(40);
-//                    PlayerUtil.setStarvation(player, 20);
+                    PlayerUtil.setStarvation(player, 20);
                     MegaWalls78.getInstance().getSkinManager().applySkin(player);
                     gamePlayer.getIdentity().getKit().equip(player);
                     int energy = gamePlayer.getEnergy();
@@ -230,7 +230,7 @@ public class PlayerListener implements Listener {
                 player.setGameMode(GameMode.SURVIVAL);
                 Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(40);
                 player.setHealth(40);
-//                PlayerUtil.setStarvation(player, 20);
+                PlayerUtil.setStarvation(player, 20);
                 gamePlayer.getIdentity().getKit().equip(player);
                 int energy = gamePlayer.getEnergy();
                 player.setLevel(energy);
@@ -334,7 +334,7 @@ public class PlayerListener implements Listener {
                         InventoryUtil.openEnderChest(player);
                         event.setCancelled(true);
                         return;
-                    } else if (ItemUtil.isMW78Item(event.getItem(), ItemUtil.COMPASS) && !gameManager.getState().equals(GameState.OPENING)) {
+                    } else if (ItemUtil.isMW78Item(event.getItem(), ItemUtil.COMPASS) && gameManager.getRunner().isDm()) {
                         GamePlayer gamePlayer = gameManager.getPlayer(player);
                         if (gameManager.getTeamPlayersMap().size() > 1) {
                             List<GameTeam> teams = gameManager.getTeams();

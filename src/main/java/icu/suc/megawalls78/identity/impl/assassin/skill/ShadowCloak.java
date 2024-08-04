@@ -9,13 +9,14 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
-import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
-import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
+import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Statistic;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -31,11 +32,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 // 因为即将重构Passive的计时方式顺便加入Skill的监听实现，暂时推迟隐身时攻击的编写
-public final class ShadowCloak extends Skill {
+public final class ShadowCloak extends DurationSkill {
 
     private static final long DURATION = 10000L; // 持续10秒
     private static final int TICK = (int) (DURATION / 50);
@@ -47,12 +46,10 @@ public final class ShadowCloak extends Skill {
     private static final double SCALE = 0.1D; //损失的生命值10%
     private static final double MIN = 1.0D; // 至少造成1点真实伤害
 
-    private static final Map<UUID, Boolean> PLAYER_STATE = Maps.newHashMap();
-
     private Task task;
 
     public ShadowCloak() {
-        super("shadow_cloak", 100, 1000L, Internal.class);
+        super("shadow_cloak", 100, 1000L, DURATION, Internal.class);
     }
 
     @Override
@@ -83,15 +80,19 @@ public final class ShadowCloak extends Skill {
 
         private int tick; // 持续时间
 
+        private final int deaths;
+
         private Task(Player player) {
             this.player = player;
 
-            setState(player.getUniqueId(), true);
+            EntityUtil.setMetadata(player, ShadowCloak.this.getId(), true);
+
+            deaths = player.getStatistic(Statistic.DEATHS);
         }
 
         @Override
         public void run() {
-            if (player.isDead()) {
+            if (player.getStatistic(Statistic.DEATHS) > deaths) {
                 this.cancel();
                 return;
             }
@@ -101,7 +102,7 @@ public final class ShadowCloak extends Skill {
                 return;
             }
 
-            if (!getState(player.getUniqueId())) {
+            if (!EntityUtil.getMetadata(player, ShadowCloak.this.getId())) {
                 player.removePotionEffect(PotionEffectType.INVISIBILITY);
                 if (EntityUtil.hasPotionEffect(player, RESISTANCE)) {
                     player.removePotionEffect(PotionEffectType.RESISTANCE);
@@ -154,18 +155,11 @@ public final class ShadowCloak extends Skill {
 
         @Override
         public synchronized void cancel() throws IllegalStateException {
-            setState(player.getUniqueId(), false);
+            ShadowCloak.this.DURATION_END();
+            EntityUtil.removeMetadata(player, ShadowCloak.this.getId());
             updateArmor();
             super.cancel();
         }
-    }
-
-    public static boolean getState(UUID uuid) {
-        return PLAYER_STATE.getOrDefault(uuid, false);
-    }
-
-    public static void setState(UUID uuid, boolean state) {
-        PLAYER_STATE.put(uuid, state);
     }
 
     public static final class Internal extends Passive {
@@ -188,7 +182,7 @@ public final class ShadowCloak extends Skill {
                 if (player.getEntityId() != packet.getIntegers().read(0)) {
                     return;
                 }
-                if (!ShadowCloak.getState(player.getUniqueId())) {
+                if (!EntityUtil.getMetadata(player, getId())) {
                     return;
                 }
                 StructureModifier<List<Pair<EnumWrappers.ItemSlot, ItemStack>>> modifier = packet.getSlotStackPairLists();
@@ -215,11 +209,11 @@ public final class ShadowCloak extends Skill {
                 return;
             }
 
-            if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && ShadowCloak.getState(player.getUniqueId()) && condition(event)) {
+            if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && EntityUtil.getMetadata(player, getId()) && condition(event)) {
                 LivingEntity entity = (LivingEntity) event.getEntity();
                 double damage = Math.max((entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() - entity.getHealth()) * SCALE, MIN);
                 event.setDamage(event.getFinalDamage() + damage);
-                ShadowCloak.setState(player.getUniqueId(), false);
+                EntityUtil.removeMetadata(player, getId());
             }
         }
 

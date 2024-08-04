@@ -10,8 +10,6 @@ import java.util.UUID;
 
 public abstract class Passive extends Trait implements Listener {
 
-    private GamePlayer player;
-
     public Passive(String id) {
         super(id, Component.translatable("mw78.passive." + id));
     }
@@ -21,22 +19,14 @@ public abstract class Passive extends Trait implements Listener {
     }
 
     protected boolean PASSIVE(UUID uuid) {
-        return this.player.getUuid().equals(uuid);
+        return PLAYER().getUuid().equals(uuid);
     }
 
     protected boolean PASSIVE(GamePlayer player) {
-        return this.player == player;
+        return PLAYER().equals(player);
     }
 
     public void register() {}
 
     public void unregister() {}
-
-    public GamePlayer PLAYER() {
-        return player;
-    }
-
-    public void PLAYER(GamePlayer player) {
-        this.player = player;
-    }
 }

@@ -12,8 +12,10 @@ public interface IActionbar {
     enum Type {
         STATE,
         COOLDOWN,
+        COOLDOWN_STATE,
         DURATION,
         DURATION_COOLDOWN,
+        DURATION_COOLDOWN_STATE,
         CHARGE,
         CHARGE_COOLDOWN,
         CHARGE_STATE,
@@ -39,6 +41,14 @@ public interface IActionbar {
 
                     return cd == 0 ? A : cooldown(cd);
                 }
+                case COOLDOWN_STATE -> {
+                    long cooldown = ((long) args[0]);
+                    boolean state = (boolean) args[1];
+
+                    double cd = Math.max(cooldown, 0) / SECOND_MILLS_D;
+
+                    return cd == 0 ? state ? A : D : cooldown(cd);
+                }
                 case DURATION -> {
                     long duration = ((long) args[0]);
 
@@ -54,6 +64,16 @@ public interface IActionbar {
                     double remain = Math.max(duration, 0) / SECOND_MILLS_D;
 
                     return remain == 0 ? (cd == 0 ? A : cooldown(cd)) : duration(remain);
+                }
+                case DURATION_COOLDOWN_STATE -> {
+                    long cooldown = ((long) args[0]);
+                    long duration = ((long) args[1]);
+                    boolean state = (boolean) args[2];
+
+                    double cd = Math.max(cooldown, 0) / SECOND_MILLS_D;
+                    double remain = Math.max(duration, 0) / SECOND_MILLS_D;
+
+                    return remain == 0 ? cd == 0 ? state ? A : D : cooldown(cd) : duration(remain);
                 }
                 case CHARGE -> {
                     int count = (int) args[0];

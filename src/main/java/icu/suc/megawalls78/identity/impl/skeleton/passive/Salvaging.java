@@ -5,7 +5,6 @@ import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.PlayerUtil;
 import org.bukkit.Material;
-import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -33,6 +32,6 @@ public final class Salvaging extends Passive {
     }
 
     private static void food(Player player) {
-        PlayerUtil.addFoodLevel(player, FOOD);
+        PlayerUtil.increaseFoodLevel(player, FOOD);
     }
 }

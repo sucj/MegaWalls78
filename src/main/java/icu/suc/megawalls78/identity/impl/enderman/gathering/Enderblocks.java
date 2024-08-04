@@ -3,10 +3,12 @@ package icu.suc.megawalls78.identity.impl.enderman.gathering;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.PlayerUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -71,6 +73,11 @@ public final class Enderblocks extends Gathering {
 
         private static boolean condition_available() {
             return !MegaWalls78.getInstance().getGameManager().getRunner().isDm();
+        }
+
+        @Override
+        public Component acb() {
+            return Type.CHARGE_STATE.accept(CHARGE_COUNT(), CHARGE, condition_available());
         }
     }
 }

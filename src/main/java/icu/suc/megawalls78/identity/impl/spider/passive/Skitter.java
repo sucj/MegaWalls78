@@ -1,25 +1,20 @@
 package icu.suc.megawalls78.identity.impl.spider.passive;
 
-import com.google.common.collect.Maps;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.util.EntityUtil;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 public final class Skitter extends Passive implements IActionbar {
 
-    private static final Mode DEFAULT = Mode.ARROW;
-    private static final Map<UUID, Mode> PLAYER_MODES = Maps.newHashMap();
-    private static final Set<Material> MATERIALS = Set.of(Material.WOODEN_SHOVEL, Material.STONE_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.DIAMOND_SHOVEL, Material.NETHERITE_SHOVEL);
+    public static final Mode DEFAULT = Mode.ARROW;
 
     public Skitter() {
         super("skitter");
@@ -36,29 +31,26 @@ public final class Skitter extends Passive implements IActionbar {
             switch (event.getAction()) {
                 case RIGHT_CLICK_BLOCK:
                 case RIGHT_CLICK_AIR: {
-                    if (!player.isSneaking() && MATERIALS.contains(event.getMaterial())) {
-                        UUID uuid = player.getUniqueId();
-                        switch (getMode(uuid)) {
-                            case ARROW -> setMode(uuid, Mode.ARCED);
-                            case ARCED -> setMode(uuid, Mode.ARROW);
+                    if (!player.isSneaking() && condition(event)) {
+                        Mode mode = DEFAULT;
+                        switch (EntityUtil.getMetadata(player, getId(), Mode.class, DEFAULT)) {
+                            case ARROW -> mode = Mode.ARCED;
+                            case ARCED -> mode = Mode.ARROW;
                         }
+                        EntityUtil.setMetadata(player, getId(), mode);
                     }
                 }
             }
         }
     }
 
+    private static boolean condition(PlayerInteractEvent event) {
+        return Tag.ITEMS_SHOVELS.isTagged(event.getMaterial());
+    }
+
     @Override
     public Component acb() {
-        return Type.MODE.accept(getMode(PLAYER().getUuid()).getName());
-    }
-
-    public static Mode getMode(UUID uuid) {
-        return PLAYER_MODES.computeIfAbsent(uuid, t -> DEFAULT);
-    }
-
-    public static void setMode(UUID uuid, Mode mode) {
-        PLAYER_MODES.put(uuid, mode);
+        return Type.MODE.accept(EntityUtil.getMetadata(PLAYER().getBukkitPlayer(), getId(), Mode.class, DEFAULT).getName());
     }
 
     public enum Mode {
@@ -87,12 +79,12 @@ public final class Skitter extends Passive implements IActionbar {
             return id;
         }
 
-        public void accept(Vector vector) {
-            consumer.accept(vector);
-        }
-
         public Component getName() {
             return name;
+        }
+
+        public void accept(Vector vector) {
+            consumer.accept(vector);
         }
 
         private static double NuggetMC_Y(double oldY, double newY) {

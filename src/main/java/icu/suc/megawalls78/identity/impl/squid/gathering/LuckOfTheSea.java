@@ -1,9 +1,12 @@
 package icu.suc.megawalls78.identity.impl.squid.gathering;
 
 import com.google.common.collect.Lists;
+import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.event.ChestRollEvent;
+import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.RandomUtil;
@@ -40,6 +43,7 @@ public class LuckOfTheSea extends Gathering {
 
         @EventHandler
         public void onChestRoll(ChestRollEvent.Post event) {
+//            if (PASSIVE(event.getPlayer()) && condition() && CHARGE()) {
             if (PASSIVE(event.getPlayer()) && CHARGE()) {
                 handle(event);
                 CHARGE_RESET();
@@ -58,5 +62,14 @@ public class LuckOfTheSea extends Gathering {
             }
             inventory.setItem(slots.get(RandomUtil.RANDOM.nextInt(slots.size())), POTION.build());
         }
+
+//        private static boolean condition() {
+//            return !MegaWalls78.getInstance().getGameManager().getRunner().isDm();
+//        }
+//
+//        @Override
+//        public Component acb() {
+//            return Type.CHARGE_STATE.accept(CHARGE_COUNT(), CHARGE, condition());
+//        }
     }
 }

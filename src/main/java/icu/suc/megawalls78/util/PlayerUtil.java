@@ -74,8 +74,13 @@ public class PlayerUtil {
         return uuid;
     }
 
-    public static void addFoodLevel(Player player, int level) {
+    public static void increaseFoodLevel(Player player, int level) {
         int food = player.getFoodLevel();
         player.setFoodLevel(Math.min(food + level, 20));
+    }
+
+    public static void decreaseFoodLevel(Player player, int level) {
+        int food = player.getFoodLevel();
+        player.setFoodLevel(Math.max(food - level, 0));
     }
 }

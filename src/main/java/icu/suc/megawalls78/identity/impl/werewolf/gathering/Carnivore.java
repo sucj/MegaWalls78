@@ -1,10 +1,49 @@
 package icu.suc.megawalls78.identity.impl.werewolf.gathering;
 
+import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.util.InventoryUtil;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.inventory.ItemStack;
 
 public class Carnivore extends Gathering {
 
+    private static final int KILL = 2;
+    private static final int FINAL_KILL = 4;
+
     public Carnivore() {
-        super("carnivore");
+        super("carnivore", Internal.class);
+    }
+
+    public static final class Internal extends Passive {
+
+        public Internal() {
+            super("carnivore");
+        }
+
+        @EventHandler
+        public void onPlayerKill(IncreaseStatsEvent.Kill event) {
+            if (event.isCancelled()) {
+                return;
+            }
+            if (PASSIVE(event.getPlayer())) {
+                handle(event);
+            }
+        }
+
+        private static void handle(IncreaseStatsEvent.Kill event) {
+            Player player = event.getPlayer().getBukkitPlayer();
+            if (player == null) {
+                return;
+            }
+            if (event.isFinal()) {
+                InventoryUtil.addItem(player, event.getEvent(), ItemStack.of(Material.COOKED_BEEF, FINAL_KILL));
+            } else {
+                InventoryUtil.addItem(player, event.getEvent(), ItemStack.of(Material.COOKED_BEEF, KILL));
+            }
+        }
     }
 }

@@ -11,7 +11,7 @@ import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
-import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.SupplierComponent;
@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.List;
 import java.util.Map;
@@ -81,9 +82,6 @@ public class GamePlayer {
     public boolean useSkill(Player player, Action action, Material material) {
         Skill skill = skills.get(Skill.Trigger.getTrigger(action, material));
         if (skill == null) {
-            return false;
-        }
-        if (energy < skill.getCost()) {
             return false;
         }
         if (player.isSneaking()) {
@@ -218,8 +216,8 @@ public class GamePlayer {
         return finalAssists;
     }
 
-    public void increaseKills() {
-        IncreaseStatsEvent.Kill event = new IncreaseStatsEvent.Kill(this, false);
+    public void increaseKills(PlayerDeathEvent playerDeathEvent) {
+        IncreaseStatsEvent.Kill event = new IncreaseStatsEvent.Kill(this, false, playerDeathEvent);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;
@@ -262,8 +260,8 @@ public class GamePlayer {
         });
     }
 
-    public void increaseFinalKills() {
-        IncreaseStatsEvent.Kill event = new IncreaseStatsEvent.Kill(this, true);
+    public void increaseFinalKills(PlayerDeathEvent playerDeathEvent) {
+        IncreaseStatsEvent.Kill event = new IncreaseStatsEvent.Kill(this, true, playerDeathEvent);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return;

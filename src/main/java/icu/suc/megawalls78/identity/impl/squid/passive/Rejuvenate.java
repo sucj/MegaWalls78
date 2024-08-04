@@ -20,7 +20,7 @@ public class Rejuvenate extends CooldownPassive {
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 30, 0);
 
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> {
-        ParticleUtil.spawnParticleRandomBody(player, Particle.TOTEM_OF_UNDYING, 8);
+        ParticleUtil.spawnParticleRandomBody(player, Particle.TOTEM_OF_UNDYING, 8, 0);
         player.getWorld().playSound(player.getLocation(), Sound.BLOCK_WATER_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F);
     });
 

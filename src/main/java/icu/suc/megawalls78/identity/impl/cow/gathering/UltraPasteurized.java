@@ -13,7 +13,6 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
@@ -33,7 +32,7 @@ public final class UltraPasteurized extends Gathering {
         super("ultra_pasteurized", Internal.class);
     }
 
-    public static final class Internal extends ChargePassive implements IActionbar {
+    public static final class Internal extends ChargePassive {
 
         public Internal() {
             super("ultra_pasteurized", 60);

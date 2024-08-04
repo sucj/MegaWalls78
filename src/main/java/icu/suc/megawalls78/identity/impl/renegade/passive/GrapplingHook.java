@@ -12,6 +12,7 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.potion.PotionEffect;
@@ -26,6 +27,8 @@ public final class GrapplingHook extends DurationCooldownPassive {
 
     private static final Effect<Player> EFFECT_BREAK = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, SoundCategory.AMBIENT, 0.4F, 1.0F));
     private static final Effect<Player> EFFECT_REPAIR = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, SoundCategory.AMBIENT, 0.4F, 1.0F));
+
+    private boolean noFall;
 
     public GrapplingHook() {
         super("grappling_hook", 15000L, 4000L);
@@ -58,15 +61,13 @@ public final class GrapplingHook extends DurationCooldownPassive {
                 event.setCancelled(true);
                 return;
             }
-            gamePlayer.decreaseEnergy(ENERGY);
 
-            Damageable damageable = (Damageable) event.getItemStack().getItemMeta();
-            damageable.setDamage((int) (damageable.getMaxDamage() * 0.5));
+            noFall = true;
+            gamePlayer.decreaseEnergy(ENERGY);
 
             EFFECT_BREAK.play(player);
 
             DURATION_RESET();
-            COOLDOWN_RESET();
         }
     }
 
@@ -75,7 +76,7 @@ public final class GrapplingHook extends DurationCooldownPassive {
         if (event.isCancelled()) {
             return;
         }
-        if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && condition(event)) {
+        if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && condition_attack(event)) {
             if (DURATION()) {
                 refund(player, REFUND);
                 player.addPotionEffect(SPEED);
@@ -107,8 +108,23 @@ public final class GrapplingHook extends DurationCooldownPassive {
         }
     }
 
-    private static boolean condition(EntityDamageByEntityEvent event) {
+    @EventHandler
+    public void onPlayerFall(EntityDamageEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (event.getEntity() instanceof Player player && PASSIVE(player) && noFall && condition_fall(event)) {
+            noFall = false;
+            event.setCancelled(true);
+        }
+    }
+
+    private static boolean condition_attack(EntityDamageByEntityEvent event) {
         return event.getEntity() instanceof Player && EntityUtil.isMeleeAttack(event);
+    }
+
+    private static boolean condition_fall(EntityDamageEvent event) {
+        return event.getCause().equals(EntityDamageEvent.DamageCause.FALL);
     }
 
     private static boolean repair(Player player) {
@@ -130,6 +146,7 @@ public final class GrapplingHook extends DurationCooldownPassive {
 
     @Override
     public void unregister() {
+        noFall = false;
         DURATION_END();
     }
 }

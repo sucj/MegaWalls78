@@ -2,7 +2,7 @@ package icu.suc.megawalls78.identity.impl.warden.skill;
 
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ParticleUtil;

@@ -1,6 +1,6 @@
 package icu.suc.megawalls78.identity.impl.skeleton.skill;
 
-import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

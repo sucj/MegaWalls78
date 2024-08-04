@@ -35,9 +35,4 @@ public final class VenomStrike extends ChargeCooldownPassive {
     private static void potion(Player player) {
         player.addPotionEffect(POISON);
     }
-
-    @Override
-    public void unregister() {
-        CHARGE_MAX();
-    }
 }

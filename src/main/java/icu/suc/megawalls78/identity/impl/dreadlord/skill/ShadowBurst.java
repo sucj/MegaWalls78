@@ -1,6 +1,6 @@
 package icu.suc.megawalls78.identity.impl.dreadlord.skill;
 
-import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.RandomUtil;

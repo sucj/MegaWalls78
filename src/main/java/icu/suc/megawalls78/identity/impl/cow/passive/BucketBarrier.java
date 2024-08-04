@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
 import icu.suc.megawalls78.util.Effect;
+import io.papermc.paper.util.Tick;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -58,7 +59,6 @@ public final class BucketBarrier extends DurationCooldownPassive {
         }
 
         if (COOLDOWN() && spawnBarriers(PLAYER().getBukkitPlayer())) {
-            COOLDOWN_RESET();
             DURATION_RESET();
         } else {
             removeBarriers();
@@ -123,7 +123,7 @@ public final class BucketBarrier extends DurationCooldownPassive {
     }
 
     private void updateBarriers() {
-        DURATION(50L);
+//        DURATION(Tick.tick().getDuration().toMillis());
         for (ItemDisplay barrier : barriers) {
             double angle = Math.toRadians(barrier.getLocation().getYaw()) + SPEED;
             barrier.teleport(new Location(center.getWorld(), center.getX() + RADIUS * Math.cos(angle), center.getY(), center.getZ() + RADIUS * Math.sin(angle), (float) Math.toDegrees(angle) + 90.0F, 0));

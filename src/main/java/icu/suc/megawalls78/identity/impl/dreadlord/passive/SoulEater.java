@@ -34,7 +34,7 @@ public final class SoulEater extends ChargeCooldownPassive {
     }
 
     private static void heal(Player player) {
-        PlayerUtil.addFoodLevel(player, FOOD);
+        PlayerUtil.increaseFoodLevel(player, FOOD);
         player.heal(HEAL);
     }
 }

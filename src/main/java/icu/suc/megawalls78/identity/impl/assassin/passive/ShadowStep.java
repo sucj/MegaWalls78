@@ -2,6 +2,7 @@ package icu.suc.megawalls78.identity.impl.assassin.passive;
 
 import icu.suc.megawalls78.identity.impl.assassin.skill.ShadowCloak;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
+import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +26,7 @@ public final class ShadowStep extends CooldownPassive {
                 event.getDamageSource().getCausingEntity() instanceof Player damager &&
                 player.isSneaking() &&
                 player.getLocation().distance(damager.getLocation()) <= RADIUS &&
-                !ShadowCloak.getState(player.getUniqueId())) {
+                !EntityUtil.getMetadata(player, "shadow_cloak")) {
 
             player.setFallDistance(0);
             player.teleport(getBlockBehindPlayer(damager));

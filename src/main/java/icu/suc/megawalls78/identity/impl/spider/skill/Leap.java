@@ -2,19 +2,18 @@ package icu.suc.megawalls78.identity.impl.spider.skill;
 
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.impl.spider.passive.Skitter;
-import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.*;
+import icu.suc.megawalls78.util.Effect;
 import net.minecraft.world.level.Level;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
+import org.bukkit.*;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -54,7 +53,7 @@ public final class Leap extends Skill {
         EFFECT_JUMP.play(player);
 
         Vector vector = player.getLocation().getDirection();
-        Skitter.getMode(player.getUniqueId()).accept(vector);
+        EntityUtil.getMetadata(player, "skitter", Skitter.Mode.class, Skitter.DEFAULT).accept(vector);
         player.setVelocity(vector);
 
         if (run) {
@@ -71,22 +70,28 @@ public final class Leap extends Skill {
         private Location lastLocation;
         private double travelLength;
 
+        private final int deaths;
+
         private Task(Player player) {
             this.player = player;
 
             this.lastLocation = player.getLocation();
+
+            deaths = player.getStatistic(Statistic.DEATHS);
         }
 
         @Override
         public void run() {
-            if (player.isDead()) {
+            if (player.getStatistic(Statistic.DEATHS) > deaths) {
                 this.cancel();
                 return;
             }
+
             if (EntityUtil.isOnGround(player)) {
                 updateTravelLength();
                 EFFECT_LAND.play(player);
                 player.addPotionEffect(REGENERATION);
+                BoundingBox boundingBox = player.getBoundingBox().expand(0.5D, 0, 0.5D);
                 AtomicInteger count = new AtomicInteger();
                 EntityUtil.getNearbyEntities(player, RADIUS).stream()
                         .filter(entity -> entity instanceof LivingEntity)
@@ -95,7 +100,7 @@ public final class Leap extends Skill {
                         .forEach(entity -> {
                             ((LivingEntity) entity).addPotionEffect(SLOWNESS);
                             double damage = BASE_DAMAGE + bonusDamage() - reduceDamage(entity);
-                            if (entity.getBoundingBox().overlaps(player.getBoundingBox())) {
+                            if (entity.getBoundingBox().overlaps(boundingBox)) {
                                 damage *= DIRECT;
                             }
                             ((LivingEntity) entity).damage(damage, DamageSource.of(DamageType.THROWN, player));

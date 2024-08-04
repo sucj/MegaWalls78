@@ -1,6 +1,8 @@
-package icu.suc.megawalls78.identity.trait;
+package icu.suc.megawalls78.identity.trait.skill;
 
 import com.google.common.collect.Sets;
+import icu.suc.megawalls78.identity.trait.IActionbar;
+import icu.suc.megawalls78.identity.trait.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
@@ -13,8 +15,9 @@ public abstract class Skill extends Trait implements IActionbar {
 
     private final int cost;
 
-    private final long cooldown;
-    private long last;
+    private final long COOLDOWN;
+
+    long COOLDOWN_LAST;
 
     private final Class<? extends Passive> internal;
     private Passive passive;
@@ -26,25 +29,30 @@ public abstract class Skill extends Trait implements IActionbar {
     public Skill(String id, int cost, long cooldown, Class<? extends Passive> internal) {
         super(id, Component.translatable("mw78.skill." + id));
         this.cost = cost;
-        this.cooldown = cooldown;
+        this.COOLDOWN = cooldown;
         this.internal = internal;
     }
 
     public boolean use(Player player) {
-        long currentMillis = System.currentTimeMillis();
-        if (currentMillis - last >= cooldown) {
+        if (!available()) {
+            return false;
+        }
+        if (COOLDOWN()) {
             if (use0(player)) {
-                last = currentMillis;
+                COOLDOWN_RESET();
                 return true;
             }
-            return false;
         }
         return false;
     }
 
+    protected boolean available() {
+        return PLAYER().getEnergy() >= cost;
+    }
+
     @Override
     public Component acb() {
-        return Type.COOLDOWN.accept(cooldown - System.currentTimeMillis() + last);
+        return Type.COOLDOWN_STATE.accept(COOLDOWN_REMAIN(), available());
     }
 
     protected abstract boolean use0(Player player);
@@ -54,7 +62,7 @@ public abstract class Skill extends Trait implements IActionbar {
     }
 
     public long getCooldown() {
-        return cooldown;
+        return COOLDOWN;
     }
 
     public Class<? extends Passive> getInternal() {
@@ -115,5 +123,33 @@ public abstract class Skill extends Trait implements IActionbar {
                 return null;
             }
         }
+    }
+
+    protected long CURRENT() {
+        return System.currentTimeMillis();
+    }
+
+    protected boolean COOLDOWN() {
+        return CURRENT() - COOLDOWN_LAST() >= COOLDOWN;
+    }
+
+    protected long COOLDOWN(long delta) {
+        return COOLDOWN_LAST += delta;
+    }
+
+    protected long COOLDOWN_LAST() {
+        return COOLDOWN_LAST;
+    }
+
+    protected void COOLDOWN_RESET() {
+        COOLDOWN_LAST = CURRENT();
+    }
+
+    protected void COOLDOWN_END() {
+        COOLDOWN_LAST = 0;
+    }
+
+    protected long COOLDOWN_REMAIN() {
+        return COOLDOWN - CURRENT() + COOLDOWN_LAST();
     }
 }

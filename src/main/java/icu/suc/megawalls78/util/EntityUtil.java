@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.myzelyam.api.vanish.VanishAPI;
+import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.entity.*;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.floats.FloatArraySet;
@@ -31,6 +32,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.potion.PotionEffect;
@@ -40,10 +42,7 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class EntityUtil {
@@ -76,17 +75,40 @@ public class EntityUtil {
     }
 
     public static <O> O getMetadata(Metadatable metadatable, String s, Class<O> clazz) {
-        List<MetadataValue> metadata = metadatable.getMetadata(s);
-        for (MetadataValue value : metadata) {
-            Object o = value.value();
-            if (o == null) {
-                continue;
-            }
-            if (clazz.isInstance(o)) {
-                return (O) o;
-            }
+        List<MetadataValue> values = metadatable.getMetadata(s);
+        if (values.isEmpty()) {
+            return null;
+        }
+        Object o = values.getFirst().value();
+        if (o == null) {
+            return null;
+        }
+        if (clazz.isInstance(o)) {
+            return clazz.cast(o);
         }
         return null;
+    }
+
+    public static <O> O getMetadata(Metadatable metadatable, String s, Class<O> clazz, O o) {
+        Object value = getMetadata(metadatable, s, o.getClass());
+        if (value == null) {
+            setMetadata(metadatable, s, o);
+            return o;
+        } else {
+            return clazz.cast(value);
+        }
+    }
+
+    public static boolean getMetadata(Metadatable metadatable, String s) {
+        return Boolean.TRUE.equals(getMetadata(metadatable, s, Boolean.class));
+    }
+
+    public static void setMetadata(Metadatable metadatable, String s, Object o) {
+        metadatable.setMetadata(s, new FixedMetadataValue(MegaWalls78.getInstance(), o));
+    }
+
+    public static void removeMetadata(Metadatable metadatable, String s) {
+        metadatable.removeMetadata(s, MegaWalls78.getInstance());
     }
 
     public static BlockFace getFacingTowards(Block block, Entity entity) {
@@ -292,6 +314,22 @@ public class EntityUtil {
 
     public static boolean isArrowAttack(EntityDamageEvent event) {
         return event.getDamageSource().getDirectEntity() instanceof AbstractArrow;
+    }
+
+    public static boolean isSweepAttack(EntityDamageEvent event) {
+        return event.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK);
+    }
+
+    public static double getRandomBodyX(Entity entity, double widthScale) {
+        return entity.getX() + entity.getWidth() * (2.0 * RandomUtil.RANDOM.nextDouble() - 1.0) * widthScale;
+    }
+
+    public static double getRandomBodyY(Entity entity) {
+        return entity.getY() + entity.getHeight() * RandomUtil.RANDOM.nextDouble();
+    }
+
+    public static double getRandomBodyZ(Entity entity, double widthScale) {
+        return entity.getZ() + entity.getWidth() * (2.0 * RandomUtil.RANDOM.nextDouble() - 1.0) * widthScale;
     }
 
     public enum Type {

@@ -47,13 +47,17 @@ import icu.suc.megawalls78.identity.impl.warden.gathering.Spreads;
 import icu.suc.megawalls78.identity.impl.warden.passive.Anger;
 import icu.suc.megawalls78.identity.impl.warden.passive.Sniffs;
 import icu.suc.megawalls78.identity.impl.warden.skill.SonicBoom;
+import icu.suc.megawalls78.identity.impl.werewolf.gathering.Carnivore;
+import icu.suc.megawalls78.identity.impl.werewolf.passive.BloodLust;
+import icu.suc.megawalls78.identity.impl.werewolf.passive.Devour;
+import icu.suc.megawalls78.identity.impl.werewolf.skill.Lycanthropy;
 import icu.suc.megawalls78.identity.impl.zombie.gathering.WellTrained;
 import icu.suc.megawalls78.identity.impl.zombie.passive.Berserk;
 import icu.suc.megawalls78.identity.impl.zombie.passive.Toughness;
 import icu.suc.megawalls78.identity.impl.zombie.skill.CircleOfHealing;
 import icu.suc.megawalls78.identity.trait.Gathering;
-import icu.suc.megawalls78.identity.trait.Skill;
-import icu.suc.megawalls78.identity.trait.Skill.Trigger;
+import icu.suc.megawalls78.identity.trait.skill.Skill;
+import icu.suc.megawalls78.identity.trait.skill.Skill.Trigger;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -73,7 +77,7 @@ public enum Identity {
     SQUID("squid", NamedTextColor.BLUE, Material.INK_SAC, icu.suc.megawalls78.identity.impl.squid.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10, EnergyWay.BOW_PER, 10), Map.of(Trigger.SWORD, SquidSplash.class, Trigger.BOW, SquidSplash.class), List.of(InnerInk.class, Rejuvenate.class), LuckOfTheSea.class),
     SKELETON("skeleton", NamedTextColor.AQUA, Material.BONE, icu.suc.megawalls78.identity.impl.skeleton.Kit.class, 100, Map.of(EnergyWay.BOW_PER, 20, EnergyWay.DM, 1), Map.of(Trigger.SWORD, ExplosiveArrow.class, Trigger.BOW, ExplosiveArrow.class), List.of(Salvaging.class, Agile.class), Efficiency.class),
     SPIDER("spider", NamedTextColor.DARK_PURPLE, Material.COBWEB, icu.suc.megawalls78.identity.impl.spider.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 8, EnergyWay.BOW_PER, 8, EnergyWay.GAME, 4, EnergyWay.DM, 4), Map.of(Trigger.SWORD, Leap.class, Trigger.BOW, Leap.class), List.of(VenomStrike.class, Skitter.class), IronRush.class),
-//    WEREWOLF("werewolf", NamedTextColor.GREEN, Material.COOKED_BEEF, icu.suc.megawalls78.identity.impl.werewolf.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10, EnergyWay.BOW_PER, 10, EnergyWay.MELEE_WHEN, 2, EnergyWay.BOW_WHEN, 2), Map.of(Trigger.SWORD, Lycanthropy.class, Trigger.BOW, Lycanthropy.class), List.of(BloodLust.class, Devour.class), Carnivore.class),
+    WEREWOLF("werewolf", NamedTextColor.GREEN, Material.COOKED_BEEF, icu.suc.megawalls78.identity.impl.werewolf.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10, EnergyWay.BOW_PER, 10, EnergyWay.MELEE_WHEN, 2, EnergyWay.BOW_WHEN, 2), Map.of(Trigger.SWORD, Lycanthropy.class, Trigger.BOW, Lycanthropy.class), List.of(BloodLust.class, Devour.class), Carnivore.class),
     ASSASSIN("assassin", NamedTextColor.GRAY, Material.BLACK_STAINED_GLASS, icu.suc.megawalls78.identity.impl.assassin.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10, EnergyWay.BOW_PER, 10, EnergyWay.PREPARATION, 2, EnergyWay.GAME, 2, EnergyWay.DM, 2), Map.of(Trigger.SWORD, ShadowCloak.class, Trigger.BOW, ShadowCloak.class), List.of(ShadowStep.class, MasterAlchemist.class), ArrowCatch.class),
     MOLEMAN("moleman", NamedTextColor.YELLOW, Material.GOLDEN_SHOVEL, icu.suc.megawalls78.identity.impl.moleman.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10, EnergyWay.BOW_PER, 10, EnergyWay.PREPARATION, 5, EnergyWay.GAME, 3, EnergyWay.DM, 3), Map.of(Trigger.SWORD, Dig.class, Trigger.BOW, Dig.class, Trigger.SHOVEL, Dig.class), List.of(Shortcut.class, JunkFood.class), Stockpile.class),
     RENEGADE("renegade", NamedTextColor.YELLOW, Material.ARROW, icu.suc.megawalls78.identity.impl.renegade.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 17, EnergyWay.BOW_PER, 13), Map.of(Trigger.SWORD, Rend.class, Trigger.BOW, Rend.class), List.of(GrapplingHook.class, Looting.class), AmmoBin.class),
@@ -176,6 +180,7 @@ public enum Identity {
                         }
                     }
                     Skill skill = skillClass.getConstructor().newInstance();
+                    skill.PLAYER(player);
                     Class<? extends Passive> passiveClass = skill.getInternal();
                     if (passiveClass != null) {
                         Passive passive = passiveClass.getConstructor().newInstance();
@@ -211,6 +216,7 @@ public enum Identity {
     public Gathering getGathering(GamePlayer player, List<Passive> passives) {
         try {
             Gathering gathering = gatheringClass.getConstructor().newInstance();
+            gathering.PLAYER(player);
             Class<? extends Passive> passiveClass = gathering.getInternal();
             if (passiveClass != null) {
                 Passive passive = passiveClass.getConstructor().newInstance();

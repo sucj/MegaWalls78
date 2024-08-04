@@ -3,14 +3,13 @@ package icu.suc.megawalls78.identity.impl.renegade.skill;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.identity.trait.Skill;
+import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.damage.DamageType;
-import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -52,7 +51,7 @@ public final class Rend extends Skill {
                     if (timestamps != null && !timestamps.isEmpty() && current <= timestamps.getLast() + PIN_MIN) {
                         int retrieve = Math.min(timestamps.size(), RETRIEVE);
                         player.getInventory().addItem(ItemStack.of(Material.ARROW, retrieve));
-                        timestamps.subList(0, retrieve).clear();
+                        timestamps.clear();
                         list.add(new AbstractMap.SimpleEntry<>(victim, retrieve));
                     }
                 });

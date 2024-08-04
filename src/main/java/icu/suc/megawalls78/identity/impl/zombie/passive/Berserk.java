@@ -31,7 +31,6 @@ public final class Berserk extends DurationCooldownPassive {
             return;
         }
         if (event.getEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() && condition_damage(event)) {
-            COOLDOWN_RESET();
             DURATION_RESET();
             potion(player);
             EFFECT_SKILL.play(player);

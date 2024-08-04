@@ -40,6 +40,7 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.loot.LootContext;
@@ -63,10 +64,12 @@ public class SkillListener implements Listener {
     private static final Map<UUID, Pair<Integer, Integer>> ENERGY_BLINK = Maps.newHashMap();
 
     private static final double BEFORE_PBB = 0.1D;
-    private static final double AFTER_PBB = 0.01D;
+    private static final double AFTER_PBB = 0.005D;
     private static final LootTable NEWBEE_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "newbee"));
     private static final LootTable NORMAL_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "normal"));
     private static final Set<UUID> NO_NEWBEE = Sets.newHashSet();
+
+    private static final Set<Material> DISABLE_ITEMS = Set.of(Material.BUCKET, Material.GLASS_BOTTLE, Material.WATER_BUCKET, Material.LAVA_BUCKET);
 
     @EventHandler
     public void onEnergyChange(EnergyChangeEvent event) {
@@ -156,6 +159,11 @@ public class SkillListener implements Listener {
                             }
                             player.sendActionBar(Component.join(ACTIONBAR_JOIN, components));
                         }
+                    }
+
+                    PlayerInventory inventory = player.getInventory();
+                    for (Material disableItem : DISABLE_ITEMS) {
+                        inventory.remove(disableItem);
                     }
                 }
             }
@@ -266,10 +274,6 @@ public class SkillListener implements Listener {
                             return;
                         }
 
-                        if (itemStack.getItemMeta() instanceof Damageable damageable) {
-                            player.setFallDistance((float) damageable.getDamage() / damageable.getMaxDamage() * player.getFallDistance());
-                        }
-
                         player.setVelocity(EntityUtil.getPullVector(player, hook));
                     }
                 }
@@ -288,6 +292,7 @@ public class SkillListener implements Listener {
             if (itemMeta instanceof Damageable damageable) {
                 int damage = damageable.getMaxDamage() / 2;
                 if (damageable.getDamage() >= damage) {
+                    event.setCancelled(true);
                     return;
                 }
                 event.setDamage(damage);

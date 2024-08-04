@@ -357,7 +357,7 @@ public class GameRunner implements Runnable {
                     double resisterScore = 0;
                     for (GamePlayer gamePlayer : gameManager.getPlayers().values()) {
                         int fk = gamePlayer.getFinalKills();
-                        int a = gamePlayer.getFinalDeaths() == 0 ? fk * 40 : fk * 20;
+                        int a = gamePlayer.getFinalDeaths() == 0 ? fk * 100 : fk * 50;
                         double damageDealt = gamePlayer.getDamageDealt();
                         double damageWither = gamePlayer.getDamageWither();
                         double damagePlayer = damageDealt - damageWither;
@@ -365,6 +365,9 @@ public class GameRunner implements Runnable {
                         double damageTaken = gamePlayer.getDamageTaken();
                         double b = damagePlayer + damageWither * 1.05 + damageGuard * 1.01 + damageTaken * 0.5;
                         double score = a + b;
+                        if (teams.contains(gamePlayer.getTeam())) {
+                            score += 100;
+                        }
                         if (score > mvpScore) {
                             mvpScore = score;
                             mvp = gamePlayer;
@@ -462,7 +465,7 @@ public class GameRunner implements Runnable {
                         UUID mvpUuid = mvp.getUuid();
                         GameTeam team = mvp.getTeam();
                         Component mvpMessage = Component.translatable("mw78.mvp", Component.translatable("ms78.brackets", team.color(), team.chat()).append(Component.space()).append(LP.getPrefix(mvpUuid).append(Component.text(Bukkit.getOfflinePlayer(mvpUuid).getName(), LP.getNameColor(mvpUuid))))).decorate(TextDecoration.BOLD);
-                        Component mvpSummary = Component.translatable("mw78.mvp.summary", NamedTextColor.GRAY, Component.text(Formatters.NUMBER.format(mvpScore)));
+                        Component mvpSummary = Component.translatable("mw78.mvp.summary", NamedTextColor.GRAY, Component.text(Formatters.COMPASS.format(mvpScore)));
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             ComponentUtil.sendMessage(mvpMessage, player);
                             ComponentUtil.sendMessage(mvpSummary, player);

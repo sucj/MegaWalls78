@@ -18,6 +18,7 @@ public class DurationCooldownPassive extends CooldownPassive {
     }
 
     protected long DURATION(long delta) {
+        COOLDOWN(-delta);
         return DURATION_LAST -= delta;
     }
 
@@ -26,10 +27,14 @@ public class DurationCooldownPassive extends CooldownPassive {
     }
 
     protected void DURATION_RESET() {
-        DURATION_LAST = CURRENT();
+        long current = CURRENT();
+        COOLDOWN_LAST = current;
+        DURATION_LAST = current;
+        COOLDOWN(DURATION);
     }
 
     protected void DURATION_END() {
+        COOLDOWN(-DURATION_REMAIN());
         DURATION_LAST = 0;
     }
 

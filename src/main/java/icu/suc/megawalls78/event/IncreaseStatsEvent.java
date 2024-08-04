@@ -4,6 +4,7 @@ import icu.suc.megawalls78.game.GamePlayer;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class IncreaseStatsEvent extends Event implements Cancellable {
@@ -38,10 +39,17 @@ public abstract class IncreaseStatsEvent extends Event implements Cancellable {
 
     public static class Kill extends IncreaseStatsEvent {
 
+        private final PlayerDeathEvent event;
+
         private static final HandlerList handlers = new HandlerList();
 
-        public Kill(GamePlayer player, boolean isFinal) {
+        public Kill(GamePlayer player, boolean isFinal, PlayerDeathEvent event) {
             super(player, isFinal);
+            this.event = event;
+        }
+
+        public PlayerDeathEvent getEvent() {
+            return event;
         }
 
         @Override
