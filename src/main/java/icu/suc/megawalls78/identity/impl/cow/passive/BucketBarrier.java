@@ -25,8 +25,8 @@ public final class BucketBarrier extends DurationCooldownPassive {
     private static final double HEALTH = 20.0D;
     private static final double DAMAGE = 2.0D;
     private static final double SCALE = 0.75D;
-    private static final double RADIUS = 0.6D;
     private static final double SPEED = 0.1D;
+    private static final double RADIUS = 0.4D;
 
     private static final Effect<Pair<Player, Float>> EFFECT_SKILL = Effect.create(pair -> {
         Player player = pair.getLeft();

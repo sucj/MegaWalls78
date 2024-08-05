@@ -62,24 +62,17 @@ public class SquidSplash extends Skill {
 
     private static void pull(LivingEntity entity, Player player) {
         entity.damage(DAMAGE, DamageSource.of(DamageType.DROWN, player));
-        entity.setVelocity(vector(player.getLocation(), entity));
-    }
-
-    private static void heal(Player player, int count) {
-        player.heal(Math.min(count * HEALTH, MAX));
-    }
-
-    private static Vector vector(Location to, Entity entity) {
-        double distance = to.distance(entity.getLocation());
-        Vector vector = to.toVector().subtract(entity.getLocation().toVector()).normalize();
-        vector.multiply(Math.min(distance / RADIUS * 2, 1.0D));
+        Vector vector = EntityUtil.getPullVector(player, entity, true);
         double y = vector.getY();
         if (y > 0) {
             vector.setY(Math.min(y, 0.2D));
         } else {
             vector.setY(Math.max(y, -0.2D));
         }
-        vector.add(entity.getVelocity());
-        return vector;
+        entity.setVelocity(vector);
+    }
+
+    private static void heal(Player player, int count) {
+        player.heal(Math.min(count * HEALTH, MAX));
     }
 }

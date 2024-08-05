@@ -37,9 +37,9 @@ public final class Teleport extends Skill {
 
     @Override
     protected boolean use0(Player player) {
-        AtomicReference<Player> aNearestPlayer = new AtomicReference<>();
+        AtomicReference<Player> nearestPlayer = new AtomicReference<>();
         AtomicReference<Double> nearestDistance = new AtomicReference<>(Double.MAX_VALUE);
-        AtomicReference<Double> nearestAngle = new AtomicReference<>(Double.MAX_VALUE);
+        AtomicReference<Double> nearestAngle = new AtomicReference<>(1.0D);
 
         Location fromF = player.getLocation();
         Location fromH = player.getEyeLocation();
@@ -54,30 +54,30 @@ public final class Teleport extends Skill {
                     double na = nearestAngle.get();
                     if (angle < na) {
                         nearestAngle.set(angle);
-                        aNearestPlayer.set(((Player) entity));
+                        nearestPlayer.set(((Player) entity));
                         nearestDistance.set(distance);
                     } else if (angle == na) {
                         double nd = nearestDistance.get();
                         if (distance < nd) {
-                            aNearestPlayer.set(((Player) entity));
+                            nearestPlayer.set(((Player) entity));
                             nearestDistance.set(distance);
                         } else if (distance == nd) {
-                            if (aNearestPlayer.get().getHealth() > ((Player) entity).getHealth()) {
-                                aNearestPlayer.set(((Player) entity));
+                            if (nearestPlayer.get().getHealth() > ((Player) entity).getHealth()) {
+                                nearestPlayer.set(((Player) entity));
                             }
                         }
                     }
                 });
 
-        Player nearestPlayer = aNearestPlayer.get();
-        if (nearestPlayer == null) {
+        Player victim = nearestPlayer.get();
+        if (victim == null) {
             return noTarget(player);
         }
 
         EFFECT_SKILL.play(player);
 
-        Location toF = nearestPlayer.getLocation();
-        Location toH = nearestPlayer.getEyeLocation();
+        Location toF = victim.getLocation();
+        Location toH = victim.getEyeLocation();
         toF.setYaw(fromF.getYaw());
         toF.setPitch(fromF.getPitch());
 

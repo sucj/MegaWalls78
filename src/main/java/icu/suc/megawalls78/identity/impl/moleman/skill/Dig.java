@@ -3,6 +3,8 @@ package icu.suc.megawalls78.identity.impl.moleman.skill;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
+import icu.suc.megawalls78.identity.trait.skill.task.AbstractTask;
+import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
 import org.bukkit.Location;
@@ -29,7 +31,7 @@ public final class Dig extends Skill {
     private static final double FORWARD = 8.0D;
     private static final double DAMAGE = 7.0D;
     private static final double RADIUS = 1.0D;
-    private static final long TICK = 8L;
+    private static final int TICK = 8;
     private static final double STEP = 1.0;
 
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 40, 0);
@@ -62,9 +64,7 @@ public final class Dig extends Skill {
         return true;
     }
 
-    private final class Task extends BukkitRunnable {
-
-        private final Player player;
+    private final class Task extends DurationTask {
 
         private final AtomicInteger count;
         private final Set<UUID> victims;
@@ -73,7 +73,7 @@ public final class Dig extends Skill {
         private long tick;
 
         private Task(Player player) {
-            this.player = player;
+            super(player, TICK);
 
             this.count = new AtomicInteger();
             this.victims = Sets.newHashSet();
@@ -81,14 +81,16 @@ public final class Dig extends Skill {
 
         @Override
         public void run() {
-            if (player.isDead()) {
-                this.cancel();
+            if (shouldCancel()) {
+                cancel();
                 return;
             }
 
-            if (tick >= TICK || distanceForward() >= FORWARD) {
+            super.run();
+
+            if (distanceForward() >= FORWARD) {
                 setVector(new Vector(0, 0, 0));
-                this.cancel();
+                cancel();
                 return;
             }
 

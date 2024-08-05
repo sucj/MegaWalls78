@@ -125,8 +125,8 @@ public class ScoreboardManager implements Listener {
                 teamDisplay.prefix(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(Component.space()));
                 teamDisplay.suffix(Component.space().append(Component.translatable("ms78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
                 teamDisplay.playerColor(gamePlayer.getTeam().color());
-                objectiveManager.addPlayer(player);
             }
+            objectiveManager.addPlayer(player);
             teamDisplay.addEntry(player.getName());
         }
     }
@@ -153,8 +153,8 @@ public class ScoreboardManager implements Listener {
             teamDisplay.prefix(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(Component.space()));
             teamDisplay.suffix(Component.space().append(Component.translatable("ms78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
             teamDisplay.playerColor(gamePlayer.getTeam().color());
-            objectiveManager.addPlayer(player);
         }
+        objectiveManager.addPlayer(player);
         teamDisplay.addEntry(player.getName());
     }
 
@@ -162,7 +162,6 @@ public class ScoreboardManager implements Listener {
     public void onDeath(PlayerDeathEvent event) {
         Player player = event.getPlayer();
         teamManager.removeTeam(String.valueOf(player.getUniqueId()));
-        objectiveManager.removePlayer(player);
     }
 
     @EventHandler

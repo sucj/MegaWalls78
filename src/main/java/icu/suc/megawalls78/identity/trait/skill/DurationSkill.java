@@ -33,6 +33,10 @@ public abstract class DurationSkill extends Skill {
         return false;
     }
 
+    public long getDuration() {
+        return DURATION;
+    }
+
     protected boolean DURATION() {
         return CURRENT() - DURATION_LAST() <= DURATION;
     }
@@ -65,5 +69,9 @@ public abstract class DurationSkill extends Skill {
     @Override
     public Component acb() {
         return Type.DURATION_COOLDOWN_STATE.accept(COOLDOWN_REMAIN(), DURATION_REMAIN(), available());
+    }
+
+    public void stop() {
+        DURATION_END();
     }
 }

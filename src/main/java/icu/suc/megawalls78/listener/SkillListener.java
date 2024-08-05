@@ -15,7 +15,7 @@ import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
 import it.unimi.dsi.fastutil.Pair;
-import it.unimi.dsi.fastutil.ints.IntIntMutablePair;
+import it.unimi.dsi.fastutil.ints.IntFloatMutablePair;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.JoinConfiguration;
@@ -61,7 +61,7 @@ public class SkillListener implements Listener {
     private static final JoinConfiguration ACBE_JOIN = JoinConfiguration.builder().separator(Component.space()).build();
     private static final JoinConfiguration ACTIONBAR_JOIN = JoinConfiguration.builder().separator(Component.text("   ")).build();
 
-    private static final Map<UUID, Pair<Integer, Integer>> ENERGY_BLINK = Maps.newHashMap();
+    private static final Map<UUID, Pair<Integer, Float>> ENERGY_BLINK = Maps.newHashMap();
 
     private static final double BEFORE_PBB = 0.1D;
     private static final double AFTER_PBB = 0.005D;
@@ -74,15 +74,15 @@ public class SkillListener implements Listener {
     @EventHandler
     public void onEnergyChange(EnergyChangeEvent event) {
         Player player = event.getPlayer();
-        int energy = event.getEnergy();
-        player.setLevel(energy);
-        int max = event.getMax();
-        player.setExp((float) energy / max);
+        float energy = event.getEnergy();
+        player.setLevel((int) energy);
+        float max = event.getMax();
+        player.setExp(energy / max);
         if (energy == max) {
-            ENERGY_BLINK.put(player.getUniqueId(), IntIntMutablePair.of(0, max));
+            ENERGY_BLINK.put(player.getUniqueId(), IntFloatMutablePair.of(0, max));
         } else {
             ENERGY_BLINK.remove(player.getUniqueId());
-            player.setExp((float) energy / max);
+            player.setExp(energy / max);
         }
     }
 
@@ -94,77 +94,10 @@ public class SkillListener implements Listener {
                 if (gameManager.isSpectator(player)) {
                     ENERGY_BLINK.remove(player.getUniqueId());
                 } else {
-                    Pair<Integer, Integer> pair = ENERGY_BLINK.get(player.getUniqueId());
-                    if (pair != null) {
-                        Integer tick = pair.first();
-                        switch (tick) {
-                            case 0 -> {
-                                player.setExp(1.0F);
-                                pair.first(tick + 1);
-                            }
-                            case 10 -> {
-                                player.setExp(0.0F);
-                                pair.first(tick + 1);
-                            }
-                            case 20 -> pair.first(0);
-                            default -> pair.first(tick + 1);
-                        }
-                    }
                     GamePlayer gamePlayer = gameManager.getPlayer(player);
-                    if (gamePlayer != null) {
-                        double nearest = Double.MAX_VALUE;
-                        Location location = player.getLocation();
-                        GameTeam tracking = gamePlayer.getTracking();
-                        Set<GamePlayer> targets = gameManager.getTeamPlayersMap().get(tracking);
-                        for (GamePlayer target : targets) {
-                            if (target.getUuid().equals(gamePlayer.getUuid())) {
-                                continue;
-                            }
-                            Player targetBukkitPlayer = target.getBukkitPlayer();
-                            if (targetBukkitPlayer == null || gameManager.isSpectator(targetBukkitPlayer)) {
-                                continue;
-                            }
-                            Location targetBukkitPlayerLocation = targetBukkitPlayer.getLocation();
-                            double distance = player.getLocation().distance(targetBukkitPlayerLocation);
-                            if (distance < nearest) {
-                                nearest = distance;
-                                location = targetBukkitPlayerLocation;
-                            }
-                        }
-                        player.setCompassTarget(location);
-                        if (ItemUtil.isMW78Item(PlayerUtil.getPlayerMainHand(player), ItemUtil.COMPASS)) {
-                            List<ComponentLike> components = Lists.newArrayList();
-                            components.add(Component.translatable("mw78.compass.tracking", tracking.name().color(tracking.color())));
-                            Component distance;
-                            if (nearest == Double.MAX_VALUE) {
-                                distance = Component.translatable("mw78.compass.null");
-                            } else {
-                                Component dir;
-                                if (location.getY() > player.getY()) {
-                                    dir = Component.translatable("mw78.compass.up");
-                                } else if (location.getY() < player.getY()) {
-                                    dir = Component.translatable("mw78.compass.down");
-                                } else {
-                                    dir = Component.translatable("mw78.compass.equal");
-                                }
-                                distance = Component.translatable("mw78.compass.distance", Component.text(Formatters.COMPASS.format(nearest)), dir.color(NamedTextColor.WHITE));
-                            }
-                            components.add(Component.translatable("mw78.compass.nearest", distance.color(tracking.color())));
-                            player.sendActionBar(Component.join(ACTIONBAR_JOIN, components));
-                        } else {
-                            List<ComponentLike> actionbar = gamePlayer.getActionbar();
-                            List<ComponentLike> components = Lists.newArrayList();
-                            for (int i = 0; i < actionbar.size(); i++) {
-                                components.add(Component.join(ACBE_JOIN, actionbar.get(i), actionbar.get(++i)));
-                            }
-                            player.sendActionBar(Component.join(ACTIONBAR_JOIN, components));
-                        }
-                    }
-
-                    PlayerInventory inventory = player.getInventory();
-                    for (Material disableItem : DISABLE_ITEMS) {
-                        inventory.remove(disableItem);
-                    }
+                    updateCompass(gameManager, gamePlayer, player);
+                    blinkEnergy(player);
+                    clearDisableItems(player);
                 }
             }
         }
@@ -274,7 +207,7 @@ public class SkillListener implements Listener {
                             return;
                         }
 
-                        player.setVelocity(EntityUtil.getPullVector(player, hook));
+                        player.setVelocity(EntityUtil.getPullVector(player, hook, 4.0D, 8.0D, 4.0D, true));
                     }
                 }
             }
@@ -297,6 +230,84 @@ public class SkillListener implements Listener {
                 }
                 event.setDamage(damage);
             }
+        }
+    }
+
+    private void blinkEnergy(Player player) {
+        Pair<Integer, Float> pair = ENERGY_BLINK.get(player.getUniqueId());
+        if (pair != null) {
+            Integer tick = pair.first();
+            switch (tick) {
+                case 0 -> {
+                    player.setExp(1.0F);
+                    pair.first(tick + 1);
+                }
+                case 10 -> {
+                    player.setExp(0.0F);
+                    pair.first(tick + 1);
+                }
+                case 20 -> pair.first(0);
+                default -> pair.first(tick + 1);
+            }
+        }
+    }
+
+    private void updateCompass(GameManager gameManager, GamePlayer gamePlayer, Player player) {
+        if (gamePlayer != null) {
+            double nearest = Double.MAX_VALUE;
+            Location location = player.getLocation();
+            GameTeam tracking = gamePlayer.getTracking();
+            Set<GamePlayer> targets = gameManager.getTeamPlayersMap().get(tracking);
+            for (GamePlayer target : targets) {
+                if (target.getUuid().equals(gamePlayer.getUuid())) {
+                    continue;
+                }
+                Player targetBukkitPlayer = target.getBukkitPlayer();
+                if (targetBukkitPlayer == null || gameManager.isSpectator(targetBukkitPlayer)) {
+                    continue;
+                }
+                Location targetBukkitPlayerLocation = targetBukkitPlayer.getLocation();
+                double distance = player.getLocation().distance(targetBukkitPlayerLocation);
+                if (distance < nearest) {
+                    nearest = distance;
+                    location = targetBukkitPlayerLocation;
+                }
+            }
+            player.setCompassTarget(location);
+            if (ItemUtil.isMW78Item(PlayerUtil.getPlayerMainHand(player), ItemUtil.COMPASS)) {
+                List<ComponentLike> components = Lists.newArrayList();
+                components.add(Component.translatable("mw78.compass.tracking", tracking.name().color(tracking.color())));
+                Component distance;
+                if (nearest == Double.MAX_VALUE) {
+                    distance = Component.translatable("mw78.compass.null");
+                } else {
+                    Component dir;
+                    if (location.getY() > player.getY()) {
+                        dir = Component.translatable("mw78.compass.up");
+                    } else if (location.getY() < player.getY()) {
+                        dir = Component.translatable("mw78.compass.down");
+                    } else {
+                        dir = Component.translatable("mw78.compass.equal");
+                    }
+                    distance = Component.translatable("mw78.compass.distance", Component.text(Formatters.COMPASS.format(nearest)), dir.color(NamedTextColor.WHITE));
+                }
+                components.add(Component.translatable("mw78.compass.nearest", distance.color(tracking.color())));
+                player.sendActionBar(Component.join(ACTIONBAR_JOIN, components));
+            } else {
+                List<ComponentLike> actionbar = gamePlayer.getActionbar();
+                List<ComponentLike> components = Lists.newArrayList();
+                for (int i = 0; i < actionbar.size(); i++) {
+                    components.add(Component.join(ACBE_JOIN, actionbar.get(i), actionbar.get(++i)));
+                }
+                player.sendActionBar(Component.join(ACTIONBAR_JOIN, components));
+            }
+        }
+    }
+
+    private void clearDisableItems(Player player) {
+        PlayerInventory inventory = player.getInventory();
+        for (Material disableItem : DISABLE_ITEMS) {
+            inventory.remove(disableItem);
         }
     }
 }

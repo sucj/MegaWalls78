@@ -25,8 +25,8 @@ public final class GrapplingHook extends DurationCooldownPassive {
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 60, 0);
 
-    private static final Effect<Player> EFFECT_BREAK = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, SoundCategory.AMBIENT, 0.4F, 1.0F));
-    private static final Effect<Player> EFFECT_REPAIR = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, SoundCategory.AMBIENT, 0.4F, 1.0F));
+//    private static final Effect<Player> EFFECT_BREAK = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, SoundCategory.AMBIENT, 0.4F, 1.0F));
+//    private static final Effect<Player> EFFECT_REPAIR = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, SoundCategory.AMBIENT, 0.4F, 1.0F));
 
     private boolean noFall;
 
@@ -65,7 +65,7 @@ public final class GrapplingHook extends DurationCooldownPassive {
             noFall = true;
             gamePlayer.decreaseEnergy(ENERGY);
 
-            EFFECT_BREAK.play(player);
+//            EFFECT_BREAK.play(player);
 
             DURATION_RESET();
         }
@@ -83,7 +83,7 @@ public final class GrapplingHook extends DurationCooldownPassive {
                 DURATION_END();
             }
             if (repair(player)) {
-                EFFECT_REPAIR.play(player);
+//                EFFECT_REPAIR.play(player);
             }
         }
     }

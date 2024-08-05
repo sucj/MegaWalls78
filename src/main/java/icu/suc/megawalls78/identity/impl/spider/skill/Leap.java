@@ -3,6 +3,7 @@ package icu.suc.megawalls78.identity.impl.spider.skill;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.impl.spider.passive.Skitter;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
+import icu.suc.megawalls78.identity.trait.skill.task.AbstractTask;
 import icu.suc.megawalls78.util.*;
 import icu.suc.megawalls78.util.Effect;
 import net.minecraft.world.level.Level;
@@ -53,7 +54,7 @@ public final class Leap extends Skill {
         EFFECT_JUMP.play(player);
 
         Vector vector = player.getLocation().getDirection();
-        EntityUtil.getMetadata(player, "skitter", Skitter.Mode.class, Skitter.DEFAULT).accept(vector);
+        EntityUtil.getMetadata(player, Skitter.ID, Skitter.Mode.class, Skitter.DEFAULT).accept(vector);
         player.setVelocity(vector);
 
         if (run) {
@@ -63,27 +64,21 @@ public final class Leap extends Skill {
         return true;
     }
 
-    private final class Task extends BukkitRunnable {
-
-        private final Player player;
+    private final class Task extends AbstractTask {
 
         private Location lastLocation;
         private double travelLength;
 
-        private final int deaths;
-
         private Task(Player player) {
-            this.player = player;
+            super(player);
 
             this.lastLocation = player.getLocation();
-
-            deaths = player.getStatistic(Statistic.DEATHS);
         }
 
         @Override
         public void run() {
-            if (player.getStatistic(Statistic.DEATHS) > deaths) {
-                this.cancel();
+            if (shouldCancel()) {
+                cancel();
                 return;
             }
 

@@ -14,10 +14,11 @@ import java.util.function.Consumer;
 
 public final class Skitter extends Passive implements IActionbar {
 
+    public static final String ID = "skitter";
     public static final Mode DEFAULT = Mode.ARROW;
 
     public Skitter() {
-        super("skitter");
+        super(ID);
     }
 
     @EventHandler

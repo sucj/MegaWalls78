@@ -153,6 +153,7 @@ public class PlayerListener implements Listener {
                 } else {
                     gamePlayer.increaseDeaths();
                 }
+                gamePlayer.stopDurationSkills();
                 gamePlayer.disablePassives();
                 ComponentUtil.sendMessage(event.deathMessage(), Bukkit.getOnlinePlayers());
                 if (gamePlayer.getFinalDeaths() != 0) {
@@ -197,9 +198,9 @@ public class PlayerListener implements Listener {
                     PlayerUtil.setStarvation(player, 20);
                     MegaWalls78.getInstance().getSkinManager().applySkin(player);
                     gamePlayer.getIdentity().getKit().equip(player);
-                    int energy = gamePlayer.getEnergy();
-                    player.setLevel(energy);
-                    player.setExp((float) energy / gamePlayer.getIdentity().getEnergy());
+                    float energy = gamePlayer.getEnergy();
+                    player.setLevel((int) energy);
+                    player.setExp(energy / gamePlayer.getIdentity().getEnergy());
                     gamePlayer.enablePassives();
                 });
             }
@@ -232,9 +233,9 @@ public class PlayerListener implements Listener {
                 player.setHealth(40);
                 PlayerUtil.setStarvation(player, 20);
                 gamePlayer.getIdentity().getKit().equip(player);
-                int energy = gamePlayer.getEnergy();
-                player.setLevel(energy);
-                player.setExp((float) energy / gamePlayer.getIdentity().getEnergy());
+                float energy = gamePlayer.getEnergy();
+                player.setLevel((int) energy);
+                player.setExp(energy / gamePlayer.getIdentity().getEnergy());
                 gamePlayer.enablePassives();
             });
         }

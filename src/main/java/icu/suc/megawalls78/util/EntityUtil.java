@@ -26,11 +26,7 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.damage.DamageType;
-import org.bukkit.entity.AbstractArrow;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -139,10 +135,28 @@ public class EntityUtil {
     }
 
     public static Collection<Entity> getNearbyEntities(Entity entity, double radius) {
-        Location location = entity.getLocation();
         Collection<Entity> entities = getNearbyEntities(entity, radius, radius, radius);
-        entities.removeIf(e -> location.distance(e.getLocation()) > radius);
+        Vector center = entity.getBoundingBox().getCenter();
+        entities.removeIf(e -> !inSphere(e, center, radius));
         return filterVanished(entities);
+    }
+
+    public static boolean inSphere(Entity entity, Vector center, double radius) {
+        BoundingBox box = entity.getBoundingBox();
+
+        double x = center.getX();
+        x = Math.min(x, box.getMaxX());
+        x = Math.max(x, box.getMinX());
+
+        double y = center.getY();
+        y = Math.min(y, box.getMaxY());
+        y = Math.max(y, box.getMinY());
+
+        double z = center.getZ();
+        z = Math.min(z, box.getMaxZ());
+        z = Math.max(z, box.getMinZ());
+
+        return center.distance(new Vector(x, y, z)) <= radius;
     }
 
     public static Collection <Entity> getNearbyEntities(World world, BoundingBox box) {
@@ -297,14 +311,26 @@ public class EntityUtil {
         return effect.getAmplifier() == amplifier;
     }
 
-    public static Vector getPullVector(Entity from, Entity to) {
+    public static Vector getPullVector(Entity from, Entity to, boolean add) {
+        Location fromLoc = from.getLocation();
+        Location toLoc = to.getLocation();
+        Vector vector = toLoc.toVector().subtract(fromLoc.toVector()).normalize();
+        if (add) {
+            vector.add(from.getVelocity());
+        }
+        return vector;
+    }
+
+    public static Vector getPullVector(Entity from, Entity to, double x, double y, double z, boolean add) {
         Location fromLoc = from.getLocation();
         Location toLoc = to.getLocation();
         Vector vector = toLoc.toVector().subtract(fromLoc.toVector());
-        vector.setX(vector.getX() / 4);
-        vector.setY(vector.getY() / 8);
-        vector.setZ(vector.getZ() / 4);
-        vector.add(from.getVelocity());
+        vector.setX(vector.getX() / x);
+        vector.setY(vector.getY() / y);
+        vector.setZ(vector.getZ() / z);
+        if (add) {
+            vector.add(from.getVelocity());
+        }
         return vector;
     }
 
@@ -313,7 +339,7 @@ public class EntityUtil {
     }
 
     public static boolean isArrowAttack(EntityDamageEvent event) {
-        return event.getDamageSource().getDirectEntity() instanceof AbstractArrow;
+        return event.getDamageSource().getDirectEntity() instanceof Arrow;
     }
 
     public static boolean isSweepAttack(EntityDamageEvent event) {
@@ -335,6 +361,7 @@ public class EntityUtil {
     public enum Type {
         EXPLOSIVE_ARROW(ExplosiveArrow.class),
         GRAPPLING_HOOK(GrapplingHook.class),
+        HOMING_ARROW(HomingArrow.class),
         SHADOW_BURST_SKULL(ShadowBurstSkull.class),
         TEAM_WITHER(TeamWither.class),
         FAKE_LIGHTNING(FakeLightning.class);

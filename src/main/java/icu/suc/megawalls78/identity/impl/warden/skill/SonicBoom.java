@@ -3,6 +3,7 @@ package icu.suc.megawalls78.identity.impl.warden.skill;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
+import icu.suc.megawalls78.identity.trait.skill.task.AbstractTask;
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ParticleUtil;
@@ -63,9 +64,7 @@ public final class SonicBoom extends Skill {
         return true;
     }
 
-    private final class Task extends BukkitRunnable {
-
-        private final Player player;
+    private final class Task extends AbstractTask {
 
         private int charge;
         private double distance;
@@ -77,7 +76,7 @@ public final class SonicBoom extends Skill {
         private final AtomicInteger players;
 
         private Task(Player player) {
-            this.player = player;
+            super(player);
 
             this.victims = Sets.newHashSet();
             this.count = new AtomicInteger();
@@ -86,8 +85,8 @@ public final class SonicBoom extends Skill {
 
         @Override
         public void run() {
-            if (player.isDead()) {
-                this.cancel();
+            if (shouldCancel()) {
+                cancel();
                 return;
             }
 

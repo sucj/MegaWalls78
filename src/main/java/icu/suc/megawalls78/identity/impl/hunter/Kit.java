@@ -21,6 +21,7 @@ public final class Kit extends icu.suc.megawalls78.identity.Kit {
         addItem(GOLDEN_APPLE, 1);
         addTool(CARROT_ON_A_STICK);
         addCompass();
+        addItem(ARROW);
         setHelmet(IRON_HELMET);
         setBoots(IRON_BOOTS);
     }

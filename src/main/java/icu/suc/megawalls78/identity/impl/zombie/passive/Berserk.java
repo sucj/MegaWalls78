@@ -5,7 +5,6 @@ import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
-import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;

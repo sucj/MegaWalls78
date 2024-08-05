@@ -13,7 +13,7 @@ import java.util.Set;
 
 public abstract class Skill extends Trait implements IActionbar {
 
-    private final int cost;
+    private final float cost;
 
     private final long COOLDOWN;
 
@@ -22,11 +22,11 @@ public abstract class Skill extends Trait implements IActionbar {
     private final Class<? extends Passive> internal;
     private Passive passive;
 
-    public Skill(String id, int cost, long cooldown) {
+    public Skill(String id, float cost, long cooldown) {
         this(id, cost, cooldown, null);
     }
 
-    public Skill(String id, int cost, long cooldown, Class<? extends Passive> internal) {
+    public Skill(String id, float cost, long cooldown, Class<? extends Passive> internal) {
         super(id, Component.translatable("mw78.skill." + id));
         this.cost = cost;
         this.COOLDOWN = cooldown;
@@ -57,7 +57,7 @@ public abstract class Skill extends Trait implements IActionbar {
 
     protected abstract boolean use0(Player player);
 
-    public int getCost() {
+    public float getCost() {
         return cost;
     }
 

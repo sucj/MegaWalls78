@@ -26,7 +26,7 @@ public final class ShadowStep extends CooldownPassive {
                 event.getDamageSource().getCausingEntity() instanceof Player damager &&
                 player.isSneaking() &&
                 player.getLocation().distance(damager.getLocation()) <= RADIUS &&
-                !EntityUtil.getMetadata(player, "shadow_cloak")) {
+                !EntityUtil.getMetadata(player, ShadowCloak.ID)) {
 
             player.setFallDistance(0);
             player.teleport(getBlockBehindPlayer(damager));

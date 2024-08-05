@@ -11,6 +11,7 @@ import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
+import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.ComponentUtil;
@@ -45,8 +46,9 @@ public class GamePlayer {
     private int finalDeaths;
     private int finalAssists;
 
-    private int energy;
+    private float energy;
     private Map<Skill.Trigger, Skill> skills;
+    private Set<Skill> uniqueSkills;
     private List<Passive> passives;
     private Gathering gathering;
 
@@ -79,6 +81,14 @@ public class GamePlayer {
         }
     }
 
+    public void stopDurationSkills() {
+        for (Skill skill : uniqueSkills) {
+            if (skill instanceof DurationSkill durationSkill) {
+                durationSkill.stop();
+            }
+        }
+    }
+
     public boolean useSkill(Player player, Action action, Material material) {
         Skill skill = skills.get(Skill.Trigger.getTrigger(action, material));
         if (skill == null) {
@@ -94,8 +104,8 @@ public class GamePlayer {
         return false;
     }
 
-    public void setEnergy(int energy) {
-        int max = identity.getEnergy();
+    public void setEnergy(float energy) {
+        float max = identity.getEnergy();
         if (energy > max) {
             energy = max;
         } else if (energy < 0) {
@@ -115,11 +125,11 @@ public class GamePlayer {
         this.energy = energy;
     }
 
-    public void increaseEnergy(int increase) {
+    public void increaseEnergy(float increase) {
         setEnergy(energy + increase);
     }
 
-    public void decreaseEnergy(int decrease) {
+    public void decreaseEnergy(float decrease) {
         setEnergy(energy - decrease);
     }
 
@@ -133,7 +143,7 @@ public class GamePlayer {
         }
     }
 
-    public int getEnergy() {
+    public float getEnergy() {
         return energy;
     }
 
@@ -159,16 +169,12 @@ public class GamePlayer {
         this.identity = pre.getIdentity();
         this.passives = identity.getPassives(this);
         this.skills = identity.getSkills(this, passives);
+        this.uniqueSkills = Sets.newHashSet(skills.values());
         this.gathering = identity.getGathering(this, passives);
 
         this.actionbar = Lists.newArrayList();
-        Set<Class<? extends Skill>> skillClasses = Sets.newHashSet();
-        for (Skill skill : skills.values()) {
-            Class<? extends Skill> skillClass = skill.getClass();
-            if (!skillClasses.contains(skillClass)) {
-                add2Actionbar(Component.translatable("mw78.acb." + skill.getId(), identity.getColor(), TextDecoration.BOLD), SupplierComponent.create(skill::acb));
-                skillClasses.add(skillClass);
-            }
+        for (Skill skill : uniqueSkills) {
+            add2Actionbar(Component.translatable("mw78.acb." + skill.getId(), identity.getColor(), TextDecoration.BOLD), SupplierComponent.create(skill::acb));
         }
         for (Passive passive : passives) {
             if (passive instanceof IActionbar) {

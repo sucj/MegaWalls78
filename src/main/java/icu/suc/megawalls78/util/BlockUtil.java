@@ -1,16 +1,19 @@
 package icu.suc.megawalls78.util;
 
+import com.google.common.collect.Sets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.TileState;
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
@@ -18,10 +21,13 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Set;
 
 public class BlockUtil {
+
     public static final Set<Material> STONES = Set.of(Material.STONE, Material.DEEPSLATE);
     public static final Set<Material> WOODS = Set.of(Material.OAK_WOOD, Material.SPRUCE_WOOD, Material.BIRCH_WOOD, Material.JUNGLE_WOOD, Material.ACACIA_WOOD, Material.CHERRY_WOOD, Material.DARK_OAK_WOOD, Material.MANGROVE_WOOD, Material.OAK_LOG, Material.SPRUCE_LOG, Material.BIRCH_LOG, Material.JUNGLE_LOG, Material.ACACIA_LOG, Material.CHERRY_LOG, Material.DARK_OAK_LOG, Material.MANGROVE_LOG);
     public static final Set<Material> ORES = Set.of(Material.COAL_ORE, Material.IRON_ORE, Material.GOLD_ORE, Material.DIAMOND_ORE, Material.COPPER_ORE, Material.EMERALD_ORE, Material.LAPIS_ORE, Material.REDSTONE_ORE, Material.NETHER_GOLD_ORE, Material.NETHER_QUARTZ_ORE, Material.DEEPSLATE_COAL_ORE, Material.DEEPSLATE_IRON_ORE, Material.DEEPSLATE_GOLD_ORE, Material.DEEPSLATE_DIAMOND_ORE, Material.DEEPSLATE_COPPER_ORE, Material.DEEPSLATE_EMERALD_ORE, Material.DEEPSLATE_LAPIS_ORE, Material.DEEPSLATE_REDSTONE_ORE);
     public static final Set<Material> DIRT = Set.of(Material.DIRT, Material.COARSE_DIRT, Material.ROOTED_DIRT, Material.SAND, Material.RED_SAND, Material.MUD, Material.CLAY, Material.GRAVEL);
+
+    private static final Set<Class<?>> CAN_INTERACT = Sets.newHashSet();
 
     public static boolean isStone(Material material) {
         return STONES.contains(material);
@@ -83,19 +89,43 @@ public class BlockUtil {
         if (block == null) {
             return false;
         }
-        net.minecraft.world.level.block.Block nms = ((CraftBlock) block).getNMS().getBlock();
-        try {
-            nms.getClass().getDeclaredMethod("useWithoutItem", BlockState.class, Level.class, BlockPos.class, Player.class, BlockHitResult.class);
+        Class<?> clazz = ((CraftBlock) block).getNMS().getBlock().getClass();
+        if (CAN_INTERACT.contains(clazz)) {
             return true;
+        }
+        Class<?> aClass = ((CraftBlock) block).getNMS().getBlock().getClass();
+        int i = canInteract(aClass);
+        if (i == 1) {
+            return true;
+        }
+        while (i == 0) {
+            aClass = aClass.getSuperclass();
+            if (aClass == net.minecraft.world.level.block.Block.class || aClass == BlockBehaviour.class) {
+                break;
+            }
+            i = canInteract(aClass);
+            if (i == 1) {
+                CAN_INTERACT.add(aClass);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static int canInteract(Class<?> clazz) {
+        try {
+            clazz.getDeclaredMethod("useWithoutItem", BlockState.class, Level.class, BlockPos.class, Player.class, BlockHitResult.class);
+            return 1;
         } catch (NoSuchMethodException ignored) {
         }
         try {
-            nms.getClass().getDeclaredMethod("useItemOn", net.minecraft.world.item.ItemStack.class, BlockState.class, Level.class, BlockPos.class, Player.class, InteractionHand.class, BlockHitResult.class);
-            return true;
+            clazz.getDeclaredMethod("useItemOn", net.minecraft.world.item.ItemStack.class, BlockState.class, Level.class, BlockPos.class, Player.class, InteractionHand.class, BlockHitResult.class);
+            return 1;
         }
         catch (NoSuchMethodException ignored) {
         }
-        return false;
+        return 0;
     }
 
     public static void addDrops(BlockDropItemEvent event, ItemStack itemStack) {

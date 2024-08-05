@@ -7,6 +7,7 @@ import icu.suc.megawalls78.identity.impl.assassin.skill.ShadowCloak;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.*;
 import icu.suc.megawalls78.util.Effect;
 import org.bukkit.*;
@@ -48,7 +49,7 @@ public final class Lycanthropy extends DurationSkill {
     private Task task;
 
     public Lycanthropy() {
-        super("lycanthropy", 100, 6000L, DURATION, Internal.class);
+        super("lycanthropy", 100, 6000L, 6000L, Internal.class);
     }
 
     @Override
@@ -75,48 +76,30 @@ public final class Lycanthropy extends DurationSkill {
         player.addPotionEffect(SPEED);
     }
 
-    private final class Task extends BukkitRunnable {
-
-        private final Player player;
-
-        private int tick;
-
-        private final int deaths;
+    private final class Task extends DurationTask {
 
         private Task(Player player) {
-            this.player = player;
+            super(player, TICK);
 
             EntityUtil.setMetadata(player, Lycanthropy.this.getId(), true);
-
-            deaths = player.getStatistic(Statistic.DEATHS);
         }
 
         @Override
         public void run() {
-            if (player.getStatistic(Statistic.DEATHS) > deaths) {
-                this.cancel();
+            if (shouldCancel()) {
+                cancel();
                 return;
             }
 
-            if (tick >= TICK) {
-                this.cancel();
-                return;
-            }
+            super.run();
 
             if (tick % 2 == 0) {
                 EFFECT_SKILL.play(player);
             }
-
-            tick++;
-        }
-
-        public void resetTimer() {
-            this.tick = 0;
         }
 
         @Override
         public synchronized void cancel() throws IllegalStateException {
-            Lycanthropy.this.DURATION_END();
             Internal passive = (Internal) Lycanthropy.this.getPassive();
             Set<UUID> unique = passive.getUnique();
             double damage = Math.min(Math.max(unique.size() * DAMAGE, MIN_DAMAGE), MAX_DAMAGE);
