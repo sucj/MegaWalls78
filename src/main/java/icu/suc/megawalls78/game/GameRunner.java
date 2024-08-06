@@ -213,6 +213,9 @@ public class GameRunner implements Runnable {
     public void next(GameState state) {
         MegaWalls78 instance = MegaWalls78.getInstance();
         GameManager gameManager = instance.getGameManager();
+        if (gameManager.getState().equals(GameState.ENDING)) {
+            return;
+        }
         ConfigManager configManager = instance.getConfigManager();
         switch (state) {
             case COUNTDOWN -> {
@@ -258,13 +261,17 @@ public class GameRunner implements Runnable {
             case OPENING -> {
                 gameManager.setState(GameState.PREPARING);
                 timer = configManager.preparingTime;
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    ComponentUtil.sendMessage(Component.empty(), player);
+                    ComponentUtil.sendMessage(Component.translatable("mw78.prepare", NamedTextColor.RED).decorate(TextDecoration.BOLD), player);
+                    ComponentUtil.sendMessage(Component.empty(), player);
+                }
                 for (GameTeam team : gameManager.getTeamPlayersMap().keySet()) {
                     if (gameManager.getTeamPlayersMap().get(team).isEmpty()) {
                         gameManager.getWither(team).setHealth(0);
                     }
                 }
                 destroyTeamGate();
-                ComponentUtil.sendMessage(Component.translatable("mw78.prepare", NamedTextColor.RED).decorate(TextDecoration.BOLD), Bukkit.getOnlinePlayers());
                 Bukkit.getScheduler().runTaskAsynchronously(MegaWalls78.getInstance(), () -> {
                     for (GameTeam team : gameManager.getTeams()) {
                         allowedBlocks.addAll(getTeamRegion(team));
@@ -322,7 +329,7 @@ public class GameRunner implements Runnable {
                     }
 
                     try {
-                        Thread.sleep(2000L);
+                        Thread.sleep(1000L);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }

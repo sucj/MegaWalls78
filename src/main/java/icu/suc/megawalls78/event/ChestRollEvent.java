@@ -25,21 +25,21 @@ public abstract class ChestRollEvent extends PlayerEvent {
 
         private static final HandlerList handlers = new HandlerList();
 
-        private double probability;
+        private double chance;
 
         private boolean cancelled;
 
-        public Pre(Player player, BlockState blockState, double probability) {
+        public Pre(Player player, BlockState blockState, double chance) {
             super(player, blockState);
-            this.probability = probability;
+            this.chance = chance;
         }
 
-        public double getProbability() {
-            return probability;
+        public double getChance() {
+            return chance;
         }
 
-        public void setProbability(double probability) {
-            this.probability = probability;
+        public void setChance(double chance) {
+            this.chance = chance;
         }
 
         @Override

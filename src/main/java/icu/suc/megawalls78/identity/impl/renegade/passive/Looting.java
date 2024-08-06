@@ -59,19 +59,10 @@ public final class Looting extends ChargePassive {
     }
 
     private static void handle(PlayerDeathEvent event, GamePlayer gamePlayer) {
-        Player player = gamePlayer.getBukkitPlayer();
-        if (player == null) {
-            event.getDrops().add(POTION.build());
-            return;
-        }
-        InventoryUtil.addItem(player, event, POTION.build());
+        InventoryUtil.addItem(gamePlayer.getBukkitPlayer(), event, POTION.build());
     }
 
     private static void heal(GamePlayer gamePlayer) {
-        Player player = gamePlayer.getBukkitPlayer();
-        if (player == null) {
-            return;
-        }
-        player.heal(HEAL);
+        gamePlayer.getBukkitPlayer().heal(HEAL);
     }
 }

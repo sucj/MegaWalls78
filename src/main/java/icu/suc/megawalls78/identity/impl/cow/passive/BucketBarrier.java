@@ -4,7 +4,6 @@ import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
 import icu.suc.megawalls78.util.Effect;
-import io.papermc.paper.util.Tick;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,8 +24,8 @@ public final class BucketBarrier extends DurationCooldownPassive {
     private static final double HEALTH = 20.0D;
     private static final double DAMAGE = 2.0D;
     private static final double SCALE = 0.75D;
-    private static final double SPEED = 0.1D;
     private static final double RADIUS = 0.4D;
+    private static final double SPEED = 0.1D;
 
     private static final Effect<Pair<Player, Float>> EFFECT_SKILL = Effect.create(pair -> {
         Player player = pair.getLeft();
@@ -58,7 +57,7 @@ public final class BucketBarrier extends DurationCooldownPassive {
             return;
         }
 
-        if (COOLDOWN() && spawnBarriers(PLAYER().getBukkitPlayer())) {
+        if (COOLDOWN() && spawnBarriers()) {
             DURATION_RESET();
         } else {
             removeBarriers();
@@ -93,8 +92,9 @@ public final class BucketBarrier extends DurationCooldownPassive {
         return false;
     }
 
-    private boolean spawnBarriers(Player player) {
-        if (player != null && player.getHealth() < HEALTH) {
+    private boolean spawnBarriers() {
+        Player player = PLAYER().getBukkitPlayer();
+        if (player.getHealth() < HEALTH) {
             if (barriers == null) {
                 barriers = new ItemDisplay[4];
                 center = player.getEyeLocation().clone().add(0, 0.5, 0);
@@ -102,7 +102,7 @@ public final class BucketBarrier extends DurationCooldownPassive {
                     barriers[i] = (ItemDisplay) center.getWorld().spawnEntity(barrierLocation(i), EntityType.ITEM_DISPLAY);
                     barriers[i].setItemStack(ItemStack.of(Material.MILK_BUCKET));
                     Transformation transformation = barriers[i].getTransformation();
-                    barriers[i].setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(), transformation.getScale().set(0.5F), transformation.getRightRotation()));
+                    barriers[i].setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(), transformation.getScale().set(0.4F), transformation.getRightRotation()));
                 }
             } else {
                 for (int i = 0; i < 4; i++) {
@@ -128,10 +128,6 @@ public final class BucketBarrier extends DurationCooldownPassive {
             double angle = Math.toRadians(barrier.getLocation().getYaw()) + SPEED;
             barrier.teleport(new Location(center.getWorld(), center.getX() + RADIUS * Math.cos(angle), center.getY(), center.getZ() + RADIUS * Math.sin(angle), (float) Math.toDegrees(angle) + 90.0F, 0));
         }
-    }
-
-    private void updateCenter(Location location) {
-        center = location.clone().add(0, 1.0D, 0);
     }
 
     private Location barrierLocation(int i) {

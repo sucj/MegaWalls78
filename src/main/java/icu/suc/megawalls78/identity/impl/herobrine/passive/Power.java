@@ -2,6 +2,7 @@ package icu.suc.megawalls78.identity.impl.herobrine.passive;
 
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.identity.trait.passive.DurationPassive;
+import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -36,12 +37,11 @@ import org.bukkit.event.entity.EntityDamageEvent;
     }
 
     private static boolean condition(EntityDamageByEntityEvent event) {
-        EntityDamageEvent.DamageCause cause = event.getCause();
-        return cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || cause.equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK);
+        return EntityUtil.isMeleeAttack(event) || EntityUtil.isSweepAttack(event);
     }
 
     private static void power(EntityDamageByEntityEvent event) {
-        event.setDamage(event.getDamage() * SCALE);
+        event.setDamage(event.getFinalDamage() * SCALE);
     }
 
     @Override

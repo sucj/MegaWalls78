@@ -5,9 +5,9 @@ import icu.suc.megawalls78.identity.Identity;
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.*;
 
-public final class Kit extends icu.suc.megawalls78.identity.Kit {
+public final class Spider extends icu.suc.megawalls78.identity.Kit {
 
-    public Kit(Identity identity) {
+    public Spider(Identity identity) {
         super(identity);
     }
 

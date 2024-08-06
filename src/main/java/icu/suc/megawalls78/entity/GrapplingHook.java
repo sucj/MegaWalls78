@@ -22,7 +22,7 @@ public class GrapplingHook extends FishingHook {
         super(((CraftPlayer) thrower).getHandle(), world, 0, -1);
         this.max = (double) max;
 
-        hook = new Hook(world, getX(), getY(), getZ(), getDeltaMovement().scale(2.0D), this);
+        hook = new Hook(world, getX(), getY(), getZ(), getDeltaMovement().scale(1.5D), this);
         world.addFreshEntity(hook);
         setHookedEntity(hook);
     }

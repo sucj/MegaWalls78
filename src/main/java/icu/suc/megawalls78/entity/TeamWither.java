@@ -1,7 +1,8 @@
 package icu.suc.megawalls78.entity;
 
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.entity.pathfinder.PathfinderGoalNearestAttackableTargetTeam;
+import icu.suc.megawalls78.entity.pathfinder.HurtByOtherTeamTargetGoal;
+import icu.suc.megawalls78.entity.pathfinder.NearestAttackableOtherTeamTargetGoal;
 import icu.suc.megawalls78.game.GameState;
 import net.kyori.adventure.bossbar.BossBar;
 import net.minecraft.tags.EntityTypeTags;
@@ -56,7 +57,8 @@ public class TeamWither extends WitherBoss {
     protected void registerGoals() {
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 10.0F));
-        this.targetSelector.addGoal(2, new PathfinderGoalNearestAttackableTargetTeam(this, 0, false, false, LIVING_ENTITY_SELECTOR));
+        this.targetSelector.addGoal(1, new HurtByOtherTeamTargetGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableOtherTeamTargetGoal<>(this, LivingEntity.class, 0, false, false, LIVING_ENTITY_SELECTOR));
     }
 
     @Override

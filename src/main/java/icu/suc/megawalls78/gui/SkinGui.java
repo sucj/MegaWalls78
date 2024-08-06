@@ -68,7 +68,7 @@ public class SkinGui {
         if (!selectedSkin.equals(skins.getFirst())) {
             inventory.setItem(RESET_SLOT, ItemBuilder.of(Material.REDSTONE_BLOCK)
                     .setDisplayName(Component.translatable("mw78.gui.skin.reset"))
-                    .setColor(NamedTextColor.WHITE)
+                    .setNameColor(NamedTextColor.WHITE)
                     .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                     .build());
         }

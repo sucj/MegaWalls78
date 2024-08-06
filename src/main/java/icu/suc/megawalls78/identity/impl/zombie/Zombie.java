@@ -5,9 +5,9 @@ import icu.suc.megawalls78.identity.Identity;
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.PROTECTION;
 
-public final class Kit extends icu.suc.megawalls78.identity.Kit {
+public final class Zombie extends icu.suc.megawalls78.identity.Kit {
 
-    public Kit(Identity identity) {
+    public Zombie(Identity identity) {
         super(identity);
     }
 

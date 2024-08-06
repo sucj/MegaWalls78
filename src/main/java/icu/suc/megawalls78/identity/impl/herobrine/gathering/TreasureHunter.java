@@ -31,7 +31,7 @@ public final class TreasureHunter extends Gathering {
         }
 
         private static void handle(ChestRollEvent.Pre event) {
-            event.setProbability(event.getProbability() * SCALE);
+            event.setChance(event.getChance() * SCALE);
         }
     }
 }

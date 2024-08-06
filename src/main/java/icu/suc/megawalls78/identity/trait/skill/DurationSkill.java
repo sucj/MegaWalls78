@@ -58,7 +58,10 @@ public abstract class DurationSkill extends Skill {
     }
 
     protected void DURATION_END() {
-        COOLDOWN(-DURATION_REMAIN());
+        long remain = DURATION_REMAIN();
+        if (remain > 0) {
+            COOLDOWN(-remain);
+        }
         DURATION_LAST = 0;
     }
 

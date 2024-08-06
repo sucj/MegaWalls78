@@ -231,20 +231,20 @@ public class GameManager {
                     ComponentUtil.sendMessage(Component.translatable("mw78.team.eliminated", team.name().color(team.color())).decorate(TextDecoration.BOLD), player);
                     ComponentUtil.sendMessage(Component.empty(), player);
                 }
-            }, 20L);
 
-            int s = teamEliminateMap.size();
-            for (GameTeam gameTeam : teamEliminateMap.keySet()) {
-                if (teamEliminateMap.get(gameTeam)) {
-                    s--;
+                int s = teamEliminateMap.size();
+                for (GameTeam gameTeam : teamEliminateMap.keySet()) {
+                    if (teamEliminateMap.get(gameTeam)) {
+                        s--;
+                    }
                 }
-            }
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.sendPlayerListFooter(MegaWalls78.getInstance().getGameManager().footer().appendNewline().append(Component.text("MC.SUC.ICU", NamedTextColor.AQUA, TextDecoration.BOLD)));
-            }
-            if (s == 1) {
-                runner.next(GameState.FIGHTING);
-            }
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    player.sendPlayerListFooter(MegaWalls78.getInstance().getGameManager().footer().appendNewline().append(Component.text("MC.SUC.ICU", NamedTextColor.AQUA, TextDecoration.BOLD)));
+                }
+                if (s == 1) {
+                    runner.next(GameState.FIGHTING);
+                }
+            }, 20L);
         }
     }
 

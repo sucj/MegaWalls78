@@ -26,10 +26,7 @@ public final class SoulSiphon extends DurationPassive {
         }
         GamePlayer gamePlayer = event.getPlayer();
         if (PASSIVE(gamePlayer)) {
-            Player player = gamePlayer.getBukkitPlayer();
-            if (player != null) {
-                player.addPotionEffect(REGENERATION);
-            }
+            gamePlayer.getBukkitPlayer().addPotionEffect(REGENERATION);
             DURATION_RESET();
         }
     }
@@ -45,7 +42,7 @@ public final class SoulSiphon extends DurationPassive {
     }
 
     private static void power(EntityDamageByEntityEvent event) {
-        event.setDamage(event.getDamage() * SCALE);
+        event.setDamage(event.getFinalDamage() * SCALE);
     }
 
     @Override

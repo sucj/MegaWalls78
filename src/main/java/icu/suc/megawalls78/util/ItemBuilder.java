@@ -10,6 +10,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.skinsrestorer.api.property.SkinProperty;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -19,10 +20,7 @@ import org.bukkit.craftbukkit.persistence.CraftPersistentDataTypeRegistry;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 
@@ -59,10 +57,12 @@ public class ItemBuilder {
 
     private PlayerProfile profile;
 
+    private Color armorColor;
+
     private List<Component> prefixList;
     private List<Component> suffixList;
 
-    private TextColor color;
+    private TextColor nameColor;
     private List<Decoration> decorationList;
 
     public static ItemBuilder of(Material type) {
@@ -189,6 +189,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setArmorColor(Color armorColor) {
+        this.armorColor = armorColor;
+        return this;
+    }
+
     public ItemBuilder addPrefix(Component prefix) {
         if (this.prefixList == null) {
             this.prefixList = Lists.newArrayList();
@@ -205,8 +210,8 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setColor(TextColor color) {
-        this.color = color;
+    public ItemBuilder setNameColor(TextColor nameColor) {
+        this.nameColor = nameColor;
         return this;
     }
 
@@ -284,6 +289,12 @@ public class ItemBuilder {
             } catch (ClassCastException ignored) {}
         }
 
+        if (armorColor != null) {
+            try {
+                ((ColorableArmorMeta) itemMeta).setColor(armorColor);
+            } catch (ClassCastException ignored) {}
+        }
+
         if (prefixList != null) {
             Component prefixes = Component.empty();
             for (Component prefix : prefixList) {
@@ -301,10 +312,10 @@ public class ItemBuilder {
 
         Component component = itemMeta.displayName();
         if (component == null) {
-            if (color != null || decorationList != null) {
+            if (nameColor != null || decorationList != null) {
                 component = Component.translatable(itemStack);
-                if (color != null) {
-                    component = component.color(color);
+                if (nameColor != null) {
+                    component = component.color(nameColor);
                 }
                 if (decorationList != null) {
                     for (Decoration decoration : decorationList) {
@@ -314,8 +325,8 @@ public class ItemBuilder {
                 itemMeta.displayName(component);
             }
         } else {
-            if (color != null) {
-                component = component.color(color);
+            if (nameColor != null) {
+                component = component.color(nameColor);
             }
             if (decorationList != null) {
                 for (Decoration decoration : decorationList) {

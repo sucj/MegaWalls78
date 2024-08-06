@@ -7,9 +7,9 @@ import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.BLAST_PROTECTION;
 import static org.bukkit.enchantments.Enchantment.FIRE_PROTECTION;
 
-public final class Kit extends icu.suc.megawalls78.identity.Kit {
+public final class Dreadlord extends icu.suc.megawalls78.identity.Kit {
 
-    public Kit(Identity identity) {
+    public Dreadlord(Identity identity) {
         super(identity);
     }
 

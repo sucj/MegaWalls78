@@ -3,6 +3,7 @@ package icu.suc.megawalls78.listener;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.management.GameManager;
+import io.papermc.paper.event.entity.TameableDeathMessageEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -87,6 +88,11 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPortalCreate(PortalCreateEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onTameableDeathMessage(TameableDeathMessageEvent event) {
         event.setCancelled(true);
     }
 }

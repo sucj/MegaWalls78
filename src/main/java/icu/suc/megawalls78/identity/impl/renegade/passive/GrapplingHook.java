@@ -67,7 +67,7 @@ public final class GrapplingHook extends DurationCooldownPassive {
 
 //            EFFECT_BREAK.play(player);
 
-            DURATION_RESET();
+            DURATION_RESET_ONLY();
         }
     }
 

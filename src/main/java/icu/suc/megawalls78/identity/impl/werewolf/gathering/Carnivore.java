@@ -36,9 +36,6 @@ public class Carnivore extends Gathering {
 
         private static void handle(IncreaseStatsEvent.Kill event) {
             Player player = event.getPlayer().getBukkitPlayer();
-            if (player == null) {
-                return;
-            }
             if (event.isFinal()) {
                 InventoryUtil.addItem(player, event.getEvent(), ItemStack.of(Material.COOKED_BEEF, FINAL_KILL));
             } else {

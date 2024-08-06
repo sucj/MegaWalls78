@@ -63,7 +63,7 @@ public class IdentityGui {
 
         inventory.setItem(RANDOM_SLOT, ItemBuilder.of(Material.NETHER_STAR)
                 .setDisplayName(Component.translatable("mw78.gui.identity.random"))
-                .setColor(NamedTextColor.WHITE)
+                .setNameColor(NamedTextColor.WHITE)
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .setEnchantmentGlintOverride(false)
                 .build());

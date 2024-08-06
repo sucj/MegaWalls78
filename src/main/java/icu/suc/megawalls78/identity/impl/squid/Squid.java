@@ -8,9 +8,9 @@ import static org.bukkit.enchantments.Enchantment.DEPTH_STRIDER;
 import static org.bukkit.enchantments.Enchantment.PROTECTION;
 import static org.bukkit.potion.PotionEffectType.REGENERATION;
 
-public class Kit extends icu.suc.megawalls78.identity.Kit {
+public class Squid extends icu.suc.megawalls78.identity.Kit {
 
-    public Kit(Identity identity) {
+    public Squid(Identity identity) {
         super(identity);
     }
 

@@ -49,4 +49,23 @@ public class InventoryUtil {
             BlockUtil.addDrops(event, item);
         }
     }
+
+    public static boolean addItemRandomSlot(Inventory inventory, ItemStack itemStack) {
+        List<Integer> slots = Lists.newArrayList();
+        int i = -1;
+        for (ItemStack slot : inventory) {
+            if (slot == null || slot.isEmpty()) {
+                if (i == -1) {
+                    i = 0;
+                }
+                slots.add(i);
+            }
+            i++;
+        }
+        if (i == -1) {
+            return false;
+        }
+        inventory.setItem(slots.get(RandomUtil.RANDOM.nextInt(slots.size())), itemStack);
+        return true;
+    }
 }

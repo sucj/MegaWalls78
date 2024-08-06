@@ -138,6 +138,7 @@ public final class ShadowCloak extends DurationSkill {
             EntityUtil.removeMetadata(player, ShadowCloak.this.getId());
             updateArmor();
             super.cancel();
+            stop();
         }
     }
 
@@ -154,9 +155,6 @@ public final class ShadowCloak extends DurationSkill {
                     return;
                 }
                 Player player = gamePlayer.getBukkitPlayer();
-                if (player == null) {
-                    return;
-                }
                 PacketContainer packet = event.getPacket();
                 if (player.getEntityId() != packet.getIntegers().read(0)) {
                     return;

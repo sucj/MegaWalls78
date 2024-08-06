@@ -27,14 +27,21 @@ public class DurationCooldownPassive extends CooldownPassive {
     }
 
     protected void DURATION_RESET() {
-        long current = CURRENT();
-        COOLDOWN_LAST = current;
-        DURATION_LAST = current;
+        DURATION_RESET_ONLY();
         COOLDOWN(DURATION);
     }
 
+    protected void DURATION_RESET_ONLY() {
+        long current = CURRENT();
+        COOLDOWN_LAST = current;
+        DURATION_LAST = current;
+    }
+
     protected void DURATION_END() {
-        COOLDOWN(-DURATION_REMAIN());
+        long remain = DURATION_REMAIN();
+        if (remain > 0) {
+            COOLDOWN(-remain);
+        }
         DURATION_LAST = 0;
     }
 

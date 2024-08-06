@@ -9,9 +9,9 @@ import static org.bukkit.enchantments.Enchantment.*;
 import static org.bukkit.potion.PotionEffectType.REGENERATION;
 import static org.bukkit.potion.PotionEffectType.SPEED;
 
-public final class Kit extends icu.suc.megawalls78.identity.Kit {
+public final class Assassin extends icu.suc.megawalls78.identity.Kit {
 
-    public Kit(Identity identity) {
+    public Assassin(Identity identity) {
         super(identity);
     }
 

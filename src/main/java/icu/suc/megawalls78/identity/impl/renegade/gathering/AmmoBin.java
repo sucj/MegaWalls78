@@ -5,6 +5,7 @@ import icu.suc.megawalls78.event.ChestRollEvent;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.BlockUtil;
+import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.RandomUtil;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
@@ -56,16 +57,7 @@ public final class AmmoBin extends Gathering {
         }
 
         private static void handleRoll(ChestRollEvent.Post event) {
-            List<Integer> slots = Lists.newArrayList();
-            int i = 0;
-            Inventory inventory = event.getInventory();
-            for (ItemStack itemStack : inventory) {
-                if (itemStack == null || itemStack.isEmpty()) {
-                    slots.add(i);
-                }
-                i++;
-            }
-            inventory.setItem(slots.get(RandomUtil.RANDOM.nextInt(slots.size())), ItemStack.of(Material.ARROW, AMOUNT));
+            InventoryUtil.addItemRandomSlot(event.getInventory(), ItemStack.of(Material.ARROW, AMOUNT));
         }
     }
 }

@@ -66,7 +66,7 @@ public abstract class Kit {
         return ItemBuilder.of(material)
                 .addPrefix(prefix())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setColor(NamedTextColor.AQUA)
+                .setNameColor(NamedTextColor.AQUA)
                 .addMW78Tag(ItemUtil.SOUL_B0UND, PersistentDataType.BOOLEAN, true)
                 .setEnchantmentGlintOverride(true);
     }

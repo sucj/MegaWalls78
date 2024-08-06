@@ -34,6 +34,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
@@ -51,7 +52,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
-public class SkillListener implements Listener {
+public class GameListener implements Listener {
 
     public static final PotionEffect COW_MILK_RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 100, 0, false);
     public static final PotionEffect COW_MILK_REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1, false);
@@ -69,7 +70,7 @@ public class SkillListener implements Listener {
     private static final LootTable NORMAL_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "normal"));
     private static final Set<UUID> NO_NEWBEE = Sets.newHashSet();
 
-    private static final Set<Material> DISABLE_ITEMS = Set.of(Material.BUCKET, Material.GLASS_BOTTLE, Material.WATER_BUCKET, Material.LAVA_BUCKET);
+    private static final Set<Material> DISABLE_ITEMS = Set.of(Material.BUCKET, Material.GLASS_BOTTLE, Material.WATER_BUCKET, Material.LAVA_BUCKET, Material.WITHER_ROSE);
 
     @EventHandler
     public void onEnergyChange(EnergyChangeEvent event) {
@@ -143,7 +144,7 @@ public class SkillListener implements Listener {
 
             ChestRollEvent.Pre pre = new ChestRollEvent.Pre(player, event.getBlockState(), MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING) ? BEFORE_PBB : AFTER_PBB);
             Bukkit.getPluginManager().callEvent(pre);
-            if (pre.isCancelled() || RandomUtil.RANDOM.nextDouble() > pre.getProbability()) {
+            if (pre.isCancelled() || RandomUtil.RANDOM.nextDouble() > pre.getChance()) {
                 return;
             }
 
@@ -308,6 +309,13 @@ public class SkillListener implements Listener {
         PlayerInventory inventory = player.getInventory();
         for (Material disableItem : DISABLE_ITEMS) {
             inventory.remove(disableItem);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onEntitySpawn(EntitySpawnEvent event) {
+        if (event.getEntity() instanceof Item item && DISABLE_ITEMS.contains(item.getItemStack().getType())) {
+            event.setCancelled(true);
         }
     }
 }

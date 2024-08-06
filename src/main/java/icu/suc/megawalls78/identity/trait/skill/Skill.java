@@ -10,6 +10,7 @@ import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
+import java.util.function.Predicate;
 
 public abstract class Skill extends Trait implements IActionbar {
 
@@ -81,18 +82,27 @@ public abstract class Skill extends Trait implements IActionbar {
         SWORD(Action.RIGHT, Tag.ITEMS_SWORDS),
         BOW(Action.LEFT, Tag.ITEMS_ENCHANTABLE_BOW),
         SHOVEL(Action.RIGHT, Tag.ITEMS_SHOVELS),
-        AXE(Action.RIGHT, Tag.ITEMS_AXES);
+        AXE(Action.RIGHT, Tag.ITEMS_AXES),
+        CARROT_ON_A_STICK(Action.RIGHT, Material.CARROT_ON_A_STICK);
 
         private final Action action;
-        private final Tag<Material> tag;
+        private final Predicate<Material> filter;
+
+        Trigger(Action action, Material material) {
+            this(action, material::equals);
+        }
 
         Trigger(Action action, Tag<Material> tag) {
+            this(action, tag::isTagged);
+        }
+
+        Trigger(Action action, Predicate<Material> filter) {
             this.action = action;
-            this.tag = tag;
+            this.filter = filter;
         }
 
         private boolean isTriggered(org.bukkit.event.block.Action action, Material material) {
-            return this.action.equals(Action.getAction(action)) && this.tag.isTagged(material);
+            return this.action.equals(Action.getAction(action)) && this.filter.test(material);
         }
 
         public static Trigger getTrigger(org.bukkit.event.block.Action action, Material material) {

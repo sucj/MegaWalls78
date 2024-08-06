@@ -81,7 +81,7 @@ public final class Lycanthropy extends DurationSkill {
         private Task(Player player) {
             super(player, TICK);
 
-            EntityUtil.setMetadata(player, Lycanthropy.this.getId(), true);
+            EntityUtil.setMetadata(player, getId(), true);
         }
 
         @Override
@@ -124,6 +124,7 @@ public final class Lycanthropy extends DurationSkill {
             EntityUtil.removeMetadata(player, Lycanthropy.this.getId());
             summaryHit(player, count.get());
             super.cancel();
+            stop();
         }
     }
 

@@ -7,9 +7,9 @@ import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.*;
 import static org.bukkit.potion.PotionEffectType.REGENERATION;
 
-public final class Kit extends icu.suc.megawalls78.identity.Kit {
+public final class Moleman extends icu.suc.megawalls78.identity.Kit {
 
-    public Kit(Identity identity) {
+    public Moleman(Identity identity) {
         super(identity);
     }
 

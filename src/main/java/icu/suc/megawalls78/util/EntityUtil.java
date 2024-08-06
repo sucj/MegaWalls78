@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import de.myzelyam.api.vanish.VanishAPI;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.entity.*;
+import icu.suc.megawalls78.entity.TamedWolf;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.floats.FloatArraySet;
 import it.unimi.dsi.fastutil.floats.FloatArrays;
@@ -359,12 +360,17 @@ public class EntityUtil {
     }
 
     public enum Type {
+        CONTROLLABLE_PIG(ControllablePig.class),
         EXPLOSIVE_ARROW(ExplosiveArrow.class),
+        FAKE_LIGHTNING(FakeLightning.class),
         GRAPPLING_HOOK(GrapplingHook.class),
         HOMING_ARROW(HomingArrow.class),
         SHADOW_BURST_SKULL(ShadowBurstSkull.class),
+        TAMED_WOLF(TamedWolf.class),
+        TEAM_SKELETON(TeamSkeleton.class),
+        TEAM_SPIDER(TeamSpider.class),
         TEAM_WITHER(TeamWither.class),
-        FAKE_LIGHTNING(FakeLightning.class);
+        TEAM_ZOMBIFIED_PIGLIN(TeamZombifiedPiglin.class);
 
         private final Class<? extends net.minecraft.world.entity.Entity> clazz;
 

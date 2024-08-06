@@ -8,9 +8,9 @@ import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.PROTECTION;
 import static org.bukkit.potion.PotionEffectType.REGENERATION;
 
-public final class Kit extends icu.suc.megawalls78.identity.Kit {
+public final class Cow extends icu.suc.megawalls78.identity.Kit {
 
-    public Kit(Identity identity) {
+    public Cow(Identity identity) {
         super(identity);
     }
 

@@ -10,6 +10,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
 import net.minecraft.world.entity.projectile.WitherSkull;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -96,5 +97,10 @@ public class ShadowBurstSkull extends WitherSkull {
     @Override
     public boolean canHitEntity(Entity entity) {
         return super.canHitEntity(entity) && !Objects.equals(entity.getTeam(), getOwner().getTeam());
+    }
+
+    @Override
+    public boolean ignoreExplosion(Explosion explosion) {
+        return true;
     }
 }

@@ -8,9 +8,9 @@ import static org.bukkit.enchantments.Enchantment.AQUA_AFFINITY;
 import static org.bukkit.enchantments.Enchantment.PROTECTION;
 import static org.bukkit.potion.PotionEffectType.REGENERATION;
 
-public final class Kit extends icu.suc.megawalls78.identity.Kit {
+public final class Herobrine extends icu.suc.megawalls78.identity.Kit {
 
-    public Kit(Identity identity) {
+    public Herobrine(Identity identity) {
         super(identity);
     }
 

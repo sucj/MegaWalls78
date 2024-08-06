@@ -63,6 +63,7 @@ public final class EagleEye extends DurationSkill {
         public synchronized void cancel() throws IllegalStateException {
             EntityUtil.removeMetadata(player, EagleEye.this.getId());
             super.cancel();
+            stop();
         }
     }
 
@@ -97,7 +98,7 @@ public final class EagleEye extends DurationSkill {
                 if (condition_melee(event)) {
                     player.heal(MELEE);
                 } else if (condition_arrow(event)) {
-                    player.damage(ARROW);
+                    player.heal(ARROW);
                 }
             }
         }

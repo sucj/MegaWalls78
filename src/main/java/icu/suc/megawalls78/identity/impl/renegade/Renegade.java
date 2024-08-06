@@ -8,8 +8,8 @@ import org.bukkit.persistence.PersistentDataType;
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.*;
 
-public final class Kit extends icu.suc.megawalls78.identity.Kit {
-    public Kit(Identity identity) {
+public final class Renegade extends icu.suc.megawalls78.identity.Kit {
+    public Renegade(Identity identity) {
         super(identity);
     }
 

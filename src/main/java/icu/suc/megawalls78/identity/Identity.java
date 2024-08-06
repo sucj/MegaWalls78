@@ -3,58 +3,73 @@ package icu.suc.megawalls78.identity;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.impl.assassin.Assassin;
 import icu.suc.megawalls78.identity.impl.assassin.gathering.ArrowCatch;
 import icu.suc.megawalls78.identity.impl.assassin.passive.MasterAlchemist;
 import icu.suc.megawalls78.identity.impl.assassin.passive.ShadowStep;
 import icu.suc.megawalls78.identity.impl.assassin.skill.ShadowCloak;
+import icu.suc.megawalls78.identity.impl.cow.Cow;
 import icu.suc.megawalls78.identity.impl.cow.gathering.UltraPasteurized;
 import icu.suc.megawalls78.identity.impl.cow.passive.BucketBarrier;
 import icu.suc.megawalls78.identity.impl.cow.passive.RefreshingSip;
 import icu.suc.megawalls78.identity.impl.cow.skill.SoothingMoo;
+import icu.suc.megawalls78.identity.impl.dreadlord.Dreadlord;
 import icu.suc.megawalls78.identity.impl.dreadlord.gathering.DarkMatter;
 import icu.suc.megawalls78.identity.impl.dreadlord.passive.SoulEater;
 import icu.suc.megawalls78.identity.impl.dreadlord.passive.SoulSiphon;
 import icu.suc.megawalls78.identity.impl.dreadlord.skill.ShadowBurst;
+import icu.suc.megawalls78.identity.impl.enderman.Enderman;
 import icu.suc.megawalls78.identity.impl.enderman.gathering.Enderblocks;
 import icu.suc.megawalls78.identity.impl.enderman.passive.EnderHeart;
 import icu.suc.megawalls78.identity.impl.enderman.passive.SoulCharge;
 import icu.suc.megawalls78.identity.impl.enderman.skill.Teleport;
+import icu.suc.megawalls78.identity.impl.herobrine.Herobrine;
 import icu.suc.megawalls78.identity.impl.herobrine.gathering.TreasureHunter;
 import icu.suc.megawalls78.identity.impl.herobrine.passive.Flurry;
 import icu.suc.megawalls78.identity.impl.herobrine.passive.Power;
 import icu.suc.megawalls78.identity.impl.herobrine.skill.Wrath;
+import icu.suc.megawalls78.identity.impl.hunter.Hunter;
 import icu.suc.megawalls78.identity.impl.hunter.gathering.GoldenGlasses;
 import icu.suc.megawalls78.identity.impl.hunter.passive.AnimalCompanion;
 import icu.suc.megawalls78.identity.impl.hunter.passive.ForceOfNature;
 import icu.suc.megawalls78.identity.impl.hunter.skill.EagleEye;
+import icu.suc.megawalls78.identity.impl.hunter.skill.PigRider;
+import icu.suc.megawalls78.identity.impl.moleman.Moleman;
 import icu.suc.megawalls78.identity.impl.moleman.gathering.Stockpile;
 import icu.suc.megawalls78.identity.impl.moleman.passive.JunkFood;
 import icu.suc.megawalls78.identity.impl.moleman.passive.Shortcut;
 import icu.suc.megawalls78.identity.impl.moleman.skill.Dig;
+import icu.suc.megawalls78.identity.impl.renegade.Renegade;
 import icu.suc.megawalls78.identity.impl.renegade.gathering.AmmoBin;
 import icu.suc.megawalls78.identity.impl.renegade.passive.GrapplingHook;
 import icu.suc.megawalls78.identity.impl.renegade.passive.Looting;
 import icu.suc.megawalls78.identity.impl.renegade.skill.Rend;
+import icu.suc.megawalls78.identity.impl.skeleton.Skeleton;
 import icu.suc.megawalls78.identity.impl.skeleton.gathering.Efficiency;
 import icu.suc.megawalls78.identity.impl.skeleton.passive.Agile;
 import icu.suc.megawalls78.identity.impl.skeleton.passive.Salvaging;
 import icu.suc.megawalls78.identity.impl.skeleton.skill.ExplosiveArrow;
+import icu.suc.megawalls78.identity.impl.spider.Spider;
 import icu.suc.megawalls78.identity.impl.spider.gathering.IronRush;
 import icu.suc.megawalls78.identity.impl.spider.passive.Skitter;
 import icu.suc.megawalls78.identity.impl.spider.passive.VenomStrike;
 import icu.suc.megawalls78.identity.impl.spider.skill.Leap;
+import icu.suc.megawalls78.identity.impl.squid.Squid;
 import icu.suc.megawalls78.identity.impl.squid.gathering.LuckOfTheSea;
 import icu.suc.megawalls78.identity.impl.squid.passive.InnerInk;
 import icu.suc.megawalls78.identity.impl.squid.passive.Rejuvenate;
 import icu.suc.megawalls78.identity.impl.squid.skill.SquidSplash;
+import icu.suc.megawalls78.identity.impl.warden.Warden;
 import icu.suc.megawalls78.identity.impl.warden.gathering.Spreads;
 import icu.suc.megawalls78.identity.impl.warden.passive.Anger;
 import icu.suc.megawalls78.identity.impl.warden.passive.Sniffs;
 import icu.suc.megawalls78.identity.impl.warden.skill.SonicBoom;
+import icu.suc.megawalls78.identity.impl.werewolf.Werewolf;
 import icu.suc.megawalls78.identity.impl.werewolf.gathering.Carnivore;
 import icu.suc.megawalls78.identity.impl.werewolf.passive.BloodLust;
 import icu.suc.megawalls78.identity.impl.werewolf.passive.Devour;
 import icu.suc.megawalls78.identity.impl.werewolf.skill.Lycanthropy;
+import icu.suc.megawalls78.identity.impl.zombie.Zombie;
 import icu.suc.megawalls78.identity.impl.zombie.gathering.WellTrained;
 import icu.suc.megawalls78.identity.impl.zombie.passive.Berserk;
 import icu.suc.megawalls78.identity.impl.zombie.passive.Toughness;
@@ -73,20 +88,20 @@ import java.util.List;
 import java.util.Map;
 
 public enum Identity {
-    COW("cow", NamedTextColor.LIGHT_PURPLE, Material.MILK_BUCKET, icu.suc.megawalls78.identity.impl.cow.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 25F, EnergyWay.BOW_PER, 20F), Map.of(Trigger.SWORD, SoothingMoo.class, Trigger.BOW, SoothingMoo.class), List.of(BucketBarrier.class, RefreshingSip.class), UltraPasteurized.class),
-    HUNTER("hunter", NamedTextColor.GREEN, Material.BOW, icu.suc.megawalls78.identity.impl.hunter.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 4F, EnergyWay.BOW_PER, 8F, EnergyWay.GAME, 0.75F, EnergyWay.DM, 0.75F), Map.of(Trigger.SWORD, EagleEye.class, Trigger.BOW, EagleEye.class), List.of(AnimalCompanion.class, ForceOfNature.class), GoldenGlasses.class),
-    DREADLORD("dreadlord", NamedTextColor.DARK_RED, Material.NETHER_BRICK, icu.suc.megawalls78.identity.impl.dreadlord.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, ShadowBurst.class, Trigger.BOW, ShadowBurst.class), List.of(SoulEater.class, SoulSiphon.class), DarkMatter.class),
-    HEROBRINE("herobrine", NamedTextColor.YELLOW, Material.DIAMOND_SWORD, icu.suc.megawalls78.identity.impl.herobrine.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 25F, EnergyWay.BOW_PER, 25F), Map.of(Trigger.SWORD, Wrath.class, Trigger.BOW, Wrath.class), List.of(Power.class, Flurry.class), TreasureHunter.class),
-    ZOMBIE("zombie", NamedTextColor.DARK_GREEN, Material.ROTTEN_FLESH, icu.suc.megawalls78.identity.impl.zombie.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 12F, EnergyWay.BOW_PER, 12F, EnergyWay.MELEE_WHEN, 1F, EnergyWay.BOW_WHEN, 2F), Map.of(Trigger.SWORD, CircleOfHealing.class, Trigger.BOW, CircleOfHealing.class), List.of(Toughness.class, Berserk.class), WellTrained.class),
-    ENDERMAN("enderman", NamedTextColor.DARK_PURPLE, Material.ENDER_PEARL, icu.suc.megawalls78.identity.impl.enderman.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 20F, EnergyWay.BOW_PER, 20F), Map.of(Trigger.SWORD, Teleport.class, Trigger.BOW, Teleport.class), List.of(EnderHeart.class, SoulCharge.class), Enderblocks.class),
-    SQUID("squid", NamedTextColor.BLUE, Material.INK_SAC, icu.suc.megawalls78.identity.impl.squid.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, SquidSplash.class, Trigger.BOW, SquidSplash.class), List.of(InnerInk.class, Rejuvenate.class), LuckOfTheSea.class),
-    SKELETON("skeleton", NamedTextColor.AQUA, Material.BONE, icu.suc.megawalls78.identity.impl.skeleton.Kit.class, 100, Map.of(EnergyWay.BOW_PER, 20F, EnergyWay.DM, 1F), Map.of(Trigger.SWORD, ExplosiveArrow.class, Trigger.BOW, ExplosiveArrow.class), List.of(Salvaging.class, Agile.class), Efficiency.class),
-    SPIDER("spider", NamedTextColor.DARK_PURPLE, Material.COBWEB, icu.suc.megawalls78.identity.impl.spider.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 8F, EnergyWay.BOW_PER, 8F, EnergyWay.GAME, 4F, EnergyWay.DM, 4F), Map.of(Trigger.SWORD, Leap.class, Trigger.BOW, Leap.class), List.of(VenomStrike.class, Skitter.class), IronRush.class),
-    WEREWOLF("werewolf", NamedTextColor.GREEN, Material.COOKED_BEEF, icu.suc.megawalls78.identity.impl.werewolf.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F, EnergyWay.MELEE_WHEN, 2F, EnergyWay.BOW_WHEN, 2F), Map.of(Trigger.SWORD, Lycanthropy.class, Trigger.BOW, Lycanthropy.class), List.of(BloodLust.class, Devour.class), Carnivore.class),
-    ASSASSIN("assassin", NamedTextColor.GRAY, Material.BLACK_STAINED_GLASS, icu.suc.megawalls78.identity.impl.assassin.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F, EnergyWay.PREPARATION, 2F, EnergyWay.GAME, 2F, EnergyWay.DM, 2F), Map.of(Trigger.SWORD, ShadowCloak.class, Trigger.BOW, ShadowCloak.class), List.of(ShadowStep.class, MasterAlchemist.class), ArrowCatch.class),
-    MOLEMAN("moleman", NamedTextColor.YELLOW, Material.GOLDEN_SHOVEL, icu.suc.megawalls78.identity.impl.moleman.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F, EnergyWay.PREPARATION, 5F, EnergyWay.GAME, 3F, EnergyWay.DM, 3F), Map.of(Trigger.SWORD, Dig.class, Trigger.BOW, Dig.class, Trigger.SHOVEL, Dig.class), List.of(Shortcut.class, JunkFood.class), Stockpile.class),
-    RENEGADE("renegade", NamedTextColor.YELLOW, Material.ARROW, icu.suc.megawalls78.identity.impl.renegade.Kit.class, 100, Map.of(EnergyWay.MELEE_PER, 17F, EnergyWay.BOW_PER, 13F), Map.of(Trigger.SWORD, Rend.class, Trigger.BOW, Rend.class), List.of(GrapplingHook.class, Looting.class), AmmoBin.class),
-    WARDEN("warden", NamedTextColor.DARK_AQUA, Material.ECHO_SHARD, icu.suc.megawalls78.identity.impl.warden.Kit.class, 150, Map.of(EnergyWay.MELEE_WHEN, 10F, EnergyWay.BOW_WHEN, 5F), Map.of(Trigger.SWORD, SonicBoom.class, Trigger.BOW, SonicBoom.class, Trigger.AXE, SonicBoom.class), List.of(Sniffs.class, Anger.class), Spreads.class);
+    COW("cow", NamedTextColor.LIGHT_PURPLE, Material.MILK_BUCKET, Cow.class, 100, Map.of(EnergyWay.MELEE_PER, 25F, EnergyWay.BOW_PER, 20F), Map.of(Trigger.SWORD, SoothingMoo.class, Trigger.BOW, SoothingMoo.class), List.of(BucketBarrier.class, RefreshingSip.class), UltraPasteurized.class),
+    HUNTER("hunter", NamedTextColor.GREEN, Material.BOW, Hunter.class, 100, Map.of(EnergyWay.MELEE_PER, 4F, EnergyWay.BOW_PER, 8F, EnergyWay.GAME, 0.75F, EnergyWay.DM, 0.75F), Map.of(Trigger.SWORD, EagleEye.class, Trigger.BOW, EagleEye.class, Trigger.CARROT_ON_A_STICK, PigRider.class), List.of(AnimalCompanion.class, ForceOfNature.class), GoldenGlasses.class),
+    DREADLORD("dreadlord", NamedTextColor.DARK_RED, Material.NETHER_BRICK, Dreadlord.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, ShadowBurst.class, Trigger.BOW, ShadowBurst.class), List.of(SoulEater.class, SoulSiphon.class), DarkMatter.class),
+    HEROBRINE("herobrine", NamedTextColor.YELLOW, Material.DIAMOND_SWORD, Herobrine.class, 100, Map.of(EnergyWay.MELEE_PER, 25F, EnergyWay.BOW_PER, 25F), Map.of(Trigger.SWORD, Wrath.class, Trigger.BOW, Wrath.class), List.of(Power.class, Flurry.class), TreasureHunter.class),
+    ZOMBIE("zombie", NamedTextColor.DARK_GREEN, Material.ROTTEN_FLESH, Zombie.class, 100, Map.of(EnergyWay.MELEE_PER, 12F, EnergyWay.BOW_PER, 12F, EnergyWay.MELEE_WHEN, 1F, EnergyWay.BOW_WHEN, 2F), Map.of(Trigger.SWORD, CircleOfHealing.class, Trigger.BOW, CircleOfHealing.class), List.of(Toughness.class, Berserk.class), WellTrained.class),
+    ENDERMAN("enderman", NamedTextColor.DARK_PURPLE, Material.ENDER_PEARL, Enderman.class, 100, Map.of(EnergyWay.MELEE_PER, 20F, EnergyWay.BOW_PER, 20F), Map.of(Trigger.SWORD, Teleport.class, Trigger.BOW, Teleport.class), List.of(EnderHeart.class, SoulCharge.class), Enderblocks.class),
+    SQUID("squid", NamedTextColor.BLUE, Material.INK_SAC, Squid.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, SquidSplash.class, Trigger.BOW, SquidSplash.class), List.of(InnerInk.class, Rejuvenate.class), LuckOfTheSea.class),
+    SKELETON("skeleton", NamedTextColor.AQUA, Material.BONE, Skeleton.class, 100, Map.of(EnergyWay.BOW_PER, 20F, EnergyWay.DM, 1F), Map.of(Trigger.SWORD, ExplosiveArrow.class, Trigger.BOW, ExplosiveArrow.class), List.of(Salvaging.class, Agile.class), Efficiency.class),
+    SPIDER("spider", NamedTextColor.DARK_PURPLE, Material.COBWEB, Spider.class, 100, Map.of(EnergyWay.MELEE_PER, 8F, EnergyWay.BOW_PER, 8F, EnergyWay.GAME, 4F, EnergyWay.DM, 4F), Map.of(Trigger.SWORD, Leap.class, Trigger.BOW, Leap.class), List.of(VenomStrike.class, Skitter.class), IronRush.class),
+    WEREWOLF("werewolf", NamedTextColor.GREEN, Material.COOKED_BEEF, Werewolf.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F, EnergyWay.MELEE_WHEN, 2F, EnergyWay.BOW_WHEN, 2F), Map.of(Trigger.SWORD, Lycanthropy.class, Trigger.BOW, Lycanthropy.class), List.of(BloodLust.class, Devour.class), Carnivore.class),
+    ASSASSIN("assassin", NamedTextColor.GRAY, Material.BLACK_STAINED_GLASS, Assassin.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F, EnergyWay.PREPARATION, 2F, EnergyWay.GAME, 2F, EnergyWay.DM, 2F), Map.of(Trigger.SWORD, ShadowCloak.class, Trigger.BOW, ShadowCloak.class), List.of(ShadowStep.class, MasterAlchemist.class), ArrowCatch.class),
+    MOLEMAN("moleman", NamedTextColor.YELLOW, Material.GOLDEN_SHOVEL, Moleman.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F, EnergyWay.PREPARATION, 5F, EnergyWay.GAME, 3F, EnergyWay.DM, 3F), Map.of(Trigger.SWORD, Dig.class, Trigger.BOW, Dig.class, Trigger.SHOVEL, Dig.class), List.of(Shortcut.class, JunkFood.class), Stockpile.class),
+    RENEGADE("renegade", NamedTextColor.YELLOW, Material.ARROW, Renegade.class, 100, Map.of(EnergyWay.MELEE_PER, 17F, EnergyWay.BOW_PER, 13F), Map.of(Trigger.SWORD, Rend.class, Trigger.BOW, Rend.class), List.of(GrapplingHook.class, Looting.class), AmmoBin.class),
+    WARDEN("warden", NamedTextColor.DARK_AQUA, Material.ECHO_SHARD, Warden.class, 150, Map.of(EnergyWay.MELEE_WHEN, 10F, EnergyWay.BOW_WHEN, 5F), Map.of(Trigger.SWORD, SonicBoom.class, Trigger.BOW, SonicBoom.class, Trigger.AXE, SonicBoom.class), List.of(Sniffs.class, Anger.class), Spreads.class);
 
     private final String id;
     private final TextColor color;
