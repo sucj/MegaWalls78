@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-public class TeamWither extends WitherBoss {
+public class MegaWither extends WitherBoss {
 
     private BossBar bossBar;
     private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = (entity) -> !entity.getType().is(EntityTypeTags.WITHER_FRIENDS) && entity.attackable();
@@ -39,7 +39,7 @@ public class TeamWither extends WitherBoss {
     private final int[] nextHeadUpdate0;
     private final int[] idleHeadUpdates0;
 
-    public TeamWither(Level world) {
+    public MegaWither(Level world) {
         super(EntityType.WITHER, world);
         Objects.requireNonNull(getAttribute(Attributes.MAX_HEALTH)).setBaseValue(MegaWalls78.getInstance().getConfigManager().witherHealth);
         setHealth(this.getMaxHealth());

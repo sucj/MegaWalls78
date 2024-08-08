@@ -1,11 +1,14 @@
 package icu.suc.megawalls78.listener;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.gui.IdentityGui;
 import icu.suc.megawalls78.gui.SkinGui;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.ItemUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
@@ -17,7 +20,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class InventoryListener implements Listener {
@@ -39,7 +44,28 @@ public class InventoryListener implements Listener {
                         return;
                     }
                     case NUMBER_KEY: {
-                        if (inventory != null && !inventory.getType().equals(InventoryType.PLAYER) && ItemUtil.mw78SoulBound(player.getInventory().getItem(event.getHotbarButton()))) {
+                        PlayerInventory playerInventory = player.getInventory();
+                        int hotbarButton = event.getHotbarButton();
+                        ItemStack playerInventoryItem = playerInventory.getItem(hotbarButton);
+                        if (inventory != null && !inventory.getType().equals(InventoryType.PLAYER) && ItemUtil.mw78SoulBound(playerInventoryItem)) {
+                            List<Integer> slots = Lists.newArrayList();
+                            for (int i = 0; i < playerInventory.getSize(); i++) {
+                                ItemStack itemStack = playerInventory.getItem(i);
+                                if (itemStack == null || itemStack.isEmpty()) {
+                                    slots.add(i);
+                                }
+                            }
+                            if (slots.size() >= 2) {
+                                int i = slots.getFirst();
+                                playerInventory.setItem(hotbarButton, null);
+                                if (i == hotbarButton) {
+                                    playerInventory.setItem(hotbarButton + 1, playerInventoryItem);
+                                } else {
+                                    playerInventory.setItem(i, playerInventoryItem);
+                                }
+                                Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), player::updateInventory);
+                                break;
+                            }
                             event.setCancelled(true);
                         }
                         return;

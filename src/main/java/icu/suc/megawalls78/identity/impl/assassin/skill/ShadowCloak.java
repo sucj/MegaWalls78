@@ -131,6 +131,7 @@ public final class ShadowCloak extends DurationSkill {
                 onlinePlayer.sendEquipmentChange(player, EquipmentSlot.HAND, equipment.getItemInMainHand());
                 onlinePlayer.sendEquipmentChange(player, EquipmentSlot.OFF_HAND, equipment.getItemInOffHand());
             }
+            player.setArrowsInBody(0);
         }
 
         @Override

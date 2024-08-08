@@ -29,7 +29,7 @@ public final class ShadowStep extends CooldownPassive {
                 !EntityUtil.getMetadata(player, ShadowCloak.ID)) {
 
             player.setFallDistance(0);
-            player.teleport(getBlockBehindPlayer(damager));
+            player.teleport(EntityUtil.getBackwardLocation(damager, 0.8D));
 
             event.setCancelled(true);
 
@@ -62,8 +62,8 @@ public final class ShadowStep extends CooldownPassive {
 //        }
 //    }
 
-    private Location getBlockBehindPlayer(Player player) { // TODO check to is safe
-        Vector inverseDirectionVec = player.getLocation().getDirection().normalize().multiply(-1);
-        return player.getLocation().add(inverseDirectionVec);
-    }
+//    private Location getBlockBehindPlayer(Player player) { // TODO check to is safe
+//        Vector inverseDirectionVec = player.getLocation().getDirection().normalize().multiply(-1);
+//        return player.getLocation().add(inverseDirectionVec);
+//    }
 }

@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.potion.PotionEffect;
@@ -119,12 +120,26 @@ public final class GrapplingHook extends DurationCooldownPassive {
         }
     }
 
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+        if (PASSIVE(event.getPlayer()) && noFall && condition_fall(event)) {
+            noFall = false;
+        }
+    }
+
     private static boolean condition_attack(EntityDamageByEntityEvent event) {
         return event.getEntity() instanceof Player && EntityUtil.isMeleeAttack(event);
     }
 
     private static boolean condition_fall(EntityDamageEvent event) {
         return event.getCause().equals(EntityDamageEvent.DamageCause.FALL);
+    }
+
+    private static boolean condition_fall(PlayerMoveEvent event) {
+        return EntityUtil.isOnGround(event.getPlayer());
     }
 
     private static boolean repair(Player player) {

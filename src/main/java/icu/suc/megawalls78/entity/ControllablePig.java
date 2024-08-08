@@ -40,10 +40,10 @@ public class ControllablePig extends Pig {
 
     @Override
     public boolean isControlledByLocalInstance() {
-//        LivingEntity controller = this.getControllingPassenger();
-//        if (controller == null || controller.isHolding(Items.CARROT_ON_A_STICK)) {
-//            return super.isControlledByLocalInstance();
-//        }
-        return true; // For no stop when switched item
+        LivingEntity controller = this.getControllingPassenger();
+        if (controller == null || controller.isHolding(Items.CARROT_ON_A_STICK)) {
+            return super.isControlledByLocalInstance();
+        }
+        return true;
     }
 }

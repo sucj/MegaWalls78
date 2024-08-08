@@ -51,7 +51,7 @@ public final class Enderblocks extends Gathering {
                 }
 
                 for (Location adjLocation : adjLocations) {
-                    if (MegaWalls78.getInstance().getGameManager().getRunner().getAllowedBlocks().contains(adjLocation)) {
+                    if (MegaWalls78.getInstance().getGameManager().getRunner().isAllowedLocation(location)) {
                         Block adjBlock = adjLocation.getBlock();
                         if (adjBlock.getType().equals(type)) {
                             List<ItemStack> leftover = InventoryUtil.addItem(player.getInventory(), adjBlock.getDrops(PlayerUtil.getPlayerMainHand(player)));

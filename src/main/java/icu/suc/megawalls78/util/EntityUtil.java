@@ -13,6 +13,7 @@ import it.unimi.dsi.fastutil.floats.FloatArrays;
 import it.unimi.dsi.fastutil.floats.FloatSet;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.AABB;
@@ -26,9 +27,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.craftbukkit.entity.CraftLivingEntity;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
@@ -359,6 +362,15 @@ public class EntityUtil {
         return entity.getZ() + entity.getWidth() * (2.0 * RandomUtil.RANDOM.nextDouble() - 1.0) * widthScale;
     }
 
+    public static Location getBackwardLocation(Entity entity, double distance) {
+        Location entityLocation = entity.getLocation();
+        return entityLocation.add(entityLocation.getDirection().multiply(-1).setY(0).multiply(distance));
+    }
+
+    public static void addPotionEffect(LivingEntity entity, PotionEffect effect, Entity source) {
+        ((CraftLivingEntity) entity).getHandle().addEffect(org.bukkit.craftbukkit.potion.CraftPotionUtil.fromBukkit(effect), ((CraftEntity) source).getHandle(), EntityPotionEffectEvent.Cause.PLUGIN);
+    }
+
     public enum Type {
         CONTROLLABLE_PIG(ControllablePig.class),
         EXPLOSIVE_ARROW(ExplosiveArrow.class),
@@ -369,7 +381,7 @@ public class EntityUtil {
         TAMED_WOLF(TamedWolf.class),
         TEAM_SKELETON(TeamSkeleton.class),
         TEAM_SPIDER(TeamSpider.class),
-        TEAM_WITHER(TeamWither.class),
+        TEAM_WITHER(MegaWither.class),
         TEAM_ZOMBIFIED_PIGLIN(TeamZombifiedPiglin.class);
 
         private final Class<? extends net.minecraft.world.entity.Entity> clazz;

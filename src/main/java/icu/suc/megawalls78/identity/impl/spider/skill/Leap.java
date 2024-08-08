@@ -93,7 +93,7 @@ public final class Leap extends Skill {
                         .filter(entity -> !(entity instanceof Wither))
                         .filter(entity -> !PlayerUtil.isValidAllies(player, entity))
                         .forEach(entity -> {
-                            ((LivingEntity) entity).addPotionEffect(SLOWNESS);
+                            EntityUtil.addPotionEffect(((LivingEntity) entity), SLOWNESS, player);
                             double damage = BASE_DAMAGE + bonusDamage() - reduceDamage(entity);
                             if (entity.getBoundingBox().overlaps(boundingBox)) {
                                 damage *= DIRECT;

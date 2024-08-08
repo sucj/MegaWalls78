@@ -13,6 +13,7 @@ import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.AbstractMap;
@@ -114,6 +115,17 @@ public final class Rend extends Skill {
                 timestamps.removeIf(timestamp -> current > timestamp + PIN_MAX);
                 timestamps.add(current);
                 summaryArrows(player, victim, timestamps.size());
+            }
+        }
+
+        @EventHandler
+        public void onPlayerDeath(PlayerDeathEvent event) {
+            if (event.isCancelled()) {
+                return;
+            }
+            UUID uuid = event.getPlayer().getUniqueId();
+            if (arrows.containsKey(uuid)) {
+                arrows.remove(uuid);
             }
         }
 

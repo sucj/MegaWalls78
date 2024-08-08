@@ -22,6 +22,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.damage.DamageSource;
@@ -33,7 +34,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.util.Vector;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.List;
@@ -164,6 +167,11 @@ public class PlayerListener implements Listener {
             drops.clear();
         }
         event.deathMessage(null);
+        Bukkit.getScheduler().runTaskLater(MegaWalls78.getInstance(), () -> {
+            if (player.isDead()) {
+                player.spigot().respawn();
+            }
+        }, 10L);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -432,6 +440,18 @@ public class PlayerListener implements Listener {
             } else if (!gameManager.getWither(team).isDead()) {
                 player.showBossBar(gameManager.getBossBar(team));
             }
+//            GameState state = gameManager.getState();
+//            if (state.equals(GameState.OPENING)) {
+//                if (!runner.getSpawn(gameManager.getPlayer(player).getTeam()).contains(to.toBlockLocation().toVector())) {
+//                    Objects.requireNonNullElse(player.getVehicle(), player).teleport(from.clone().subtract(to.clone().subtract(from)));
+//                }
+//            } else if (state.equals(GameState.PREPARING)) {
+//                GameTeam playerTeam = gameManager.getPlayer(player).getTeam();
+//                Vector location = to.toBlockLocation().toVector();
+//                if (!(runner.getTeamRegion(playerTeam).contains(location) || runner.getSpawn(playerTeam).contains(location))) {
+//                    Objects.requireNonNullElse(player.getVehicle(), player).teleport(from.clone().subtract(to.clone().subtract(from)));
+//                }
+//            }
         }
     }
 
@@ -508,6 +528,25 @@ public class PlayerListener implements Listener {
         if (event.isFinal()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.sendPlayerListFooter(MegaWalls78.getInstance().getGameManager().footer().appendNewline().append(Component.text("MC.SUC.ICU", NamedTextColor.AQUA, TextDecoration.BOLD)));
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onEntityPotionEffect(EntityPotionEffectEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+            if (gameManager.isSpectator(player)) {
+                return;
+            }
+            GamePlayer gamePlayer = gameManager.getPlayer(player);
+            if (gamePlayer == null) {
+                return;
+            }
+            if (gameManager.isWitherDead(gamePlayer.getTeam())) {
+                if (event.getModifiedType().equals(PotionEffectType.WITHER) && event.getCause().equals(EntityPotionEffectEvent.Cause.ATTACK)) {
+                    event.setCancelled(true);
+                }
             }
         }
     }

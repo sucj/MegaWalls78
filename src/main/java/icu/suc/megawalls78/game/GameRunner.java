@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.entity.TeamWither;
+import icu.suc.megawalls78.entity.MegaWither;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.management.ConfigManager;
@@ -15,9 +15,7 @@ import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.apache.commons.lang3.tuple.Pair;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -26,6 +24,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import org.bukkit.util.Vector;
 import redis.clients.jedis.Jedis;
 
 import java.util.List;
@@ -35,7 +34,7 @@ import java.util.UUID;
 
 public class GameRunner implements Runnable {
 
-    private static final Set<Location> EMPTY = Set.of();
+    private static final Set<Vector> EMPTY = Set.of();
 
     public static boolean force;
 
@@ -49,12 +48,12 @@ public class GameRunner implements Runnable {
     private boolean initializing;
 
     private Set<Block> barriers;
-    private final Set<Location> allowedBlocks;
-    private final Map<GameTeam, Set<Location>> palaces;
-    private final Map<GameTeam, Set<Location>> spawns;
-    private final Set<Location> walls;
-    private final Set<Location> region;
-    private final Map<GameTeam, Set<Location>> regions;
+    private final Set<Vector> allowedBlocks;
+    private final Map<GameTeam, Set<Vector>> palaces;
+    private final Map<GameTeam, Set<Vector>> spawns;
+    private final Set<Vector> walls;
+    private final Set<Vector> region;
+    private final Map<GameTeam, Set<Vector>> regions;
 
     private final PotionEffect HUNGER = new PotionEffect(PotionEffectType.HUNGER, PotionEffect.INFINITE_DURATION, 9, true, false);
 
@@ -73,13 +72,13 @@ public class GameRunner implements Runnable {
         Bukkit.getScheduler().runTaskAsynchronously(MegaWalls78.getInstance(), () -> {
             MegaWalls78.getInstance().getLogger().info("Map initializing...");
             for (GameTeam team : gameManager.getTeams()) {
-                Set<Location> palace = Sets.newHashSet();
+                Set<Vector> palace = Sets.newHashSet();
                 palaces.put(team, palace);
                 addRegionsBlock(team.palace(), palace);
-                Set<Location> spawn = Sets.newHashSet();
+                Set<Vector> spawn = Sets.newHashSet();
                 spawns.put(team, spawn);
                 addRegionsBlock(team.spawn(), spawn);
-                Set<Location> region = Sets.newHashSet();
+                Set<Vector> region = Sets.newHashSet();
                 regions.put(team, region);
                 addRegionsBlock(team.region(), region);
             }
@@ -257,6 +256,7 @@ public class GameRunner implements Runnable {
                 for (GameTeam team : gameManager.getTeams()) {
                     placeTeamGate(team);
                 }
+                Bukkit.getWorlds().getFirst().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, false);
             }
             case OPENING -> {
                 gameManager.setState(GameState.PREPARING);
@@ -301,6 +301,8 @@ public class GameRunner implements Runnable {
                 allowedBlocks.clear();
 
                 MegaWalls78.getInstance().getLogger().info("Game end.");
+
+                Bukkit.getWorlds().getFirst().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
 
                 Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
                     List<Map.Entry<GameTeam, Pair<Integer, Integer>>> winners = Lists.newArrayList();
@@ -491,7 +493,7 @@ public class GameRunner implements Runnable {
         }
     }
 
-    private void addRegionsBlock(Location[][] regions, Set<Location> locations) {
+    private void addRegionsBlock(Location[][] regions, Set<Vector> locations) {
         for (Location[] region : regions) {
             Location locA = region[0];
             Location locB = region[1];
@@ -504,7 +506,7 @@ public class GameRunner implements Runnable {
             for (int x = minX; x <= maxX; x++) {
                 for (int y = minY; y <= maxY; y++) {
                     for (int z = minZ; z <= maxZ; z++) {
-                        locations.add(new Location(Bukkit.getWorlds().getFirst(), x, y, z));
+                        locations.add(new Vector(x, y, z));
                     }
                 }
             }
@@ -541,7 +543,7 @@ public class GameRunner implements Runnable {
                 Wither wither = (Wither) entity;
                 wither.customName(Component.translatable("mw78.wither.name", gameTeam.color(), gameTeam.name(), wither.name()));
                 mcTeam.addEntity(wither);
-                ((TeamWither) entity.getHandle()).setBossBar(gameManager.addWither(gameTeam, wither));
+                ((MegaWither) entity.getHandle()).setBossBar(gameManager.addWither(gameTeam, wither));
             });
         }
     }
@@ -577,8 +579,9 @@ public class GameRunner implements Runnable {
     }
 
     private void destroyWalls() {
-        for (Location location : walls) {
-            location.getBlock().setType(Material.AIR);
+        World world = Bukkit.getWorlds().getFirst();
+        for (Vector location : walls) {
+            world.getBlockAt(location.getBlockX(), location.getBlockY(), location.getBlockZ()).setType(Material.AIR);
         }
     }
 
@@ -594,20 +597,22 @@ public class GameRunner implements Runnable {
         return dmC ? dmTimer : timer;
     }
 
-    public Set<Location> getAllowedBlocks() {
+    public Set<Vector> getAllowedBlocks() {
         return allowedBlocks;
     }
 
-    public Set<Location> getTeamRegion(GameTeam team) {
+    public boolean isAllowedLocation(Location location) {
+        return allowedBlocks.contains(location.toBlockLocation().toVector());
+    }
+
+    public Set<Vector> getTeamRegion(GameTeam team) {
         return regions.getOrDefault(team, EMPTY);
     }
 
     public GameTeam inPalace(Location location) {
+        Vector vector = location.toBlockLocation().toVector();
         for (GameTeam team : palaces.keySet()) {
-            Location blockLocation = location.toBlockLocation();
-            blockLocation.setPitch(0);
-            blockLocation.setYaw(0);
-            if (palaces.get(team).contains(blockLocation)) {
+            if (palaces.get(team).contains(vector)) {
                 return team;
             }
         }
@@ -635,18 +640,15 @@ public class GameRunner implements Runnable {
         return dmC;
     }
 
-    public Set<Location> getPalace(GameTeam team) {
+    public Set<Vector> getPalace(GameTeam team) {
         return palaces.getOrDefault(team, EMPTY);
     }
 
-    public Set<Location> getSpawn(GameTeam team) {
+    public Set<Vector> getSpawn(GameTeam team) {
         return spawns.getOrDefault(team, EMPTY);
     }
 
     public boolean inMid(Player player) {
-        Location location = player.getLocation().toBlockLocation();
-        location.setYaw(0);
-        location.setPitch(0);
-        return region.contains(location);
+        return region.contains(player.getLocation().toBlockLocation().toVector());
     }
 }

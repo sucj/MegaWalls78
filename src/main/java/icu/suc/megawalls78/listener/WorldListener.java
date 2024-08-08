@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 
@@ -32,10 +33,10 @@ public class WorldListener implements Listener {
                 event.setCancelled(true);
                 return;
             default: {
-                if (!gameManager.getRunner().getAllowedBlocks().contains(event.getBlock().getLocation())) {
+                if (!gameManager.getRunner().isAllowedLocation(event.getBlock().getLocation())) {
                     event.setCancelled(true);
                 } else if (state.equals(GameState.PREPARING)) {
-                    if (!gameManager.getRunner().getTeamRegion(gameManager.getPlayer(player).getTeam()).contains(event.getBlock().getLocation())) {
+                    if (!gameManager.getRunner().getTeamRegion(gameManager.getPlayer(player).getTeam()).contains(event.getBlock().getLocation().toBlockLocation().toVector())) {
                         event.setCancelled(true);
                     }
                 }
@@ -60,10 +61,10 @@ public class WorldListener implements Listener {
                 event.setCancelled(true);
                 return;
             default: {
-                if (!gameManager.getRunner().getAllowedBlocks().contains(event.getBlock().getLocation())) {
+                if (!gameManager.getRunner().isAllowedLocation(event.getBlock().getLocation())) {
                     event.setCancelled(true);
                 } else if (state.equals(GameState.PREPARING)) {
-                    if (!gameManager.getRunner().getTeamRegion(gameManager.getPlayer(player).getTeam()).contains(event.getBlock().getLocation())) {
+                    if (!gameManager.getRunner().getTeamRegion(gameManager.getPlayer(player).getTeam()).contains(event.getBlock().getLocation().toBlockLocation().toVector())) {
                         event.setCancelled(true);
                     }
                 }
@@ -81,7 +82,7 @@ public class WorldListener implements Listener {
                 event.setCancelled(true);
                 return;
             default: {
-                event.blockList().removeIf(block -> !gameManager.getRunner().getAllowedBlocks().contains(block.getLocation()));
+                event.blockList().removeIf(block -> !gameManager.getRunner().isAllowedLocation(block.getLocation()));
             }
         }
     }
@@ -93,6 +94,11 @@ public class WorldListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onTameableDeathMessage(TameableDeathMessageEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onEntityBlockForm(EntityBlockFormEvent event) {
         event.setCancelled(true);
     }
 }

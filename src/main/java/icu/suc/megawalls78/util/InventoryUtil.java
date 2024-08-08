@@ -65,6 +65,10 @@ public class InventoryUtil {
         if (i == -1) {
             return false;
         }
+        int size = slots.size();
+        if (size == 0) {
+            return false;
+        }
         inventory.setItem(slots.get(RandomUtil.RANDOM.nextInt(slots.size())), itemStack);
         return true;
     }

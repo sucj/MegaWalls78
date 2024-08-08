@@ -68,7 +68,14 @@ public class AnimalCompanion extends CooldownPassive {
     }
 
     private boolean condition_discard(PlayerInteractAtEntityEvent event) {
-        return Tag.ITEMS_PICKAXES.isTagged(event.getPlayer().getEquipment().getItem(event.getHand()).getType()) && entities.contains(event.getRightClicked());
+        if (Tag.ITEMS_PICKAXES.isTagged(event.getPlayer().getEquipment().getItem(event.getHand()).getType())) {
+            for (LivingEntity entity : entities) {
+                if (entity.getUniqueId().equals(event.getRightClicked().getUniqueId())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void spawn(Player player) {
@@ -94,7 +101,9 @@ public class AnimalCompanion extends CooldownPassive {
                         pigZombie.addPotionEffect(ZOMBIE_PIGMAN_POTION);
                     });
             case 2 -> // Spider
-                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_SPIDER, entity -> add(((Spider) entity), player));
+                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_SPIDER, entity -> {
+                        add(((Spider) entity), player);
+                    });
             case 3 -> // Cow
                     player.getWorld().spawnEntity(player.getLocation(), EntityType.COW, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
                         Cow cow = (Cow) entity;

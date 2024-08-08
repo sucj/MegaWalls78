@@ -128,7 +128,7 @@ public final class SonicBoom extends Skill {
                             ((LivingEntity) entity).damage(DAMAGE, DamageSource.of(DamageType.SONIC_BOOM, player));
                         }
                         setVelocity(entity);
-                        ((LivingEntity) entity).addPotionEffect(DARKNESS);
+                        EntityUtil.addPotionEffect(((LivingEntity) entity), DARKNESS, player);
                         victims.add(entity.getUniqueId());
                         count.getAndIncrement();
                     });

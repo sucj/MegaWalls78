@@ -70,7 +70,8 @@ public class GameListener implements Listener {
     private static final LootTable NORMAL_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "normal"));
     private static final Set<UUID> NO_NEWBEE = Sets.newHashSet();
 
-    private static final Set<Material> DISABLE_ITEMS = Set.of(Material.BUCKET, Material.GLASS_BOTTLE, Material.WATER_BUCKET, Material.LAVA_BUCKET, Material.WITHER_ROSE);
+    private static final Set<Material> DROPS = Set.of(Material.RAW_GOLD, Material.RAW_GOLD_BLOCK, Material.GOLD_INGOT, Material.GOLD_BLOCK, Material.DIAMOND, Material.DIAMOND_BLOCK);
+    private static final Set<Material> DISABLE_ITEMS = Set.of(Material.BUCKET, Material.GLASS_BOTTLE, Material.WATER_BUCKET, Material.LAVA_BUCKET);
 
     @EventHandler
     public void onEnergyChange(EnergyChangeEvent event) {
@@ -128,7 +129,7 @@ public class GameListener implements Listener {
         List<Item> items = event.getItems();
         for (Item item : items) {
             ItemStack itemStack = item.getItemStack();
-            if (itemStack.getType().equals(Material.DIAMOND)) {
+            if (DROPS.contains(itemStack.getType())) {
                 continue;
             }
             HashMap<Integer, ItemStack> over = player.getInventory().addItem(itemStack);

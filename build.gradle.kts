@@ -55,7 +55,6 @@ bukkitPluginYaml {
   depend = listOf("SkinsRestorer", "SuperVanish", "LuckPerms", "ProtocolLib")
   libraries = listOf("redis.clients:jedis:5.1.3", "net.megavex:scoreboard-library-api:2.1.10", "net.megavex:scoreboard-library-implementation:2.1.10", "net.megavex:scoreboard-library-modern:2.1.10")
   prefix = "MW78"
-  defaultPermission = Permission.Default.OP
   permissions {
     register("mw78.id") {
       default = Permission.Default.TRUE

@@ -105,7 +105,7 @@ public final class Dig extends Skill {
 
             for (Location location : EntityUtil.getLocations(world, box)) {
                 GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-                if (gameManager.getRunner().getAllowedBlocks().contains(location)) {
+                if (gameManager.getRunner().isAllowedLocation(location)) {
                     Block block = location.getBlock();
                     if (BlockUtil.isDestroyable(block)) {
                         BlockUtil.breakNaturally(block);

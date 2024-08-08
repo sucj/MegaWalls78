@@ -35,7 +35,7 @@ public class ForceOfNature extends DurationCooldownPassive {
             new PotionEffect[]{new PotionEffect(PotionEffectType.ABSORPTION, 160, 1)},
             new PotionEffect[]{new PotionEffect(PotionEffectType.SPEED, 160, 1)});
 
-    private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPLASH_POTION_THROW, SoundCategory.PLAYERS, 1.0F, 1.0F));
+    private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, SoundCategory.PLAYERS, 1.0F, 1.0F));
 
     public ForceOfNature() {
         super("force_of_nature", 20000L, 5000L);
