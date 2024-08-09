@@ -13,7 +13,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
+import java.sql.SQLException;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 public final class MegaWalls78 extends JavaPlugin {
 
@@ -22,6 +25,7 @@ public final class MegaWalls78 extends JavaPlugin {
     private SkinManager skinManager;
     private ConfigManager configManager;
     private ScoreboardManager scoreboardManager;
+    private DatabaseManager databaseManager;
 
     private static MegaWalls78 instance;
     private static ScoreboardLibrary scoreboardLib;
@@ -55,6 +59,15 @@ public final class MegaWalls78 extends JavaPlugin {
             }
         };
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> jedis.subscribe(sub, "mw78"));
+
+        databaseManager = new DatabaseManager(configManager.url, configManager.user, configManager.password);
+        try {
+            databaseManager.connect();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        databaseManager.init();
     }
 
     @Override
@@ -68,6 +81,12 @@ public final class MegaWalls78 extends JavaPlugin {
             try (Jedis pub = Redis.get()) {
                 pub.publish("mw78", String.join("|", "remove", MegaWalls78.getInstance().getConfigManager().server));
             }
+        }
+
+        try {
+            databaseManager.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -119,6 +138,10 @@ public final class MegaWalls78 extends JavaPlugin {
 
     public ScoreboardManager getScoreboardManager() {
         return scoreboardManager;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
     }
 
     public static MegaWalls78 getInstance() {

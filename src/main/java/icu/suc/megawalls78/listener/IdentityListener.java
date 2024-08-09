@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.UUID;
+
 public class IdentityListener implements Listener {
 
     @EventHandler
@@ -22,11 +24,14 @@ public class IdentityListener implements Listener {
 
     @EventHandler
     public void postIdentitySelected(IdentitySelectEvent.Post event) {
-        Player player = Bukkit.getPlayer(event.getUuid());
+        UUID uuid = event.getUuid();
+        Player player = Bukkit.getPlayer(uuid);
         if (player == null) {
             return;
         }
         player.getInventory().setItem(0, IdentityGui.trigger(player));
         player.getInventory().setItem(1, SkinGui.trigger(player));
+
+        MegaWalls78.getInstance().getDatabaseManager().setPlayerIdentity(uuid, event.getIdentity());
     }
 }

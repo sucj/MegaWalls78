@@ -9,6 +9,7 @@ import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Skin;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
@@ -37,6 +38,7 @@ public class GamePlayer {
     private final UUID uuid;
 
     private Identity identity;
+
     private GameTeam team;
 
     private int kills;

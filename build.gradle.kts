@@ -30,12 +30,13 @@ repositories {
 
 dependencies {
   paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT")
-  compileOnly("net.skinsrestorer", "skinsrestorer-api", "15.0.15")
-  compileOnly("com.github.LeonMangler", "SuperVanish", "6.2.19")
-  compileOnly("net.luckperms", "api", "5.4")
-  compileOnly("net.megavex", "scoreboard-library-api", "2.1.10")
-  compileOnly("com.comphenix.protocol", "ProtocolLib", "5.3.0-SNAPSHOT")
-  compileOnly("redis.clients", "jedis", "5.1.3")
+  implementation("net.skinsrestorer", "skinsrestorer-api", "15.0.15")
+  implementation("com.github.LeonMangler", "SuperVanish", "6.2.19")
+  implementation("net.luckperms", "api", "5.4")
+  implementation("net.megavex", "scoreboard-library-api", "2.1.10")
+  implementation("com.comphenix.protocol", "ProtocolLib", "5.3.0-SNAPSHOT")
+  implementation("redis.clients", "jedis", "5.1.3")
+  implementation("com.mysql", "mysql-connector-j", "9.0.0")
 }
 
 tasks {
@@ -53,7 +54,7 @@ bukkitPluginYaml {
   apiVersion = "1.21"
   load = BukkitPluginYaml.PluginLoadOrder.POSTWORLD
   depend = listOf("SkinsRestorer", "SuperVanish", "LuckPerms", "ProtocolLib")
-  libraries = listOf("redis.clients:jedis:5.1.3", "net.megavex:scoreboard-library-api:2.1.10", "net.megavex:scoreboard-library-implementation:2.1.10", "net.megavex:scoreboard-library-modern:2.1.10")
+  libraries = listOf("com.mysql:mysql-connector-j:9.0.0", "redis.clients:jedis:5.1.3", "net.megavex:scoreboard-library-api:2.1.10", "net.megavex:scoreboard-library-implementation:2.1.10", "net.megavex:scoreboard-library-modern:2.1.10")
   prefix = "MW78"
   permissions {
     register("mw78.id") {

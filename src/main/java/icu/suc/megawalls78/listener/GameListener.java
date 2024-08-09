@@ -70,7 +70,6 @@ public class GameListener implements Listener {
     private static final LootTable NORMAL_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "normal"));
     private static final Set<UUID> NO_NEWBEE = Sets.newHashSet();
 
-    private static final Set<Material> DROPS = Set.of(Material.RAW_GOLD, Material.RAW_GOLD_BLOCK, Material.GOLD_INGOT, Material.GOLD_BLOCK, Material.DIAMOND, Material.DIAMOND_BLOCK);
     private static final Set<Material> DISABLE_ITEMS = Set.of(Material.BUCKET, Material.GLASS_BOTTLE, Material.WATER_BUCKET, Material.LAVA_BUCKET);
 
     @EventHandler
@@ -126,19 +125,17 @@ public class GameListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockDropItem(BlockDropItemEvent event) {
         Player player = event.getPlayer();
-        List<Item> items = event.getItems();
-        for (Item item : items) {
-            ItemStack itemStack = item.getItemStack();
-            if (DROPS.contains(itemStack.getType())) {
-                continue;
-            }
-            HashMap<Integer, ItemStack> over = player.getInventory().addItem(itemStack);
-            if (over.isEmpty()) {
-                item.remove();
-            } else {
-                item.setItemStack(over.get(0));
+        if (MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING)) {
+            for (Item item : event.getItems()) {
+                HashMap<Integer, ItemStack> over = player.getInventory().addItem(item.getItemStack());
+                if (over.isEmpty()) {
+                    item.remove();
+                } else {
+                    item.setItemStack(over.get(0));
+                }
             }
         }
+
 
         if (BlockUtil.isNatural(event.getBlockState().getType())) {
             Block block = event.getBlock();

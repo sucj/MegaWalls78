@@ -37,6 +37,12 @@ public class ConfigManager {
     public String host;
     public int port;
     public String server;
+
+    public String url;
+    public String user;
+    public String password;
+    public String database;
+
     public int maxPlayer;
     public int minPlayer;
     public int maxSpec;
@@ -79,6 +85,12 @@ public class ConfigManager {
         ConfigurationSection redis = gameConfig.getConfigurationSection("redis");
         host = redis.getString("host");
         port = redis.getInt("port");
+
+        ConfigurationSection mysql = gameConfig.getConfigurationSection("mysql");
+        url = mysql.getString("url");
+        user = mysql.getString("user");
+        password = mysql.getString("password");
+        database = mysql.getString("database");
 
         server = gameConfig.getString("server");
         maxPlayer = gameConfig.getInt("max-player", 100);
