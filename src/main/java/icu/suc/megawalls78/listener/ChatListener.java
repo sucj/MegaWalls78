@@ -2,6 +2,7 @@ package icu.suc.megawalls78.listener;
 
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.LP;
 import io.papermc.paper.chat.ChatRenderer;
@@ -58,6 +59,10 @@ public class ChatListener implements Listener, ChatRenderer {
         } else {
             name = LP.getPrefix(player.getUniqueId())
                     .append(player.teamDisplayName().color(LP.getNameColor(player.getUniqueId())));
+            Identity identity = MegaWalls78.getInstance().getIdentityManager().getRankedIdentity(player.getUniqueId());
+            if (identity != null) {
+                name = identity.getIcon().color(MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), identity)).append(Component.space()).append(name);
+            }
         }
         return Component.translatable("mw78.chat", NamedTextColor.GRAY, name, component1.color(LP.getChatColor(player.getUniqueId())));
     }

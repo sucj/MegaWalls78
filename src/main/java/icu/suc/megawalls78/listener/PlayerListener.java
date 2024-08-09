@@ -97,6 +97,7 @@ public class PlayerListener implements Listener {
         } else {
             event.quitMessage(null);
         }
+        MegaWalls78.getInstance().getIdentityManager().clearCache(player.getUniqueId());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
