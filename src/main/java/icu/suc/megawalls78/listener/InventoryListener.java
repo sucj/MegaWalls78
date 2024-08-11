@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.gui.IdentityGui;
 import icu.suc.megawalls78.gui.SkinGui;
+import icu.suc.megawalls78.gui.TeamGui;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.ItemUtil;
 import org.bukkit.Bukkit;
@@ -116,6 +117,8 @@ public class InventoryListener implements Listener {
                     IdentityGui.handle(player, inventory, event.getSlot());
                 } else if (SkinGui.INVENTORIES.containsKey(inventory)) {
                     SkinGui.handle(player, inventory, event.getSlot());
+                } else if (TeamGui.INVENTORIES.containsKey(inventory)) {
+                    TeamGui.handle(player, inventory, event.getSlot());
                 }
             } else if (gameManager.isSpectator(player)) {
                 event.setCancelled(true);

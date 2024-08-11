@@ -7,6 +7,7 @@ import icu.suc.megawalls78.event.EnergyChangeEvent;
 import icu.suc.megawalls78.event.IdentitySelectEvent;
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.record.GameTeam;
+import icu.suc.megawalls78.gui.TeamGui;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.Skin;
@@ -15,6 +16,7 @@ import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.SupplierComponent;
 import net.kyori.adventure.text.Component;
@@ -197,6 +199,7 @@ public class GamePlayer {
     }
 
     public void setTeam(GameTeam team) {
+        MegaWalls78.getInstance().getGameManager().getTeamPlayersMap().computeIfAbsent(team, k -> Sets.newHashSet()).add(this);
         this.team = team;
     }
 

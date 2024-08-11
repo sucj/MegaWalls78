@@ -101,7 +101,7 @@ public class IdentityGui {
                     }
                 }
                 gamePlayer.setIdentity(identity);
-                player.sendMessage(Component.translatable("mw78.identity.randomly", NamedTextColor.GREEN, identity.getName().color(MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
+                player.sendMessage(Component.translatable("mw78.message.identity.randomly", NamedTextColor.AQUA, identity.getName().color(MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
                 INVENTORIES.remove(inventory);
                 player.closeInventory();
             }
@@ -118,7 +118,7 @@ public class IdentityGui {
                         Identity identity = Identity.values()[(INVENTORIES.get(inventory) - 1) * SLOT_COUNT + index];
                         if (!gamePlayer.getIdentity().equals(identity)) {
                             gamePlayer.setIdentity(identity);
-                            player.sendMessage(Component.translatable("mw78.identity", NamedTextColor.GREEN, identity.getName().color(MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
+                            player.sendMessage(Component.translatable("mw78.message.identity", NamedTextColor.AQUA, identity.getName().color(MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
                             INVENTORIES.remove(inventory);
                             player.closeInventory();
                         }

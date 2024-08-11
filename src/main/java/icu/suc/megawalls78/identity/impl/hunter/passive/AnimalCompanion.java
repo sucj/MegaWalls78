@@ -86,7 +86,7 @@ public class AnimalCompanion extends CooldownPassive {
                         add(skeleton, player);
                         EntityEquipment equipment = skeleton.getEquipment();
                         equipment.setItem(EquipmentSlot.HAND, SKELETON_BOW.build());
-                        equipment.setItem(EquipmentSlot.HEAD, ItemBuilder.of(Material.LEATHER_HELMET).setArmorColor(Color.fromNamedTextColor(PLAYER().getTeam().color()).getColor()).build());
+                        equipment.setItem(EquipmentSlot.HEAD, ItemBuilder.of(Material.LEATHER_HELMET).setArmorColor(Color.getDye(PLAYER().getTeam().color()).getColor()).build());
                         player.getWorld().spawnEntity(player.getLocation(), EntityType.CHICKEN, CreatureSpawnEvent.SpawnReason.CUSTOM, saddler -> {
                             Chicken chicken = (Chicken) saddler;
                             add(chicken, player);
@@ -116,7 +116,7 @@ public class AnimalCompanion extends CooldownPassive {
                         add(wolf, player);
                         AttributeInstance maxHealth = wolf.getAttribute(Attribute.GENERIC_MAX_HEALTH);
                         maxHealth.setBaseValue(maxHealth.getBaseValue() / 2);
-                        wolf.setCollarColor(Color.fromNamedTextColor(PLAYER().getTeam().color()));
+                        wolf.setCollarColor(Color.getDye(PLAYER().getTeam().color()));
                     }, player.getUniqueId());
         }
     }

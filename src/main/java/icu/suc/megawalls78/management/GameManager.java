@@ -75,7 +75,17 @@ public class GameManager {
     }
 
     public void removePlayer(Player player) {
-        players.remove(player.getUniqueId());
+        UUID uuid = player.getUniqueId();
+        GamePlayer gamePlayer = players.get(uuid);
+        if (gamePlayer == null) {
+            return;
+        }
+        players.remove(uuid);
+        GameTeam team = gamePlayer.getTeam();
+        if (team == null) {
+            return;
+        }
+        teamPlayersMap.get(team).remove(gamePlayer);
     }
 
     public void addSpectator(Player player) {
@@ -153,6 +163,9 @@ public class GameManager {
     }
 
     public Map<GameTeam, Set<GamePlayer>> getTeamPlayersMap() {
+        for (GameTeam team : teamPlayersMap.keySet()) {
+            teamPlayersMap.get(team).removeIf(gamePlayer -> !gamePlayer.getTeam().equals(team));
+        }
         return teamPlayersMap;
     }
 

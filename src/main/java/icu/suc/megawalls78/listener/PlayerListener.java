@@ -10,6 +10,7 @@ import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.gui.IdentityGui;
 import icu.suc.megawalls78.gui.SkinGui;
+import icu.suc.megawalls78.gui.TeamGui;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
@@ -22,10 +23,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -36,7 +35,6 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.util.Vector;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.List;
@@ -55,8 +53,9 @@ public class PlayerListener implements Listener {
         if (gameManager.inWaiting()) {
             player.getInventory().setItem(0, IdentityGui.trigger(player));
             player.getInventory().setItem(1, SkinGui.trigger(player));
+            player.getInventory().setItem(7, TeamGui.trigger(player));
             MegaWalls78.getInstance().getSkinManager().applySkin(player);
-            event.joinMessage(Component.translatable("multiplayer.player.joined", player.displayName().color(LP.getNameColor(player.getUniqueId())))
+            event.joinMessage(Component.translatable("multiplayer.player.joined", player.teamDisplayName().color(LP.getNameColor(player.getUniqueId())))
                     .append(Component.space())
                     .append(Component.translatable("mw78.online", Component.text(gameManager.getPlayers().values().size(), NamedTextColor.WHITE), Component.text(MegaWalls78.getInstance().getConfigManager().maxPlayer, NamedTextColor.WHITE)))
                     .color(NamedTextColor.AQUA));
@@ -85,7 +84,7 @@ public class PlayerListener implements Listener {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         Player player = event.getPlayer();
         if (gameManager.inWaiting()) {
-            event.quitMessage(Component.translatable("multiplayer.player.left", NamedTextColor.AQUA, player.displayName().color(LP.getNameColor(player.getUniqueId()))));
+            event.quitMessage(Component.translatable("multiplayer.player.left", NamedTextColor.AQUA, player.teamDisplayName().color(LP.getNameColor(player.getUniqueId()))));
             gameManager.removePlayer(player);
         } else if (gameManager.inFighting()) {
             if (gameManager.isSpectator(player)) {
@@ -367,11 +366,11 @@ public class PlayerListener implements Listener {
             switch (event.getAction()) {
                 case RIGHT_CLICK_BLOCK:
                 case RIGHT_CLICK_AIR: {
-                    Material material = event.getMaterial();
-                    if (material.equals(gameManager.getPlayer(player).getIdentity().getMaterial())) {
-                        IdentityGui.open(player, 1);
-                    } else if (material.equals(Material.PLAYER_HEAD)) {
-                        SkinGui.open(player, 1);
+                    int slot = player.getInventory().getHeldItemSlot();
+                    switch (slot) {
+                        case 0 -> IdentityGui.open(player, 1);
+                        case 1 -> SkinGui.open(player, 1);
+                        case 7 -> TeamGui.open(player, 1);
                     }
                 }
             }

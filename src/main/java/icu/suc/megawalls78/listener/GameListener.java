@@ -12,6 +12,7 @@ import icu.suc.megawalls78.event.GrapplingHookEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameTeam;
+import icu.suc.megawalls78.management.EquipmentManager;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
 import it.unimi.dsi.fastutil.Pair;
@@ -24,8 +25,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.craftbukkit.entity.CraftFishHook;
 import org.bukkit.entity.Item;
@@ -42,8 +46,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
 import org.bukkit.persistence.PersistentDataType;
@@ -98,7 +101,7 @@ public class GameListener implements Listener {
                     GamePlayer gamePlayer = gameManager.getPlayer(player);
                     updateCompass(gameManager, gamePlayer, player);
                     blinkEnergy(player);
-                    clearDisableItems(player);
+                    processItems(player, gamePlayer);
                 }
             }
         }
@@ -303,10 +306,25 @@ public class GameListener implements Listener {
         }
     }
 
-    private void clearDisableItems(Player player) {
+    private void processItems(Player player, GamePlayer gamePlayer) {
         PlayerInventory inventory = player.getInventory();
-        for (Material disableItem : DISABLE_ITEMS) {
-            inventory.remove(disableItem);
+        processItems(inventory, inventory.getStorageContents(), gamePlayer);
+        processItems(inventory, inventory.getArmorContents(), gamePlayer);
+        processItems(inventory, inventory.getExtraContents(), gamePlayer);
+    }
+
+    private void processItems(PlayerInventory inventory, ItemStack[] items, GamePlayer gamePlayer) {
+        for (int i = 0; i < items.length; i++) {
+            ItemStack itemStack = items[i];
+            if (itemStack == null) {
+                continue;
+            }
+            Material type = itemStack.getType();
+            if (DISABLE_ITEMS.contains(type)) {
+                inventory.clear(i);
+                continue;
+            }
+            EquipmentManager.decorate(itemStack, gamePlayer);
         }
     }
 

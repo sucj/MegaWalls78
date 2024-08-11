@@ -27,10 +27,7 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 import redis.clients.jedis.Jedis;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class GameRunner implements Runnable {
 
@@ -518,13 +515,23 @@ public class GameRunner implements Runnable {
         List<GameTeam> teams = gameManager.getTeams();
         GameTeam team = RandomUtil.getRandomEntry(teams);
         int i = teams.indexOf(team);
-        for (GamePlayer player : gameManager.getPlayers().values()) {
-            team = teams.get(i);
-            player.setTeam(team);
-            gameManager.getTeamPlayersMap().computeIfAbsent(team, k -> Sets.newHashSet()).add(player);
-            i++;
-            if (i == teams.size()) {
-                i = 0;
+        Collection<GamePlayer> players = gameManager.getPlayers().values();
+        double max = Math.ceil((double) players.size() / teams.size());
+        for (GamePlayer player : players) {
+            if (player.getTeam() == null) {
+                team = teams.get(i);
+                while (gameManager.getTeamPlayersMap().computeIfAbsent(team, k -> Sets.newHashSet()).size() >= max) {
+                    i++;
+                    if (i == teams.size()) {
+                        i = 0;
+                    }
+                    team = teams.get(i);
+                }
+                i++;
+                if (i == teams.size()) {
+                    i = 0;
+                }
+                player.setTeam(team);
             }
         }
         for (GameTeam gameTeam : gameManager.getTeams()) {

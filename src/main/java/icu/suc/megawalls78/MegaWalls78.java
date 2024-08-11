@@ -9,14 +9,15 @@ import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
 import org.bukkit.Bukkit;
+import org.bukkit.inventory.CookingRecipe;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 public final class MegaWalls78 extends JavaPlugin {
 
@@ -36,58 +37,22 @@ public final class MegaWalls78 extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        try {
-            scoreboardLib = ScoreboardLibrary.loadScoreboardLibrary(this);
-        } catch (NoPacketAdapterAvailableException e) {
-            scoreboardLib = new NoopScoreboardLibrary();
-        }
+        initScoreboard();
         initManagers();
         registerCommands();
         registerListeners();
-        configManager.load();
-
-        jedis = Redis.get();
-        sub = new JedisPubSub() {
-            @Override
-            public void onMessage(String channel, String message) {
-                String[] split = message.split("\\|");
-                if (split[0].equals("games")) {
-                    try (Jedis pub = Redis.get()) {
-                        pub.publish("mw78", String.join("|", "game", configManager.server, gameManager.getMap().id(), String.valueOf(gameManager.inWaiting())));
-                    }
-                }
-            }
-        };
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> jedis.subscribe(sub, "mw78"));
-
-        databaseManager = new DatabaseManager(configManager.url, configManager.user, configManager.password);
-        try {
-            databaseManager.connect();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        databaseManager.init();
+        loadConfig();
+        initRedis();
+        initSql();
+        boostSmelting();
     }
 
     @Override
     public void onDisable() {
-        scoreboardLib.close();
-        configManager.save();
-
-        sub.unsubscribe();
-        Redis.close(jedis);
-        if (!gameManager.getState().equals(GameState.ENDING)) {
-            try (Jedis pub = Redis.get()) {
-                pub.publish("mw78", String.join("|", "remove", MegaWalls78.getInstance().getConfigManager().server));
-            }
-        }
-
-        try {
-            databaseManager.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        closeScoreboard();
+        saveConfig();
+        closeRedis();
+        closeSql();
     }
 
     private void initManagers() {
@@ -111,6 +76,7 @@ public final class MegaWalls78 extends JavaPlugin {
 
     private void registerListeners() {
         Bukkit.getPluginManager().registerEvents(new ChatListener(), this);
+        Bukkit.getPluginManager().registerEvents(new EquipmentListener(), this);
         Bukkit.getPluginManager().registerEvents(new GameListener(), this);
         Bukkit.getPluginManager().registerEvents(new IdentityListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
@@ -150,5 +116,80 @@ public final class MegaWalls78 extends JavaPlugin {
 
     public static ScoreboardLibrary getScoreboardLib() {
         return scoreboardLib;
+    }
+
+    public void initScoreboard() {
+        try {
+            scoreboardLib = ScoreboardLibrary.loadScoreboardLibrary(this);
+        } catch (NoPacketAdapterAvailableException e) {
+            scoreboardLib = new NoopScoreboardLibrary();
+        }
+    }
+
+    public void closeScoreboard() {
+        scoreboardLib.close();
+    }
+
+    public void loadConfig() {
+        configManager.load();
+    }
+
+    @Override
+    public void saveConfig() {
+        configManager.save();
+    }
+
+    public void initRedis() {
+        jedis = Redis.get();
+        sub = new JedisPubSub() {
+            @Override
+            public void onMessage(String channel, String message) {
+                String[] split = message.split("\\|");
+                if (split[0].equals("games")) {
+                    try (Jedis pub = Redis.get()) {
+                        pub.publish("mw78", String.join("|", "game", configManager.server, gameManager.getMap().id(), String.valueOf(gameManager.inWaiting())));
+                    }
+                }
+            }
+        };
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> jedis.subscribe(sub, "mw78"));
+    }
+
+    public void initSql() {
+        databaseManager = new DatabaseManager(configManager.url, configManager.user, configManager.password);
+        try {
+            databaseManager.connect();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        databaseManager.init();
+    }
+
+    public void closeRedis() {
+        sub.unsubscribe();
+        Redis.close(jedis);
+        if (!gameManager.getState().equals(GameState.ENDING)) {
+            try (Jedis pub = Redis.get()) {
+                pub.publish("mw78", String.join("|", "remove", MegaWalls78.getInstance().getConfigManager().server));
+            }
+        }
+    }
+
+    public void closeSql() {
+        try {
+            databaseManager.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void boostSmelting() {
+        Iterator<Recipe> iterator = Bukkit.recipeIterator();
+        if (iterator.hasNext()) {
+            Recipe recipe = iterator.next();
+            if (recipe instanceof CookingRecipe<?> cooking) {
+                cooking.setCookingTime(cooking.getCookingTime() / 4);
+            }
+        }
     }
 }

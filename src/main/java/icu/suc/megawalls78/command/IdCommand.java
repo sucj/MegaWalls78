@@ -32,11 +32,11 @@ public class IdCommand implements CommandExecutor, TabExecutor {
             if (strings.length == 1) {
                 Identity identity = Identity.getIdentity(strings[0]);
                 if (identity == null) {
-                    commandSender.sendMessage(Component.translatable("mw78.identity.failed", NamedTextColor.RED));
+                    commandSender.sendMessage(Component.translatable("mw78.message.identity.failed", NamedTextColor.RED));
                     return true;
                 }
                 gameManager.getPlayer(player).setIdentity(identity);
-                commandSender.sendMessage(Component.translatable("mw78.identity", NamedTextColor.GREEN, identity.getName().color(instance.getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
+                commandSender.sendMessage(Component.translatable("mw78.message.identity", NamedTextColor.AQUA, identity.getName().color(instance.getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
                 return true;
             }
         }
