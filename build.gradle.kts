@@ -1,10 +1,9 @@
 import xyz.jpenilla.resourcefactory.bukkit.BukkitPluginYaml
 import xyz.jpenilla.resourcefactory.bukkit.Permission
-import xyz.jpenilla.resourcefactory.paper.paperPluginYaml
 
 plugins {
   `java-library`
-  id("io.papermc.paperweight.userdev").version("1.7.1")
+  id("io.papermc.paperweight.userdev").version("1.7.2")
   id("xyz.jpenilla.run-paper").version("2.3.0")
   id("xyz.jpenilla.resource-factory-bukkit-convention").version("1.1.1")
 }
@@ -29,7 +28,7 @@ repositories {
 }
 
 dependencies {
-  paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT")
+  paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
   implementation("net.skinsrestorer", "skinsrestorer-api", "15.0.15")
   implementation("com.github.LeonMangler", "SuperVanish", "6.2.19")
   implementation("net.luckperms", "api", "5.4")
