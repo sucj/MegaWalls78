@@ -27,6 +27,7 @@ public final class MegaWalls78 extends JavaPlugin {
     private ConfigManager configManager;
     private ScoreboardManager scoreboardManager;
     private DatabaseManager databaseManager;
+    private EquipmentManager equipmentManager;
 
     private static MegaWalls78 instance;
     private static ScoreboardLibrary scoreboardLib;
@@ -61,6 +62,7 @@ public final class MegaWalls78 extends JavaPlugin {
         skinManager = new SkinManager();
         gameManager = new GameManager();
         scoreboardManager = new ScoreboardManager();
+        equipmentManager = new EquipmentManager();
     }
 
     private void registerCommands() {
@@ -116,6 +118,10 @@ public final class MegaWalls78 extends JavaPlugin {
 
     public static ScoreboardLibrary getScoreboardLib() {
         return scoreboardLib;
+    }
+
+    public EquipmentManager getEquipmentManager() {
+        return equipmentManager;
     }
 
     public void initScoreboard() {

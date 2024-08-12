@@ -13,6 +13,7 @@ import net.skinsrestorer.api.property.SkinProperty;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class SkinManager {
 
@@ -60,12 +61,38 @@ public class SkinManager {
     }
 
     public Skin getPlayerSelectedSkin(UUID uuid, Identity identity) {
-        // TODO DATABASE
-        return playerSelectedSkin.computeIfAbsent(uuid, k -> Maps.newHashMap()).computeIfAbsent(identity, k -> skins.get(identity).getFirst());
+        Map<Identity, Skin> skinMap = playerSelectedSkin.computeIfAbsent(uuid, k -> Maps.newHashMap());
+        Skin skin = skinMap.get(identity);
+        if (skin == null) {
+            String skinId;
+            try {
+                skinId = MegaWalls78.getInstance().getDatabaseManager().getIdentitySkin(uuid, identity).get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+            for (List<Skin> skinList : skins.values()) {
+                boolean flag = false;
+                for (Skin aSkin : skinList) {
+                    if (aSkin.id().equals(skinId)) {
+                        skin = aSkin;
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag) {
+                    break;
+                }
+            }
+        }
+        if (skin == null) {
+            skin = skins.get(identity).getFirst();
+        }
+        Skin finalSkin = skin;
+        return skinMap.computeIfAbsent(identity, k -> finalSkin);
     }
 
     public void setPlayerSelectedSkin(UUID uuid, Identity identity, Skin skin) {
-        // TODO DATABASE
+        MegaWalls78.getInstance().getDatabaseManager().setIdentitySkin(uuid, identity, skin);
         playerSelectedSkin.computeIfAbsent(uuid, k -> Maps.newHashMap()).put(identity, skin);
     }
 

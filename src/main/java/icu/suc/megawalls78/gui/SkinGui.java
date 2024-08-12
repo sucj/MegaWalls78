@@ -102,7 +102,7 @@ public class SkinGui {
                     skinManager.setPlayerSelectedSkin(player.getUniqueId(), identity, skin);
                     skinManager.applySkin(player, skin);
                     player.getInventory().setItem(1, SkinGui.trigger(player));
-                    player.sendMessage(Component.translatable("mw78.message.skin.reset", NamedTextColor.AQUA, skin.name().color(NamedTextColor.GRAY)));
+                    player.sendMessage(Component.translatable("mw78.message.skin.reset", NamedTextColor.AQUA, skin.name().color(NamedTextColor.WHITE)));
                     INVENTORIES.remove(inventory);
                     player.closeInventory();
                 }
@@ -122,7 +122,7 @@ public class SkinGui {
                             skinManager.setPlayerSelectedSkin(player.getUniqueId(), identity, skin);
                             skinManager.applySkin(player, skin);
                             player.getInventory().setItem(1, SkinGui.trigger(player));
-                            player.sendMessage(Component.translatable("mw78.message.skin", NamedTextColor.AQUA, skin.name().color(NamedTextColor.GRAY)));
+                            player.sendMessage(Component.translatable("mw78.message.skin", NamedTextColor.AQUA, skin.name().color(NamedTextColor.WHITE)));
                             INVENTORIES.remove(inventory);
                             player.closeInventory();
                         }

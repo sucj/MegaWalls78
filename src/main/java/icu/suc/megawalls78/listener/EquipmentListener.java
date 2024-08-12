@@ -37,10 +37,10 @@ public class EquipmentListener implements Listener {
         }
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPLayerDropItem(PlayerDropItemEvent event) {
-        EquipmentManager.clear(event.getItemDrop().getItemStack());
-    }
+//    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+//    public void onPLayerDropItem(PlayerDropItemEvent event) {
+//        EquipmentManager.clear(event.getItemDrop().getItemStack());
+//    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerPickupItem(PlayerAttemptPickupItemEvent event) {
@@ -56,17 +56,17 @@ public class EquipmentListener implements Listener {
         EquipmentManager.decorate(event.getItem().getItemStack(), gamePlayer);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        for (ItemStack itemStack : event.getDrops()) {
-            EquipmentManager.clear(itemStack);
-        }
-    }
+//    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+//    public void onPlayerDeath(PlayerDeathEvent event) {
+//        for (ItemStack itemStack : event.getDrops()) {
+//            EquipmentManager.clear(itemStack);
+//        }
+//    }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event) {
-        EquipmentManager.clear(event.getPlayer().getEquipment().getItem(event.getHand()));
-    }
+//    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+//    public void onPlayerInteractAtEntity(PlayerInteractEntityEvent event) {
+//        EquipmentManager.clear(event.getPlayer().getEquipment().getItem(event.getHand()));
+//    }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
@@ -80,6 +80,6 @@ public class EquipmentListener implements Listener {
             return;
         }
         EquipmentManager.decorate(event.getArmorStandItem(), gamePlayer);
-        EquipmentManager.clear(event.getPlayerItem());
+//        EquipmentManager.clear(event.getPlayerItem());
     }
 }

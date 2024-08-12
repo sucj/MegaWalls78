@@ -8,9 +8,7 @@ import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameRunner;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameTeam;
-import icu.suc.megawalls78.gui.IdentityGui;
-import icu.suc.megawalls78.gui.SkinGui;
-import icu.suc.megawalls78.gui.TeamGui;
+import icu.suc.megawalls78.gui.*;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
@@ -53,6 +51,8 @@ public class PlayerListener implements Listener {
         if (gameManager.inWaiting()) {
             player.getInventory().setItem(0, IdentityGui.trigger(player));
             player.getInventory().setItem(1, SkinGui.trigger(player));
+            player.getInventory().setItem(2, PatternGui.trigger(player));
+            player.getInventory().setItem(3, TrimGui.trigger(player));
             player.getInventory().setItem(7, TeamGui.trigger(player));
             MegaWalls78.getInstance().getSkinManager().applySkin(player);
             event.joinMessage(Component.translatable("multiplayer.player.joined", player.teamDisplayName().color(LP.getNameColor(player.getUniqueId())))
@@ -83,8 +83,9 @@ public class PlayerListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
         if (gameManager.inWaiting()) {
-            event.quitMessage(Component.translatable("multiplayer.player.left", NamedTextColor.AQUA, player.teamDisplayName().color(LP.getNameColor(player.getUniqueId()))));
+            event.quitMessage(Component.translatable("multiplayer.player.left", NamedTextColor.AQUA, player.teamDisplayName().color(LP.getNameColor(uuid))));
             gameManager.removePlayer(player);
         } else if (gameManager.inFighting()) {
             if (gameManager.isSpectator(player)) {
@@ -96,7 +97,8 @@ public class PlayerListener implements Listener {
         } else {
             event.quitMessage(null);
         }
-        MegaWalls78.getInstance().getIdentityManager().clearCache(player.getUniqueId());
+        MegaWalls78.getInstance().getIdentityManager().clearCache(uuid);
+        MegaWalls78.getInstance().getEquipmentManager().clearCache(uuid);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -370,6 +372,8 @@ public class PlayerListener implements Listener {
                     switch (slot) {
                         case 0 -> IdentityGui.open(player, 1);
                         case 1 -> SkinGui.open(player, 1);
+                        case 2 -> PatternGui.open(player, 1);
+                        case 3 -> TrimGui.open(player, 1);
                         case 7 -> TeamGui.open(player, 1);
                     }
                 }

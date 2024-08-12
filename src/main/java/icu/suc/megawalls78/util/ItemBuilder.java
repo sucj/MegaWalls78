@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.block.banner.Pattern;
 import org.bukkit.craftbukkit.persistence.CraftPersistentDataContainer;
 import org.bukkit.craftbukkit.persistence.CraftPersistentDataTypeRegistry;
 import org.bukkit.enchantments.Enchantment;
@@ -58,6 +59,8 @@ public class ItemBuilder {
     private PlayerProfile profile;
 
     private Color armorColor;
+
+    private List<Pattern> bannerPatternList;
 
     private List<Component> prefixList;
     private List<Component> suffixList;
@@ -194,6 +197,14 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder addBannerPattern(Pattern pattern) {
+        if (this.bannerPatternList == null) {
+            this.bannerPatternList = Lists.newArrayList();
+        }
+        this.bannerPatternList.add(pattern);
+        return this;
+    }
+
     public ItemBuilder addPrefix(Component prefix) {
         if (this.prefixList == null) {
             this.prefixList = Lists.newArrayList();
@@ -292,6 +303,12 @@ public class ItemBuilder {
         if (armorColor != null) {
             try {
                 ((ColorableArmorMeta) itemMeta).setColor(armorColor);
+            } catch (ClassCastException ignored) {}
+        }
+
+        if (bannerPatternList != null) {
+            try {
+                ((BannerMeta) itemMeta).setPatterns(bannerPatternList);
             } catch (ClassCastException ignored) {}
         }
 

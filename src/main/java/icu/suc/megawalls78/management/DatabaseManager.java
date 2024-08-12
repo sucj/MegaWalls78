@@ -2,6 +2,9 @@ package icu.suc.megawalls78.management;
 
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Skin;
+import org.bukkit.block.banner.Pattern;
+import org.bukkit.inventory.meta.trim.TrimPattern;
 
 import java.sql.*;
 import java.util.UUID;
@@ -9,13 +12,30 @@ import java.util.concurrent.CompletableFuture;
 
 public class DatabaseManager {
 
-    private static final String IDENTITY_GET_QUERY = "SELECT identity FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_identity WHERE uuid = ?;";
-    private static final String IDENTITY_SET_QUERY = "INSERT INTO " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_identity(uuid, identity) VALUES(?, ?) AS new ON DUPLICATE KEY UPDATE identity = new.identity;";
-    private static final String RANK_GET_QUERY = "SELECT identity FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_rank WHERE uuid = ?;";
-    private static final String ID_COLOR_GET_QUERY = "SELECT color FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_color WHERE uuid = ? AND identity = ?;";
+    private static final String IDENTITY_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_identity (uuid CHAR(36) NOT NULL PRIMARY KEY, identity VARCHAR(255) DEFAULT NULL);";
+    private static final String RANK_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_rank (uuid CHAR(36) NOT NULL PRIMARY KEY, identity VARCHAR(255) DEFAULT NULL);";
+    private static final String ID_COLOR_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_color (uuid CHAR(36) NOT NULL, identity VARCHAR(255) NOT NULL UNIQUE, color VARCHAR(255) DEFAULT NULL);";
+    private static final String ID_SKIN_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_skin (uuid CHAR(36) NOT NULL, identity VARCHAR(255) NOT NULL UNIQUE, skin VARCHAR(255) DEFAULT NULL);";
+    private static final String PATTERN_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern (uuid CHAR(36) NOT NULL PRIMARY KEY, pattern VARCHAR(255) DEFAULT NULL);";
+    private static final String TRIM_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trim (uuid CHAR(36) NOT NULL PRIMARY KEY, trim VARCHAR(255) DEFAULT NULL);";
+
+    private static final String IDENTITY_GET = "SELECT identity FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_identity WHERE uuid = ?;";
+    private static final String IDENTITY_SET = "INSERT INTO " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_identity(uuid, identity) VALUES(?, ?) AS new ON DUPLICATE KEY UPDATE identity = new.identity;";
+    private static final String RANK_GET = "SELECT identity FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_rank WHERE uuid = ?;";
+    private static final String ID_COLOR_GET = "SELECT color FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_color WHERE uuid = ? AND identity = ?;";
+    private static final String ID_SKIN_GET = "SELECT skin FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_skin WHERE uuid = ? AND identity = ?;";
+    private static final String ID_SKIN_SET = "INSERT INTO " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_skin(uuid, identity, skin) VALUES(?, ?, ?) AS new ON DUPLICATE KEY UPDATE skin = new.skin;";
+    private static final String PATTERN_GET = "SELECT pattern FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern WHERE uuid = ?;";
+    private static final String PATTERN_SET = "INSERT INTO " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern(uuid, pattern) VALUES(?, ?) AS new ON DUPLICATE KEY UPDATE pattern = new.pattern;";
+    private static final String PATTERN_SET_NULL = "DELETE FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern WHERE uuid = ?;";
+    private static final String TRIM_GET = "SELECT trim FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trim WHERE uuid = ?;";
+    private static final String TRIM_SET = "INSERT INTO " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trim(uuid, trim) VALUES(?, ?) AS new ON DUPLICATE KEY UPDATE trim = new.trim;";
 
     private static final String IDENTITY_LABEL = "identity";
     private static final String COLOR_LABEL = "color";
+    private static final String SKIN_LABEL = "skin";
+    private static final String PATTERN_LABEL = "pattern";
+    private static final String TRIM_LABEL = "trim";
 
     private final String url;
     private final String user;
@@ -47,9 +67,12 @@ public class DatabaseManager {
 
     public void init() {
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_identity (uuid CHAR(36) NOT NULL PRIMARY KEY, identity VARCHAR(255) DEFAULT NULL);");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_rank (uuid CHAR(36) NOT NULL PRIMARY KEY, identity VARCHAR(255) DEFAULT NULL);");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_color (uuid CHAR(36) NOT NULL PRIMARY KEY, identity VARCHAR(255) DEFAULT NULL, color VARCHAR(255) DEFAULT NULL);");
+            statement.executeUpdate(IDENTITY_CREATE);
+            statement.executeUpdate(RANK_CREATE);
+            statement.executeUpdate(ID_COLOR_CREATE);
+            statement.executeUpdate(ID_SKIN_CREATE);
+            statement.executeUpdate(PATTERN_CREATE);
+            statement.executeUpdate(TRIM_CREATE);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -58,7 +81,7 @@ public class DatabaseManager {
     public CompletableFuture<String> getPlayerIdentity(UUID player) {
         return CompletableFuture.supplyAsync(() -> {
             String identity = null;
-            try (PreparedStatement statement = connection.prepareStatement(IDENTITY_GET_QUERY)) {
+            try (PreparedStatement statement = connection.prepareStatement(IDENTITY_GET)) {
                 statement.setString(1, player.toString());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
@@ -74,7 +97,7 @@ public class DatabaseManager {
 
     public void setPlayerIdentity(UUID player, Identity identity) {
         CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(IDENTITY_SET_QUERY)) {
+            try (PreparedStatement statement = connection.prepareStatement(IDENTITY_SET)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, identity.getId());
                 statement.executeUpdate();
@@ -88,7 +111,7 @@ public class DatabaseManager {
     public CompletableFuture<String> getRankedIdentity(UUID player) {
         return CompletableFuture.supplyAsync(() -> {
             String identity = null;
-            try (PreparedStatement statement = connection.prepareStatement(RANK_GET_QUERY)) {
+            try (PreparedStatement statement = connection.prepareStatement(RANK_GET)) {
                 statement.setString(1, player.toString());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
@@ -105,7 +128,7 @@ public class DatabaseManager {
     public CompletableFuture<String> getIdentityColor(UUID player, Identity identity) {
         return CompletableFuture.supplyAsync(() -> {
             String color = null;
-            try (PreparedStatement statement = connection.prepareStatement(ID_COLOR_GET_QUERY)) {
+            try (PreparedStatement statement = connection.prepareStatement(ID_COLOR_GET)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, identity.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -117,6 +140,104 @@ public class DatabaseManager {
                 throw new RuntimeException(e);
             }
             return color;
+        });
+    }
+
+    public CompletableFuture<String> getIdentitySkin(UUID player, Identity identity) {
+        return CompletableFuture.supplyAsync(() -> {
+            String skin = null;
+            try (PreparedStatement statement = connection.prepareStatement(ID_SKIN_GET)) {
+                statement.setString(1, player.toString());
+                statement.setString(2, identity.getId());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        skin = resultSet.getString(SKIN_LABEL);
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return skin;
+        });
+    }
+
+    public void setIdentitySkin(UUID player, Identity identity, Skin skin) {
+        CompletableFuture.supplyAsync(() -> {
+            try (PreparedStatement statement = connection.prepareStatement(ID_SKIN_SET)) {
+                statement.setString(1, player.toString());
+                statement.setString(2, identity.getId());
+                statement.setString(3, skin.id());
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
+    }
+
+    public CompletableFuture<String> getPlayerPattern(UUID player) {
+        return CompletableFuture.supplyAsync(() -> {
+            String pattern = null;
+            try (PreparedStatement statement = connection.prepareStatement(PATTERN_GET)) {
+                statement.setString(1, player.toString());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        pattern = resultSet.getString(PATTERN_LABEL);
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return pattern;
+        });
+    }
+
+    public void setPlayerPattern(UUID player, Pattern pattern) {
+        CompletableFuture.supplyAsync(() -> {
+            String sql = PATTERN_SET;
+            if (pattern == null) {
+                sql = PATTERN_SET_NULL;
+            }
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, player.toString());
+                if (pattern != null) {
+                    statement.setString(2, pattern.getPattern().key().value());
+                }
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
+    }
+
+    public CompletableFuture<String> getPlayerTrim(UUID player) {
+        return CompletableFuture.supplyAsync(() -> {
+            String pattern = null;
+            try (PreparedStatement statement = connection.prepareStatement(TRIM_GET)) {
+                statement.setString(1, player.toString());
+                try (ResultSet resultSet = statement.executeQuery()) {
+                    if (resultSet.next()) {
+                        pattern = resultSet.getString(TRIM_LABEL);
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return pattern;
+        });
+    }
+
+    public void setPlayerTrim(UUID player, TrimPattern trim) {
+        CompletableFuture.supplyAsync(() -> {
+            try (PreparedStatement statement = connection.prepareStatement(TRIM_SET)) {
+                statement.setString(1, player.toString());
+                statement.setString(2, trim.key().value());
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
         });
     }
 }
