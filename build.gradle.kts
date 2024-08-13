@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-  paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
+  paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT")
   implementation("net.skinsrestorer", "skinsrestorer-api", "15.0.15")
   implementation("com.github.LeonMangler", "SuperVanish", "6.2.19")
   implementation("net.luckperms", "api", "5.4")

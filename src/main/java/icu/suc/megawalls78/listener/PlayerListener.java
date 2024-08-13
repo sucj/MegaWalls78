@@ -12,6 +12,7 @@ import icu.suc.megawalls78.gui.*;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
+import io.papermc.paper.event.entity.EntityMoveEvent;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -21,6 +22,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
@@ -33,6 +35,7 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.util.Vector;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.List;
@@ -261,7 +264,7 @@ public class PlayerListener implements Listener {
                 Entity causingEntity = event.getDamageSource().getCausingEntity();
                 if (causingEntity != null) {
                     Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-                    if (Objects.equals(scoreboard.getEntityTeam(causingEntity), scoreboard.getPlayerTeam(player))) {
+                    if (Objects.equals(scoreboard.getEntityTeam(causingEntity), scoreboard.getPlayerTeam(player)) || EntityUtil.traceableTeamed(causingEntity, player)) {
                         event.setCancelled(true);
                     }
 //                    if (causingEntity instanceof Player causingPlayer && !causingPlayer.equals(player)) {
@@ -432,7 +435,8 @@ public class PlayerListener implements Listener {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         if (gameManager.inFighting()) {
             GameRunner runner = gameManager.getRunner();
-            GameTeam team = runner.inPalace(event.getTo());
+            Location to = event.getTo();
+            GameTeam team = runner.inPalace(to);
             Player player = event.getPlayer();
             if (team == null) {
                 for (BossBar bossBar : player.activeBossBars()) {
@@ -444,18 +448,26 @@ public class PlayerListener implements Listener {
             } else if (!gameManager.getWither(team).isDead()) {
                 player.showBossBar(gameManager.getBossBar(team));
             }
-//            GameState state = gameManager.getState();
-//            if (state.equals(GameState.OPENING)) {
-//                if (!runner.getSpawn(gameManager.getPlayer(player).getTeam()).contains(to.toBlockLocation().toVector())) {
-//                    Objects.requireNonNullElse(player.getVehicle(), player).teleport(from.clone().subtract(to.clone().subtract(from)));
-//                }
-//            } else if (state.equals(GameState.PREPARING)) {
-//                GameTeam playerTeam = gameManager.getPlayer(player).getTeam();
-//                Vector location = to.toBlockLocation().toVector();
-//                if (!(runner.getTeamRegion(playerTeam).contains(location) || runner.getSpawn(playerTeam).contains(location))) {
-//                    Objects.requireNonNullElse(player.getVehicle(), player).teleport(from.clone().subtract(to.clone().subtract(from)));
-//                }
-//            }
+            GameState state = gameManager.getState();
+            if (state.equals(GameState.OPENING)) {
+                Vector vector = to.toBlockLocation().toVector();
+                if (!runner.getSpawn(gameManager.getPlayer(player).getTeam()).contains(vector)) {
+                    event.setCancelled(true);
+                }
+            } else if (state.equals(GameState.PREPARING)) {
+                GameTeam playerTeam = gameManager.getPlayer(player).getTeam();
+                Vector vector = to.toBlockLocation().toVector();
+                if (!(runner.getTeamRegion(playerTeam).contains(vector) || runner.getSpawn(playerTeam).contains(vector))) {
+                    event.setCancelled(true);
+                }
+            }
+            if (event.isCancelled()) {
+                Entity vehicle = player.getVehicle();
+                if (vehicle == null) {
+                    return;
+                }
+                vehicle.remove();
+            }
         }
     }
 

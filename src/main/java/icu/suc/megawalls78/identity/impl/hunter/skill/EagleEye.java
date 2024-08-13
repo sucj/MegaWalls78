@@ -6,7 +6,6 @@ import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.EntityUtil;
-import net.minecraft.world.entity.projectile.Projectile;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,6 +37,7 @@ public final class EagleEye extends DurationSkill {
         if (run) {
             task.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
         }
+
         return true;
     }
 

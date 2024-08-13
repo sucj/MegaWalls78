@@ -13,7 +13,7 @@ import it.unimi.dsi.fastutil.floats.FloatArrays;
 import it.unimi.dsi.fastutil.floats.FloatSet;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.TraceableEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.AABB;
@@ -28,6 +28,7 @@ import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.potion.CraftPotionUtil;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -46,6 +47,17 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class EntityUtil {
+
+    private static final Vector[][] SAFE_RIDE = new Vector[][]{
+            {new Vector(0.2, 0, 0)},
+            {new Vector(-0.2, 0, 0)},
+            {new Vector(0, 0, 0.2)},
+            {new Vector(0, 0, -0.2)},
+            {new Vector(0.2, 0, 0), new Vector(0, 0, 0.2)},
+            {new Vector(-0.2, 0, 0), new Vector(0, 0, -0.2)},
+            {new Vector(-0.2, 0, 0), new Vector(0, 0, 0.2)},
+            {new Vector(0.2, 0, 0), new Vector(0, 0, -0.2)},
+    };
 
     public static Entity spawn(Location location, Type type, Object... data) {
         return spawn(location, type, null, data);
@@ -364,15 +376,44 @@ public class EntityUtil {
 
     public static Location getBackwardLocation(Entity entity, double distance) {
         Location entityLocation = entity.getLocation();
+//        Location backwardLocation = entityLocation.clone().add(entityLocation.getDirection().multiply(-1).setY(0).multiply(distance));
+//        if (backwardLocation.getBlock().isCollidable() || backwardLocation.clone().add(0, 1, 0).getBlock().isCollidable()) {
+//            return entityLocation;
+//        }
         return entityLocation.add(entityLocation.getDirection().multiply(-1).setY(0).multiply(distance));
     }
 
     public static void addPotionEffect(LivingEntity entity, PotionEffect effect, Entity source) {
-        ((CraftLivingEntity) entity).getHandle().addEffect(org.bukkit.craftbukkit.potion.CraftPotionUtil.fromBukkit(effect), ((CraftEntity) source).getHandle(), EntityPotionEffectEvent.Cause.PLUGIN);
+        ((CraftLivingEntity) entity).getHandle().addEffect(CraftPotionUtil.fromBukkit(effect), ((CraftEntity) source).getHandle(), EntityPotionEffectEvent.Cause.PLUGIN);
+    }
+
+    public static boolean traceableTeamed(Entity traceable, Entity entity) {
+        if (((CraftEntity) traceable).getHandle() instanceof TraceableEntity nmsTraceable && nmsTraceable.getOwner() instanceof net.minecraft.world.entity.Entity nms) {
+            return Objects.equals(nms.getTeam(), ((CraftEntity) entity).getHandle().getTeam());
+        }
+        return false;
+    }
+
+    public static void safeRide(Entity vehicle, Player player) {
+        Location location = vehicle.getLocation();
+        if (vehicle.collidesAt(location)) {
+            for (Vector[] vectors : SAFE_RIDE) {
+                Location safe = location.clone();
+                for (Vector vector : vectors) {
+                    safe.add(vector);
+                }
+                if (!vehicle.collidesAt(safe)) {
+                    vehicle.teleport(safe);
+                    break;
+                }
+            }
+        }
+        vehicle.addPassenger(player);
     }
 
     public enum Type {
         CONTROLLABLE_PIG(ControllablePig.class),
+        EXPLODING_SHEEP(ExplodingSheep.class),
         EXPLOSIVE_ARROW(ExplosiveArrow.class),
         FAKE_LIGHTNING(FakeLightning.class),
         GRAPPLING_HOOK(GrapplingHook.class),

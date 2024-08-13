@@ -79,7 +79,7 @@ public class AnimalCompanion extends CooldownPassive {
     }
 
     private void spawn(Player player) {
-        switch (RandomUtil.RANDOM.nextInt(5)) {
+        switch (RandomUtil.RANDOM.nextInt(6)) {
             case 0 -> // Chicken Jockey
                     EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_SKELETON, jockey -> {
                         Skeleton skeleton = (Skeleton) jockey;
@@ -101,16 +101,16 @@ public class AnimalCompanion extends CooldownPassive {
                         pigZombie.addPotionEffect(ZOMBIE_PIGMAN_POTION);
                     });
             case 2 -> // Spider
-                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_SPIDER, entity -> {
-                        add(((Spider) entity), player);
-                    });
-            case 3 -> // Cow
+                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_SPIDER, entity -> add(((Spider) entity), player));
+            case 3 -> // Exploding Sheep
+                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.EXPLODING_SHEEP, entity -> add(((Sheep) entity), player), player);
+            case 4 -> // Cow
                     player.getWorld().spawnEntity(player.getLocation(), EntityType.COW, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
                         Cow cow = (Cow) entity;
                         add(cow, player);
                         cow.addPotionEffect(COW_POTION);
                     });
-            case 4 -> // Tamed Wolf
+            case 5 -> // Tamed Wolf
                     EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TAMED_WOLF, entity -> {
                         Wolf wolf = (Wolf) entity;
                         add(wolf, player);
@@ -129,15 +129,6 @@ public class AnimalCompanion extends CooldownPassive {
         entities.add(entity);
         entity.customName(Component.translatable("mw78.entity.tamed", player.name(), entity.name()));
         player.getScoreboard().getPlayerTeam(player).addEntity(entity);
-    }
-
-    private LivingEntity add(LivingEntity entity) {
-        entities.removeIf(Entity::isDead);
-        if (entities.size() >= MAX) {
-            entities.removeFirst().setHealth(0);
-        }
-        entities.add(entity);
-        return entity;
     }
 
     @Override

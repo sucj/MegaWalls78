@@ -18,7 +18,7 @@ public final class PigRider extends DurationSkill {
     private Task task;
 
     public PigRider() {
-        super("pig_rider", 0, 60000L, 30000L);
+        super("pig_rider", 0, 1000L, 30000L);
     }
 
     @Override
@@ -63,13 +63,13 @@ public final class PigRider extends DurationSkill {
         }
 
         private void spawn() {
-            EntityUtil.spawn(EntityUtil.getBackwardLocation(player, 0.5D), EntityUtil.Type.CONTROLLABLE_PIG, entity -> {
+            EntityUtil.spawn(player.getLocation(), EntityUtil.Type.CONTROLLABLE_PIG, entity -> {
                 pig = (Pig) entity;
                 AttributeInstance attribute = pig.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
                 attribute.setBaseValue(attribute.getBaseValue() * 2.5);
                 pig.setInvulnerable(true);
                 pig.addPotionEffect(SPEED);
-                pig.addPassenger(player);
+                EntityUtil.safeRide(pig, player);
             });
         }
 
