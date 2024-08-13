@@ -34,14 +34,9 @@ public final class RefreshingSip extends CooldownPassive {
         super("refreshing_sip", 5000L);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onConsumeMilk(PlayerItemConsumeEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         Player player = event.getPlayer();
-
         if (PASSIVE(player) && COOLDOWN() && condition(event)) {
             AtomicInteger count = new AtomicInteger();
             heal(player);

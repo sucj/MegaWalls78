@@ -49,11 +49,8 @@ public class ForceOfNature extends DurationCooldownPassive {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getDamager() instanceof Player player && PASSIVE(player) && DURATION() && condition(event)) {
             scale(event);
             DURATION(PER);

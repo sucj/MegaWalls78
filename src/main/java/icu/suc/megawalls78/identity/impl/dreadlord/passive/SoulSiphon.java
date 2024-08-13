@@ -19,11 +19,8 @@ public final class SoulSiphon extends DurationPassive {
         super("soul_siphon", 5000L);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerKill(IncreaseStatsEvent.Kill event) {
-        if (event.isCancelled()) {
-            return;
-        }
         GamePlayer gamePlayer = event.getPlayer();
         if (PASSIVE(gamePlayer)) {
             gamePlayer.getBukkitPlayer().addPotionEffect(REGENERATION);
@@ -31,11 +28,8 @@ public final class SoulSiphon extends DurationPassive {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getDamager() instanceof Player player && PASSIVE(player) && DURATION()) {
             power(event);
         }

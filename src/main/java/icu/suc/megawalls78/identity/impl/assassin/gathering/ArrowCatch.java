@@ -20,11 +20,8 @@ public final class ArrowCatch extends Gathering {
             super("arrow_catch", 3000L);
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void shot(EntityDamageByEntityEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             if (event.getEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() && event.getDamager() instanceof Arrow arrow && EntityUtil.isEntityInFront(player, arrow)) {
                 player.getInventory().addItem(arrow.getItemStack().add(2));
                 arrow.remove();

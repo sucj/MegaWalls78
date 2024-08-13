@@ -14,8 +14,13 @@ import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
+import icu.suc.megawalls78.util.ParticleUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -46,6 +51,12 @@ public final class ShadowCloak extends DurationSkill {
     private static final double SCALE = 0.1D; //损失的生命值10%
     private static final double MIN = 1.0D; // 至少造成1点真实伤害
 
+    private static final Effect<Player> EFFECT_START = Effect.create(player -> {
+        ParticleUtil.spawnParticleRandomBody(player, Particle.SMOKE, 8, 0);
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITHER_AMBIENT, SoundCategory.PLAYERS, 1.0F, 2.0F);
+    });
+    private static final Effect<Player> EFFECT_END = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 1.0F, 1.0F));
+
     private Task task;
 
     public ShadowCloak() {
@@ -61,6 +72,7 @@ public final class ShadowCloak extends DurationSkill {
             run = true;
         }
 
+        EFFECT_START.play(player);
         player.addPotionEffect(INVISIBILITY); // force参数已弃用，默认覆盖原效果时间
         player.addPotionEffect(SPEED);
         player.addPotionEffect(RESISTANCE);
@@ -136,6 +148,7 @@ public final class ShadowCloak extends DurationSkill {
 
         @Override
         public synchronized void cancel() throws IllegalStateException {
+            EFFECT_END.play(player);
             EntityUtil.removeMetadata(player, ShadowCloak.this.getId());
             updateArmor();
             super.cancel();
@@ -181,12 +194,8 @@ public final class ShadowCloak extends DurationSkill {
             super("shadow_cloak");
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onPlayerDamage(EntityDamageByEntityEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
-
             if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && EntityUtil.getMetadata(player, ID) && condition(event)) {
                 LivingEntity entity = (LivingEntity) event.getEntity();
                 double damage = Math.max((entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() - entity.getHealth()) * SCALE, MIN);

@@ -24,11 +24,8 @@ public final class Berserk extends DurationCooldownPassive {
         super("berserk", 15000L, 6000L);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() && condition_damage(event)) {
             DURATION_RESET();
             potion(player);
@@ -36,7 +33,7 @@ public final class Berserk extends DurationCooldownPassive {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player player && PASSIVE(player) && DURATION() && condition_attack(event)) {
             power(event);

@@ -47,22 +47,16 @@ public final class Anger extends Passive implements IActionbar {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEnergyChange(EnergyChangeEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Player player = event.getPlayer();
         if (PASSIVE(player) && event.getEnergy() == 0) {
             deactivate(player);
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerSprint(PlayerMoveEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Player player = event.getPlayer();
         if (PASSIVE(player) && player.isSprinting() && !state) {
             activate(player);

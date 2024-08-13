@@ -38,11 +38,8 @@ public final class UltraPasteurized extends Gathering {
             super("ultra_pasteurized", 60);
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onBreakBlock(BlockDropItemEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             Player player = event.getPlayer();
             if (PASSIVE(player) && condition_available() && condition_stone(event) && CHARGE()) {
                 handle(event);
@@ -51,7 +48,7 @@ public final class UltraPasteurized extends Gathering {
         }
 
         private static void handle(BlockDropItemEvent event) {
-            BlockUtil.addDrops(event, MILK.build());
+            InventoryUtil.addItem(event.getPlayer(), event, MILK.build());
             EFFECT_SKILL.play(event.getBlockState().getLocation());
         }
 

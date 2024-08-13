@@ -40,11 +40,8 @@ public final class BucketBarrier extends DurationCooldownPassive {
         super("bucket_barrier", 30000L, 20000L);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getEntity() instanceof Player player && PASSIVE(player) && DURATION() && block(event)) {
             EFFECT_SKILL.play(Pair.of(player, (float) DURATION_REMAIN() / DURATION));
             DURATION(PER);
@@ -72,11 +69,8 @@ public final class BucketBarrier extends DurationCooldownPassive {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Player player = event.getPlayer();
         if (PASSIVE(player) && DURATION()) {
             center = event.getTo().clone().add(0, player.getEyeHeight() + 0.5, 0);

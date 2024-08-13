@@ -22,7 +22,7 @@ public final class SoulCharge extends CooldownPassive {
         super("soul_charge", 15000L);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEnergyChange(EnergyChangeEvent event) {
         Player player = event.getPlayer();
         if (PASSIVE(player) && COOLDOWN() && condition(event)) {

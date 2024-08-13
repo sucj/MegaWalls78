@@ -40,22 +40,16 @@ public class AnimalCompanion extends CooldownPassive {
         super("animal_companion", 4000L);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() && condition_spawn(event)) {
             spawn(player);
             COOLDOWN_RESET();
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Player player = event.getPlayer();
         if (PASSIVE(player) && condition_discard(event)) {
             ((LivingEntity) event.getRightClicked()).setHealth(0);

@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
@@ -46,6 +47,7 @@ public class IdentityGui {
             ItemBuilder itemBuilder = ItemBuilder.of(identity.getMaterial())
                     .setDisplayName(identity.getName().color(identity.getColor()))
                     .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                    .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                     .clearAttributes();
             if (flag && MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity().equals(identity)) {
                 itemBuilder.addSuffix(Component.space().append(Component.translatable("mw78.gui.selected", NamedTextColor.GRAY))).setEnchantmentGlintOverride(true);
@@ -132,6 +134,7 @@ public class IdentityGui {
         return ItemBuilder.of(MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity().getMaterial())
                 .setDisplayName(Component.translatable("mw78.gui.identity", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.identity.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .clearAttributes()
                 .build();
     }

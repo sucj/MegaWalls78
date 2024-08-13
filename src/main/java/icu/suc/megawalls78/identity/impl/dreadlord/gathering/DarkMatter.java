@@ -2,7 +2,7 @@ package icu.suc.megawalls78.identity.impl.dreadlord.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
-import org.bukkit.Location;
+import icu.suc.megawalls78.util.InventoryUtil;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Item;
@@ -31,17 +31,14 @@ public class DarkMatter extends Gathering {
             super("dark_matter", 20);
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onBreakBlock(BlockDropItemEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             Player player = event.getPlayer();
             BlockState blockState = event.getBlockState();
             if (PASSIVE(player) && condition(blockState)) {
                 handle_smelt(event);
                 if (CHARGE()) {
-                    handle_armor(event, player, blockState.getLocation(), ARMORS.get(armor));
+                    handle_armor(event, player, ARMORS.get(armor));
                     if (++armor >= ARMORS.size()) {
                         armor = 0;
                     }
@@ -63,8 +60,8 @@ public class DarkMatter extends Gathering {
             }
         }
 
-        private static void handle_armor(BlockDropItemEvent event, Player player, Location location, Material material) {
-            event.getItems().add(player.getWorld().dropItemNaturally(location, ItemStack.of(material)));
+        private static void handle_armor(BlockDropItemEvent event, Player player, Material material) {
+            InventoryUtil.addItem(player, event, ItemStack.of(material));
         }
     }
 }

@@ -15,11 +15,8 @@ public final class Toughness extends ChargePassive {
         super("toughness", 3);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getEntity() instanceof Player player && PASSIVE(player) && condition(event) && CHARGE()) {
             potion(player);
             CHARGE_RESET();

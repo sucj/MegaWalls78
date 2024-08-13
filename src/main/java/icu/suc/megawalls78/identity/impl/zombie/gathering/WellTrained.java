@@ -29,11 +29,8 @@ public final class WellTrained extends Gathering {
             super("well_trained");
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             Player player = event.getPlayer();
             if (PASSIVE(player) && condition_break(event)) {
                 potion_break(player);

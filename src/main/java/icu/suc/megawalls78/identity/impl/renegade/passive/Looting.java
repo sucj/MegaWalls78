@@ -36,22 +36,16 @@ public final class Looting extends ChargePassive {
         super("looting", 5);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerKill(PlayerDeathEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (PASSIVE(PlayerUtil.getKiller(event)) && CHARGE()) {
             handle(event, PLAYER());
             CHARGE_RESET();
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerKill(IncreaseStatsEvent.Kill event) {
-        if (event.isCancelled()) {
-            return;
-        }
         GamePlayer player = event.getPlayer();
         if (PASSIVE(player)) {
             heal(player);

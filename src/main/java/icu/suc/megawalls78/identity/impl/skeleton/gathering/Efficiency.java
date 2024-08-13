@@ -27,11 +27,8 @@ public final class Efficiency extends Gathering {
             super("efficiency");
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onBlockBreak(BlockDropItemEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             Player player = event.getPlayer();
             if (PASSIVE(player)) {
                 handle(event);

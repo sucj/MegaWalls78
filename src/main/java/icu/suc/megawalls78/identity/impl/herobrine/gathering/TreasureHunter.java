@@ -19,12 +19,8 @@ public final class TreasureHunter extends Gathering {
             super("treasure_hunter");
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onChestRoll(ChestRollEvent.Pre event) {
-            if (event.isCancelled()) {
-                return;
-            }
-
             if (PASSIVE(event.getPlayer())) {
                 handle(event);
             }

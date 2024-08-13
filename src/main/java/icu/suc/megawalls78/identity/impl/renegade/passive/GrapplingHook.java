@@ -35,11 +35,8 @@ public final class GrapplingHook extends DurationCooldownPassive {
         super("grappling_hook", 15000L, 4000L);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onCast(GrapplingHookEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (PASSIVE(event.getPlayer()) && event.getState().equals(GrapplingHookEvent.State.CAST)) {
             if (COOLDOWN()) {
                 event.setCancelled(PLAYER().getEnergy() < ENERGY);
@@ -49,11 +46,8 @@ public final class GrapplingHook extends DurationCooldownPassive {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPull(GrapplingHookEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Player player = event.getPlayer();
         if (PASSIVE(player) && event.getState().equals(GrapplingHookEvent.State.PULL)) {
 
@@ -72,11 +66,8 @@ public final class GrapplingHook extends DurationCooldownPassive {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && condition_attack(event)) {
             if (DURATION()) {
                 refund(player, REFUND);
@@ -89,42 +80,30 @@ public final class GrapplingHook extends DurationCooldownPassive {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerKill(IncreaseStatsEvent.Kill event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (PASSIVE(event.getPlayer())) {
             COOLDOWN_END();
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerAssist(IncreaseStatsEvent.Assist event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (PASSIVE(event.getPlayer())) {
             COOLDOWN_END();
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerFall(EntityDamageEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getEntity() instanceof Player player && PASSIVE(player) && noFall && condition_fall(event)) {
             noFall = false;
             event.setCancelled(true);
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (PASSIVE(event.getPlayer()) && noFall && condition_fall(event)) {
             noFall = false;
         }

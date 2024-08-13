@@ -28,12 +28,8 @@ public class InnerInk extends Passive {
         super("inner_ink");
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPotionConsume(PlayerItemConsumeEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         Player player = event.getPlayer();
 
         AtomicInteger count = new AtomicInteger();

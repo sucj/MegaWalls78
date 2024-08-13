@@ -2,10 +2,10 @@ package icu.suc.megawalls78.identity.impl.spider.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.PlayerUtil;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
@@ -23,11 +23,8 @@ public final class IronRush extends Gathering {
             super("iron_rush");
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onBlockBreak(BlockDropItemEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             Player player = event.getPlayer();
             if (PASSIVE(player) && condition(player)) {
                 handle(event);
@@ -39,8 +36,7 @@ public final class IronRush extends Gathering {
         }
 
         private static void handle(BlockDropItemEvent event) {
-            BlockState block = event.getBlockState();
-            event.getItems().add(block.getWorld().dropItemNaturally(block.getLocation(), ItemStack.of(Material.IRON_INGOT)));
+            BlockUtil.addDrops(event, ItemStack.of(Material.IRON_INGOT));
         }
     }
 }

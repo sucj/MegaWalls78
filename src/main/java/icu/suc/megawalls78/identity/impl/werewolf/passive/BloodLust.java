@@ -18,22 +18,16 @@ public class BloodLust extends ChargePassive {
         super("blood_lust", 2);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && condition_attack(event) && CHARGE()) {
             potion(player);
             CHARGE_RESET();
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getEntity() instanceof Player player && PASSIVE(player)) {
             CHARGE_RESET();
         }

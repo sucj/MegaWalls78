@@ -16,11 +16,8 @@ public final class SoulEater extends ChargeCooldownPassive {
         super("soul_eater", 1000L, 4);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() && condition(event) && CHARGE()) {
             heal(player);
             CHARGE_RESET();

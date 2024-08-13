@@ -20,12 +20,8 @@ public final class MasterAlchemist extends CooldownPassive {
         super("master_alchemist", 12000L);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) { // 实际上这个技能不需要在意是谁造成了伤害
-        if (event.isCancelled()) {
-            return;
-        }
-
         if (event.getEntity() instanceof Player player && PASSIVE(player) && COOLDOWN()) {
             double damage = event.getFinalDamage();
             long currentTimeMillis = System.currentTimeMillis();

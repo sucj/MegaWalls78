@@ -26,11 +26,8 @@ public final class EnderHeart extends ChargePassive {
         super("ender_heart", 3);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Player player = event.getPlayer();
         if (PASSIVE(player) && CHARGE()) {
             EFFECT_SKILL.play(player);
@@ -41,7 +38,7 @@ public final class EnderHeart extends ChargePassive {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerKill(IncreaseStatsEvent.Kill event) {
         GamePlayer player = event.getPlayer();
         if (PASSIVE(player)) {
@@ -49,7 +46,7 @@ public final class EnderHeart extends ChargePassive {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerAssist(IncreaseStatsEvent.Assist event) {
         GamePlayer player = event.getPlayer();
         if (PASSIVE(player)) {

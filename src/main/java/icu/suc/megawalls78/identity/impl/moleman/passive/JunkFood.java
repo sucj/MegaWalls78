@@ -6,6 +6,7 @@ import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.BlockUtil;
+import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.ItemUtil;
 import net.kyori.adventure.text.Component;
@@ -49,12 +50,8 @@ public final class JunkFood extends ChargePassive implements IActionbar {
         super("junk_food", JUNK_APPLE_APPEAR);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockDropItemEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-
         Player player = event.getPlayer();
         if (PASSIVE(player) && condition_available() && condition_shovelable(event) && CHARGE()) {
             if (CHARGE_COUNT() > JUNK_APPLE_APPEAR) {
@@ -71,11 +68,8 @@ public final class JunkFood extends ChargePassive implements IActionbar {
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onConsumeApple(PlayerItemConsumeEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Player player = event.getPlayer();
         if (PASSIVE(player)) {
             ItemStack itemStack = event.getItem();
@@ -101,7 +95,7 @@ public final class JunkFood extends ChargePassive implements IActionbar {
     }
 
     private static void handle(BlockDropItemEvent event, ItemStack itemStack) {
-        BlockUtil.addDrops(event, itemStack);
+        InventoryUtil.addItem(event.getPlayer(), event, itemStack);
     }
 
     @Override

@@ -19,7 +19,7 @@ public final class Salvaging extends Passive {
         super("salvaging");
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerShoot(EntityDamageByEntityEvent event) {
         if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && condition(event)) {
             player.getInventory().addItem(ARROW.build());

@@ -24,11 +24,8 @@ public class Carnivore extends Gathering {
             super("carnivore");
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onPlayerKill(IncreaseStatsEvent.Kill event) {
-            if (event.isCancelled()) {
-                return;
-            }
             if (PASSIVE(event.getPlayer())) {
                 handle(event);
             }

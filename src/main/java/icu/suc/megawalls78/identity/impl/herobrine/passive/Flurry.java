@@ -17,11 +17,8 @@ public final class Flurry extends ChargePassive {
         super("flurry", 3);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && condition(event) && CHARGE()) {
             potion(player);
             CHARGE_RESET();

@@ -6,9 +6,8 @@ import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 
-    public final class Power extends DurationPassive {
+public final class Power extends DurationPassive {
 
     private static final double SCALE = 1.85D;
 
@@ -16,21 +15,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
         super("power", 6000L);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerKill(IncreaseStatsEvent.Kill event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (PASSIVE(event.getPlayer())) {
             DURATION_RESET();
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getDamager() instanceof Player player && PASSIVE(player) && DURATION() && condition(event)) {
             power(event);
         }

@@ -103,11 +103,8 @@ public final class Rend extends Skill {
             super("rend");
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onPlayerAttack(EntityDamageByEntityEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && condition(event)) {
                 Player victim = (Player) event.getEntity();
                 List<Long> timestamps = arrows.computeIfAbsent(victim.getUniqueId(), uuid -> Lists.newArrayList());
@@ -118,15 +115,10 @@ public final class Rend extends Skill {
             }
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onPlayerDeath(PlayerDeathEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             UUID uuid = event.getPlayer().getUniqueId();
-            if (arrows.containsKey(uuid)) {
-                arrows.remove(uuid);
-            }
+            arrows.remove(uuid);
         }
 
         public Map<UUID, List<Long>> getArrows() {

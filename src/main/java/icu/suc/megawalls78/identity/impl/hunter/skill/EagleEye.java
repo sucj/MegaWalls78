@@ -73,11 +73,8 @@ public final class EagleEye extends DurationSkill {
             super("eagle_eye");
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onPlayerShoot(ProjectileLaunchEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             if (event.getEntity() instanceof Arrow arrow && PASSIVE(arrow.getOwnerUniqueId()) && EntityUtil.getMetadata(PLAYER().getBukkitPlayer(), getId()) && condition_arrow(arrow)) {
                 arrow.remove();
                 EntityUtil.spawn(arrow.getLocation(), EntityUtil.Type.HOMING_ARROW, entity -> {
@@ -89,11 +86,8 @@ public final class EagleEye extends DurationSkill {
             }
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onPlayerAttack(EntityDamageByEntityEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && EntityUtil.getMetadata(player, getId()) && condition_attack(event)) {
                 if (condition_melee(event)) {
                     player.heal(MELEE);

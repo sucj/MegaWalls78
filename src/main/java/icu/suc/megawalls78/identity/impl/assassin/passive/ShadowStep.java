@@ -3,11 +3,9 @@ package icu.suc.megawalls78.identity.impl.assassin.passive;
 import icu.suc.megawalls78.identity.impl.assassin.skill.ShadowCloak;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.EntityUtil;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.util.Vector;
 
 public final class ShadowStep extends CooldownPassive {
 
@@ -17,11 +15,8 @@ public final class ShadowStep extends CooldownPassive {
         super("shadow_step", 10000L);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageByEntityEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         if (event.getEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() &&
                 event.getDamageSource().getCausingEntity() instanceof Player damager &&
                 player.isSneaking() &&

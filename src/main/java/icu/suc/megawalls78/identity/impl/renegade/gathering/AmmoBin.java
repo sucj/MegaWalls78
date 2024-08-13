@@ -1,20 +1,15 @@
 package icu.suc.megawalls78.identity.impl.renegade.gathering;
 
-import com.google.common.collect.Lists;
 import icu.suc.megawalls78.event.ChestRollEvent;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.InventoryUtil;
-import icu.suc.megawalls78.util.RandomUtil;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
 
 public final class AmmoBin extends Gathering {
 
@@ -30,11 +25,8 @@ public final class AmmoBin extends Gathering {
             super("ammo_bin");
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onBlockBreak(BlockDropItemEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             if (PASSIVE(event.getPlayer()) && condition(event)) {
                 handleBreak(event);
             }

@@ -32,11 +32,8 @@ public final class Enderblocks extends Gathering {
             super("enderblocks", 3);
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             Player player = event.getPlayer();
             Block block = event.getBlock();
             Location location = block.getLocation();

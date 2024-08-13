@@ -30,11 +30,8 @@ public final class Spreads extends Gathering {
             super("spreads");
         }
 
-        @EventHandler
+        @EventHandler(ignoreCancelled = true)
         public void onBlockBreak(BlockDropItemEvent event) {
-            if (event.isCancelled()) {
-                return;
-            }
             Player player = event.getPlayer();
             BlockState blockState = event.getBlockState();
             if (PASSIVE(player) && condition(blockState)) {

@@ -23,7 +23,7 @@ public class Devour extends Passive {
         super("devour");
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onEatSteak(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
         if (PASSIVE(player) && condition(event)) {

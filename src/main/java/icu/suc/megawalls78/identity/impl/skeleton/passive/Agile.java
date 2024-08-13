@@ -17,7 +17,7 @@ public final class Agile extends CooldownPassive {
         super("agile", 12000L);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onPlayerShoot(EntityDamageByEntityEvent event) {
         if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && condition(event)) {
             if (COOLDOWN()) {

@@ -23,6 +23,11 @@ import icu.suc.megawalls78.identity.impl.enderman.gathering.Enderblocks;
 import icu.suc.megawalls78.identity.impl.enderman.passive.EnderHeart;
 import icu.suc.megawalls78.identity.impl.enderman.passive.SoulCharge;
 import icu.suc.megawalls78.identity.impl.enderman.skill.Teleport;
+import icu.suc.megawalls78.identity.impl.golem.Golem;
+import icu.suc.megawalls78.identity.impl.golem.gathering.Momentum;
+import icu.suc.megawalls78.identity.impl.golem.passive.IronConstitution;
+import icu.suc.megawalls78.identity.impl.golem.passive.IronHeart;
+import icu.suc.megawalls78.identity.impl.golem.skill.IronPunch;
 import icu.suc.megawalls78.identity.impl.herobrine.Herobrine;
 import icu.suc.megawalls78.identity.impl.herobrine.gathering.TreasureHunter;
 import icu.suc.megawalls78.identity.impl.herobrine.passive.Flurry;
@@ -91,6 +96,7 @@ public enum Identity {
     COW("cow", NamedTextColor.LIGHT_PURPLE, Material.MILK_BUCKET, Cow.class, 100, Map.of(EnergyWay.MELEE_PER, 25F, EnergyWay.BOW_PER, 20F), Map.of(Trigger.SWORD, SoothingMoo.class, Trigger.BOW, SoothingMoo.class), List.of(BucketBarrier.class, RefreshingSip.class), UltraPasteurized.class),
     HUNTER("hunter", NamedTextColor.GREEN, Material.BOW, Hunter.class, 100, Map.of(EnergyWay.MELEE_PER, 4F, EnergyWay.BOW_PER, 8F, EnergyWay.GAME, 0.75F, EnergyWay.DM, 0.75F), Map.of(Trigger.SWORD, EagleEye.class, Trigger.BOW, EagleEye.class, Trigger.CARROT_ON_A_STICK, PigRider.class), List.of(AnimalCompanion.class, ForceOfNature.class), GoldenGlasses.class),
     DREADLORD("dreadlord", NamedTextColor.DARK_RED, Material.NETHER_BRICK, Dreadlord.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, ShadowBurst.class, Trigger.BOW, ShadowBurst.class), List.of(SoulEater.class, SoulSiphon.class), DarkMatter.class),
+    GOLEM("golem", NamedTextColor.GRAY, Material.IRON_CHESTPLATE, Golem.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, IronPunch.class, Trigger.BOW, IronPunch.class), List.of(IronHeart.class, IronConstitution.class), Momentum.class),
     HEROBRINE("herobrine", NamedTextColor.YELLOW, Material.DIAMOND_SWORD, Herobrine.class, 100, Map.of(EnergyWay.MELEE_PER, 25F, EnergyWay.BOW_PER, 25F), Map.of(Trigger.SWORD, Wrath.class, Trigger.BOW, Wrath.class), List.of(Power.class, Flurry.class), TreasureHunter.class),
     ZOMBIE("zombie", NamedTextColor.DARK_GREEN, Material.ROTTEN_FLESH, Zombie.class, 100, Map.of(EnergyWay.MELEE_PER, 12F, EnergyWay.BOW_PER, 12F, EnergyWay.MELEE_WHEN, 1F, EnergyWay.BOW_WHEN, 2F), Map.of(Trigger.SWORD, CircleOfHealing.class, Trigger.BOW, CircleOfHealing.class), List.of(Toughness.class, Berserk.class), WellTrained.class),
     ENDERMAN("enderman", NamedTextColor.DARK_PURPLE, Material.ENDER_PEARL, Enderman.class, 100, Map.of(EnergyWay.MELEE_PER, 20F, EnergyWay.BOW_PER, 20F), Map.of(Trigger.SWORD, Teleport.class, Trigger.BOW, Teleport.class), List.of(EnderHeart.class, SoulCharge.class), Enderblocks.class),

@@ -17,11 +17,8 @@ public final class Shortcut extends ChargePassive {
         super("shortcut", 3);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
         Player player = event.getPlayer();
         if (PASSIVE(player) && condition(event) && CHARGE()) {
             potion(player);
