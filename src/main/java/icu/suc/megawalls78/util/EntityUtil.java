@@ -380,7 +380,7 @@ public class EntityUtil {
 //        if (backwardLocation.getBlock().isCollidable() || backwardLocation.clone().add(0, 1, 0).getBlock().isCollidable()) {
 //            return entityLocation;
 //        }
-        return entityLocation.add(entityLocation.getDirection().multiply(-1).setY(0).multiply(distance));
+        return entityLocation.add(entityLocation.getDirection().multiply(-1).setY(0).normalize().multiply(distance));
     }
 
     public static void addPotionEffect(LivingEntity entity, PotionEffect effect, Entity source) {
