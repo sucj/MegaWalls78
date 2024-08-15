@@ -135,7 +135,7 @@ public class EntityUtil {
 
     public static boolean isEntityInFront(Entity a, Entity b) {
         Location aLoc = a.getLocation();
-        return aLoc.getDirection().dot(b.getLocation().toVector().subtract(aLoc.toVector()).normalize()) > 0;
+        return aLoc.getDirection().setY(0).normalize().dot(b.getLocation().toVector().subtract(aLoc.toVector()).normalize()) > 0;
     }
 
     public static boolean isOnGround(Entity entity) {

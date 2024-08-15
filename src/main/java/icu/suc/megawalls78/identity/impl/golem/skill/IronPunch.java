@@ -37,19 +37,6 @@ public final class IronPunch extends Skill {
 
         Location center = player.getLocation();
 
-        Location location = center.clone().add(0, 3, 0);
-        Vector vector = location.getDirection().setY(0).normalize().multiply(RADIUS - 1);
-        for (int i = 0; i < 6; i++) {
-            vector.rotateAroundY(Math.toRadians(60));
-            player.getWorld().spawnEntity(location.clone().add(vector), EntityType.FALLING_BLOCK, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
-                FallingBlock fallingBlock = (FallingBlock) entity;
-                fallingBlock.setBlockData(Material.IRON_BLOCK.createBlockData());
-                fallingBlock.setCancelDrop(true);
-                fallingBlock.setHurtEntities(false);
-                fallingBlock.setVelocity(VECTOR);
-            });
-        }
-
         double y = center.getY() - 2;
         AtomicInteger count = new AtomicInteger();
         EntityUtil.getNearbyEntities(player, RADIUS).stream()
@@ -61,8 +48,26 @@ public final class IronPunch extends Skill {
                     count.getAndIncrement();
                 });
 
+        int i = count.get();
+        if (i == 0) {
+            return noTarget(player);
+        }
+
+        Location location = center.clone().add(0, 3, 0);
+        Vector vector = location.getDirection().setY(0).normalize().multiply(RADIUS - 1);
+        for (int j = 0; j < 6; j++) {
+            vector.rotateAroundY(Math.toRadians(60));
+            player.getWorld().spawnEntity(location.clone().add(vector), EntityType.FALLING_BLOCK, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
+                FallingBlock fallingBlock = (FallingBlock) entity;
+                fallingBlock.setBlockData(Material.IRON_BLOCK.createBlockData());
+                fallingBlock.setCancelDrop(true);
+                fallingBlock.setHurtEntities(false);
+                fallingBlock.setVelocity(VECTOR);
+            });
+        }
+
         EFFECT_SKILL.play(center);
 
-        return summaryHit(player, count.get());
+        return summaryHit(player, i);
     }
 }

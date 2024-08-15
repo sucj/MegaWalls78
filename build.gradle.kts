@@ -23,16 +23,17 @@ repositories {
   maven("https://oss.sonatype.org/content/groups/public/")
   maven("https://repo.codemc.org/repository/maven-public/")
   maven("https://jitpack.io")
+  maven("https://repo.codemc.org/repository/maven-public/")
   maven("https://repo.dmulloy2.net/repository/public/")
   mavenCentral()
 }
 
 dependencies {
-  paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT")
-  implementation("net.skinsrestorer", "skinsrestorer-api", "15.0.15")
+  paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
+  implementation("net.skinsrestorer", "skinsrestorer-api", "15.4.2-SNAPSHOT")
   implementation("com.github.LeonMangler", "SuperVanish", "6.2.19")
   implementation("net.luckperms", "api", "5.4")
-  implementation("net.megavex", "scoreboard-library-api", "2.1.10")
+  implementation("net.megavex", "scoreboard-library-api", "2.1.12")
   implementation("com.comphenix.protocol", "ProtocolLib", "5.3.0-SNAPSHOT")
   implementation("redis.clients", "jedis", "5.1.3")
   implementation("com.mysql", "mysql-connector-j", "9.0.0")
@@ -53,7 +54,7 @@ bukkitPluginYaml {
   apiVersion = "1.21"
   load = BukkitPluginYaml.PluginLoadOrder.POSTWORLD
   depend = listOf("SkinsRestorer", "SuperVanish", "LuckPerms", "ProtocolLib")
-  libraries = listOf("com.mysql:mysql-connector-j:9.0.0", "redis.clients:jedis:5.1.3", "net.megavex:scoreboard-library-api:2.1.10", "net.megavex:scoreboard-library-implementation:2.1.10", "net.megavex:scoreboard-library-modern:2.1.10")
+  libraries = listOf("com.mysql:mysql-connector-j:9.0.0", "redis.clients:jedis:5.1.3", "net.megavex:scoreboard-library-api:2.1.12", "net.megavex:scoreboard-library-implementation:2.1.12", "net.megavex:scoreboard-library-modern:2.1.12")
   prefix = "MW78"
   permissions {
     register("mw78.id") {

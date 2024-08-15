@@ -1,12 +1,22 @@
 package icu.suc.megawalls78.util;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.Map;
+import java.util.Set;
+
 public class ItemUtil {
+
+    private static final Map<Material, Set<Material>> RECIPE_MAP = Maps.newHashMap();
+    private static final Map<Material, Set<Material>> RECIPE_BLACK_MAP = Maps.newHashMap();
 
     public static final NamespacedKey ID = new NamespacedKey("mw78", "id");
     public static final NamespacedKey TAG = new NamespacedKey("mw78", "tag");
@@ -70,5 +80,45 @@ public class ItemUtil {
             return false;
         }
         return soulBound;
+    }
+
+    public static boolean recipeContains(Material mat1, Material mat2) {
+        Set<Material> blackMat = RECIPE_BLACK_MAP.get(mat1);
+        if (blackMat == null) {
+            blackMat = Sets.newHashSet();
+            RECIPE_BLACK_MAP.put(mat1, blackMat);
+        } else if (blackMat.contains(mat2)) {
+            return false;
+        }
+
+        Set<Material> materials = RECIPE_MAP.get(mat1);
+        if (materials == null) {
+            materials = Sets.newHashSet();
+            RECIPE_MAP.put(mat1, materials);
+        } else if (materials.contains(mat2)) {
+            return true;
+        }
+
+        ItemStack itemStack = ItemStack.of(mat2);
+        for (Recipe recipe : Bukkit.getRecipesFor(ItemStack.of(mat1))) {
+            if (recipe instanceof ShapedRecipe shaped) {
+                for (RecipeChoice choice : shaped.getChoiceMap().values()) {
+                    if (choice.test(itemStack)) {
+                        materials.add(mat2);
+                        return true;
+                    }
+                }
+            } else if (recipe instanceof ShapelessRecipe shapeless) {
+                for (RecipeChoice choice : shapeless.getChoiceList()) {
+                    if (choice.test(itemStack)) {
+                        materials.add(mat2);
+                        return true;
+                    }
+                }
+            }
+        }
+
+        blackMat.add(mat2);
+        return false;
     }
 }

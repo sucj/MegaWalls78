@@ -448,6 +448,9 @@ public class PlayerListener implements Listener {
             } else if (!gameManager.getWither(team).isDead()) {
                 player.showBossBar(gameManager.getBossBar(team));
             }
+            if (gameManager.isSpectator(player)) {
+                return;
+            }
             GameState state = gameManager.getState();
             if (state.equals(GameState.OPENING)) {
                 Vector vector = to.toBlockLocation().toVector();

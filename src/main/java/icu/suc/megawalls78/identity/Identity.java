@@ -64,6 +64,11 @@ import icu.suc.megawalls78.identity.impl.squid.gathering.LuckOfTheSea;
 import icu.suc.megawalls78.identity.impl.squid.passive.InnerInk;
 import icu.suc.megawalls78.identity.impl.squid.passive.Rejuvenate;
 import icu.suc.megawalls78.identity.impl.squid.skill.SquidSplash;
+import icu.suc.megawalls78.identity.impl.vex.Vex;
+import icu.suc.megawalls78.identity.impl.vex.gathering.SoulBound;
+import icu.suc.megawalls78.identity.impl.vex.passive.Transience;
+import icu.suc.megawalls78.identity.impl.vex.passive.Shriek;
+import icu.suc.megawalls78.identity.impl.vex.skill.Flight;
 import icu.suc.megawalls78.identity.impl.warden.Warden;
 import icu.suc.megawalls78.identity.impl.warden.gathering.Spreads;
 import icu.suc.megawalls78.identity.impl.warden.passive.Anger;
@@ -107,7 +112,8 @@ public enum Identity {
     ASSASSIN("assassin", NamedTextColor.GRAY, Material.BLACK_STAINED_GLASS, Assassin.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F, EnergyWay.PREPARATION, 2F, EnergyWay.GAME, 2F, EnergyWay.DM, 2F), Map.of(Trigger.SWORD, ShadowCloak.class, Trigger.BOW, ShadowCloak.class), List.of(ShadowStep.class, MasterAlchemist.class), ArrowCatch.class),
     MOLEMAN("moleman", NamedTextColor.YELLOW, Material.GOLDEN_SHOVEL, Moleman.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F, EnergyWay.PREPARATION, 5F, EnergyWay.GAME, 3F, EnergyWay.DM, 3F), Map.of(Trigger.SWORD, Dig.class, Trigger.BOW, Dig.class, Trigger.SHOVEL, Dig.class), List.of(Shortcut.class, JunkFood.class), Stockpile.class),
     RENEGADE("renegade", NamedTextColor.YELLOW, Material.ARROW, Renegade.class, 100, Map.of(EnergyWay.MELEE_PER, 17F, EnergyWay.BOW_PER, 13F), Map.of(Trigger.SWORD, Rend.class, Trigger.BOW, Rend.class), List.of(GrapplingHook.class, Looting.class), AmmoBin.class),
-    WARDEN("warden", NamedTextColor.DARK_AQUA, Material.ECHO_SHARD, Warden.class, 150, Map.of(EnergyWay.MELEE_WHEN, 10F, EnergyWay.BOW_WHEN, 5F), Map.of(Trigger.SWORD, SonicBoom.class, Trigger.BOW, SonicBoom.class, Trigger.AXE, SonicBoom.class), List.of(Sniffs.class, Anger.class), Spreads.class);
+    WARDEN("warden", NamedTextColor.DARK_AQUA, Material.ECHO_SHARD, Warden.class, 150, Map.of(EnergyWay.MELEE_WHEN, 10F, EnergyWay.BOW_WHEN, 5F), Map.of(Trigger.SWORD, SonicBoom.class, Trigger.BOW, SonicBoom.class, Trigger.AXE, SonicBoom.class), List.of(Sniffs.class, Anger.class), Spreads.class),
+    VEX("vex", NamedTextColor.AQUA, Material.ELYTRA, Vex.class, 100, Map.of(EnergyWay.MELEE_PER, 20F), Map.of(Trigger.SWORD, Flight.class, Trigger.BOW, Flight.class), List.of(Shriek.class, Transience.class), SoulBound.class);
 
     private final String id;
     private final TextColor color;
