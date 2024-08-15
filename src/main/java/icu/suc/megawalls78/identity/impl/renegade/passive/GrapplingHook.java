@@ -68,7 +68,7 @@ public final class GrapplingHook extends DurationCooldownPassive {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
-        if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && condition_attack(event)) {
+        if (event.getDamager() instanceof Player player && PASSIVE(player) && condition_attack(event)) {
             if (DURATION()) {
                 refund(player, REFUND);
                 player.addPotionEffect(SPEED);

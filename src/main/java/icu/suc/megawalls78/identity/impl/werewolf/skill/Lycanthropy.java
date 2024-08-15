@@ -41,8 +41,8 @@ public final class Lycanthropy extends DurationSkill {
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, TICK, 1);
 
-    private static final Effect<Player> EFFECT_START = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WOLF_HOWL, SoundCategory.PLAYERS, 1.0F, 1.0F));
-    private static final Effect<Player> EFFECT_END = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WOLF_WHINE, SoundCategory.PLAYERS, 1.0F, 1.0F));
+    private static final Effect<Player> EFFECT_START = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_WOLF_HOWL, SoundCategory.PLAYERS, 1.0F, 1.0F));
+    private static final Effect<Player> EFFECT_END = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_WOLF_WHINE, SoundCategory.PLAYERS, 1.0F, 1.0F));
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> ParticleUtil.spawnParticleRandomBody(player, Particle.SMOKE, 1, 0));
     private static final Effect<Entity> EFFECT_HIT = Effect.create(entity -> ParticleUtil.spawnParticleRandomBody(entity, Particle.BLOCK, 4, 1, Material.REDSTONE_BLOCK.createBlockData()));
 
@@ -121,7 +121,7 @@ public final class Lycanthropy extends DurationSkill {
             unique.clear();
             passive.setHeal(0);
             EFFECT_END.play(player);
-            EntityUtil.removeMetadata(player, Lycanthropy.this.getId());
+            EntityUtil.removeMetadata(player, getId());
             summaryHit(player, count.get());
             super.cancel();
             stop();

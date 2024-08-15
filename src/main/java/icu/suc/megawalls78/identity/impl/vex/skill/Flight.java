@@ -34,8 +34,6 @@ public final class Flight extends DurationSkill {
         }
 
         EFFECT_SOUND.play(player);
-        player.setAllowFlight(true);
-        player.setFlying(true);
         task.resetTimer();
 
         if (run) {
@@ -49,6 +47,9 @@ public final class Flight extends DurationSkill {
 
         public Task(Player player) {
             super(player, TICK);
+
+            player.setAllowFlight(true);
+            player.setFlying(true);
         }
 
         @Override

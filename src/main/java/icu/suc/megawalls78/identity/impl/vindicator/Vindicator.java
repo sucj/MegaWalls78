@@ -22,6 +22,6 @@ public final class Vindicator extends Kit {
         addHealingPotion(2, 3);
         addSpeedPotion(2, 15, 2);
         addCompass();
-        setChestplate(DIAMOND_LEGGINGS);
+        setLeggings(DIAMOND_LEGGINGS);
     }
 }

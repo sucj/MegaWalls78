@@ -88,7 +88,7 @@ public final class EagleEye extends DurationSkill {
 
         @EventHandler(ignoreCancelled = true)
         public void onPlayerAttack(EntityDamageByEntityEvent event) {
-            if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && EntityUtil.getMetadata(player, getId()) && condition_attack(event)) {
+            if (event.getDamager() instanceof Player player && PASSIVE(player) && EntityUtil.getMetadata(player, getId()) && condition_attack(event)) {
                 if (condition_melee(event)) {
                     player.heal(MELEE);
                 } else if (condition_arrow(event)) {

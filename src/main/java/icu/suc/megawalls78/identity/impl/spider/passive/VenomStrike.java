@@ -18,7 +18,7 @@ public final class VenomStrike extends ChargeCooldownPassive {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
-        if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() && condition(event) && CHARGE()) {
+        if (event.getDamager() instanceof Player player && PASSIVE(player) && COOLDOWN() && condition(event) && CHARGE()) {
             potion((Player) event.getEntity(), player);
             CHARGE_RESET();
             COOLDOWN_RESET();
