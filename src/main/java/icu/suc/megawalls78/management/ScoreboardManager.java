@@ -121,7 +121,7 @@ public class ScoreboardManager implements Listener {
             if (MegaWalls78.getInstance().getGameManager().isSpectator(player)) {
                 teamDisplay.prefix(Component.translatable("ms78.brackets", GRAY, Component.translatable("mw78.team.spec.abbr")).append(Component.space()));
                 teamDisplay.playerColor(GRAY);
-            } else {
+            } else if (gamePlayer != null) {
                 teamDisplay.prefix(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(Component.space()));
                 teamDisplay.suffix(Component.space().append(Component.translatable("ms78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
                 teamDisplay.playerColor(gamePlayer.getTeam().color());

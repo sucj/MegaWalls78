@@ -3,23 +3,22 @@ package icu.suc.megawalls78.identity.impl.vex.passive;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ParticleUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Color;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public final class Transience extends Passive {
+public final class Transience extends Passive implements IActionbar {
 
     private static final double HEALTH = 10.0D;
     private static final double DAMAGE = 1.0D;
@@ -31,6 +30,7 @@ public final class Transience extends Passive {
     private static final Effect<Player> EFFECT_PARTICLE = Effect.create(player -> ParticleUtil.spawnParticleRandomBody(player, Particle.DUST, 1, 0, new Particle.DustOptions(Color.RED, 1)));
 
     private int tick;
+    private boolean state;
 
     public Transience() {
         super("transience");
@@ -41,7 +41,8 @@ public final class Transience extends Passive {
         Player player = PLAYER().getBukkitPlayer();
 
         double health = player.getHealth();
-        if (health < HEALTH) {
+        state = health < HEALTH;
+        if (state) {
             if (!EntityUtil.hasPotionEffect(player, STRENGTH)) {
                 player.addPotionEffect(STRENGTH);
             }
@@ -74,9 +75,8 @@ public final class Transience extends Passive {
     public void onPlayerKill(IncreaseStatsEvent.Kill event) {
         GamePlayer gamePlayer = event.getPlayer();
         if (PASSIVE(gamePlayer)) {
-            Player player = gamePlayer.getBukkitPlayer();
-            if (player.getHealth() < HEALTH) {
-                player.setHealth(HEALTH);
+            if (state) {
+                gamePlayer.getBukkitPlayer().setHealth(HEALTH);
             }
         }
     }
@@ -84,5 +84,10 @@ public final class Transience extends Passive {
     @Override
     public void unregister() {
         tick = 0;
+    }
+
+    @Override
+    public Component acb() {
+        return Type.STATE.accept(state);
     }
 }

@@ -22,8 +22,9 @@ public final class Anger extends Passive implements IActionbar {
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, PotionEffect.INFINITE_DURATION, 0);
     private static final PotionEffect SLOWNESS = new PotionEffect(PotionEffectType.SLOWNESS, PotionEffect.INFINITE_DURATION, 0);
 
-    private boolean state;
     private int tick;
+    private boolean state;
+    private boolean deactivated;
 
     public Anger() {
         super("anger");
@@ -31,35 +32,21 @@ public final class Anger extends Passive implements IActionbar {
 
     @EventHandler
     public void onPlayerTick(ServerTickStartEvent event) {
-        if (state) {
-            GamePlayer gamePlayer = PLAYER();
-            Player player = gamePlayer.getBukkitPlayer();
-            if (!player.isSprinting()) {
-                deactivate(player);
+        GamePlayer gamePlayer = PLAYER();
+        Player player = gamePlayer.getBukkitPlayer();
+        if (player.isSprinting() && gamePlayer.getEnergy() > 0) {
+            if (!state && gamePlayer.getEnergy() >= MIN) {
+                activate(player);
             }
-            if (tick % 20 == 0) {
-                if (gamePlayer.getEnergy() > 0) {
+            if (state) {
+                if (tick % 20 == 0) {
                     gamePlayer.decreaseEnergy(DECREASE);
                     playSoundEffect(player);
                 }
+                tick++;
             }
-            tick++;
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onEnergyChange(EnergyChangeEvent event) {
-        Player player = event.getPlayer();
-        if (PASSIVE(player) && event.getEnergy() == 0) {
+        } else if (!deactivated) {
             deactivate(player);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onPlayerSprint(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        if (PASSIVE(player) && player.isSprinting() && !state) {
-            activate(player);
         }
     }
 
@@ -78,20 +65,25 @@ public final class Anger extends Passive implements IActionbar {
     }
 
     private void activate(Player player) {
-        if (PLAYER().getEnergy() >= MIN) {
-            state = true;
-            tick = 0;
-            speed(player);
-        }
+        state = true;
+        deactivated = false;
+        tick = 0;
+        speed(player);
     }
 
     private void deactivate(Player player) {
         state = false;
+        deactivated = true;
         slow(player);
     }
 
     @Override
     public Component acb() {
         return Type.STATE.accept(state);
+    }
+
+    @Override
+    public void unregister() {
+        tick = 0;
     }
 }

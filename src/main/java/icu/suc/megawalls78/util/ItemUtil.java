@@ -103,6 +103,9 @@ public class ItemUtil {
         for (Recipe recipe : Bukkit.getRecipesFor(ItemStack.of(mat1))) {
             if (recipe instanceof ShapedRecipe shaped) {
                 for (RecipeChoice choice : shaped.getChoiceMap().values()) {
+                    if (choice == null) {
+                        continue;
+                    }
                     if (choice.test(itemStack)) {
                         materials.add(mat2);
                         return true;
@@ -110,6 +113,9 @@ public class ItemUtil {
                 }
             } else if (recipe instanceof ShapelessRecipe shapeless) {
                 for (RecipeChoice choice : shapeless.getChoiceList()) {
+                    if (choice == null) {
+                        continue;
+                    }
                     if (choice.test(itemStack)) {
                         materials.add(mat2);
                         return true;

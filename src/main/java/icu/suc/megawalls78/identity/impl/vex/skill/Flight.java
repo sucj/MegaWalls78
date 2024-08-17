@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 public final class Flight extends DurationSkill {
 
-    private static final long DURATION = 10000L;
+    private static final long DURATION = 5000L;
     private static final int TICK = (int) (DURATION / 50);
 
     private static final Effect<Player> EFFECT_SOUND = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_VEX_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F));

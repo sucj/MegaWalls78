@@ -14,8 +14,8 @@ public class DatabaseManager {
 
     private static final String IDENTITY_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_identity (uuid CHAR(36) NOT NULL PRIMARY KEY, identity VARCHAR(255) DEFAULT NULL);";
     private static final String RANK_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_rank (uuid CHAR(36) NOT NULL PRIMARY KEY, identity VARCHAR(255) DEFAULT NULL);";
-    private static final String ID_COLOR_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_color (uuid CHAR(36) NOT NULL, identity VARCHAR(255) NOT NULL UNIQUE, color VARCHAR(255) DEFAULT NULL);";
-    private static final String ID_SKIN_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_skin (uuid CHAR(36) NOT NULL, identity VARCHAR(255) NOT NULL UNIQUE, skin VARCHAR(255) DEFAULT NULL);";
+    private static final String ID_COLOR_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_color (uuid CHAR(36) NOT NULL, identity VARCHAR(255) NOT NULL, color VARCHAR(255) DEFAULT NULL, PRIMARY KEY (uuid, identity));";
+    private static final String ID_SKIN_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_skin (uuid CHAR(36) NOT NULL, identity VARCHAR(255) NOT NULL, skin VARCHAR(255) DEFAULT NULL, PRIMARY KEY (uuid, identity));";
     private static final String PATTERN_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern (uuid CHAR(36) NOT NULL PRIMARY KEY, pattern VARCHAR(255) DEFAULT NULL);";
     private static final String TRIM_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trim (uuid CHAR(36) NOT NULL PRIMARY KEY, trim VARCHAR(255) DEFAULT NULL);";
 
