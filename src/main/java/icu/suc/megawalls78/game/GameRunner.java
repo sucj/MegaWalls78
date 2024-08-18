@@ -297,6 +297,13 @@ public class GameRunner implements Runnable {
                 gameManager.setState(GameState.ENDING);
                 allowedBlocks.clear();
 
+                for (GamePlayer gamePlayer : gameManager.getPlayers().values()) {
+                    if (gameManager.isSpectator(gamePlayer.getUuid())) {
+                        continue;
+                    }
+                    gamePlayer.disablePassives();
+                }
+
                 MegaWalls78.getInstance().getLogger().info("Game end.");
 
                 Bukkit.getWorlds().getFirst().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);

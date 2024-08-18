@@ -94,11 +94,15 @@ public class GamePlayer {
     }
 
     public boolean useSkill(Player player, Action action, Material material) {
-        Skill skill = skills.get(Skill.Trigger.getTrigger(action, material));
-        if (skill == null) {
+        Skill.Trigger trigger = Skill.Trigger.getTrigger(action, material);
+        if (trigger == null) {
             return false;
         }
-        if (player.isSneaking()) {
+        if (player.isSneaking() != trigger.isSneak()) {
+            return false;
+        }
+        Skill skill = skills.get(trigger);
+        if (skill == null) {
             return false;
         }
         if (skill.use(player)) {

@@ -12,7 +12,6 @@ import icu.suc.megawalls78.gui.*;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
-import io.papermc.paper.event.entity.EntityMoveEvent;
 import io.papermc.paper.event.player.PrePlayerAttackEntityEvent;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -23,7 +22,6 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -323,7 +321,7 @@ public class PlayerListener implements Listener {
             }
             double damage = Math.min(entity.getHealth(), event.getFinalDamage());
             if (gamePlayer != null) {
-                gamePlayer.increaseDamageTaken(damage);
+                gamePlayer.increaseDamageTaken(damage - event.getDamage(EntityDamageEvent.DamageModifier.BLOCKING));
             }
             if (gamePlayerCause != null) {
                 gamePlayerCause.increaseDamageDealt(damage);

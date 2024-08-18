@@ -1,7 +1,6 @@
 package icu.suc.megawalls78.identity.impl.spider.skill;
 
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.identity.impl.spider.passive.Skitter;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.task.AbstractTask;
 import icu.suc.megawalls78.util.*;
@@ -13,13 +12,14 @@ import org.bukkit.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Leap extends Skill {
+
+    public static final String ID = "leap";
 
     private static final double RADIUS = 4.0D;
     private static final double BASE_DAMAGE = 3.0D;
@@ -40,7 +40,7 @@ public final class Leap extends Skill {
     private Task task;
 
     public Leap() {
-        super("leap", 100, 1000L);
+        super(ID, 100, 1000L);
     }
 
     @Override
@@ -54,7 +54,7 @@ public final class Leap extends Skill {
         EFFECT_JUMP.play(player);
 
         Vector vector = player.getLocation().getDirection();
-        EntityUtil.getMetadata(player, Skitter.ID, Skitter.Mode.class, Skitter.DEFAULT).accept(vector);
+        EntityUtil.getMetadata(player, Locus.ID, Locus.Mode.class, Locus.DEFAULT).accept(vector);
         player.setVelocity(vector);
 
         if (run) {
@@ -108,6 +108,7 @@ public final class Leap extends Skill {
                 spawnWebs(i);
                 Explosion.create(player.getWorld(), player, Explosion.ONLY_BLOCK, lastLocation.getX(), lastLocation.getY(), lastLocation.getZ(), (float) RADIUS, false, Level.ExplosionInteraction.BLOCK, false);
                 summaryHit(player, i);
+                EntityUtil.setMetadata(player, getId(), true);
                 this.cancel();
             } else {
                 updateTravelLength();

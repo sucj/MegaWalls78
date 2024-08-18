@@ -79,26 +79,32 @@ public abstract class Skill extends Trait implements IActionbar {
     }
 
     public enum Trigger {
-        SWORD(Action.RIGHT, Tag.ITEMS_SWORDS),
-        BOW(Action.LEFT, Tag.ITEMS_ENCHANTABLE_BOW),
-        SHOVEL(Action.RIGHT, Tag.ITEMS_SHOVELS),
-        AXE(Action.RIGHT, Tag.ITEMS_AXES),
-        CARROT_ON_A_STICK(Action.RIGHT, Material.CARROT_ON_A_STICK);
+        SWORD(Action.RIGHT, Tag.ITEMS_SWORDS, true),
+        BOW(Action.LEFT, Tag.ITEMS_ENCHANTABLE_BOW, false),
+        SHOVEL(Action.RIGHT, Tag.ITEMS_SHOVELS, true),
+        AXE(Action.RIGHT, Tag.ITEMS_AXES, true),
+        CARROT_ON_A_STICK(Action.RIGHT, Material.CARROT_ON_A_STICK, false);
 
         private final Action action;
         private final Predicate<Material> filter;
+        private final boolean sneak;
 
-        Trigger(Action action, Material material) {
-            this(action, material::equals);
+        Trigger(Action action, Material material, boolean sneak) {
+            this(action, material::equals, sneak);
         }
 
-        Trigger(Action action, Tag<Material> tag) {
-            this(action, tag::isTagged);
+        Trigger(Action action, Tag<Material> tag, boolean sneak) {
+            this(action, tag::isTagged, sneak);
         }
 
-        Trigger(Action action, Predicate<Material> filter) {
+        Trigger(Action action, Predicate<Material> filter, boolean sneak) {
             this.action = action;
             this.filter = filter;
+            this.sneak = sneak;
+        }
+
+        public boolean isSneak() {
+            return sneak;
         }
 
         private boolean isTriggered(org.bukkit.event.block.Action action, Material material) {

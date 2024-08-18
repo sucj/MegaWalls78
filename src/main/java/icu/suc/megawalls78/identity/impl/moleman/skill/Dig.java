@@ -123,8 +123,6 @@ public final class Dig extends Skill {
                         victims.add(entity.getUniqueId());
                         count.getAndIncrement();
                     });
-
-            tick++;
         }
 
         public void resetTimer() {

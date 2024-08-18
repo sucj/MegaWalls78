@@ -146,6 +146,18 @@ public class EntityUtil {
         return movement.y() != vec3.y() && movement.y() < 0.0D;
     }
 
+    public static Collection<Entity> getNearbyEntitiesCylinder(Location location, double height, double radius) {
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+        BoundingBox boundingBox = new BoundingBox(x + radius, y, z + radius, x - radius, y + height, z - radius);
+        return filterVanished(location.getWorld().getNearbyEntities(boundingBox, entity -> {
+            double dx = entity.getX() - x;
+            double dz = entity.getZ() - z;
+            return Math.sqrt(dx * dx + dz * dz) <= radius;
+        }));
+    }
+
     public static Collection<Entity> getNearbyEntities(Entity entity, double x, double y, double z) {
         return filterVanished(entity.getNearbyEntities(x, y, z));
     }

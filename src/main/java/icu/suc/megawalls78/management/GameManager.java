@@ -101,8 +101,12 @@ public class GameManager {
         }
     }
 
+    public boolean isSpectator(UUID uuid) {
+        return spectators.contains(uuid);
+    }
+
     public boolean isSpectator(Player player) {
-        return spectators.contains(player.getUniqueId());
+        return isSpectator(player.getUniqueId());
     }
 
     public Set<Player> getSpectators() {

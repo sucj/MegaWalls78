@@ -26,7 +26,6 @@ import java.util.List;
 public class AnimalCompanion extends CooldownPassive {
 
     private static final double CHANCE = 0.2D;
-    private static final int MAX = 3;
 
     private static final ItemBuilder ZOMBIE_PIGMAN_SWORD = ItemBuilder.of(Material.GOLDEN_SWORD);
     private static final ItemBuilder SKELETON_BOW = ItemBuilder.of(Material.BOW);
@@ -77,37 +76,36 @@ public class AnimalCompanion extends CooldownPassive {
             case 0 -> // Chicken Jockey
                     EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_SKELETON, jockey -> {
                         Skeleton skeleton = (Skeleton) jockey;
-                        add(skeleton, player);
                         EntityEquipment equipment = skeleton.getEquipment();
                         equipment.setItem(EquipmentSlot.HAND, SKELETON_BOW.build());
                         equipment.setItem(EquipmentSlot.HEAD, ItemBuilder.of(Material.LEATHER_HELMET).setArmorColor(Color.getDye(PLAYER().getTeam().color()).getColor()).build());
                         player.getWorld().spawnEntity(player.getLocation(), EntityType.CHICKEN, CreatureSpawnEvent.SpawnReason.CUSTOM, saddler -> {
                             Chicken chicken = (Chicken) saddler;
-                            add(chicken, player);
+                            add(player, chicken, skeleton);
                             chicken.addPassenger(skeleton);
                         });
                     });
             case 1 -> // Zombie Pigman
                     EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_ZOMBIFIED_PIGLIN, entity -> {
                         PigZombie pigZombie = (PigZombie) entity;
-                        add(pigZombie, player);
+                        add(player, pigZombie);
                         pigZombie.getEquipment().setItem(EquipmentSlot.HAND, ZOMBIE_PIGMAN_SWORD.build());
                         pigZombie.addPotionEffect(ZOMBIE_PIGMAN_POTION);
                     });
             case 2 -> // Spider
-                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_SPIDER, entity -> add(((Spider) entity), player));
+                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_SPIDER, entity -> add(player, ((Spider) entity)));
             case 3 -> // Exploding Sheep
-                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.EXPLODING_SHEEP, entity -> add(((Sheep) entity), player), player);
+                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.EXPLODING_SHEEP, entity -> add(player, (Sheep) entity), player);
             case 4 -> // Cow
                     player.getWorld().spawnEntity(player.getLocation(), EntityType.COW, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
                         Cow cow = (Cow) entity;
-                        add(cow, player);
+                        add(player, cow);
                         cow.addPotionEffect(COW_POTION);
                     });
             case 5 -> // Tamed Wolf
                     EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TAMED_WOLF, entity -> {
                         Wolf wolf = (Wolf) entity;
-                        add(wolf, player);
+                        add(player, wolf);
                         AttributeInstance maxHealth = wolf.getAttribute(Attribute.GENERIC_MAX_HEALTH);
                         maxHealth.setBaseValue(maxHealth.getBaseValue() / 2);
                         wolf.setCollarColor(Color.getDye(PLAYER().getTeam().color()));
@@ -115,14 +113,19 @@ public class AnimalCompanion extends CooldownPassive {
         }
     }
 
-    private void add(LivingEntity entity, Player player) {
-        entities.removeIf(Entity::isDead);
-        if (entities.size() >= MAX) {
-            entities.removeFirst().setHealth(0);
+    private void add(Player player, LivingEntity... livings) {
+        for (LivingEntity living : entities) {
+            if (living.isDead()) {
+                continue;
+            }
+            living.setHealth(0);
         }
-        entities.add(entity);
-        entity.customName(Component.translatable("mw78.entity.tamed", player.name(), entity.name()));
-        player.getScoreboard().getPlayerTeam(player).addEntity(entity);
+        entities.clear();
+        for (LivingEntity living : livings) {
+            entities.add(living);
+            living.customName(Component.translatable("mw78.entity.tamed", player.name(), living.name()));
+            player.getScoreboard().getPlayerTeam(player).addEntity(living);
+        }
     }
 
     @Override
