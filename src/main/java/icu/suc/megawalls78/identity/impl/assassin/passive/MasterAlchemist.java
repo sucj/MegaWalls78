@@ -35,6 +35,7 @@ public final class MasterAlchemist extends CooldownPassive {
             if (lastDamage.getRight() > DAMAGE) {
                 COOLDOWN_RESET();
                 player.addPotionEffect(REGENERATION);
+                summaryEffectSelf(player, REGENERATION);
                 lastDamage.setLeft(0L);
             }
         }

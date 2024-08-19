@@ -22,7 +22,10 @@ public final class Heroism extends ChargePassive {
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player player && PASSIVE(player) && condition(event) && CHARGE()) {
             player.addPotionEffect(SPEED);
-            ((Player) event.getEntity()).addPotionEffect(WEAKNESS);
+            summaryEffectSelf(player, SPEED);
+            Player target = (Player) event.getEntity();
+            target.addPotionEffect(WEAKNESS);
+            summaryEffectOther(player, target, WEAKNESS);
             CHARGE_RESET();
         }
     }

@@ -36,7 +36,8 @@ public final class SoulCharge extends CooldownPassive {
         return event.getEnergy() == ENERGY;
     }
 
-    private static void potion(Player player) {
+    private void potion(Player player) {
         player.addPotionEffect(REGENERATION);
+        summaryEffectSelf(player, REGENERATION);
     }
 }

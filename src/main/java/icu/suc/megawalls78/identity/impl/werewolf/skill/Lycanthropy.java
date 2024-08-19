@@ -72,8 +72,9 @@ public final class Lycanthropy extends DurationSkill {
         return true;
     }
 
-    private static void potion(Player player) {
+    private void potion(Player player) {
         player.addPotionEffect(SPEED);
+        summaryEffectSelf(player, SPEED);
     }
 
     private final class Task extends DurationTask {

@@ -29,7 +29,8 @@ public final class VenomStrike extends ChargeCooldownPassive {
         return event.getEntity() instanceof Player && EntityUtil.isMeleeAttack(event);
     }
 
-    private static void potion(Player target, Player source) {
+    private void potion(Player target, Player source) {
         EntityUtil.addPotionEffect(target, POISON, source);
+        summaryEffectOther(source, target, POISON);
     }
 }

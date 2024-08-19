@@ -27,7 +27,8 @@ public final class Toughness extends ChargePassive {
         return event.getDamageSource().getCausingEntity() != null;
     }
 
-    private static void potion(Player player) {
+    private void potion(Player player) {
         player.addPotionEffect(RESISTANCE);
+        summaryEffectSelf(player, RESISTANCE);
     }
 }

@@ -39,8 +39,9 @@ public class Devour extends Passive {
         return event.getItem().getType().equals(Material.COOKED_BEEF);
     }
 
-    private static void potion(Player player) {
+    private void potion(Player player) {
         player.addPotionEffect(REGENERATION);
+        summaryEffectSelf(player, REGENERATION);
     }
 
     private static void hunger(Player player) {

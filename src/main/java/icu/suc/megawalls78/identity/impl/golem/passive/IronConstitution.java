@@ -32,6 +32,7 @@ public final class IronConstitution extends Passive {
     public void onPlayerDamage(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player player && PASSIVE(player) && condition_projectile(event)) {
             player.addPotionEffect(RESISTANCE);
+            summaryEffectSelf(player, RESISTANCE);
         }
     }
 

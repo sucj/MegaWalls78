@@ -26,6 +26,7 @@ public final class Skitter extends DurationPassive {
         if (event.getDamager() instanceof Player player && PASSIVE(player) && DURATION()) {
             player.addPotionEffect(SPEED);
             PLAYER().increaseEnergy(ENERGY);
+            summaryEffectSelf(player, SPEED);
             DURATION_END();
         }
     }

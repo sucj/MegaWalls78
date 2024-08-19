@@ -37,8 +37,9 @@ public class BloodLust extends ChargePassive {
         return event.getEntity() instanceof Player && (EntityUtil.isMeleeAttack(event) || EntityUtil.isArrowAttack(event));
     }
 
-    private static void potion(Player player) {
+    private void potion(Player player) {
         player.addPotionEffect(SPEED);
         player.addPotionEffect(RESISTANCE);
+        summaryEffectSelf(player, SPEED, RESISTANCE);
     }
 }

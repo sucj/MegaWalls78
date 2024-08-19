@@ -11,8 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static icu.suc.megawalls78.util.PlayerUtil.getIdentity;
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
@@ -38,9 +36,7 @@ public final class RefreshingSip extends CooldownPassive {
     public void onConsumeMilk(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
         if (PASSIVE(player) && COOLDOWN() && condition(event)) {
-            AtomicInteger count = new AtomicInteger();
             heal(player);
-            count.getAndIncrement();
 
             EntityUtil.getNearbyEntities(player, RADIUS).stream()
                     .filter(entity -> entity instanceof Player)
@@ -48,13 +44,12 @@ public final class RefreshingSip extends CooldownPassive {
                     .filter(entity -> !getIdentity((Player) entity).equals(Identity.COW))
                     .forEach(entity -> {
                         heal((Player) entity);
-                        summaryHealBy(player, (Player) entity);
-                        count.getAndIncrement();
+                        summaryHealOther(player, (Player) entity);
                     });
 
             EFFECT_SKILL.play(player);
 
-            summaryHeal(player, count.get());
+            summaryHealSelf(player);
 
             COOLDOWN_RESET();
         }

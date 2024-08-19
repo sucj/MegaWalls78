@@ -28,7 +28,8 @@ public final class DoorBreaker extends Passive {
         return event.getEntity() instanceof HumanEntity human && human.isBlocking() && Tag.ITEMS_AXES.isTagged(player.getEquipment().getItemInMainHand().getType());
     }
 
-    private static void potion(Player player) {
+    private void potion(Player player) {
         player.addPotionEffect(SPEED);
+        summaryEffectSelf(player, SPEED);
     }
 }

@@ -86,6 +86,7 @@ public final class Leap extends Skill {
                 updateTravelLength();
                 EFFECT_LAND.play(player);
                 player.addPotionEffect(REGENERATION);
+                summaryEffectSelf(player, REGENERATION);
                 BoundingBox boundingBox = player.getBoundingBox().expand(0.5D, 0, 0.5D);
                 AtomicInteger count = new AtomicInteger();
                 EntityUtil.getNearbyEntities(player, RADIUS).stream()
@@ -93,12 +94,16 @@ public final class Leap extends Skill {
                         .filter(entity -> !(entity instanceof Wither))
                         .filter(entity -> !PlayerUtil.isValidAllies(player, entity))
                         .forEach(entity -> {
-                            EntityUtil.addPotionEffect(((LivingEntity) entity), SLOWNESS, player);
+                            LivingEntity target = (LivingEntity) entity;
+                            EntityUtil.addPotionEffect(target, SLOWNESS, player);
+                            if (target instanceof Player victim) {
+                                summaryEffectOther(player, victim, SLOWNESS);
+                            }
                             double damage = BASE_DAMAGE + bonusDamage() - reduceDamage(entity);
                             if (entity.getBoundingBox().overlaps(boundingBox)) {
                                 damage *= DIRECT;
                             }
-                            ((LivingEntity) entity).damage(damage, DamageSource.of(DamageType.THROWN, player));
+                            target.damage(damage, DamageSource.of(DamageType.THROWN, player));
                             count.getAndIncrement();
                         });
                 int i = count.get();

@@ -49,8 +49,9 @@ public final class Berserk extends DurationCooldownPassive {
         return cause.equals(EntityDamageEvent.DamageCause.ENTITY_ATTACK) || cause.equals(EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK);
     }
 
-    private static void potion(Player player) {
+    private void potion(Player player) {
         player.addPotionEffect(SPEED);
+        summaryEffectSelf(player, SPEED);
     }
 
     private static void power(EntityDamageByEntityEvent event) {

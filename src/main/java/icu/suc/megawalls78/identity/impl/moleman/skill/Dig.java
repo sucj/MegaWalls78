@@ -61,7 +61,7 @@ public final class Dig extends Skill {
             task.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
         }
 
-        return true;
+        return summaryEffectSelf(player, RESISTANCE);
     }
 
     private final class Task extends DurationTask {

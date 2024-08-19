@@ -65,16 +65,20 @@ public class ForceOfNature extends DurationCooldownPassive {
         event.setDamage(event.getDamage() * SCALE);
     }
 
-    private static void potion(Player player) {
+    private void potion(Player player) {
         PotionEffect[] effects;
         if (MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING)) {
             effects = RandomUtil.getRandomEntry(PREPARE);
         } else {
             effects = RandomUtil.getRandomEntry(WALLS_FALL);
         }
+        if (effects == null) {
+            return;
+        }
         for (PotionEffect effect : effects) {
             player.addPotionEffect(effect);
         }
         EFFECT_SKILL.play(player);
+        summaryEffectSelf(player, effects);
     }
 }

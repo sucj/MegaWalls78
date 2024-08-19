@@ -23,7 +23,9 @@ public final class SoulSiphon extends DurationPassive {
     public void onPlayerKill(IncreaseStatsEvent.Kill event) {
         GamePlayer gamePlayer = event.getPlayer();
         if (PASSIVE(gamePlayer)) {
-            gamePlayer.getBukkitPlayer().addPotionEffect(REGENERATION);
+            Player player = gamePlayer.getBukkitPlayer();
+            player.addPotionEffect(REGENERATION);
+            summaryEffectSelf(player, REGENERATION);
             DURATION_RESET();
         }
     }

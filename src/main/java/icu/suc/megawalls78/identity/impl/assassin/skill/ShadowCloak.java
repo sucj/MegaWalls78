@@ -76,6 +76,7 @@ public final class ShadowCloak extends DurationSkill {
         player.addPotionEffect(INVISIBILITY); // force参数已弃用，默认覆盖原效果时间
         player.addPotionEffect(SPEED);
         player.addPotionEffect(RESISTANCE);
+        summaryEffectSelf(player, INVISIBILITY, SPEED, RESISTANCE);
         task.resetTimer();
 
         if (run) {
@@ -110,7 +111,7 @@ public final class ShadowCloak extends DurationSkill {
                 if (EntityUtil.hasPotionEffect(player, RESISTANCE)) {
                     player.removePotionEffect(PotionEffectType.RESISTANCE);
                 }
-                ShadowCloak.this.refund(player, (int) (((double) remain() / REMAIN) * RETURN));
+                ShadowCloak.this.summaryRefund(player, (int) (((double) remain() / REMAIN) * RETURN));
                 cancel();
             }
         }

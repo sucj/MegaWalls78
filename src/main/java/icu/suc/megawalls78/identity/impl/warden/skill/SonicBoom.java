@@ -106,6 +106,7 @@ public final class SonicBoom extends Skill {
         public void resetCharge() {
             player.addPotionEffect(SLOWNESS);
             player.addPotionEffect(RESISTANCE);
+            summaryEffectSelf(player, SLOWNESS, RESISTANCE);
             playChargeSoundEffect();
             charge = 0;
         }
@@ -122,14 +123,16 @@ public final class SonicBoom extends Skill {
                     .filter(entity -> !isValidAllies(player, entity))
                     .filter(entity -> !victims.contains(entity.getUniqueId()))
                     .forEach(entity -> {
-                        if (entity instanceof Player) {
-                            ((Player) entity).damage(damage(), DamageSource.of(DamageType.SONIC_BOOM, player));
+                        LivingEntity living = (LivingEntity) entity;
+                        EntityUtil.addPotionEffect(living, DARKNESS, player);
+                        if (living instanceof Player victim) {
+                            victim.damage(damage(), DamageSource.of(DamageType.SONIC_BOOM, player));
+                            summaryEffectOther(player, victim, DARKNESS);
                         } else {
-                            ((LivingEntity) entity).damage(DAMAGE, DamageSource.of(DamageType.SONIC_BOOM, player));
+                            living.damage(DAMAGE, DamageSource.of(DamageType.SONIC_BOOM, player));
                         }
-                        setVelocity(entity);
-                        EntityUtil.addPotionEffect(((LivingEntity) entity), DARKNESS, player);
-                        victims.add(entity.getUniqueId());
+                        setVelocity(living);
+                        victims.add(living.getUniqueId());
                         count.getAndIncrement();
                     });
 

@@ -11,8 +11,6 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
 public final class CircleOfHealing extends Skill {
@@ -33,22 +31,19 @@ public final class CircleOfHealing extends Skill {
 
     @Override
     protected boolean use0(Player player) {
-        AtomicInteger count = new AtomicInteger();
         heal(player);
-        count.incrementAndGet();
 
         EntityUtil.getNearbyEntities(player, RADIUS).stream()
                 .filter(entity -> entity instanceof Player)
                 .filter(entity -> isValidAllies(player, entity))
                 .forEach(entity -> {
                     heal((Player) entity);
-                    summaryHealBy(player, (Player) entity);
-                    count.getAndIncrement();
+                    summaryHealOther(player, (Player) entity);
                 });
 
         EFFECT_SKILL.play(player);
 
-        return summaryHeal(player, count.get());
+        return summaryHealSelf(player);
     }
 
     private static void heal(Player entity) {

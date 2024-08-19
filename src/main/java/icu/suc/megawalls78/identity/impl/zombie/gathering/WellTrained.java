@@ -67,12 +67,14 @@ public final class WellTrained extends Gathering {
             return event.getState().equals(GameState.BUFFING);
         }
 
-        private static void potion_break(Player player) {
+        private void potion_break(Player player) {
             player.addPotionEffect(HASTE_2);
+            summaryEffectSelf(player, HASTE_2);
         }
 
-        private static void potion_respawn(Player player) {
+        private void potion_respawn(Player player) {
             player.addPotionEffect(HASTE_3);
+            summaryEffectSelf(player, HASTE_3);
         }
 
         private static void potion_remove(Player player) {

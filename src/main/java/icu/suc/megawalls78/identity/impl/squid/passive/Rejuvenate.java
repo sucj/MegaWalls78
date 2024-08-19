@@ -44,8 +44,9 @@ public class Rejuvenate extends CooldownPassive {
         return player.getHealth() < HEALTH;
     }
 
-    private static void potion(Player player) {
+    private void potion(Player player) {
         player.addPotionEffect(REGENERATION);
         player.addPotionEffect(RESISTANCE);
+        summaryEffectSelf(player, REGENERATION, RESISTANCE);
     }
 }

@@ -52,7 +52,8 @@ public class InnerInk extends Passive {
         return event.getItem().getType().equals(Material.POTION);
     }
 
-    private static void potion(Player target, Player source) {
+    private void potion(Player target, Player source) {
         EntityUtil.addPotionEffect(target, BLINDNESS, source);
+        summaryEffectOther(source, target, BLINDNESS);
     }
 }

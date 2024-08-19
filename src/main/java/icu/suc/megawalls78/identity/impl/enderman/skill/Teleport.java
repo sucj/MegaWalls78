@@ -1,5 +1,6 @@
 package icu.suc.megawalls78.identity.impl.enderman.skill;
 
+import com.google.common.collect.Lists;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -14,6 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
@@ -86,13 +88,17 @@ public final class Teleport extends Skill {
 
         EFFECT_SKILL.play(player);
 
+        List<PotionEffect> potionEffects = Lists.newArrayList();
+
         player.addPotionEffect(SPEED);
+        potionEffects.add(SPEED);
 
         if (weakness(fromF, toF) || weakness(fromH, toH)) {
             player.addPotionEffect(WEAKNESS);
+            potionEffects.add(WEAKNESS);
         }
 
-        return true;
+        return summaryEffectSelf(player, potionEffects);
     }
 
     private static boolean weakness(Location from, Location to) {

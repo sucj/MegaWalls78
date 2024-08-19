@@ -13,8 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
 public final class SoothingMoo extends Skill {
@@ -41,32 +39,27 @@ public final class SoothingMoo extends Skill {
 
     @Override
     protected boolean use0(Player player) {
-        AtomicInteger count = new AtomicInteger();
         healSelf(player);
-        count.incrementAndGet();
 
         EntityUtil.getNearbyEntities(player, RADIUS).stream()
                 .filter(entity -> entity instanceof Player)
                 .filter(entity -> isValidAllies(player, entity))
-                .forEach(entity -> {
-                    healOther((Player) entity);
-                    summaryHealBy(player, (Player) entity);
-                    count.getAndIncrement();
-                });
+                .forEach(entity -> healOther(player, (Player) entity));
 
         EFFECT_SKILL.play(player);
 
-        return summaryHeal(player, count.get());
+        return summaryEffectSelf(player, RESISTANCE, REGENERATION_2);
     }
 
-    private static void healSelf(Player player) {
+    private void healSelf(Player player) {
         player.addPotionEffect(RESISTANCE);
         player.addPotionEffect(REGENERATION_2);
         EFFECT_HEAL.play(Pair.of(player, 2));
     }
 
-    private static void healOther(Player player) {
-        player.addPotionEffect(REGENERATION_3);
-        EFFECT_HEAL.play(Pair.of(player, 3));
+    private void healOther(Player player, Player target) {
+        target.addPotionEffect(REGENERATION_3);
+        EFFECT_HEAL.play(Pair.of(target, 3));
+        summaryEffectOther(player, target, REGENERATION_3);
     }
 }

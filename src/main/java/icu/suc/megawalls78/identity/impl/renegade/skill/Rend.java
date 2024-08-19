@@ -90,7 +90,7 @@ public final class Rend extends Skill {
             count++;
         }
         if (energy) {
-            Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> refund(player, ENERGY));
+            Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> summaryRefund(player, ENERGY));
         }
         return summaryHit(player, count);
     }

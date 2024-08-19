@@ -30,8 +30,9 @@ public final class Shortcut extends ChargePassive {
         return Tag.MINEABLE_SHOVEL.isTagged(event.getBlock().getType());
     }
 
-    private static void potion(Player player) {
+    private void potion(Player player) {
         player.addPotionEffect(SPEED);
         player.addPotionEffect(HASTE);
+        summaryEffectSelf(player, SPEED, HASTE);
     }
 }

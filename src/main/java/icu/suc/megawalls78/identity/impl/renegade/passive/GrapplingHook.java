@@ -4,11 +4,8 @@ import icu.suc.megawalls78.event.GrapplingHookEvent;
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
-import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ItemUtil;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -70,8 +67,9 @@ public final class GrapplingHook extends DurationCooldownPassive {
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player player && PASSIVE(player) && condition_attack(event)) {
             if (DURATION()) {
-                refund(player, REFUND);
+                summaryRefund(player, REFUND);
                 player.addPotionEffect(SPEED);
+                summaryEffectSelf(player, SPEED);
                 DURATION_END();
             }
             if (repair(player)) {

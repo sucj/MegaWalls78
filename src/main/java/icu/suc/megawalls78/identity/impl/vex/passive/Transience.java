@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.identity.impl.vex.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
+import com.google.common.collect.Lists;
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.IActionbar;
@@ -17,6 +18,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.List;
 
 public final class Transience extends Passive implements IActionbar {
 
@@ -43,15 +46,20 @@ public final class Transience extends Passive implements IActionbar {
         double health = player.getHealth();
         state = health < HEALTH;
         if (state) {
+            List<PotionEffect> effects = Lists.newArrayList();
             if (!EntityUtil.hasPotionEffect(player, STRENGTH)) {
                 player.addPotionEffect(STRENGTH);
+                effects.add(STRENGTH);
             }
             if (!EntityUtil.hasPotionEffect(player, SPEED)) {
                 player.addPotionEffect(SPEED);
+                effects.add(SPEED);
             }
             if (!EntityUtil.hasPotionEffect(player, HASTE)) {
                 player.addPotionEffect(HASTE);
+                effects.add(HASTE);
             }
+            summaryEffectSelf(player, effects);
             if (tick % 40 == 0 && health > DAMAGE) {
                 player.damage(DAMAGE, DamageSource.builder(DamageType.STARVE).build());
             }
