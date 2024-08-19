@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.record.GameTeam;
-import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.Color;
 import icu.suc.megawalls78.util.ItemBuilder;

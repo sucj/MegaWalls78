@@ -2,7 +2,6 @@ package icu.suc.megawalls78.listener;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.gui.*;
 import icu.suc.megawalls78.management.GameManager;
@@ -21,7 +20,6 @@ import org.bukkit.inventory.PlayerInventory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 public class InventoryListener implements Listener {

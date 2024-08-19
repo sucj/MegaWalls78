@@ -2,21 +2,17 @@ package icu.suc.megawalls78.listener;
 
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
-import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.management.EquipmentManager;
 import icu.suc.megawalls78.management.GameManager;
-import icu.suc.megawalls78.util.ItemUtil;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.ItemStack;
 
 public class EquipmentListener implements Listener {
 

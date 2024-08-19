@@ -47,7 +47,7 @@ public class TeamSpider extends Spider {
             float f = this.mob.getLightLevelDependentMagicValue();
 
             if (f >= 0.5F && this.mob.getRandom().nextInt(100) == 0) {
-                this.mob.setTarget((LivingEntity) null);
+                this.mob.setTarget(null);
                 return false;
             } else {
                 return super.canContinueToUse();

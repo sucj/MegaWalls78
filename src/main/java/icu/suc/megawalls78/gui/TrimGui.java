@@ -11,13 +11,15 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.banner.Pattern;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class TrimGui {
 

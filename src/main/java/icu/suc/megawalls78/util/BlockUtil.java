@@ -13,7 +13,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.TileState;
 import org.bukkit.craftbukkit.block.CraftBlock;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;

@@ -4,14 +4,11 @@ import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.Identity;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
 
-import java.sql.*;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 public class IdentityManager {

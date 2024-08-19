@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 

@@ -2,10 +2,8 @@ package icu.suc.megawalls78.entity;
 
 import icu.suc.megawalls78.util.EntityUtil;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftEntity;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 

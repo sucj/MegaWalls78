@@ -5,7 +5,6 @@ import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
-import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.ItemUtil;

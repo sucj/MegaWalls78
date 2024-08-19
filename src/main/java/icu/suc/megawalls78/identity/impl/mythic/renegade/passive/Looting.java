@@ -10,14 +10,10 @@ import icu.suc.megawalls78.util.PlayerUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import java.util.Map;
 
 public final class Looting extends ChargePassive {
 

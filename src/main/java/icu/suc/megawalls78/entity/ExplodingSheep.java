@@ -10,7 +10,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.TraceableEntity;
 import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -36,7 +35,7 @@ public class ExplodingSheep extends Sheep implements TraceableEntity {
     private static final ExplosionDamageCalculator USED_PORTAL_DAMAGE_CALCULATOR = new ExplosionDamageCalculator() {
         @Override
         public boolean shouldBlockExplode(Explosion explosion, BlockGetter world, BlockPos pos, BlockState state, float power) {
-            return state.is(Blocks.NETHER_PORTAL) ? false : super.shouldBlockExplode(explosion, world, pos, state, power);
+            return !state.is(Blocks.NETHER_PORTAL) && super.shouldBlockExplode(explosion, world, pos, state, power);
         }
 
         @Override

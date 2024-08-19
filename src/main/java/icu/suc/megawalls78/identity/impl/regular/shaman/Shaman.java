@@ -4,7 +4,8 @@ import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.Kit;
 
 import static org.bukkit.Material.*;
-import static org.bukkit.enchantments.Enchantment.*;
+import static org.bukkit.enchantments.Enchantment.FEATHER_FALLING;
+import static org.bukkit.enchantments.Enchantment.PROTECTION;
 
 public final class Shaman extends Kit {
 

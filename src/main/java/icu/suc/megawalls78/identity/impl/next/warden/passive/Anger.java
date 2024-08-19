@@ -1,7 +1,6 @@
 package icu.suc.megawalls78.identity.impl.next.warden.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
-import icu.suc.megawalls78.event.EnergyChangeEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
@@ -10,7 +9,6 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
