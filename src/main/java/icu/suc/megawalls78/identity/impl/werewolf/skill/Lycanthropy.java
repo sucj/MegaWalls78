@@ -140,16 +140,14 @@ public final class Lycanthropy extends DurationSkill {
         @EventHandler(ignoreCancelled = true)
         public void onPlayerAttack(EntityDamageByEntityEvent event) {
             if (event.getDamageSource().getCausingEntity() instanceof Player player && PASSIVE(player) && EntityUtil.getMetadata(player, getId()) && condition(event)) {
-                if (!EntityUtil.isSweepAttack(event)) {
-                    double heal = event.getFinalDamage() * SCALE;
-                    double remain = MAX_HEAL - this.heal;
-                    if (remain > heal) {
-                        player.heal(heal);
-                        this.heal += heal;
-                    } else {
-                        player.heal(remain);
-                        this.heal += remain;
-                    }
+                double heal = event.getFinalDamage() * SCALE;
+                double remain = MAX_HEAL - this.heal;
+                if (remain > heal) {
+                    player.heal(heal);
+                    this.heal += heal;
+                } else {
+                    player.heal(remain);
+                    this.heal += remain;
                 }
                 Entity entity = event.getEntity();
                 UUID uuid = entity.getUniqueId();

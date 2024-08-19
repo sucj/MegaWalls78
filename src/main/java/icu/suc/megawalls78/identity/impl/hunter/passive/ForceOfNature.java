@@ -62,7 +62,7 @@ public class ForceOfNature extends DurationCooldownPassive {
     }
 
     private static void scale(EntityDamageByEntityEvent event) {
-        event.setDamage(event.getFinalDamage() * SCALE);
+        event.setDamage(event.getDamage() * SCALE);
     }
 
     private static void potion(Player player) {

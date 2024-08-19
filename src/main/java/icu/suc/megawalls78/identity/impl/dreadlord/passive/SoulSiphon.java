@@ -36,7 +36,7 @@ public final class SoulSiphon extends DurationPassive {
     }
 
     private static void power(EntityDamageByEntityEvent event) {
-        event.setDamage(event.getFinalDamage() * SCALE);
+        event.setDamage(event.getDamage() * SCALE);
     }
 
     @Override

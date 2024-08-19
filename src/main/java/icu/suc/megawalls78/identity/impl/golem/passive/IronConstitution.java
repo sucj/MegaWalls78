@@ -24,7 +24,7 @@ public final class IronConstitution extends Passive {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player && PASSIVE(player) && condition_true(event)) {
-            event.setDamage(event.getFinalDamage() * SCALE);
+            event.setDamage(event.getDamage() * SCALE);
         }
     }
 

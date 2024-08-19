@@ -22,7 +22,7 @@ public final class Shriek extends CooldownPassive {
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {
         if (event.getDamageSource().getDirectEntity() instanceof Player player && PASSIVE(player) && COOLDOWN() && !EntityUtil.isEntityInFront(event.getEntity(), player)) {
-            event.setDamage(event.getFinalDamage() * SCALE);
+            event.setDamage(event.getDamage() * SCALE);
             EFFECT_SOUND.play(player);
             COOLDOWN_RESET();
         }

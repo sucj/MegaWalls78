@@ -54,7 +54,7 @@ public final class Berserk extends DurationCooldownPassive {
     }
 
     private static void power(EntityDamageByEntityEvent event) {
-        event.setDamage(event.getFinalDamage() * SCALE);
+        event.setDamage(event.getDamage() * SCALE);
     }
 
     @Override

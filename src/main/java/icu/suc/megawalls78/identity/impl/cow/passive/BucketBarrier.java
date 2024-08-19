@@ -78,7 +78,7 @@ public final class BucketBarrier extends DurationCooldownPassive {
     }
 
     private static boolean block(EntityDamageEvent event) {
-        double damage = event.getFinalDamage();
+        double damage = event.getDamage();
         if (damage >= DAMAGE) {
             event.setDamage(damage * SCALE);
             return true;

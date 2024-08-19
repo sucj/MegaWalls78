@@ -199,7 +199,7 @@ public final class ShadowCloak extends DurationSkill {
             if (event.getDamager() instanceof Player player && PASSIVE(player) && EntityUtil.getMetadata(player, ID) && condition(event)) {
                 LivingEntity entity = (LivingEntity) event.getEntity();
                 double damage = Math.max((entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() - entity.getHealth()) * SCALE, MIN);
-                event.setDamage(event.getFinalDamage() + damage);
+                event.setDamage(event.getDamage() + damage);
                 EntityUtil.removeMetadata(player, ID);
             }
         }
