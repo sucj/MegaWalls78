@@ -16,13 +16,13 @@ public final class Skeleton extends icu.suc.megawalls78.identity.Kit {
         addTool(IRON_SWORD);
         addEnderChest();
         addPickaxe();
-        addTool(BOW).addEnchantment(POWER, 3, true);
+        addTool(BOW).addEnchantment(POWER, 3);
         addItem(COOKED_BEEF, 3);
         addHealingPotion(2, 3);
         addSpeedPotion(2, 15, 2);
         addCompass();
-        addTool(IRON_AXE).addEnchantment(EFFICIENCY, 1, true);
+        addTool(IRON_AXE).addEnchantment(EFFICIENCY, 1);
         addItem(ARROW, 64);
-        setHelmet(DIAMOND_HELMET).addEnchantment(PROTECTION, 1, true).addEnchantment(PROJECTILE_PROTECTION, 3, true);
+        setHelmet(DIAMOND_HELMET).addEnchantment(PROTECTION, 1).addEnchantment(PROJECTILE_PROTECTION, 3);
     }
 }

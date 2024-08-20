@@ -21,7 +21,7 @@ public final class Zombie extends icu.suc.megawalls78.identity.Kit {
         addHealingPotion(2, 3);
         addSpeedPotion(2, 15, 2);
         addCompass();
-        setHelmet(IRON_HELMET).addEnchantment(PROTECTION, 1, true);
-        setChestplate(DIAMOND_CHESTPLATE).addEnchantment(PROTECTION, 3, true);
+        setHelmet(IRON_HELMET).addEnchantment(PROTECTION, 1);
+        setChestplate(DIAMOND_CHESTPLATE).addEnchantment(PROTECTION, 3);
     }
 }

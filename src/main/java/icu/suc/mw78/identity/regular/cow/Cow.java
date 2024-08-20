@@ -25,6 +25,6 @@ public final class Cow extends icu.suc.megawalls78.identity.Kit {
         addHealingPotion(1, 3).addCustomEffect(new PotionEffect(REGENERATION, 6, 4), false);
         addSpeedPotion(2, 15, 2);
         addCompass();
-        setChestplate(DIAMOND_CHESTPLATE).addEnchantment(PROTECTION, 1, true);
+        setChestplate(DIAMOND_CHESTPLATE).addEnchantment(PROTECTION, 1);
     }
 }

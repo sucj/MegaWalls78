@@ -26,8 +26,8 @@ public final class Golem extends Kit {
         addPotion("healing", 2).addCustomEffect(new PotionEffect(PotionEffectType.REGENERATION, 240, 2), false);
         addItem(SPLASH_POTION, 2).setDisplayName(Component.translatable("item.minecraft.splash_potion.effect.weakness")).addCustomEffect(new PotionEffect(PotionEffectType.SLOWNESS, 140, 0), false).addCustomEffect(new PotionEffect(PotionEffectType.WEAKNESS, 140, 3), false);
         addCompass();
-        addTool(IRON_AXE).addEnchantment(EFFICIENCY, 1, true);
-        setChestplate(DIAMOND_CHESTPLATE).addEnchantment(PROTECTION, 1, true);
-        setBoots(DIAMOND_BOOTS).addEnchantment(PROTECTION, 1, true);
+        addTool(IRON_AXE).addEnchantment(EFFICIENCY, 1);
+        setChestplate(DIAMOND_CHESTPLATE).addEnchantment(PROTECTION, 1);
+        setBoots(DIAMOND_BOOTS).addEnchantment(PROTECTION, 1);
     }
 }

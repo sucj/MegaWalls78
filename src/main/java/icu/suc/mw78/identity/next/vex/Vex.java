@@ -22,6 +22,6 @@ public final class Vex extends Kit {
         addHealingPotion(2, 3);
         addSpeedPotion(2, 15, 2);
         addCompass();
-        setChestplate(IRON_CHESTPLATE).addEnchantment(Enchantment.FEATHER_FALLING, 4, true);
+        setChestplate(IRON_CHESTPLATE).addEnchantment(Enchantment.FEATHER_FALLING, 4);
     }
 }

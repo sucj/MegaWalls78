@@ -15,7 +15,7 @@ public final class Dreadlord extends icu.suc.megawalls78.identity.Kit {
 
     @Override
     protected void init() {
-        addTool(DIAMOND_SWORD).addEnchantment(Enchantment.SMITE, 1, true);
+        addTool(DIAMOND_SWORD).addEnchantment(Enchantment.SMITE, 1);
         addEnderChest();
         addPickaxe();
         addTool(BOW);
@@ -23,6 +23,6 @@ public final class Dreadlord extends icu.suc.megawalls78.identity.Kit {
         addHealingPotion(2, 3);
         addSpeedPotion(2, 15, 2);
         addCompass();
-        setHelmet(DIAMOND_HELMET).addEnchantment(FIRE_PROTECTION, 1, true).addEnchantment(BLAST_PROTECTION, 2, true);
+        setHelmet(DIAMOND_HELMET).addEnchantment(FIRE_PROTECTION, 1).addEnchantment(BLAST_PROTECTION, 2);
     }
 }

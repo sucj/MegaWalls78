@@ -14,7 +14,7 @@ public final class Vindicator extends Kit {
 
     @Override
     protected void init() {
-        addTool(IRON_AXE).addEnchantment(Enchantment.EFFICIENCY, 3, true).addEnchantment(Enchantment.SHARPNESS, 1, true);
+        addTool(IRON_AXE).addEnchantment(Enchantment.EFFICIENCY, 3).addEnchantment(Enchantment.SHARPNESS, 1);
         addEnderChest();
         addPickaxe();
         addTool(BOW);

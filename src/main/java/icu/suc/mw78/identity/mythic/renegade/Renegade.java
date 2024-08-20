@@ -15,16 +15,16 @@ public final class Renegade extends icu.suc.megawalls78.identity.Kit {
 
     @Override
     protected void init() {
-        addTool(IRON_SWORD).addEnchantment(SHARPNESS, 1, true);
+        addTool(IRON_SWORD).addEnchantment(SHARPNESS, 1);
         addEnderChest();
         addPickaxe();
-        addTool(BOW).addEnchantment(POWER, 1, true);
+        addTool(BOW).addEnchantment(POWER, 1);
         addItem(COOKED_BEEF, 3);
         addHealingPotion(2, 3);
         addSpeedPotion(2, 15, 2);
         addTool(FISHING_ROD).setDisplayName(Component.translatable("mw78.item.grappling_hook")).setUnbreakable(false).setMaxDurability(100).setMW78Id(ItemUtil.GRAPPLING_HOOK).addMW78Tag(ItemUtil.GRAPPLING_MAX, PersistentDataType.DOUBLE, 22.0D);
         addCompass();
         addItem(ARROW, 48);
-        setBoots(DIAMOND_BOOTS).addEnchantment(PROTECTION, 3, true).addEnchantment(FEATHER_FALLING, 2, true).addEnchantment(PROJECTILE_PROTECTION, 1, true);
+        setBoots(DIAMOND_BOOTS).addEnchantment(PROTECTION, 3).addEnchantment(FEATHER_FALLING, 2).addEnchantment(PROJECTILE_PROTECTION, 1);
     }
 }

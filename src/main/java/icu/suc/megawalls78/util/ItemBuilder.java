@@ -142,11 +142,15 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder addEnchantment(Enchantment enchantment, int level, boolean ignoreLevelRestriction) {
+    public ItemBuilder addEnchantment(Enchantment enchantment, int level) {
+        return addEnchantment(enchantment, level, true);
+    }
+
+    public ItemBuilder addEnchantment(Enchantment enchantment, int level, boolean ignoreRestrictions) {
         if (this.enchantList == null) {
             this.enchantList = Lists.newArrayList();
         }
-        this.enchantList.add(new Enchant(enchantment, level, ignoreLevelRestriction));
+        this.enchantList.add(new Enchant(enchantment, level, ignoreRestrictions));
         return this;
     }
 

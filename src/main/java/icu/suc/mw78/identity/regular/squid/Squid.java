@@ -24,6 +24,6 @@ public class Squid extends icu.suc.megawalls78.identity.Kit {
         addHealingPotion(3, 2).addCustomEffect(new PotionEffect(REGENERATION, 6, 4), false);
         addSpeedPotion(1, 15, 2);
         addCompass();
-        setBoots(DIAMOND_BOOTS).addEnchantment(PROTECTION, 3, true).addEnchantment(DEPTH_STRIDER, 2, true);
+        setBoots(DIAMOND_BOOTS).addEnchantment(PROTECTION, 3).addEnchantment(DEPTH_STRIDER, 2);
     }
 }

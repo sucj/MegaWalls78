@@ -23,6 +23,6 @@ public final class Shaman extends Kit {
         addHealingPotion(2, 3);
         addSpeedPotion(2, 15, 2);
         addCompass();
-        setBoots(DIAMOND_BOOTS).addEnchantment(PROTECTION, 2, true).addEnchantment(FEATHER_FALLING, 2, true);
+        setBoots(DIAMOND_BOOTS).addEnchantment(PROTECTION, 2).addEnchantment(FEATHER_FALLING, 2);
     }
 }

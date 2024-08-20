@@ -22,6 +22,6 @@ public final class Enderman extends icu.suc.megawalls78.identity.Kit {
         addHealingPotion(2, 3);
         addSpeedPotion(2, 15, 2);
         addCompass();
-        setBoots(DIAMOND_BOOTS).addEnchantment(PROJECTILE_PROTECTION, 2, true).addEnchantment(FEATHER_FALLING, 2, true);
+        setBoots(DIAMOND_BOOTS).addEnchantment(PROJECTILE_PROTECTION, 2).addEnchantment(FEATHER_FALLING, 2);
     }
 }

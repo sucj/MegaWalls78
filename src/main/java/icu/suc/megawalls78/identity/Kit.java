@@ -88,7 +88,7 @@ public abstract class Kit {
     }
 
     protected ItemBuilder addPickaxe() {
-        return addTool(Material.DIAMOND_PICKAXE).addEnchantment(Enchantment.EFFICIENCY, 3, true);
+        return addTool(Material.DIAMOND_PICKAXE).addEnchantment(Enchantment.EFFICIENCY, 3);
     }
 
     protected ItemBuilder addEnderChest() {

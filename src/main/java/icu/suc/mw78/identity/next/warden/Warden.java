@@ -20,6 +20,6 @@ public final class Warden extends icu.suc.megawalls78.identity.Kit {
         addItem(COOKED_BEEF, 3);
         addHealingPotion(4, 2);
         addCompass();
-        setChestplate(NETHERITE_CHESTPLATE).addEnchantment(FIRE_PROTECTION, 4, true);
+        setChestplate(NETHERITE_CHESTPLATE).addEnchantment(FIRE_PROTECTION, 4);
     }
 }

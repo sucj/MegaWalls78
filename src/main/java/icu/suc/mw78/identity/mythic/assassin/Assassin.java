@@ -17,7 +17,7 @@ public final class Assassin extends icu.suc.megawalls78.identity.Kit {
 
     @Override
     protected void init() {
-        addTool(DIAMOND_SWORD).addEnchantment(SHARPNESS, 1, true);
+        addTool(DIAMOND_SWORD).addEnchantment(SHARPNESS, 1);
         addEnderChest();
         addPickaxe();
         addTool(BOW);
@@ -26,7 +26,7 @@ public final class Assassin extends icu.suc.megawalls78.identity.Kit {
                 .addCustomEffect(new PotionEffect(REGENERATION, 120, 2), false)
                 .addCustomEffect(new PotionEffect(SPEED, 120, 1), false);
         addCompass();
-        setBoots(IRON_BOOTS).addEnchantment(PROJECTILE_PROTECTION, 2, true).addEnchantment(FEATHER_FALLING, 2, true);
+        setBoots(IRON_BOOTS).addEnchantment(PROJECTILE_PROTECTION, 2).addEnchantment(FEATHER_FALLING, 2);
     }
 }
 
