@@ -99,6 +99,11 @@ import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.Skill.Trigger;
+import icu.suc.mw78.identity.todo.arcanist.Arcanist;
+import icu.suc.mw78.identity.todo.arcanist.gathering.ArcaneMining;
+import icu.suc.mw78.identity.todo.arcanist.passive.ArcaneExplosion;
+import icu.suc.mw78.identity.todo.arcanist.passive.Tempest;
+import icu.suc.mw78.identity.todo.arcanist.skill.ArcaneBeam;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -111,6 +116,7 @@ import java.util.Map;
 public enum Identity {
     COW("cow", NamedTextColor.LIGHT_PURPLE, Material.MILK_BUCKET, Cow.class, 100, Map.of(EnergyWay.MELEE_PER, 25F, EnergyWay.BOW_PER, 20F), Map.of(Trigger.SWORD, SoothingMoo.class, Trigger.BOW, SoothingMoo.class), List.of(BucketBarrier.class, RefreshingSip.class), UltraPasteurized.class),
     HUNTER("hunter", NamedTextColor.GREEN, Material.BOW, Hunter.class, 100, Map.of(EnergyWay.MELEE_PER, 4F, EnergyWay.BOW_PER, 8F, EnergyWay.GAME, 0.75F, EnergyWay.DM, 0.75F), Map.of(Trigger.SWORD, EagleEye.class, Trigger.BOW, EagleEye.class, Trigger.CARROT_ON_A_STICK, PigRider.class), List.of(AnimalCompanion.class, ForceOfNature.class), GoldenGlasses.class),
+    ARCANIST("arcanist", NamedTextColor.RED, Material.FIREWORK_ROCKET, Arcanist.class, 100, Map.of(EnergyWay.MELEE_PER, 34F, EnergyWay.BOW_PER, 34F), Map.of(Trigger.SWORD, ArcaneBeam.class, Trigger.BOW, ArcaneBeam.class), List.of(Tempest.class, ArcaneExplosion.class), ArcaneMining.class),
     DREADLORD("dreadlord", NamedTextColor.DARK_RED, Material.NETHER_BRICK, Dreadlord.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, ShadowBurst.class, Trigger.BOW, ShadowBurst.class), List.of(SoulEater.class, SoulSiphon.class), DarkMatter.class),
     GOLEM("golem", NamedTextColor.GRAY, Material.IRON_CHESTPLATE, Golem.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, IronPunch.class, Trigger.BOW, IronPunch.class), List.of(IronHeart.class, IronConstitution.class), Momentum.class),
     HEROBRINE("herobrine", NamedTextColor.YELLOW, Material.DIAMOND_SWORD, Herobrine.class, 100, Map.of(EnergyWay.MELEE_PER, 25F, EnergyWay.BOW_PER, 25F), Map.of(Trigger.SWORD, Wrath.class, Trigger.BOW, Wrath.class), List.of(Power.class, Flurry.class), TreasureHunter.class),

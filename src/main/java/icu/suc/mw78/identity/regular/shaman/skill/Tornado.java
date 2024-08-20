@@ -46,7 +46,7 @@ public final class Tornado extends Skill {
 
         Task task = new Task(player);
         tasks.add(task);
-        task.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
+        task.fire();
 
         return true;
     }
@@ -74,11 +74,13 @@ public final class Tornado extends Skill {
 
             super.run();
 
-            for (int i = 0; i < 4; i++) {
-                for (double j = 1; j < HEIGHT; j += 0.5) {
-                    double x = Math.cos(angle + j) * j * 0.75;
-                    double z = Math.sin(angle + j) * j * 0.75;
-                    ParticleUtil.spawnParticle(player.getWorld(), Particle.FIREWORK, location.clone().add(x, j, z), 1, 0, 0, 0, 0);
+            for (int i = 0; i < 2; i++) {
+                for (double j = 2; j - 2 < HEIGHT; j += 1) {
+                    double v = angle + j + Math.PI * i;
+                    double v1 = j * 0.5;
+                    double x = Math.cos(v) * v1;
+                    double z = Math.sin(v) * v1;
+                    ParticleUtil.spawnParticle(player.getWorld(), Particle.FIREWORK, location.clone().add(x, j - 2, z), 1, 0, 0, 0, 0);
                 }
             }
 

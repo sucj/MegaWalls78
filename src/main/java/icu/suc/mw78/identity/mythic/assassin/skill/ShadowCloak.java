@@ -80,7 +80,7 @@ public final class ShadowCloak extends DurationSkill {
         task.resetTimer();
 
         if (run) {
-            task.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
+            task.fire();
         }
 
         //TODO:不是asn隐身的粒子效果是什么来着老子忘了草拟吗反正肯定不是dust但我也不知道是什么所以等会再补

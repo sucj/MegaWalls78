@@ -35,7 +35,7 @@ public final class SonicBoom extends Skill {
     private static final int TICK = (int) (CHARGE / 50);
     private static final PotionEffect SLOWNESS = new PotionEffect(PotionEffectType.SLOWNESS, TICK, 2);
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, TICK, 2);
-    private static final double RADIUS = 1D;
+    private static final double RADIUS = 1.5D;
     private static final double SCALE = 0.6D;
     private static final PotionEffect DARKNESS = new PotionEffect(PotionEffectType.DARKNESS, 100, 0);
 
@@ -57,7 +57,7 @@ public final class SonicBoom extends Skill {
         task.resetCharge();
 
         if (run) {
-            task.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
+            task.fire();
         }
 
         return true;
@@ -116,12 +116,14 @@ public final class SonicBoom extends Skill {
                 vector = location.getDirection();
             }
 
-            EntityUtil.getNearbyEntities(location.getWorld(), BoundingBox.of(location, RADIUS, RADIUS, RADIUS)).stream()
+            EntityUtil.getNearbyEntitiesSphere(location, RADIUS).stream()
                     .filter(entity -> entity instanceof LivingEntity)
                     .filter(entity -> !(entity instanceof Wither))
                     .filter(entity -> !isValidAllies(player, entity))
-                    .filter(entity -> !victims.contains(entity.getUniqueId()))
                     .forEach(entity -> {
+                        if (victims.contains(entity.getUniqueId())) {
+                            return;
+                        }
                         LivingEntity living = (LivingEntity) entity;
                         EntityUtil.addPotionEffect(living, DARKNESS, player);
                         if (living instanceof Player victim) {
@@ -173,7 +175,9 @@ public final class SonicBoom extends Skill {
         }
 
         private void playBoomEffect() {
-            ParticleUtil.spawnParticle(location.getWorld(), Particle.SONIC_BOOM, location, 1);
+            if (location.distance(player.getEyeLocation()) > 0.5) {
+                ParticleUtil.spawnParticle(location.getWorld(), Particle.SONIC_BOOM, location, 1);
+            }
             player.getWorld().playSound(location, Sound.ENTITY_WARDEN_SONIC_BOOM, SoundCategory.PLAYERS, 1.0F, 1.0F);
         }
 

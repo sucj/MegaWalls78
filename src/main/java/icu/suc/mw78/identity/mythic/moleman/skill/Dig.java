@@ -56,7 +56,7 @@ public final class Dig extends Skill {
         task.updateVector();
 
         if (run) {
-            task.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
+            task.fire();
         }
 
         return summaryEffectSelf(player, RESISTANCE);
@@ -115,8 +115,10 @@ public final class Dig extends Skill {
                     .filter(entity -> entity instanceof LivingEntity)
                     .filter(entity -> !(entity instanceof Wither))
                     .filter(entity -> !PlayerUtil.isValidAllies(player, entity))
-                    .filter(entity -> !victims.contains(entity.getUniqueId()))
                     .forEach(entity -> {
+                        if (victims.contains(entity.getUniqueId())) {
+                            return;
+                        }
                         ((LivingEntity) entity).damage(DAMAGE, DamageSource.of(DamageType.FLY_INTO_WALL, player));
                         victims.add(entity.getUniqueId());
                         count.getAndIncrement();

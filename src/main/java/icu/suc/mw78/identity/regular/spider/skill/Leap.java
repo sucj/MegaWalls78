@@ -37,7 +37,7 @@ public final class Leap extends Skill {
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1);
 
     private static final Effect<Player> EFFECT_JUMP = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_SPIDER_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F));
-    private static final Effect<Player> EFFECT_LAND = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.7F, 0.5F));
+    private static final Effect<Player> EFFECT_LAND = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.AMBIENT, 0.7F, 0.5F));
 
     private Task task;
 
@@ -60,7 +60,7 @@ public final class Leap extends Skill {
         player.setVelocity(vector);
 
         if (run) {
-            task.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
+            task.fire();
         }
 
         return true;

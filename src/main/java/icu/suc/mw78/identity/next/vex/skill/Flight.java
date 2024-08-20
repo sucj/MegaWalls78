@@ -37,7 +37,7 @@ public final class Flight extends DurationSkill {
         task.resetTimer();
 
         if (run) {
-            task.runTaskTimer(MegaWalls78.getInstance(), 0L, 1L);
+            task.fire();
         }
 
         return true;

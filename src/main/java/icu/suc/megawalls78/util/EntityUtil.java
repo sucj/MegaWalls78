@@ -148,14 +148,28 @@ public class EntityUtil {
         return movement.y() != vec3.y() && movement.y() < 0.0D;
     }
 
+    public static Collection<Entity> getNearbyEntitiesSphere(Location location, double radius) {
+        Collection<Entity> entities = getNearbyEntities(location.getWorld(), BoundingBox.of(location, radius, radius, radius));
+        entities.removeIf(e -> !inSphere(e, location.toVector(), radius));
+        return filterVanished(entities);
+    }
+
     public static Collection<Entity> getNearbyEntitiesCylinder(Location location, double height, double radius) {
         double x = location.getX();
         double y = location.getY();
         double z = location.getZ();
         BoundingBox boundingBox = new BoundingBox(x + radius, y, z + radius, x - radius, y + height, z - radius);
         return filterVanished(location.getWorld().getNearbyEntities(boundingBox, entity -> {
-            double dx = entity.getX() - x;
-            double dz = entity.getZ() - z;
+            BoundingBox box = entity.getBoundingBox();
+
+            double dx = x;
+            dx = Math.min(dx, box.getMaxX());
+            dx = Math.max(dx, box.getMinX());
+
+            double dz = z;
+            dz = Math.min(dz, box.getMaxZ());
+            dz = Math.max(dz, box.getMinZ());
+
             return Math.sqrt(dx * dx + dz * dz) <= radius;
         }));
     }
@@ -169,6 +183,15 @@ public class EntityUtil {
         Vector center = entity.getBoundingBox().getCenter();
         entities.removeIf(e -> !inSphere(e, center, radius));
         return filterVanished(entities);
+    }
+
+    public static Collection <Entity> getNearbyEntities(World world, BoundingBox box) {
+        return filterVanished(world.getNearbyEntities(box));
+    }
+
+    private static Collection<Entity> filterVanished(Collection<Entity> entities) {
+        entities.removeIf(e -> (e instanceof Player && VanishAPI.isInvisible((Player) e)));
+        return entities;
     }
 
     public static boolean inSphere(Entity entity, Vector center, double radius) {
@@ -187,15 +210,6 @@ public class EntityUtil {
         z = Math.max(z, box.getMinZ());
 
         return center.distance(new Vector(x, y, z)) <= radius;
-    }
-
-    public static Collection <Entity> getNearbyEntities(World world, BoundingBox box) {
-        return filterVanished(world.getNearbyEntities(box));
-    }
-
-    private static Collection<Entity> filterVanished(Collection<Entity> entities) {
-        entities.removeIf(e -> (e instanceof Player && VanishAPI.isInvisible((Player) e)));
-        return entities;
     }
 
     public static Set<Location> getLocations(World world, BoundingBox box) {
@@ -432,6 +446,7 @@ public class EntityUtil {
         FAKE_LIGHTNING(FakeLightning.class),
         GRAPPLING_HOOK(GrapplingHook.class),
         HOMING_ARROW(HomingArrow.class),
+        SAFE_FIREWORK(SafeFirework.class),
         SHADOW_BURST_SKULL(ShadowBurstSkull.class),
         TAMED_WOLF(TamedWolf.class),
         TEAM_SKELETON(TeamSkeleton.class),

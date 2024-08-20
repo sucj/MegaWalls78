@@ -362,9 +362,7 @@ public class PlayerListener implements Listener {
                     }
                 }
             }
-            if (!BlockUtil.canInteract(event.getClickedBlock())) {
-                gameManager.getPlayer(player).useSkill(player, event.getAction(), event.getMaterial());
-            }
+            gameManager.getPlayer(player).useSkill(player, event.getAction(), event.getMaterial());
         } else if (gameManager.inWaiting()) {
             switch (event.getAction()) {
                 case RIGHT_CLICK_BLOCK:

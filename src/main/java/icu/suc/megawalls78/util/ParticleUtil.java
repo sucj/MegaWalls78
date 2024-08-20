@@ -1,14 +1,35 @@
 package icu.suc.megawalls78.util;
 
 import icu.suc.megawalls78.MegaWalls78;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.phys.Vec3;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftFirework;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.function.Consumer;
+
 public class ParticleUtil {
+
+    public static void spawnFirework(Location location, FireworkEffect... effects) {
+        EntityUtil.spawn(location, EntityUtil.Type.SAFE_FIREWORK, entity -> {
+            Firework firework = (Firework) entity;
+            FireworkMeta meta = firework.getFireworkMeta();
+            meta.addEffects(effects);
+            firework.setFireworkMeta(meta);
+            firework.detonate();
+        });
+    }
 
     public static void spawnParticleOverhead(LivingEntity entity, Particle particle, int count) {
         Location location = entity.getEyeLocation().add(0.0D, 1.0D, 0.0D);
