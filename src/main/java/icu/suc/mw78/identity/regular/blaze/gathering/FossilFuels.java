@@ -1,4 +1,4 @@
-package icu.suc.mw78.identity.todo.regular.blaze.gathering;
+package icu.suc.mw78.identity.regular.blaze.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;

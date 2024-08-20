@@ -1,4 +1,4 @@
-package icu.suc.mw78.identity.todo.regular.blaze;
+package icu.suc.mw78.identity.regular.blaze;
 
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.Kit;

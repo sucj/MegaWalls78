@@ -1,4 +1,4 @@
-package icu.suc.mw78.identity.todo.regular.blaze.passive;
+package icu.suc.mw78.identity.regular.blaze.passive;
 
 import com.google.common.collect.Lists;
 import icu.suc.megawalls78.event.IncreaseStatsEvent;

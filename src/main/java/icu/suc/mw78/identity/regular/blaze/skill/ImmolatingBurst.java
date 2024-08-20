@@ -1,4 +1,4 @@
-package icu.suc.mw78.identity.todo.regular.blaze.skill;
+package icu.suc.mw78.identity.regular.blaze.skill;
 
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
