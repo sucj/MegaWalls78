@@ -104,6 +104,11 @@ import icu.suc.mw78.identity.regular.arcanist.gathering.ArcaneMining;
 import icu.suc.mw78.identity.regular.arcanist.passive.ArcaneExplosion;
 import icu.suc.mw78.identity.regular.arcanist.passive.Tempest;
 import icu.suc.mw78.identity.regular.arcanist.skill.ArcaneBeam;
+import icu.suc.mw78.identity.todo.regular.blaze.Blaze;
+import icu.suc.mw78.identity.todo.regular.blaze.gathering.FossilFuels;
+import icu.suc.mw78.identity.todo.regular.blaze.passive.CallOfTheBlazes;
+import icu.suc.mw78.identity.todo.regular.blaze.passive.MeltingCore;
+import icu.suc.mw78.identity.todo.regular.blaze.skill.ImmolatingBurst;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -121,6 +126,7 @@ public enum Identity {
     GOLEM("golem", NamedTextColor.GRAY, Material.IRON_CHESTPLATE, Golem.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, IronPunch.class, Trigger.BOW, IronPunch.class), List.of(IronHeart.class, IronConstitution.class), Momentum.class),
     HEROBRINE("herobrine", NamedTextColor.YELLOW, Material.DIAMOND_SWORD, Herobrine.class, 100, Map.of(EnergyWay.MELEE_PER, 25F, EnergyWay.BOW_PER, 25F), Map.of(Trigger.SWORD, Wrath.class, Trigger.BOW, Wrath.class), List.of(Power.class, Flurry.class), TreasureHunter.class),
     ZOMBIE("zombie", NamedTextColor.DARK_GREEN, Material.ROTTEN_FLESH, Zombie.class, 100, Map.of(EnergyWay.MELEE_PER, 12F, EnergyWay.BOW_PER, 12F, EnergyWay.MELEE_WHEN, 1F, EnergyWay.BOW_WHEN, 2F), Map.of(Trigger.SWORD, CircleOfHealing.class, Trigger.BOW, CircleOfHealing.class), List.of(Toughness.class, Berserk.class), WellTrained.class),
+    BLAZE("blaze", NamedTextColor.RED, Material.BLAZE_POWDER, Blaze.class, 100, Map.of(EnergyWay.MELEE_PER, 8F, EnergyWay.BOW_PER, 4F, EnergyWay.GAME, 4F, EnergyWay.DM, 4F), Map.of(Trigger.SWORD, ImmolatingBurst.class, Trigger.BOW, ImmolatingBurst.class), List.of(CallOfTheBlazes.class, MeltingCore.class), FossilFuels.class),
     ENDERMAN("enderman", NamedTextColor.DARK_PURPLE, Material.ENDER_PEARL, Enderman.class, 100, Map.of(EnergyWay.MELEE_PER, 20F, EnergyWay.BOW_PER, 20F), Map.of(Trigger.SWORD, Teleport.class, Trigger.BOW, Teleport.class), List.of(EnderHeart.class, SoulCharge.class), Enderblocks.class),
     SHAMAN("shaman", NamedTextColor.GREEN, Material.ENCHANTING_TABLE, Shaman.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, Tornado.class, Trigger.BOW, Tornado.class), List.of(Heroism.class, WolfPack.class), SpiritGathering.class),
     SQUID("squid", NamedTextColor.BLUE, Material.INK_SAC, Squid.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, SquidSplash.class, Trigger.BOW, SquidSplash.class), List.of(InnerInk.class, Rejuvenate.class), LuckOfTheSea.class),
