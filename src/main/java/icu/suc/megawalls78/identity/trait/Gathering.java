@@ -13,7 +13,7 @@ public abstract class Gathering extends Trait {
     }
 
     public Gathering(String id, Class<? extends Passive> internal) {
-        super(id, Component.translatable("mw78.gathering." + id));
+        super(id);
         this.internal = internal;
     }
 

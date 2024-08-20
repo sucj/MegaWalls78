@@ -28,7 +28,7 @@ public abstract class Skill extends Trait implements IActionbar {
     }
 
     public Skill(String id, float cost, long cooldown, Class<? extends Passive> internal) {
-        super(id, Component.translatable("mw78.skill." + id));
+        super(id);
         this.cost = cost;
         this.COOLDOWN = cooldown;
         this.internal = internal;
@@ -79,10 +79,10 @@ public abstract class Skill extends Trait implements IActionbar {
     }
 
     public enum Trigger {
-        SWORD(Action.RIGHT, Tag.ITEMS_SWORDS, true),
+        SWORD(Action.RIGHT, Tag.ITEMS_SWORDS, false),
         BOW(Action.LEFT, Tag.ITEMS_ENCHANTABLE_BOW, false),
-        SHOVEL(Action.RIGHT, Tag.ITEMS_SHOVELS, true),
-        AXE(Action.RIGHT, Tag.ITEMS_AXES, true),
+        SHOVEL(Action.RIGHT, Tag.ITEMS_SHOVELS, false),
+        AXE(Action.RIGHT, Tag.ITEMS_AXES, false),
         CARROT_ON_A_STICK(Action.RIGHT, Material.CARROT_ON_A_STICK, false);
 
         private final Action action;

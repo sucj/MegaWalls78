@@ -2,7 +2,6 @@ package icu.suc.megawalls78.identity.trait.passive;
 
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.Trait;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
@@ -11,7 +10,7 @@ import java.util.UUID;
 public abstract class Passive extends Trait implements Listener {
 
     public Passive(String id) {
-        super(id, Component.translatable("mw78.passive." + id));
+        super(id);
     }
 
     protected boolean PASSIVE(Player player) {

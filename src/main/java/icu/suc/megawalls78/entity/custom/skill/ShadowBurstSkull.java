@@ -1,7 +1,9 @@
-package icu.suc.megawalls78.entity.custom;
+package icu.suc.megawalls78.entity.custom.skill;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -83,11 +85,11 @@ public class ShadowBurstSkull extends WitherSkull {
         if (!this.level().isClientSide) {
             // CraftBukkit start
             // this.level().explode(this, this.getX(), this.getY(), this.getZ(), 1.0F, false, World.a.MOB);
-            ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), 1.0F, false);
+            ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), 2F, false);
             this.level().getCraftServer().getPluginManager().callEvent(event);
 
             if (!event.isCancelled()) {
-                this.level().explode(this, this.getX(), this.getY(), this.getZ(), event.getRadius(), event.getFire(), Level.ExplosionInteraction.STANDARD);
+                this.level().explode(this, this.damageSources().witherSkull(this, getOwner()), icu.suc.megawalls78.util.Explosion.ONLY_BLOCK, this.getX(), this.getY(), this.getZ(), event.getRadius(), event.getFire(), Level.ExplosionInteraction.STANDARD, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION, SoundEvents.GENERIC_EXPLODE);
             }
             // CraftBukkit end
             this.discard(); // CraftBukkit - add Bukkit remove cause

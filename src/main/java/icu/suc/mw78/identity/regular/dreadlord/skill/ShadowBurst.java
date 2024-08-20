@@ -31,7 +31,7 @@ public final class ShadowBurst extends Skill {
             float v = (float) i / 100;
             v = v == 0 ? 0 : RandomUtil.RANDOM.nextFloat(v);
             Vector vector = direction.add(new Vector(h, v, h));
-            EntityUtil.spawn(location, EntityUtil.Type.SHADOW_BURST_SKULL, null, player, vector, DAMAGE / 3);
+            EntityUtil.spawn(location, EntityUtil.Type.SHADOW_BURST_SKULL, null, player, vector, DAMAGE);
         }
         return true;
     }

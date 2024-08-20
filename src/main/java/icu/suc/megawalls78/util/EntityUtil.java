@@ -8,6 +8,9 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.entity.custom.*;
 import icu.suc.megawalls78.entity.custom.arrow.ExplosiveArrow;
 import icu.suc.megawalls78.entity.custom.arrow.HomingArrow;
+import icu.suc.megawalls78.entity.custom.FakeLightning;
+import icu.suc.megawalls78.entity.custom.skill.ImmolatingBurstFireball;
+import icu.suc.megawalls78.entity.custom.skill.ShadowBurstSkull;
 import icu.suc.megawalls78.entity.custom.tamed.*;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.floats.FloatArraySet;
@@ -44,6 +47,7 @@ import org.bukkit.metadata.Metadatable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
@@ -173,7 +177,7 @@ public class EntityUtil {
             dz = Math.min(dz, box.getMaxZ());
             dz = Math.max(dz, box.getMinZ());
 
-            return Math.sqrt(dx * dx + dz * dz) <= radius;
+            return Math.sqrt(NumberConversions.square(x - dx) + NumberConversions.square(z - dz)) <= radius;
         }));
     }
 
@@ -450,6 +454,7 @@ public class EntityUtil {
         GRAPPLING_HOOK(GrapplingHook.class),
         HOMING_ARROW(HomingArrow.class),
         SAFE_FIREWORK(SafeFirework.class),
+        IMMOLATING_BURST_FIREBALL(ImmolatingBurstFireball.class),
         SHADOW_BURST_SKULL(ShadowBurstSkull.class),
         TAMED_WOLF(TamedWolf.class),
         TAMED_BLAZE(TamedBlaze.class),

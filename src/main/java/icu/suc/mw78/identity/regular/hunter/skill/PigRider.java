@@ -18,7 +18,7 @@ public final class PigRider extends DurationSkill {
     private Task task;
 
     public PigRider() {
-        super("pig_rider", 0, 1000L, 30000L);
+        super("pig_rider", 0, 60000L, 30000L);
     }
 
     @Override

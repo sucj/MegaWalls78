@@ -9,7 +9,7 @@ public abstract class DurationTask extends AbstractTask {
 
     public DurationTask(Player player, int maxTick) {
         super(player);
-        this.maxTick = maxTick;
+        this.maxTick = maxTick - 1;
         resetTimer();
     }
 

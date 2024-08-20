@@ -26,9 +26,9 @@ public abstract class Trait {
 
     private GamePlayer player;
 
-    public Trait(String id, Component name) {
+    public Trait(String id) {
         this.id = id;
-        this.name = name;
+        this.name = Component.translatable("mw78.trait." + id);
     }
 
     protected boolean noTarget(Player player) {
