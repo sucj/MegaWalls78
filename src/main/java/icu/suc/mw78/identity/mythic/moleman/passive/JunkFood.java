@@ -15,17 +15,13 @@ import org.bukkit.Tag;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
-import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 public final class JunkFood extends ChargePassive implements IActionbar {
 
     private static final int COOKIE_APPEAR = 50;
     private static final int PIE_APPEAR = 100;
     private static final int JUNK_APPLE_APPEAR = 300;
-    private static final int RECYCLE = 5;
 
     private static final ItemBuilder COOKIE = ItemBuilder.of(Material.COOKIE)
             .setAmount(3)
@@ -40,10 +36,6 @@ public final class JunkFood extends ChargePassive implements IActionbar {
             .addPrefix(Identity.MOLEMAN.getName().append(Component.space()))
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .setMW78Id(ItemUtil.MOLEMAN_JUNK_APPLE);
-
-    private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 0, false);
-
-    private int recycle = 1;
 
     public JunkFood() {
         super("junk_food", JUNK_APPLE_APPEAR);
@@ -63,24 +55,6 @@ public final class JunkFood extends ChargePassive implements IActionbar {
             } else if (CHARGE_COUNT() > COOKIE_APPEAR) {
                 handle(event, COOKIE.build());
                 CHARGE = PIE_APPEAR;
-            }
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onConsumeApple(PlayerItemConsumeEvent event) {
-        Player player = event.getPlayer();
-        if (PASSIVE(player)) {
-            ItemStack itemStack = event.getItem();
-            boolean isJunk = ItemUtil.isMW78Item(itemStack, ItemUtil.MOLEMAN_JUNK_APPLE);
-            if (isJunk || itemStack.getType().equals(Material.GOLDEN_APPLE)) {
-                if (++this.recycle > RECYCLE) {
-                    event.setReplacement(itemStack);
-                    this.recycle = 1;
-                }
-                if (isJunk) {
-                    player.addPotionEffect(REGENERATION);
-                }
             }
         }
     }

@@ -12,6 +12,7 @@ import icu.suc.megawalls78.event.GrapplingHookEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameTeam;
+import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.management.EquipmentManager;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
@@ -59,6 +60,7 @@ public class GameListener implements Listener {
     public static final PotionEffect COW_MILK_REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1, false);
     public static final int MOLEMAN_COOKIE_ENERGY = 3;
     public static final int MOLEMAN_PIE_ENERGY = 12;
+    private static final PotionEffect MOLEMAN_JUNK_APPLE_REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 0, false);
 
     private static final JoinConfiguration ACBE_JOIN = JoinConfiguration.builder().separator(Component.space()).build();
     private static final JoinConfiguration ACTIONBAR_JOIN = JoinConfiguration.builder().separator(Component.text("   ")).build();
@@ -120,6 +122,11 @@ public class GameListener implements Listener {
             }
             case ItemUtil.MOLEMAN_COOKIE -> gamePlayer.increaseEnergy(MOLEMAN_COOKIE_ENERGY);
             case ItemUtil.MOLEMAN_PIE -> gamePlayer.increaseEnergy(MOLEMAN_PIE_ENERGY);
+            case ItemUtil.MOLEMAN_JUNK_APPLE -> {
+                if (gamePlayer.getIdentity().equals(Identity.MOLEMAN)) {
+                    player.addPotionEffect(MOLEMAN_JUNK_APPLE_REGENERATION);
+                }
+            }
         }
     }
 
