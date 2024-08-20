@@ -1,5 +1,6 @@
-package icu.suc.megawalls78.entity;
+package icu.suc.megawalls78.entity.custom.tamed;
 
+import icu.suc.megawalls78.entity.pathfinder.CustomFollowOwnerGoal;
 import icu.suc.megawalls78.entity.pathfinder.HurtByOtherTeamTargetGoal;
 import icu.suc.megawalls78.entity.pathfinder.NearestAttackableOtherTeamTargetGoal;
 import net.minecraft.world.entity.EntityType;
@@ -10,15 +11,22 @@ import net.minecraft.world.entity.animal.armadillo.Armadillo;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-public class TeamSpider extends Spider {
+import java.util.UUID;
 
-    public TeamSpider(Level world) {
+public class TamedSpider extends Spider implements Tamable {
+
+    private final UUID owner;
+
+    public TamedSpider(Level world, Object owner) {
         super(EntityType.SPIDER, world);
+        this.owner = (UUID) owner;
     }
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(6, new CustomFollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
         this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Armadillo.class, 6.0F, 1.0D, 1.2D, (entityliving) -> !((Armadillo) entityliving).isScared()));
         this.goalSelector.addGoal(3, new LeapAtTargetGoal(this, 0.4F));
@@ -29,6 +37,12 @@ public class TeamSpider extends Spider {
         this.targetSelector.addGoal(1, new HurtByOtherTeamTargetGoal(this));
         this.targetSelector.addGoal(2, new SpiderTargetGoal<>(this, Player.class));
         this.targetSelector.addGoal(3, new SpiderTargetGoal<>(this, IronGolem.class));
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwnerUUID() {
+        return owner;
     }
 
     private static class SpiderAttackGoal extends MeleeAttackGoal {

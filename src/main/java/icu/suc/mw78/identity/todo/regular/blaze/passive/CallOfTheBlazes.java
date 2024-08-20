@@ -31,12 +31,12 @@ public final class CallOfTheBlazes extends Passive {
 
     private void spawn(Player player) {
         for (int i = 0; i < 2; i++) {
-            EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_BLAZE, entity -> {
+            EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TAMED_BLAZE, entity -> {
                 Blaze blaze = (Blaze) entity;
                 blazes.add(blaze);
                 blaze.customName(Component.translatable("mw78.entity.tamed", player.name(), blaze.name()));
                 player.getScoreboard().getPlayerTeam(player).addEntity(entity);
-            });
+            }, player.getUniqueId());
         }
     }
 

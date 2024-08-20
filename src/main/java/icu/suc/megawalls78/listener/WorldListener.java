@@ -1,7 +1,7 @@
 package icu.suc.megawalls78.listener;
 
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.entity.SafeFirework;
+import icu.suc.megawalls78.entity.custom.SafeFirework;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.management.GameManager;
 import io.papermc.paper.event.entity.TameableDeathMessageEvent;

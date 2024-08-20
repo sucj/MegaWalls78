@@ -1,7 +1,6 @@
 package icu.suc.mw78.identity.regular.hunter.skill;
 
-import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.entity.HomingArrow;
+import icu.suc.megawalls78.entity.custom.arrow.HomingArrow;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;

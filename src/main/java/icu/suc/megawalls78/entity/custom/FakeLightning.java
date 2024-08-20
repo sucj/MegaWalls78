@@ -1,4 +1,4 @@
-package icu.suc.megawalls78.entity;
+package icu.suc.megawalls78.entity.custom;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LightningBolt;

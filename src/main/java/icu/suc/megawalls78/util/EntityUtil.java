@@ -5,7 +5,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.myzelyam.api.vanish.VanishAPI;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.entity.*;
+import icu.suc.megawalls78.entity.custom.*;
+import icu.suc.megawalls78.entity.custom.arrow.ExplosiveArrow;
+import icu.suc.megawalls78.entity.custom.arrow.HomingArrow;
+import icu.suc.megawalls78.entity.custom.tamed.*;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.floats.FloatArraySet;
 import it.unimi.dsi.fastutil.floats.FloatArrays;
@@ -449,11 +452,13 @@ public class EntityUtil {
         SAFE_FIREWORK(SafeFirework.class),
         SHADOW_BURST_SKULL(ShadowBurstSkull.class),
         TAMED_WOLF(TamedWolf.class),
-        TEAM_BLAZE(TeamBlaze.class),
-        TEAM_SKELETON(TeamSkeleton.class),
-        TEAM_SPIDER(TeamSpider.class),
-        TEAM_WITHER(MegaWither.class),
-        TEAM_ZOMBIFIED_PIGLIN(TeamZombifiedPiglin.class);
+        TAMED_BLAZE(TamedBlaze.class),
+        TAMED_CHICKEN(TamedChicken.class),
+        TAMED_COW(TamedCow.class),
+        TAMED_SKELETON(TamedSkeleton.class),
+        TAMED_SPIDER(TamedSpider.class),
+        MEGA_WITHER(MegaWither.class),
+        TAMED_ZOMBIFIED_PIGLIN(TeamZombifiedPiglin.class);
 
         private final Class<? extends net.minecraft.world.entity.Entity> clazz;
 

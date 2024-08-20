@@ -1,4 +1,4 @@
-package icu.suc.megawalls78.entity;
+package icu.suc.megawalls78.entity.custom.arrow;
 
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;

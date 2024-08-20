@@ -1,4 +1,4 @@
-package icu.suc.megawalls78.entity;
+package icu.suc.megawalls78.entity.custom;
 
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.entity.pathfinder.HurtByOtherTeamTargetGoal;

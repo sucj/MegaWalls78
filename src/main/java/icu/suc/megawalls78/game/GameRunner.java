@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.entity.MegaWither;
+import icu.suc.megawalls78.entity.custom.MegaWither;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.management.ConfigManager;
@@ -553,7 +553,7 @@ public class GameRunner implements Runnable {
             for (GamePlayer player : gameManager.getTeamPlayersMap().get(gameTeam)) {
                 mcTeam.addPlayer(player.getBukkitPlayer());
             }
-            EntityUtil.spawn(gameTeam.wither(), EntityUtil.Type.TEAM_WITHER, entity -> {
+            EntityUtil.spawn(gameTeam.wither(), EntityUtil.Type.MEGA_WITHER, entity -> {
                 Wither wither = (Wither) entity;
                 wither.customName(Component.translatable("mw78.wither.name", gameTeam.color(), gameTeam.name(), wither.name()));
                 mcTeam.addEntity(wither);

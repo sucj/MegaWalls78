@@ -7,13 +7,13 @@ import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.RandomUtil;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.inventory.EntityEquipment;
@@ -22,6 +22,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
+import java.util.UUID;
 
 public class AnimalCompanion extends CooldownPassive {
 
@@ -72,44 +73,46 @@ public class AnimalCompanion extends CooldownPassive {
     }
 
     private void spawn(Player player) {
+        Location location = player.getLocation();
+        UUID uuid = player.getUniqueId();
         switch (RandomUtil.RANDOM.nextInt(6)) {
             case 0 -> // Chicken Jockey
-                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_SKELETON, jockey -> {
+                    EntityUtil.spawn(location, EntityUtil.Type.TAMED_SKELETON, jockey -> {
                         Skeleton skeleton = (Skeleton) jockey;
                         EntityEquipment equipment = skeleton.getEquipment();
                         equipment.setItem(EquipmentSlot.HAND, SKELETON_BOW.build());
                         equipment.setItem(EquipmentSlot.HEAD, ItemBuilder.of(Material.LEATHER_HELMET).setArmorColor(Color.getDye(PLAYER().getTeam().color()).getColor()).build());
-                        player.getWorld().spawnEntity(player.getLocation(), EntityType.CHICKEN, CreatureSpawnEvent.SpawnReason.CUSTOM, saddler -> {
+                        EntityUtil.spawn(location, EntityUtil.Type.TAMED_CHICKEN, saddler -> {
                             Chicken chicken = (Chicken) saddler;
                             add(player, chicken, skeleton);
                             chicken.addPassenger(skeleton);
-                        });
-                    });
+                        }, uuid);
+                    }, uuid);
             case 1 -> // Zombie Pigman
-                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_ZOMBIFIED_PIGLIN, entity -> {
+                    EntityUtil.spawn(location, EntityUtil.Type.TAMED_ZOMBIFIED_PIGLIN, entity -> {
                         PigZombie pigZombie = (PigZombie) entity;
                         add(player, pigZombie);
                         pigZombie.getEquipment().setItem(EquipmentSlot.HAND, ZOMBIE_PIGMAN_SWORD.build());
                         pigZombie.addPotionEffect(ZOMBIE_PIGMAN_POTION);
-                    });
+                    }, uuid);
             case 2 -> // Spider
-                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TEAM_SPIDER, entity -> add(player, ((Spider) entity)));
+                    EntityUtil.spawn(location, EntityUtil.Type.TAMED_SPIDER, entity -> add(player, ((Spider) entity)), uuid);
             case 3 -> // Exploding Sheep
-                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.EXPLODING_SHEEP, entity -> add(player, (Sheep) entity), player);
+                    EntityUtil.spawn(location, EntityUtil.Type.EXPLODING_SHEEP, entity -> add(player, (Sheep) entity), player);
             case 4 -> // Cow
-                    player.getWorld().spawnEntity(player.getLocation(), EntityType.COW, CreatureSpawnEvent.SpawnReason.CUSTOM, entity -> {
+                    EntityUtil.spawn(location, EntityUtil.Type.TAMED_COW, entity -> {
                         Cow cow = (Cow) entity;
                         add(player, cow);
                         cow.addPotionEffect(COW_POTION);
-                    });
+                    }, uuid);
             case 5 -> // Tamed Wolf
-                    EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TAMED_WOLF, entity -> {
+                    EntityUtil.spawn(location, EntityUtil.Type.TAMED_WOLF, entity -> {
                         Wolf wolf = (Wolf) entity;
                         add(player, wolf);
                         AttributeInstance maxHealth = wolf.getAttribute(Attribute.GENERIC_MAX_HEALTH);
                         maxHealth.setBaseValue(maxHealth.getBaseValue() / 2);
                         wolf.setCollarColor(Color.getDye(PLAYER().getTeam().color()));
-                    }, player.getUniqueId());
+                    }, uuid);
         }
     }
 

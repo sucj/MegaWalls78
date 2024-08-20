@@ -1,5 +1,6 @@
-package icu.suc.megawalls78.entity;
+package icu.suc.megawalls78.entity.custom.tamed;
 
+import icu.suc.megawalls78.entity.pathfinder.CustomFollowOwnerGoal;
 import icu.suc.megawalls78.entity.pathfinder.HurtByOtherTeamTargetGoal;
 import icu.suc.megawalls78.entity.pathfinder.NearestAttackableOtherTeamTargetGoal;
 import net.minecraft.server.level.ServerLevel;
@@ -13,19 +14,26 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-public class TeamZombifiedPiglin extends ZombifiedPiglin {
+import java.util.UUID;
+
+public class TeamZombifiedPiglin extends ZombifiedPiglin implements Tamable {
 
     private static final UniformInt PERSISTENT_ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
 
+    private final UUID owner;
+
     private HurtByTargetGoal pathfinderGoalHurtByTarget;
 
-    public TeamZombifiedPiglin(Level world) {
+    public TeamZombifiedPiglin(Level world, Object owner) {
         super(EntityType.ZOMBIFIED_PIGLIN, world);
+        this.owner = (UUID) owner;
     }
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(6, new CustomFollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
         this.goalSelector.addGoal(2, new ZombieAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.targetSelector.addGoal(1, pathfinderGoalHurtByTarget = new HurtByOtherTeamTargetGoal(this).setAlertOthers());
@@ -43,5 +51,11 @@ public class TeamZombifiedPiglin extends ZombifiedPiglin {
             return;
         }
         this.setRemainingPersistentAngerTime(event.getNewAnger());
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwnerUUID() {
+        return owner;
     }
 }

@@ -1,4 +1,4 @@
-package icu.suc.megawalls78.entity;
+package icu.suc.megawalls78.entity.custom;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

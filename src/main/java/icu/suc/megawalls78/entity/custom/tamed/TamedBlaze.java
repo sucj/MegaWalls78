@@ -1,5 +1,6 @@
-package icu.suc.megawalls78.entity;
+package icu.suc.megawalls78.entity.custom.tamed;
 
+import icu.suc.megawalls78.entity.pathfinder.CustomFollowOwnerGoal;
 import icu.suc.megawalls78.entity.pathfinder.HurtByOtherTeamTargetGoal;
 import icu.suc.megawalls78.entity.pathfinder.NearestAttackableOtherTeamTargetGoal;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -13,16 +14,21 @@ import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 import java.util.Objects;
+import java.util.UUID;
 
-public class TeamBlaze extends Blaze {
+public class TamedBlaze extends Blaze implements Tamable {
 
     private static EntityDataAccessor<Byte> DATA_FLAGS_ID;
 
-    public TeamBlaze(Level world) {
+    private final UUID owner;
+
+    public TamedBlaze(Level world, Object owner) {
         super(EntityType.BLAZE, world);
+        this.owner = (UUID) owner;
 
         try {
             DATA_FLAGS_ID = (EntityDataAccessor<Byte>) FieldUtils.readStaticField(Blaze.class, "DATA_FLAGS_ID", true);
@@ -33,6 +39,7 @@ public class TeamBlaze extends Blaze {
 
     @Override
     protected void registerGoals() {
+        this.goalSelector.addGoal(6, new CustomFollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
         this.goalSelector.addGoal(4, new BlazeAttackGoal(this));
         this.goalSelector.addGoal(5, new MoveTowardsRestrictionGoal(this, 1.0));
         this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0, 0.0F));
@@ -53,13 +60,29 @@ public class TeamBlaze extends Blaze {
         this.entityData.set(DATA_FLAGS_ID, b);
     }
 
+    @Override
+    public boolean unableToMoveToOwner() {
+        return this.isPassenger() || this.mayBeLeashed() || Tamable.super.unableToMoveToOwner();
+    }
+
+    @Override
+    public boolean canFlyToOwner() {
+        return true;
+    }
+
+    @Nullable
+    @Override
+    public UUID getOwnerUUID() {
+        return owner;
+    }
+
     static class BlazeAttackGoal extends Goal {
-        private final TeamBlaze blaze;
+        private final TamedBlaze blaze;
         private int attackStep;
         private int attackTime;
         private int lastSeen;
 
-        public BlazeAttackGoal(TeamBlaze blaze) {
+        public BlazeAttackGoal(TamedBlaze blaze) {
             this.blaze = blaze;
             this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         }

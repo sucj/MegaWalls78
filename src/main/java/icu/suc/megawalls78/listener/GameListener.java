@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.entity.GrapplingHook;
+import icu.suc.megawalls78.entity.custom.GrapplingHook;
 import icu.suc.megawalls78.event.ChestRollEvent;
 import icu.suc.megawalls78.event.EnergyChangeEvent;
 import icu.suc.megawalls78.event.GrapplingHookEvent;

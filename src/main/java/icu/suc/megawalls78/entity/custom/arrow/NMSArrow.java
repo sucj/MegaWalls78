@@ -1,4 +1,4 @@
-package icu.suc.megawalls78.entity;
+package icu.suc.megawalls78.entity.custom.arrow;
 
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
