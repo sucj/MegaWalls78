@@ -1,4 +1,4 @@
-package icu.suc.mw78.identity.todo.arcanist.skill;
+package icu.suc.mw78.identity.regular.arcanist.skill;
 
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;

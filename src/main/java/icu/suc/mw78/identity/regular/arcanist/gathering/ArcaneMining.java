@@ -1,4 +1,4 @@
-package icu.suc.mw78.identity.todo.arcanist.gathering;
+package icu.suc.mw78.identity.regular.arcanist.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
