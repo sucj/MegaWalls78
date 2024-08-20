@@ -23,7 +23,8 @@ public final class Blaze extends Kit {
         addHealingPotion(2, 3);
         addSpeedPotion(2, 15, 2);
         addCompass();
-        addItem(ARROW, 128);
+        addItem(ARROW, 64);
+        addItem(ARROW, 64);
         setLeggings(IRON_LEGGINGS).addEnchantment(Enchantment.PROTECTION, 3).addEnchantment(Enchantment.BLAST_PROTECTION, 2).addEnchantment(Enchantment.PROJECTILE_PROTECTION, 2);
     }
 }

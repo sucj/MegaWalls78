@@ -449,6 +449,7 @@ public class EntityUtil {
         SAFE_FIREWORK(SafeFirework.class),
         SHADOW_BURST_SKULL(ShadowBurstSkull.class),
         TAMED_WOLF(TamedWolf.class),
+        TEAM_BLAZE(TeamBlaze.class),
         TEAM_SKELETON(TeamSkeleton.class),
         TEAM_SPIDER(TeamSpider.class),
         TEAM_WITHER(MegaWither.class),

@@ -27,8 +27,8 @@ public class TeamSpider extends Spider {
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByOtherTeamTargetGoal(this));
-        this.targetSelector.addGoal(2, new SpiderOtherTeamTargetGoal<>(this, Player.class));
-        this.targetSelector.addGoal(3, new SpiderOtherTeamTargetGoal<>(this, IronGolem.class));
+        this.targetSelector.addGoal(2, new SpiderTargetGoal<>(this, Player.class));
+        this.targetSelector.addGoal(3, new SpiderTargetGoal<>(this, IronGolem.class));
     }
 
     private static class SpiderAttackGoal extends MeleeAttackGoal {
@@ -55,9 +55,9 @@ public class TeamSpider extends Spider {
         }
     }
 
-    private static class SpiderOtherTeamTargetGoal<T extends LivingEntity> extends NearestAttackableOtherTeamTargetGoal<T> {
+    private static class SpiderTargetGoal<T extends LivingEntity> extends NearestAttackableOtherTeamTargetGoal<T> {
 
-        public SpiderOtherTeamTargetGoal(Spider spider, Class<T> targetEntityClass) {
+        public SpiderTargetGoal(Spider spider, Class<T> targetEntityClass) {
             super(spider, targetEntityClass, true);
         }
 
