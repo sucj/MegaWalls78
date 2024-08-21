@@ -147,7 +147,7 @@ public class TriggerGui { // TODO k
     }
 
     private static ItemStack flag(boolean sneak) {
-        return (sneak ? ItemBuilder.of(Material.LIME_CONCRETE) : ItemBuilder.of(Material.RED_CONCRETE))
+        return (sneak ? ItemBuilder.of(Material.LIME_STAINED_GLASS_PANE) : ItemBuilder.of(Material.RED_STAINED_GLASS_PANE))
                 .setDisplayName(Component.translatable("mw78.gui.trigger.sneak", sneak ? TRUE : FALSE))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .build();
