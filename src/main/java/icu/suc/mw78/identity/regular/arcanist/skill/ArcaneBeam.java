@@ -97,6 +97,11 @@ public final class ArcaneBeam extends Skill {
 
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         boolean prepare = gameManager.getState().equals(GameState.PREPARING);
+
+        if (!prepare) {
+            return false;
+        }
+
         boolean energy = true;
         boolean flag = false;
 
