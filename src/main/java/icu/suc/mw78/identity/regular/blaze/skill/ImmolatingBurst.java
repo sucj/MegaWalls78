@@ -2,8 +2,11 @@ package icu.suc.mw78.identity.regular.blaze.skill;
 
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
+import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
-import org.bukkit.Location;
+import icu.suc.megawalls78.util.ParticleUtil;
+import net.minecraft.world.level.Explosion;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 public final class ImmolatingBurst extends Skill {
@@ -12,6 +15,11 @@ public final class ImmolatingBurst extends Skill {
     private static final int DELAY = 10;
     private static final int AMOUNT = 3;
     private static final int DURATION = DELAY * AMOUNT;
+
+    private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> {
+        ParticleUtil.spawnParticleRandomBody(player, Particle.LAVA, 4);
+        player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_BLAZE_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F);
+    });
 
     private Task task;
 
@@ -52,6 +60,7 @@ public final class ImmolatingBurst extends Skill {
             super.run();
 
             if (tick % DELAY == 0) {
+                EFFECT_SKILL.play(player);
                 Location location = player.getEyeLocation();
                 EntityUtil.spawn(location, EntityUtil.Type.IMMOLATING_BURST_FIREBALL, null, player, location.getDirection(), DAMAGE);
             }
