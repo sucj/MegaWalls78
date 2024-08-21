@@ -90,7 +90,7 @@ public final class ArcaneBeam extends Skill {
             distance = beam.distance(eye);
         }
 
-        return true;
+        return summaryHit(player, victims.size());
     }
 
     private boolean breakBlock(Player player, Location location) {

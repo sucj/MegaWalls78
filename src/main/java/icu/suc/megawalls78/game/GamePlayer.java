@@ -95,7 +95,7 @@ public class GamePlayer {
         if (trigger == null) {
             return false;
         }
-        if (player.isSneaking() != trigger.isSneak()) {
+        if (player.isSneaking() != MegaWalls78.getInstance().getTriggerManager().sneak(player.getUniqueId(), trigger)) {
             return false;
         }
         Skill skill = skills.get(trigger);

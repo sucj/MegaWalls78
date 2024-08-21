@@ -30,8 +30,11 @@ public class InventoryListener implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getWhoClicked() instanceof Player player) {
             GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-            if (gameManager.inFighting()) {
-                Inventory inventory = event.getClickedInventory();
+            Inventory inventory = event.getClickedInventory();
+            if (TriggerGui.INVENTORIES.contains(inventory)) {
+                TriggerGui.handle(player, event.getSlot());
+            }
+            else if (gameManager.inFighting()) {
                 switch (event.getClick()) {
                     case SHIFT_LEFT:
                     case SHIFT_RIGHT: {
@@ -106,9 +109,9 @@ public class InventoryListener implements Listener {
                         LAST_SLOTS.put(player.getUniqueId(), event.getSlot());
                     }
                 }
-            } else if (gameManager.inWaiting()) {
+            }
+            else if (gameManager.inWaiting()) {
                 event.setCancelled(true);
-                Inventory inventory = event.getClickedInventory();
                 if (inventory == null) {
                     return;
                 }
@@ -123,9 +126,11 @@ public class InventoryListener implements Listener {
                 } else if (TrimGui.INVENTORIES.containsKey(inventory)) {
                     TrimGui.handle(player, inventory, event.getSlot());
                 }
-            } else if (gameManager.isSpectator(player)) {
+            }
+            else if (gameManager.isSpectator(player)) {
                 event.setCancelled(true);
-            } else {
+            }
+            else {
                 event.setCancelled(true);
             }
         }
@@ -164,7 +169,14 @@ public class InventoryListener implements Listener {
             Inventory inventory = event.getInventory();
             if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() == null) {
                 player.playSound(player, Sound.BLOCK_ENDER_CHEST_CLOSE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            } else IdentityGui.INVENTORIES.remove(inventory);
+            } else {
+                IdentityGui.INVENTORIES.remove(inventory);
+                SkinGui.INVENTORIES.remove(inventory);
+                TeamGui.INVENTORIES.remove(inventory);
+                PatternGui.INVENTORIES.remove(inventory);
+                TrimGui.INVENTORIES.remove(inventory);
+                TriggerGui.INVENTORIES.remove(inventory);
+            }
             if (player.getItemOnCursor().getType().isAir()) {
                 LAST_SLOTS.remove(player.getUniqueId());
             }

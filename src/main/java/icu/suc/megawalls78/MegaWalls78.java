@@ -28,6 +28,7 @@ public final class MegaWalls78 extends JavaPlugin {
     private ScoreboardManager scoreboardManager;
     private DatabaseManager databaseManager;
     private EquipmentManager equipmentManager;
+    private TriggerManager triggerManager;
 
     private static MegaWalls78 instance;
     private static ScoreboardLibrary scoreboardLib;
@@ -63,6 +64,7 @@ public final class MegaWalls78 extends JavaPlugin {
         gameManager = new GameManager();
         scoreboardManager = new ScoreboardManager();
         equipmentManager = new EquipmentManager();
+        triggerManager = new TriggerManager();
     }
 
     private void registerCommands() {
@@ -74,6 +76,7 @@ public final class MegaWalls78 extends JavaPlugin {
         Objects.requireNonNull(getCommand("start")).setExecutor(new StartCommand());
         Objects.requireNonNull(getCommand("suicide")).setExecutor(new SuicideCommand());
         Objects.requireNonNull(getCommand("surface")).setExecutor(new SurfaceCommand());
+        Objects.requireNonNull(getCommand("trigger")).setExecutor(new TriggerCommand());
     }
 
     private void registerListeners() {
@@ -122,6 +125,10 @@ public final class MegaWalls78 extends JavaPlugin {
 
     public EquipmentManager getEquipmentManager() {
         return equipmentManager;
+    }
+
+    public TriggerManager getTriggerManager() {
+        return triggerManager;
     }
 
     public void initScoreboard() {

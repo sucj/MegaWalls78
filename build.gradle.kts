@@ -81,6 +81,9 @@ bukkitPluginYaml {
     register("mw78.cancel") {
       default = Permission.Default.FALSE
     }
+    register("mw78.trigger") {
+      default = Permission.Default.TRUE
+    }
   }
   commands {
     register("id") {
@@ -116,6 +119,10 @@ bukkitPluginYaml {
     register("cancel") {
       permission = "mw78.cancel"
       usage = "/cancel"
+    }
+    register("trigger") {
+      permission = "mw78.trigger"
+      usage = "/trigger"
     }
   }
 }

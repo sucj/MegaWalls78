@@ -79,32 +79,36 @@ public abstract class Skill extends Trait implements IActionbar {
     }
 
     public enum Trigger {
-        SWORD(Action.RIGHT, Tag.ITEMS_SWORDS, false),
-        BOW(Action.LEFT, Tag.ITEMS_ENCHANTABLE_BOW, false),
-        SHOVEL(Action.RIGHT, Tag.ITEMS_SHOVELS, false),
-        AXE(Action.RIGHT, Tag.ITEMS_AXES, false),
-        CARROT_ON_A_STICK(Action.RIGHT, Material.CARROT_ON_A_STICK, false);
+        SWORD("sword", Action.RIGHT, Tag.ITEMS_SWORDS),
+        BOW("bow", Action.LEFT, Tag.ITEMS_ENCHANTABLE_BOW),
+        CROSSBOW("crossbow", Action.LEFT, Tag.ITEMS_ENCHANTABLE_CROSSBOW),
+        SHOVEL("shovel", Action.RIGHT, Tag.ITEMS_SHOVELS),
+        PICKAXE("pickaxe", Action.RIGHT, Tag.ITEMS_PICKAXES),
+        AXE("axe", Action.RIGHT, Tag.ITEMS_AXES),
+        HOE("hoe", Action.RIGHT, Tag.ITEMS_HOES),
+        CARROT_ON_A_STICK("carrot_on_a_stick", Action.RIGHT, Material.CARROT_ON_A_STICK),
+        WARPED_FUNGUS_ON_A_STICK("warped_fungus_on_a_stick", Action.RIGHT, Material.WARPED_FUNGUS_ON_A_STICK);
 
+        private final String id;
         private final Action action;
         private final Predicate<Material> filter;
-        private final boolean sneak;
 
-        Trigger(Action action, Material material, boolean sneak) {
-            this(action, material::equals, sneak);
+        Trigger(String id, Action action, Material material) {
+            this(id, action, material::equals);
         }
 
-        Trigger(Action action, Tag<Material> tag, boolean sneak) {
-            this(action, tag::isTagged, sneak);
+        Trigger(String id, Action action, Tag<Material> tag) {
+            this(id, action, tag::isTagged);
         }
 
-        Trigger(Action action, Predicate<Material> filter, boolean sneak) {
+        Trigger(String id, Action action, Predicate<Material> filter) {
+            this.id = id;
             this.action = action;
             this.filter = filter;
-            this.sneak = sneak;
         }
 
-        public boolean isSneak() {
-            return sneak;
+        public String getId() {
+            return id;
         }
 
         private boolean isTriggered(org.bukkit.event.block.Action action, Material material) {
