@@ -46,7 +46,6 @@ public final class MegaWalls78 extends JavaPlugin {
         loadConfig();
         initRedis();
         initSql();
-        boostSmelting();
     }
 
     @Override
@@ -193,16 +192,6 @@ public final class MegaWalls78 extends JavaPlugin {
             databaseManager.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    public static void boostSmelting() {
-        Iterator<Recipe> iterator = Bukkit.recipeIterator();
-        if (iterator.hasNext()) {
-            Recipe recipe = iterator.next();
-            if (recipe instanceof CookingRecipe<?> cooking) {
-                cooking.setCookingTime(cooking.getCookingTime() / 4);
-            }
         }
     }
 }

@@ -12,10 +12,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockCookEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.EntityBlockFormEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.FurnaceStartSmeltEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 
 public class WorldListener implements Listener {
@@ -111,5 +114,10 @@ public class WorldListener implements Listener {
         if (event.getDamager() instanceof Firework firework && ((CraftFirework) firework).getHandle() instanceof SafeFirework) {
             event.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onFurnaceStartSmelt(FurnaceStartSmeltEvent event) {
+        event.setTotalCookTime(event.getTotalCookTime() / 4);
     }
 }
