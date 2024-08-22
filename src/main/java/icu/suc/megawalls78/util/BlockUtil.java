@@ -23,8 +23,9 @@ public class BlockUtil {
 
     public static final Set<Material> STONES = Set.of(Material.STONE, Material.DEEPSLATE);
     public static final Set<Material> WOODS = Set.of(Material.OAK_WOOD, Material.SPRUCE_WOOD, Material.BIRCH_WOOD, Material.JUNGLE_WOOD, Material.ACACIA_WOOD, Material.CHERRY_WOOD, Material.DARK_OAK_WOOD, Material.MANGROVE_WOOD, Material.OAK_LOG, Material.SPRUCE_LOG, Material.BIRCH_LOG, Material.JUNGLE_LOG, Material.ACACIA_LOG, Material.CHERRY_LOG, Material.DARK_OAK_LOG, Material.MANGROVE_LOG);
-    public static final Set<Material> ORES = Set.of(Material.COAL_ORE, Material.IRON_ORE, Material.GOLD_ORE, Material.DIAMOND_ORE, Material.COPPER_ORE, Material.EMERALD_ORE, Material.LAPIS_ORE, Material.REDSTONE_ORE, Material.NETHER_GOLD_ORE, Material.NETHER_QUARTZ_ORE, Material.DEEPSLATE_COAL_ORE, Material.DEEPSLATE_IRON_ORE, Material.DEEPSLATE_GOLD_ORE, Material.DEEPSLATE_DIAMOND_ORE, Material.DEEPSLATE_COPPER_ORE, Material.DEEPSLATE_EMERALD_ORE, Material.DEEPSLATE_LAPIS_ORE, Material.DEEPSLATE_REDSTONE_ORE, Material.RAW_COPPER_BLOCK, Material.RAW_IRON_BLOCK, Material.RAW_GOLD_BLOCK);
+    public static final Set<Material> ORES = Set.of(Material.COAL_ORE, Material.IRON_ORE, Material.GOLD_ORE, Material.DIAMOND_ORE, Material.COPPER_ORE, Material.EMERALD_ORE, Material.LAPIS_ORE, Material.REDSTONE_ORE, Material.NETHER_GOLD_ORE, Material.NETHER_QUARTZ_ORE, Material.DEEPSLATE_COAL_ORE, Material.DEEPSLATE_IRON_ORE, Material.DEEPSLATE_GOLD_ORE, Material.DEEPSLATE_DIAMOND_ORE, Material.DEEPSLATE_COPPER_ORE, Material.DEEPSLATE_EMERALD_ORE, Material.DEEPSLATE_LAPIS_ORE, Material.DEEPSLATE_REDSTONE_ORE);
     public static final Set<Material> DIRT = Set.of(Material.DIRT, Material.COARSE_DIRT, Material.ROOTED_DIRT, Material.SAND, Material.RED_SAND, Material.MUD, Material.CLAY, Material.GRAVEL);
+    public static final Set<Material> RAW = Set.of(Material.RAW_COPPER_BLOCK, Material.RAW_IRON_BLOCK, Material.RAW_GOLD_BLOCK);
 
     private static final Set<Class<?>> CAN_INTERACT = Sets.newHashSet();
 
@@ -42,6 +43,10 @@ public class BlockUtil {
 
     public static boolean isDirt(Material material) {
         return DIRT.contains(material);
+    }
+
+    public static boolean isRaw(Material material) {
+        return RAW.contains(material);
     }
 
     public static boolean isNatural(Material material) {
