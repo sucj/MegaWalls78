@@ -3,6 +3,7 @@ package icu.suc.mw78.identity.regular.blaze.gathering;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.BlockUtil;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -33,7 +34,8 @@ public final class FossilFuels extends Gathering {
         }
 
         private static boolean condition(BlockBreakEvent event) {
-            return BlockUtil.isOre(event.getBlock().getType());
+            Material type = event.getBlock().getType();
+            return BlockUtil.isOre(type) || BlockUtil.isRaw(type);
         }
 
         private void potion(Player player) {
