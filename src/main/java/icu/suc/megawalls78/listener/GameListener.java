@@ -60,20 +60,21 @@ public class GameListener implements Listener {
     public static final PotionEffect COW_MILK_REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 1, false);
     public static final int MOLEMAN_COOKIE_ENERGY = 3;
     public static final int MOLEMAN_PIE_ENERGY = 12;
-    private static final PotionEffect MOLEMAN_JUNK_APPLE_REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 0, false);
+    public static final PotionEffect MOLEMAN_JUNK_APPLE_REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 0, false);
 
-    private static final JoinConfiguration ACBE_JOIN = JoinConfiguration.builder().separator(Component.space()).build();
-    private static final JoinConfiguration ACTIONBAR_JOIN = JoinConfiguration.builder().separator(Component.text("   ")).build();
+    public static final JoinConfiguration ACBE_JOIN = JoinConfiguration.builder().separator(Component.space()).build();
+    public static final JoinConfiguration ACTIONBAR_JOIN = JoinConfiguration.builder().separator(Component.text("   ")).build();
 
-    private static final Map<UUID, Pair<Integer, Float>> ENERGY_BLINK = Maps.newHashMap();
+    public static final Map<UUID, Pair<Integer, Float>> ENERGY_BLINK = Maps.newHashMap();
 
-    private static final double BEFORE_PBB = 0.1D;
-    private static final double AFTER_PBB = 0.005D;
-    private static final LootTable NEWBEE_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "newbee"));
-    private static final LootTable NORMAL_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "normal"));
-    private static final Set<UUID> NO_NEWBEE = Sets.newHashSet();
+    public static final double BEFORE_PBB = 0.1D;
+    public static final double AFTER_PBB = 0.005D;
+    public static final LootTable NEWBEE_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "newbee"));
+    public static final LootTable NORMAL_CHEST = Bukkit.getLootTable(new NamespacedKey("mw78", "normal"));
+    public static final Set<UUID> NO_NEWBEE = Sets.newHashSet();
 
-    private static final Set<Material> DISABLE_ITEMS = Set.of(Material.BUCKET, Material.GLASS_BOTTLE, Material.WATER_BUCKET, Material.LAVA_BUCKET);
+    public static final Set<Material> DISABLE_ITEMS = Set.of(Material.BUCKET, Material.GLASS_BOTTLE, Material.WATER_BUCKET, Material.LAVA_BUCKET);
+    public static final Set<Material> DROP_ITEMS = Set.of(Material.GOLD_ORE, Material.DEEPSLATE_GOLD_ORE, Material.DIAMOND_ORE);
 
     @EventHandler
     public void onEnergyChange(EnergyChangeEvent event) {
@@ -133,7 +134,8 @@ public class GameListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockDropItem(BlockDropItemEvent event) {
         Player player = event.getPlayer();
-        if (MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING)) {
+
+        if (!DROP_ITEMS.contains(event.getBlockState().getType())) {
             for (Item item : event.getItems()) {
                 HashMap<Integer, ItemStack> over = player.getInventory().addItem(item.getItemStack());
                 if (over.isEmpty()) {
@@ -143,7 +145,6 @@ public class GameListener implements Listener {
                 }
             }
         }
-
 
         if (BlockUtil.isNatural(event.getBlockState().getType())) {
             Block block = event.getBlock();

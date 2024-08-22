@@ -1,10 +1,12 @@
 package icu.suc.mw78.identity.regular.arcanist.skill;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
+import icu.suc.megawalls78.listener.GameListener;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.*;
 import icu.suc.megawalls78.util.Effect;
@@ -14,10 +16,10 @@ import org.bukkit.Color;
 import org.bukkit.block.Block;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public final class ArcaneBeam extends Skill {
 
@@ -63,6 +65,7 @@ public final class ArcaneBeam extends Skill {
 
         double distance = 0;
         Set<UUID> victims = Sets.newHashSet();
+        int bb = 0;
         while (distance < DISTANCE) {
             EntityUtil.getNearbyEntitiesSphere(beam, RADIUS).stream()
                     .filter(entity -> entity instanceof Player)
@@ -81,9 +84,12 @@ public final class ArcaneBeam extends Skill {
                 EFFECT_BEAM.play(beam);
             }
 
-            if (breakBlock(player, beam)) {
-                EFFECT_EXPLOSION.play(Triple.of(beam, beam, PLAYER()));
-                break;
+            boolean gen = bb == 0;
+            if (bb < 3 && breakBlock(player, beam, gen)) {
+                if (gen) {
+                    EFFECT_EXPLOSION.play(Triple.of(beam, beam, PLAYER()));
+                }
+                bb++;
             }
 
             beam.add(direction);
@@ -93,12 +99,11 @@ public final class ArcaneBeam extends Skill {
         return summaryHit(player, victims.size());
     }
 
-    private boolean breakBlock(Player player, Location location) {
+    private boolean breakBlock(Player player, Location location, boolean gen) {
 
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-        boolean prepare = gameManager.getState().equals(GameState.PREPARING);
 
-        if (!prepare) {
+        if (!gameManager.getState().equals(GameState.PREPARING)) {
             return false;
         }
 
@@ -107,19 +112,15 @@ public final class ArcaneBeam extends Skill {
 
         for (Vector vector : VECTORS) {
             Block block = location.clone().add(vector).getBlock();
-            if (!gameManager.getRunner().isAllowedLocation(block.getLocation())) {
+            if (!gameManager.getRunner().getTeamRegion(gameManager.getPlayer(player).getTeam()).contains(block.getLocation().toVector())) {
                 continue;
-            } else if (prepare) {
-                if (!gameManager.getRunner().getTeamRegion(gameManager.getPlayer(player).getTeam()).contains(block.getLocation().toVector())) {
-                    continue;
-                }
             }
             Material type = block.getType();
             if (BlockUtil.isStone(type)) {
-                breakBlock(block);
+                breakBlock(player, block);
             } else if (BlockUtil.isOre(type)) {
-                breakBlock(block);
-                if (prepare && energy) {
+                breakBlock(player, block);
+                if (energy && gen) {
                     Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> PLAYER().increaseEnergy(ENERGY));
                     energy = false;
                 }
@@ -130,9 +131,23 @@ public final class ArcaneBeam extends Skill {
         return flag;
     }
 
-    private static void breakBlock(Block block) {
+    private static void breakBlock(Player player, Block block) {
         if (BlockUtil.isDestroyable(block)) {
-            BlockUtil.breakNaturally(block);
+            if (GameListener.DROP_ITEMS.contains(block.getType())) {
+                BlockUtil.breakNaturally(block);
+            } else {
+                List<ItemStack> drops = Lists.newArrayList();
+                for (ItemStack itemStack : block.getDrops()) {
+                    HashMap<Integer, ItemStack> over = player.getInventory().addItem(itemStack);
+                    if (!over.isEmpty()) {
+                        drops.addAll(over.values());
+                    }
+                }
+                for (ItemStack itemStack : drops) {
+                    block.getWorld().dropItemNaturally(block.getLocation(), itemStack);
+                }
+                BlockUtil.breakNaturallyNoDrops(block);
+            }
         }
     }
 }
