@@ -77,7 +77,7 @@ public final class ShadowCloak extends DurationSkill {
         player.addPotionEffect(SPEED);
         player.addPotionEffect(RESISTANCE);
         summaryEffectSelf(player, INVISIBILITY, SPEED, RESISTANCE);
-        task.resetTimer();
+        task.reset();
 
         if (run) {
             task.fire();

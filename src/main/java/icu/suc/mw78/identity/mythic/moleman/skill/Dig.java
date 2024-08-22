@@ -52,7 +52,7 @@ public final class Dig extends Skill {
         }
 
         player.addPotionEffect(RESISTANCE);
-        task.resetTimer();
+        task.reset();
         task.updateVector();
 
         if (run) {
@@ -125,7 +125,7 @@ public final class Dig extends Skill {
                     });
         }
 
-        public void resetTimer() {
+        public void reset() {
             this.tick = 0;
         }
 

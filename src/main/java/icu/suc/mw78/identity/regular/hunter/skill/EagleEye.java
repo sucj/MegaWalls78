@@ -31,7 +31,7 @@ public final class EagleEye extends DurationSkill {
             run = true;
         }
 
-        task.resetTimer();
+        task.reset();
 
         if (run) {
             task.fire();

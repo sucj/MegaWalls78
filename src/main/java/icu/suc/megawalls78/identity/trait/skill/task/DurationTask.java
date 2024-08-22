@@ -10,7 +10,7 @@ public abstract class DurationTask extends AbstractTask {
     public DurationTask(Player player, int maxTick) {
         super(player);
         this.maxTick = maxTick - 1;
-        resetTimer();
+        reset();
     }
 
     @Override
@@ -23,7 +23,7 @@ public abstract class DurationTask extends AbstractTask {
         return super.shouldCancel() || tick >= maxTick;
     }
 
-    public void resetTimer() {
+    public void reset() {
         this.tick = -1;
     }
 

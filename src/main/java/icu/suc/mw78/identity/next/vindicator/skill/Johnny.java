@@ -1,6 +1,5 @@
 package icu.suc.mw78.identity.next.vindicator.skill;
 
-import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
@@ -40,7 +39,7 @@ public final class Johnny extends DurationSkill {
         }
 
         EFFECT_SKILL.play(player);
-        task.resetTimer();
+        task.reset();
 
         if (run) {
             task.fire();

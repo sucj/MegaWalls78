@@ -1,6 +1,5 @@
 package icu.suc.mw78.identity.next.vex.skill;
 
-import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.Effect;
@@ -34,7 +33,7 @@ public final class Flight extends DurationSkill {
         }
 
         EFFECT_SOUND.play(player);
-        task.resetTimer();
+        task.reset();
 
         if (run) {
             task.fire();

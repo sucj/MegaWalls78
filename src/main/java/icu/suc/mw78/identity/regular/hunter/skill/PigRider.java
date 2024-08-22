@@ -1,6 +1,5 @@
 package icu.suc.mw78.identity.regular.hunter.skill;
 
-import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -29,7 +28,7 @@ public final class PigRider extends DurationSkill {
             run = true;
         }
 
-        task.resetTimer();
+        task.reset();
 
         if (run) {
             task.fire();

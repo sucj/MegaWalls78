@@ -2,7 +2,6 @@ package icu.suc.mw78.identity.mythic.werewolf.skill;
 
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.AtomicDouble;
-import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
@@ -62,7 +61,7 @@ public final class Lycanthropy extends DurationSkill {
         EFFECT_START.play(player);
 
         potion(player);
-        task.resetTimer();
+        task.reset();
 
         if (run) {
             task.fire();

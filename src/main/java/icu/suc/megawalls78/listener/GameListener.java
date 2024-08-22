@@ -340,15 +340,8 @@ public class GameListener implements Listener {
         if (lootTable == null) {
             return;
         }
-        int size = inventory.getSize();
         for (ItemStack itemStack : lootTable.populateLoot(RandomUtil.RANDOM, new LootContext.Builder(block.getLocation()).build())) {
-            for (int i = 0; i < 3; i++) {
-                int slot = RandomUtil.RANDOM.nextInt(size);
-                if (inventory.getItem(slot) == null) {
-                    inventory.setItem(slot, itemStack);
-                    break;
-                }
-            }
+            InventoryUtil.addItemRandomSlot(inventory, itemStack);
         }
     }
 

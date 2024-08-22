@@ -110,6 +110,10 @@ import icu.suc.mw78.identity.regular.blaze.gathering.FossilFuels;
 import icu.suc.mw78.identity.regular.blaze.passive.CallOfTheBlazes;
 import icu.suc.mw78.identity.regular.blaze.passive.MeltingCore;
 import icu.suc.mw78.identity.regular.blaze.skill.ImmolatingBurst;
+import icu.suc.mw78.identity.todo.next.scatha.Scatha;
+import icu.suc.mw78.identity.todo.next.scatha.gathering.Burrowing;
+import icu.suc.mw78.identity.todo.next.scatha.passive.Grounded;
+import icu.suc.mw78.identity.todo.next.scatha.skill.Wormhole;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -139,7 +143,8 @@ public enum Identity {
     RENEGADE("renegade", NamedTextColor.YELLOW, Material.ARROW, Renegade.class, 100, Map.of(EnergyWay.MELEE_PER, 17F, EnergyWay.BOW_PER, 13F), Map.of(Trigger.SWORD, Rend.class, Trigger.BOW, Rend.class), List.of(GrapplingHook.class, Looting.class), AmmoBin.class),
     WARDEN("warden", NamedTextColor.DARK_AQUA, Material.ECHO_SHARD, Warden.class, 150, Map.of(EnergyWay.MELEE_WHEN, 10F, EnergyWay.BOW_WHEN, 5F), Map.of(Trigger.SWORD, SonicBoom.class, Trigger.BOW, SonicBoom.class, Trigger.AXE, SonicBoom.class), List.of(Sniffs.class, Anger.class), Spreads.class),
     VEX("vex", NamedTextColor.AQUA, Material.ELYTRA, Vex.class, 100, Map.of(EnergyWay.MELEE_PER, 20F), Map.of(Trigger.SWORD, Flight.class, Trigger.BOW, Flight.class), List.of(Shriek.class, Transience.class), SoulBound.class),
-    VINDICATOR("vindicator", NamedTextColor.DARK_GREEN, Material.IRON_AXE, Vindicator.class, 100, Map.of(EnergyWay.MELEE_PER, 20F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, Johnny.class, Trigger.BOW, Johnny.class, Trigger.AXE, Johnny.class), List.of(DoorBreaker.class, Tetanus.class), Lumberjack.class);
+    VINDICATOR("vindicator", NamedTextColor.DARK_GREEN, Material.IRON_AXE, Vindicator.class, 100, Map.of(EnergyWay.MELEE_PER, 20F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.SWORD, Johnny.class, Trigger.BOW, Johnny.class, Trigger.AXE, Johnny.class), List.of(DoorBreaker.class, Tetanus.class), Lumberjack.class),
+    SCATHA("scatha", NamedTextColor.DARK_BLUE, Material.DIAMOND_PICKAXE, Scatha.class, 100, Map.of(EnergyWay.MELEE_PER, 10F, EnergyWay.BOW_PER, 10F), Map.of(Trigger.PICKAXE, Wormhole.class), List.of(Grounded.class), Burrowing.class);
 
     private final String id;
     private final TextColor color;

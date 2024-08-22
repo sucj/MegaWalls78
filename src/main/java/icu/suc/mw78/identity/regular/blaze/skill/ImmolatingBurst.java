@@ -5,7 +5,6 @@ import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ParticleUtil;
-import net.minecraft.world.level.Explosion;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
@@ -35,7 +34,7 @@ public final class ImmolatingBurst extends Skill {
             run = true;
         }
 
-        task.resetTimer();
+        task.reset();
 
         if (run) {
             task.fire();
