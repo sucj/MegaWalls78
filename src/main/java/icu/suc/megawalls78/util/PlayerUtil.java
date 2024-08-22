@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.util;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.record.GameTeam;
@@ -10,6 +11,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.TranslationArgument;
 import net.kyori.adventure.text.event.HoverEvent;
+import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
@@ -18,9 +20,12 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class PlayerUtil {
+
+    private static final Map<UUID, Location> LAST_DEATH_LOCATIONS = Maps.newHashMap();
 
     public static boolean isValidAllies(Player origin, Entity entity) {
         if (entity instanceof Player target) {
@@ -82,5 +87,13 @@ public class PlayerUtil {
     public static void decreaseFoodLevel(Player player, int level) {
         int food = player.getFoodLevel();
         player.setFoodLevel(Math.max(food - level, 0));
+    }
+
+    public static Location getLastDeathLocation(Player player) {
+        return LAST_DEATH_LOCATIONS.get(player.getUniqueId());
+    }
+
+    public static void setLastDeathLocation(Player player, Location location) {
+        LAST_DEATH_LOCATIONS.put(player.getUniqueId(), location);
     }
 }

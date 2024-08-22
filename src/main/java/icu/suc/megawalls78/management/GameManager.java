@@ -220,7 +220,7 @@ public class GameManager {
     }
 
     public void addAssist(Player player, Player assist) {
-        getAssists(player).add(new ExpiringValue<>(assist.getUniqueId(), 10000L));
+        getAssists(player).add(new ExpiringValue<>(assist.getUniqueId(), 30000L));
     }
 
     public void saveAssists(Player player, UUID killerId, boolean wither) {

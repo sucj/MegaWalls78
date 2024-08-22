@@ -166,6 +166,7 @@ public class PlayerListener implements Listener {
                     gameManager.addSpectator(player);
                 }
             }
+            PlayerUtil.setLastDeathLocation(player, player.getLocation());
         } else {
             drops.clear();
         }
@@ -230,7 +231,12 @@ public class PlayerListener implements Listener {
                 ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), Component.empty(), ComponentUtil.DEFAULT_TIMES, player);
                 MegaWalls78.getInstance().getSkinManager().resetSkin(player);
             }
-            event.setRespawnLocation(gameManager.getMap().spectator());
+            Location deathLocation = PlayerUtil.getLastDeathLocation(player);
+            if (deathLocation == null) {
+                event.setRespawnLocation(gameManager.getMap().spectator());
+            } else {
+                event.setRespawnLocation(deathLocation);
+            }
             player.setGameMode(GameMode.SPECTATOR);
 //            player.setAllowFlight(true);
 //            player.setFlying(true);
@@ -338,48 +344,53 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         if (gameManager.isSpectator(player)) {
             event.setCancelled(true);
-        } else if (gameManager.inFighting()) {
-            switch (event.getAction()) {
-                case RIGHT_CLICK_BLOCK:
-                case RIGHT_CLICK_AIR: {
-                    if (ItemUtil.isMW78Item(event.getItem(), ItemUtil.ENDER_CHEST)) {
-                        InventoryUtil.openEnderChest(player);
-                        event.setCancelled(true);
-                        return;
-                    } else if (ItemUtil.isMW78Item(event.getItem(), ItemUtil.COMPASS) && gameManager.getRunner().isDm()) {
-                        GamePlayer gamePlayer = gameManager.getPlayer(player);
-                        if (gameManager.getTeamPlayersMap().size() > 1) {
-                            List<GameTeam> teams = gameManager.getTeams();
-                            int i = teams.indexOf(gamePlayer.getTracking()) + 1;
-                            GameTeam team = teams.get(i % teams.size());
-                            while (gameManager.isEliminated(team)) {
-                                team = teams.get((++i) % teams.size());
-                            }
-                            gamePlayer.setTracking(team);
-                        }
-                        event.setCancelled(true);
-                        return;
-                    }
-                }
-            }
-            gameManager.getPlayer(player).useSkill(player, event.getAction(), event.getMaterial());
-        } else if (gameManager.inWaiting()) {
-            switch (event.getAction()) {
-                case RIGHT_CLICK_BLOCK:
-                case RIGHT_CLICK_AIR: {
-                    int slot = player.getInventory().getHeldItemSlot();
-                    switch (slot) {
-                        case 0 -> IdentityGui.open(player, 1);
-                        case 1 -> SkinGui.open(player, 1);
-                        case 2 -> PatternGui.open(player, 1);
-                        case 3 -> TrimGui.open(player, 1);
-                        case 7 -> TeamGui.open(player, 1);
-                    }
-                }
-            }
-            event.setCancelled(true);
         } else {
-            event.setCancelled(true);
+            Action action = event.getAction();
+            if (gameManager.inFighting()) {
+                switch (action) {
+                    case RIGHT_CLICK_BLOCK:
+                    case RIGHT_CLICK_AIR: {
+                        if (ItemUtil.isMW78Item(event.getItem(), ItemUtil.ENDER_CHEST)) {
+                            InventoryUtil.openEnderChest(player);
+                            event.setCancelled(true);
+                            return;
+                        } else if (ItemUtil.isMW78Item(event.getItem(), ItemUtil.COMPASS) && gameManager.getRunner().isDm()) {
+                            GamePlayer gamePlayer = gameManager.getPlayer(player);
+                            if (gameManager.getTeamPlayersMap().size() > 1) {
+                                List<GameTeam> teams = gameManager.getTeams();
+                                int i = teams.indexOf(gamePlayer.getTracking()) + 1;
+                                GameTeam team = teams.get(i % teams.size());
+                                while (gameManager.isEliminated(team)) {
+                                    team = teams.get((++i) % teams.size());
+                                }
+                                gamePlayer.setTracking(team);
+                            }
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                }
+                if (player.isSneaking() || !BlockUtil.canInteract(event.getClickedBlock()) || action.equals(Action.LEFT_CLICK_BLOCK)) {
+                    gameManager.getPlayer(player).useSkill(player, action, event.getMaterial());
+                }
+            } else if (gameManager.inWaiting()) {
+                switch (action) {
+                    case RIGHT_CLICK_BLOCK:
+                    case RIGHT_CLICK_AIR: {
+                        int slot = player.getInventory().getHeldItemSlot();
+                        switch (slot) {
+                            case 0 -> IdentityGui.open(player, 1);
+                            case 1 -> SkinGui.open(player, 1);
+                            case 2 -> PatternGui.open(player, 1);
+                            case 3 -> TrimGui.open(player, 1);
+                            case 7 -> TeamGui.open(player, 1);
+                        }
+                    }
+                }
+                event.setCancelled(true);
+            } else {
+                event.setCancelled(true);
+            }
         }
     }
 
