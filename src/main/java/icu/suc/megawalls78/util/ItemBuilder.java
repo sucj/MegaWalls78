@@ -38,6 +38,7 @@ public class ItemBuilder {
     private Integer maxStackSize;
     private Component displayName;
     private Boolean unbreakable;
+    private Boolean hideToolTip;
 
     private List<Component> lore;
 
@@ -95,6 +96,11 @@ public class ItemBuilder {
 
     public ItemBuilder setUnbreakable(Boolean unbreakable) {
         this.unbreakable = unbreakable;
+        return this;
+    }
+
+    public ItemBuilder setHideToolTip(Boolean hideToolTip) {
+        this.hideToolTip = hideToolTip;
         return this;
     }
 
@@ -253,6 +259,9 @@ public class ItemBuilder {
         }
         if (unbreakable != null) {
             itemMeta.setUnbreakable(unbreakable);
+        }
+        if (hideToolTip != null) {
+            itemMeta.setHideTooltip(hideToolTip);
         }
 
         itemMeta.lore(lore);

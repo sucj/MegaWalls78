@@ -134,8 +134,8 @@ public class IdentityGui {
         return ItemBuilder.of(MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity().getMaterial())
                 .setDisplayName(Component.translatable("mw78.gui.identity", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.identity.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .clearAttributes()
+                .setHideToolTip(true)
                 .build();
     }
 }

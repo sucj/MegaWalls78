@@ -46,9 +46,7 @@ public class TeamGui {
         boolean flag = true;
         for (int i = 0; i < teams.size(); i++) {
             GameTeam team = teams.get(i);
-            DyeColor dye = Color.getDye(team.color());
-            Material material = dye == null ? Material.NAME_TAG : Material.valueOf(dye.name() + "_WOOL");
-            ItemBuilder itemBuilder = ItemBuilder.of(material)
+            ItemBuilder itemBuilder = ItemBuilder.of(material(team))
                     .setDisplayName(team.name().color(team.color()))
                     .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE);
             int players = playersMap.computeIfAbsent(team, k -> Sets.newHashSet()).size();
@@ -68,12 +66,14 @@ public class TeamGui {
                     .build());
         }
 
-        inventory.setItem(RANDOM_SLOT, ItemBuilder.of(Material.NETHER_STAR)
-                .setDisplayName(Component.translatable("mw78.gui.team.random"))
-                .setNameColor(NamedTextColor.WHITE)
-                .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
-                .setEnchantmentGlintOverride(false)
-                .build());
+        if (gameManager.getPlayer(player).getTeam() != null) {
+            inventory.setItem(RANDOM_SLOT, ItemBuilder.of(Material.NETHER_STAR)
+                    .setDisplayName(Component.translatable("mw78.gui.team.random"))
+                    .setNameColor(NamedTextColor.WHITE)
+                    .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                    .setEnchantmentGlintOverride(false)
+                    .build());
+        }
 
         if (page < MAX_PAGE) {
             inventory.setItem(NEXT_SLOT, ItemBuilder.of(Material.ARROW)
@@ -96,11 +96,13 @@ public class TeamGui {
                 }
             }
             case RANDOM_SLOT -> {
-                MegaWalls78.getInstance().getGameManager().getPlayer(player).setTeam(null);
-                player.getInventory().setItem(7, trigger(player));
-                player.sendMessage(Component.translatable("mw78.message.team.randomly", NamedTextColor.AQUA));
-                INVENTORIES.remove(inventory);
-                player.closeInventory();
+                if (item != null) {
+                    MegaWalls78.getInstance().getGameManager().getPlayer(player).setTeam(null);
+                    player.getInventory().setItem(7, trigger(player));
+                    player.sendMessage(Component.translatable("mw78.message.team.randomly", NamedTextColor.AQUA));
+                    INVENTORIES.remove(inventory);
+                    player.closeInventory();
+                }
             }
             case NEXT_SLOT -> {
                 if (item != null) {
@@ -133,12 +135,15 @@ public class TeamGui {
     }
 
     public static ItemStack trigger(Player player) {
-        GameTeam team = MegaWalls78.getInstance().getGameManager().getPlayer(player).getTeam();
-        DyeColor dye = team == null ? null : Color.getDye(team.color());
-        Material material = dye == null ? Material.NAME_TAG : Material.valueOf(dye.name() + "_WOOL");
-        return ItemBuilder.of(material)
+        return ItemBuilder.of(material(MegaWalls78.getInstance().getGameManager().getPlayer(player).getTeam()))
                 .setDisplayName(Component.translatable("mw78.gui.team", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.team.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                .setHideToolTip(true)
                 .build();
+    }
+
+    private static Material material(GameTeam team) {
+        DyeColor dye = team == null ? null : Color.getDye(team.color());
+        return dye == null ? Material.NAME_TAG : Material.valueOf(dye.name() + "_DYE");
     }
 }

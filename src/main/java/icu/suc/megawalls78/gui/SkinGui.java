@@ -101,7 +101,6 @@ public class SkinGui {
                     Skin skin = skins.getFirst();
                     skinManager.setPlayerSelectedSkin(player.getUniqueId(), identity, skin);
                     skinManager.applySkin(player, skin);
-                    player.getInventory().setItem(1, SkinGui.trigger(player));
                     player.sendMessage(Component.translatable("mw78.message.skin.reset", NamedTextColor.AQUA, skin.name().color(NamedTextColor.WHITE)));
                     INVENTORIES.remove(inventory);
                     player.closeInventory();
@@ -121,7 +120,6 @@ public class SkinGui {
                         if (!skinManager.getPlayerSelectedSkin(player.getUniqueId(), identity).equals(skin)) {
                             skinManager.setPlayerSelectedSkin(player.getUniqueId(), identity, skin);
                             skinManager.applySkin(player, skin);
-                            player.getInventory().setItem(1, SkinGui.trigger(player));
                             player.sendMessage(Component.translatable("mw78.message.skin", NamedTextColor.AQUA, skin.name().color(NamedTextColor.WHITE)));
                             INVENTORIES.remove(inventory);
                             player.closeInventory();
@@ -135,7 +133,7 @@ public class SkinGui {
     public static ItemStack trigger(Player player) {
         Skin skin = MegaWalls78.getInstance().getSkinManager().getPlayerSelectedSkin(player.getUniqueId(), MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity());
         return ItemBuilder.of(Material.PLAYER_HEAD)
-                .setDisplayName(Component.translatable("mw78.gui.skin", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.skin.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
+                .setDisplayName(Component.translatable("mw78.gui.skin", NamedTextColor.WHITE))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .setSkullSkin(skin.value(), skin.signature())
                 .build();

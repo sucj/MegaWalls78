@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 
@@ -46,7 +47,8 @@ public class TrimGui {
             TrimPattern trim = trims.get(i);
             ItemBuilder itemBuilder = itemBuilder(trim)
                     .setDisplayName(trim.description())
-                    .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+                    .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                    .addItemFlag(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
             if (flag && MegaWalls78.getInstance().getEquipmentManager().getTrim(player.getUniqueId()).equals(trim)) {
                 itemBuilder.addSuffix(Component.space().append(Component.translatable("mw78.gui.selected", NamedTextColor.GRAY))).setEnchantmentGlintOverride(true);
                 flag = false;
@@ -102,7 +104,6 @@ public class TrimGui {
                     }
                 }
                 equipmentManager.setTrim(uuid, trim);
-                player.getInventory().setItem(3, trigger(player));
                 player.sendMessage(Component.translatable("mw78.message.trim.randomly", NamedTextColor.AQUA, trim.description().color(NamedTextColor.WHITE)));
 
                 INVENTORIES.remove(inventory);
@@ -124,7 +125,6 @@ public class TrimGui {
                         UUID uuid = player.getUniqueId();
                         if (!equipmentManager.getTrim(uuid).equals(trim)) {
                             equipmentManager.setTrim(uuid, trim);
-                            player.getInventory().setItem(3, trigger(player));
                             player.sendMessage(Component.translatable("mw78.message.trim", NamedTextColor.AQUA, trim.description().color(NamedTextColor.WHITE)));
                             INVENTORIES.remove(inventory);
                             player.closeInventory();
@@ -138,8 +138,9 @@ public class TrimGui {
     public static ItemStack trigger(Player player) {
         TrimPattern trim = MegaWalls78.getInstance().getEquipmentManager().getTrim(player.getUniqueId());
         return itemBuilder(trim)
-                .setDisplayName(Component.translatable("mw78.gui.trim", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.trim.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
+                .setDisplayName(Component.translatable("mw78.gui.trim", NamedTextColor.WHITE))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+                .addItemFlag(ItemFlag.HIDE_ADDITIONAL_TOOLTIP)
                 .build();
     }
 

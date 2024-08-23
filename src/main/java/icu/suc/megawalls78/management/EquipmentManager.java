@@ -3,6 +3,7 @@ package icu.suc.megawalls78.management;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.util.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -36,52 +38,52 @@ public class EquipmentManager {
     );
     public static final Map<String, TrimPattern> TRIMS = Maps.newHashMap();
 
-    private final Map<UUID, Pattern> patternCache;
-    private final Map<UUID, Boolean> patternCached;
-    private final Map<UUID, TrimPattern> trimCache;
+    public static final Pattern PATTERN_NONE = new Pattern(DyeColor.BLACK, PatternType.BASE);
+
+    private final Map<UUID, Map<Identity, Pattern>> patternCache;
+    private final Map<UUID, Map<Identity, TrimPattern>> trimCache;
 
     public EquipmentManager() {
         this.patternCache = Maps.newHashMap();
-        this.patternCached = Maps.newHashMap();
         this.trimCache = Maps.newHashMap();
     }
 
-    public boolean isPatternCached(UUID player) {
-        return patternCached.getOrDefault(player, false);
-    }
-
     public Pattern getPattern(UUID player) {
-        if (isPatternCached(player)) {
-            return patternCache.get(player);
-        }
-        CompletableFuture<String> future = MegaWalls78.getInstance().getDatabaseManager().getPlayerPattern(player);
-        try {
-            String s = future.get();
-            if (s == null) {
-                patternCache.put(player, null);
-                patternCached.put(player, true);
-                return null;
+        Identity identity = MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity();
+        Map<Identity, Pattern> map = patternCache.computeIfAbsent(player, k -> Maps.newHashMap());
+        Pattern pattern = map.get(identity);
+        if (pattern == null) {
+            try {
+                String s = MegaWalls78.getInstance().getDatabaseManager().getPlayerPattern(player, identity).get();
+                if (s == null) {
+                    pattern = PATTERN_NONE;
+                } else {
+                    pattern = PATTERNS.get(s);
+                    if (pattern == null) {
+                        pattern = PATTERN_NONE;
+                    }
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
             }
-            Pattern pattern = PATTERNS.get(s);
-            patternCache.put(player, pattern);
-            patternCached.put(player, true);
-            return pattern;
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
         }
+        map.put(identity, pattern);
+        return pattern == PATTERN_NONE ? null : pattern;
     }
 
     public void setPattern(UUID player, Pattern pattern) {
-        patternCache.put(player, pattern);
-        patternCached.put(player, true);
-        MegaWalls78.getInstance().getDatabaseManager().setPlayerPattern(player, pattern);
+        Identity identity = MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity();
+        patternCache.computeIfAbsent(player, k -> Maps.newHashMap()).put(identity, pattern);
+        MegaWalls78.getInstance().getDatabaseManager().setPlayerPattern(player, identity, pattern);
     }
 
     public TrimPattern getTrim(UUID player) {
-        TrimPattern trim = trimCache.get(player);
+        Identity identity = MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity();
+        Map<Identity, TrimPattern> map = trimCache.computeIfAbsent(player, k -> Maps.newHashMap());
+        TrimPattern trim = map.get(identity);
         if (trim == null) {
             try {
-                String s = MegaWalls78.getInstance().getDatabaseManager().getPlayerTrim(player).get();
+                String s = MegaWalls78.getInstance().getDatabaseManager().getPlayerTrim(player, identity).get();
                 if (s == null) {
                     trim = TrimPattern.SHAPER;
                 } else {
@@ -94,19 +96,19 @@ public class EquipmentManager {
                 throw new RuntimeException(e);
             }
         }
-        trimCache.put(player, trim);
+        map.put(identity, trim);
         return trim;
     }
 
     public void setTrim(UUID player, TrimPattern trim) {
-        trimCache.put(player, trim);
-        MegaWalls78.getInstance().getDatabaseManager().setPlayerTrim(player, trim);
+        Identity identity = MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity();
+        trimCache.computeIfAbsent(player, k -> Maps.newHashMap()).put(identity, trim);
+        MegaWalls78.getInstance().getDatabaseManager().setPlayerTrim(player, identity, trim);
     }
 
     public void clearCache(UUID player) {
         trimCache.remove(player);
         patternCache.remove(player);
-        patternCached.remove(player);
     }
 
     public static void decorate(ItemStack itemStack, GamePlayer gamePlayer) {

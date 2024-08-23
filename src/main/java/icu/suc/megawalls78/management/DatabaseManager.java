@@ -17,8 +17,8 @@ public class DatabaseManager {
     private static final String RANK_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_rank (uuid CHAR(36) NOT NULL PRIMARY KEY, identity VARCHAR(255) DEFAULT NULL);";
     private static final String ID_COLOR_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_color (uuid CHAR(36) NOT NULL, identity VARCHAR(255) NOT NULL, color VARCHAR(255) DEFAULT NULL, PRIMARY KEY (uuid, identity));";
     private static final String ID_SKIN_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_skin (uuid CHAR(36) NOT NULL, identity VARCHAR(255) NOT NULL, skin VARCHAR(255) DEFAULT NULL, PRIMARY KEY (uuid, identity));";
-    private static final String PATTERN_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern (uuid CHAR(36) NOT NULL PRIMARY KEY, pattern VARCHAR(255) DEFAULT NULL);";
-    private static final String TRIM_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trim (uuid CHAR(36) NOT NULL PRIMARY KEY, trim VARCHAR(255) DEFAULT NULL);";
+    private static final String PATTERN_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern (uuid CHAR(36) NOT NULL, identity VARCHAR(255) NOT NULL, pattern VARCHAR(255) DEFAULT NULL, PRIMARY KEY (uuid, identity));";
+    private static final String TRIM_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trim (uuid CHAR(36) NOT NULL, identity VARCHAR(255) NOT NULL, trim VARCHAR(255) DEFAULT NULL, PRIMARY KEY (uuid, identity));";
     private static final String TRIGGER_CREATE = "CREATE TABLE IF NOT EXISTS " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trigger (uuid CHAR(36) NOT NULL, `trigger` VARCHAR(255) NOT NULL, sneak TINYINT(255) DEFAULT NULL, PRIMARY KEY (uuid, `trigger`));";
 
     private static final String IDENTITY_GET = "SELECT identity FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_identity WHERE uuid = ?;";
@@ -27,11 +27,11 @@ public class DatabaseManager {
     private static final String ID_COLOR_GET = "SELECT color FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_color WHERE uuid = ? AND identity = ?;";
     private static final String ID_SKIN_GET = "SELECT skin FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_skin WHERE uuid = ? AND identity = ?;";
     private static final String ID_SKIN_SET = "INSERT INTO " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_id_skin(uuid, identity, skin) VALUES(?, ?, ?) AS new ON DUPLICATE KEY UPDATE skin = new.skin;";
-    private static final String PATTERN_GET = "SELECT pattern FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern WHERE uuid = ?;";
-    private static final String PATTERN_SET = "INSERT INTO " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern(uuid, pattern) VALUES(?, ?) AS new ON DUPLICATE KEY UPDATE pattern = new.pattern;";
-    private static final String PATTERN_SET_NULL = "DELETE FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern WHERE uuid = ?;";
-    private static final String TRIM_GET = "SELECT trim FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trim WHERE uuid = ?;";
-    private static final String TRIM_SET = "INSERT INTO " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trim(uuid, trim) VALUES(?, ?) AS new ON DUPLICATE KEY UPDATE trim = new.trim;";
+    private static final String PATTERN_GET = "SELECT pattern FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern WHERE uuid = ? AND identity = ?;";
+    private static final String PATTERN_SET = "INSERT INTO " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern(uuid, identity, pattern) VALUES(?, ?, ?) AS new ON DUPLICATE KEY UPDATE pattern = new.pattern;";
+    private static final String PATTERN_SET_NULL = "DELETE FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_pattern WHERE uuid = ? AND identity = ?;";
+    private static final String TRIM_GET = "SELECT trim FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trim WHERE uuid = ? AND identity = ?;";
+    private static final String TRIM_SET = "INSERT INTO " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trim(uuid, identity, trim) VALUES(?, ?, ?) AS new ON DUPLICATE KEY UPDATE trim = new.trim;";
     private static final String TRIGGER_GET = "SELECT sneak FROM " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trigger WHERE uuid = ? AND `trigger` = ?;";
     private static final String TRIGGER_SET = "INSERT INTO " + MegaWalls78.getInstance().getConfigManager().database + ".mw78_trigger(uuid, `trigger`, sneak) VALUES(?, ?, ?) AS new ON DUPLICATE KEY UPDATE sneak = new.sneak;";
 
@@ -173,11 +173,12 @@ public class DatabaseManager {
         });
     }
 
-    public CompletableFuture<String> getPlayerPattern(UUID player) {
+    public CompletableFuture<String> getPlayerPattern(UUID player, Identity identity) {
         return CompletableFuture.supplyAsync(() -> {
             String pattern = null;
             try (PreparedStatement statement = connection.prepareStatement(PATTERN_GET)) {
                 statement.setString(1, player.toString());
+                statement.setString(2, identity.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
                         pattern = resultSet.getString(PATTERN_LABEL);
@@ -190,16 +191,17 @@ public class DatabaseManager {
         });
     }
 
-    public void setPlayerPattern(UUID player, Pattern pattern) {
+    public void setPlayerPattern(UUID player, Identity identity, Pattern pattern) {
         CompletableFuture.supplyAsync(() -> {
             String sql = PATTERN_SET;
-            if (pattern == null) {
+            if (pattern == EquipmentManager.PATTERN_NONE) {
                 sql = PATTERN_SET_NULL;
             }
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, player.toString());
+                statement.setString(2, identity.getId());
                 if (pattern != null) {
-                    statement.setString(2, pattern.getPattern().key().value());
+                    statement.setString(3, pattern.getPattern().key().value());
                 }
                 statement.executeUpdate();
             } catch (SQLException e) {
@@ -209,10 +211,11 @@ public class DatabaseManager {
         });
     }
 
-    public CompletableFuture<String> getPlayerTrim(UUID player) {
+    public CompletableFuture<String> getPlayerTrim(UUID player, Identity identity) {
         return CompletableFuture.supplyAsync(() -> {
             try (PreparedStatement statement = connection.prepareStatement(TRIM_GET)) {
                 statement.setString(1, player.toString());
+                statement.setString(2, identity.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
                         return resultSet.getString(TRIM_LABEL);
@@ -225,11 +228,12 @@ public class DatabaseManager {
         });
     }
 
-    public void setPlayerTrim(UUID player, TrimPattern trim) {
+    public void setPlayerTrim(UUID player, Identity identity, TrimPattern trim) {
         CompletableFuture.supplyAsync(() -> {
             try (PreparedStatement statement = connection.prepareStatement(TRIM_SET)) {
                 statement.setString(1, player.toString());
-                statement.setString(2, trim.key().value());
+                statement.setString(2, identity.getId());
+                statement.setString(3, trim.key().value());
                 statement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);

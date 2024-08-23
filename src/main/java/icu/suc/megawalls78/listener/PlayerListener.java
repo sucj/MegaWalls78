@@ -51,9 +51,10 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         if (gameManager.inWaiting()) {
             player.getInventory().setItem(0, IdentityGui.trigger(player));
-            player.getInventory().setItem(1, SkinGui.trigger(player));
-            player.getInventory().setItem(2, PatternGui.trigger(player));
-            player.getInventory().setItem(3, TrimGui.trigger(player));
+            player.getInventory().setItem(1, CosmeticsGui.trigger());
+//            player.getInventory().setItem(1, SkinGui.trigger(player));
+//            player.getInventory().setItem(2, PatternGui.trigger(player));
+//            player.getInventory().setItem(3, TrimGui.trigger(player));
             player.getInventory().setItem(7, TeamGui.trigger(player));
             MegaWalls78.getInstance().getSkinManager().applySkin(player);
             event.joinMessage(Component.translatable("multiplayer.player.joined", player.teamDisplayName().color(LP.getNameColor(player.getUniqueId())))
@@ -380,9 +381,10 @@ public class PlayerListener implements Listener {
                         int slot = player.getInventory().getHeldItemSlot();
                         switch (slot) {
                             case 0 -> IdentityGui.open(player, 1);
-                            case 1 -> SkinGui.open(player, 1);
-                            case 2 -> PatternGui.open(player, 1);
-                            case 3 -> TrimGui.open(player, 1);
+                            case 1 -> CosmeticsGui.open(player);
+//                            case 1 -> SkinGui.open(player, 1);
+//                            case 2 -> PatternGui.open(player, 1);
+//                            case 3 -> TrimGui.open(player, 1);
                             case 7 -> TeamGui.open(player, 1);
                         }
                     }

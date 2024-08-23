@@ -120,6 +120,8 @@ public class InventoryListener implements Listener {
                 }
                 if (IdentityGui.INVENTORIES.containsKey(inventory)) {
                     IdentityGui.handle(player, inventory, event.getSlot());
+                } else if (CosmeticsGui.INVENTORIES.contains(inventory)) {
+                    CosmeticsGui.handle(player, event.getSlot());
                 } else if (SkinGui.INVENTORIES.containsKey(inventory)) {
                     SkinGui.handle(player, inventory, event.getSlot());
                 } else if (TeamGui.INVENTORIES.containsKey(inventory)) {
@@ -174,6 +176,7 @@ public class InventoryListener implements Listener {
             if (inventory instanceof CraftInventoryCustom && title.equals(InventoryUtil.ENDERCHEST_TITLE) || title.equals(InventoryUtil.TEAMCHEST_TITLE)) {
                 player.playSound(player, Sound.BLOCK_ENDER_CHEST_CLOSE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             } else {
+                CosmeticsGui.INVENTORIES.remove(inventory);
                 IdentityGui.INVENTORIES.remove(inventory);
                 SkinGui.INVENTORIES.remove(inventory);
                 TeamGui.INVENTORIES.remove(inventory);

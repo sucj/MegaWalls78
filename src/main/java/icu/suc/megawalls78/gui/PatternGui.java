@@ -95,7 +95,7 @@ public class PatternGui {
             }
             case RANDOM_SLOT -> {
                 List<Pattern> patterns = Lists.newArrayList(EquipmentManager.PATTERNS.values());
-                patterns.addFirst(null);
+                patterns.addFirst(EquipmentManager.PATTERN_NONE);
                 int i = RandomUtil.RANDOM.nextInt(patterns.size());
                 Pattern pattern = patterns.get(i);
                 EquipmentManager equipmentManager = MegaWalls78.getInstance().getEquipmentManager();
@@ -108,7 +108,6 @@ public class PatternGui {
                     }
                 }
                 equipmentManager.setPattern(uuid, pattern);
-                player.getInventory().setItem(2, trigger(player));
                 player.sendMessage(Component.translatable("mw78.message.pattern.randomly", NamedTextColor.AQUA, name(pattern).color(NamedTextColor.WHITE)));
                 INVENTORIES.remove(inventory);
                 player.closeInventory();
@@ -124,13 +123,12 @@ public class PatternGui {
                     int index = Arrays.binarySearch(ID_SLOT, slot);
                     if (index >= 0) {
                         List<Pattern> patterns = Lists.newArrayList(EquipmentManager.PATTERNS.values());
-                        patterns.addFirst(null);
+                        patterns.addFirst(EquipmentManager.PATTERN_NONE);
                         Pattern pattern = patterns.get((INVENTORIES.get(inventory) - 1) * SLOT_COUNT + index);
                         EquipmentManager equipmentManager = MegaWalls78.getInstance().getEquipmentManager();
                         UUID uuid = player.getUniqueId();
                         if (!Objects.equals(equipmentManager.getPattern(uuid), pattern)) {
                             equipmentManager.setPattern(uuid, pattern);
-                            player.getInventory().setItem(2, trigger(player));
                             player.sendMessage(Component.translatable("mw78.message.pattern", NamedTextColor.AQUA, name(pattern).color(NamedTextColor.WHITE)));
                             INVENTORIES.remove(inventory);
                             player.closeInventory();
@@ -143,7 +141,7 @@ public class PatternGui {
 
     public static ItemStack trigger(Player player) {
         ItemBuilder itemBuilder = ItemBuilder.of(Material.WHITE_BANNER)
-                .setDisplayName(Component.translatable("mw78.gui.pattern", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.pattern.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
+                .setDisplayName(Component.translatable("mw78.gui.pattern", NamedTextColor.WHITE))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE);
         Pattern pattern = MegaWalls78.getInstance().getEquipmentManager().getPattern(player.getUniqueId());
         if (pattern != null) {
