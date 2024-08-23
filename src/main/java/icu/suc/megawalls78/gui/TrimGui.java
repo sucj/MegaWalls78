@@ -25,7 +25,7 @@ public class TrimGui {
 
     private static final int SLOT_COUNT = 21;
     private static final int MIN_PAGE = 1;
-    private static final int MAX_PAGE = EquipmentManager.TRIMS.values().size() / SLOT_COUNT + 1;
+    private static final int MAX_PAGE = EquipmentManager.TRIMS.values().size() / SLOT_COUNT + EquipmentManager.TRIMS.values().size() % SLOT_COUNT == 0 ? 0 : 1;
     private static final int[] ID_SLOT = new int[]{
             10, 11, 12, 13, 14, 15, 16,
             19, 20, 21, 22, 23, 24, 25,

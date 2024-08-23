@@ -27,7 +27,8 @@ public class SurfaceCommand implements CommandExecutor {
             if (gameManager.getState().equals(GameState.OPENING) || gameManager.getState().equals(GameState.PREPARING)) {
                 player.teleport(RandomUtil.getRandomSpawn(gameManager.getPlayer(player).getTeam().spawn()));
             }
+            return true;
         }
-        return true;
+        return false;
     }
 }

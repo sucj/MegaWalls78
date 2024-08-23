@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.record.GameTeam;
+import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.Color;
 import icu.suc.megawalls78.util.ItemBuilder;
@@ -25,7 +26,7 @@ public class TeamGui {
 
     private static final int SLOT_COUNT = 7;
     private static final int MIN_PAGE = 1;
-    private static final int MAX_PAGE = MegaWalls78.getInstance().getGameManager().getTeams().size() / SLOT_COUNT + 1;
+    private static final int MAX_PAGE = MegaWalls78.getInstance().getGameManager().getTeams().size() / SLOT_COUNT + MegaWalls78.getInstance().getGameManager().getTeams().size() % SLOT_COUNT == 0 ? 0 : 1;
     private static final int[] ID_SLOT = new int[]{
             10, 11, 12, 13, 14, 15, 16,
     };
@@ -95,32 +96,9 @@ public class TeamGui {
                 }
             }
             case RANDOM_SLOT -> {
-                GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-                List<GameTeam> teams = gameManager.getTeams();
-                GameTeam team = RandomUtil.getRandomEntry(teams);
-                int i = teams.indexOf(team);
-                Collection<GamePlayer> players = gameManager.getPlayers().values();
-                double max = Math.ceil((double) players.size() / teams.size());
-                GamePlayer gamePlayer = gameManager.getPlayer(player);
-                while (Objects.equals(team, gamePlayer.getTeam())) {
-                    team = teams.get(i);
-                    while (gameManager.getTeamPlayersMap().computeIfAbsent(team, k -> Sets.newHashSet()).size() >= max) {
-                        i++;
-                        if (i == teams.size()) {
-                            i = 0;
-                        }
-                        team = teams.get(i);
-                    }
-                    i++;
-                    if (i == teams.size()) {
-                        i = 0;
-                    }
-                }
-                if (team != null) {
-                    gamePlayer.setTeam(team);
-                    player.getInventory().setItem(7, trigger(player));
-                    player.sendMessage(Component.translatable("mw78.message.team.randomly", NamedTextColor.AQUA, team.name().color(team.color())));
-                }
+                MegaWalls78.getInstance().getGameManager().getPlayer(player).setTeam(null);
+                player.getInventory().setItem(7, trigger(player));
+                player.sendMessage(Component.translatable("mw78.message.team.randomly", NamedTextColor.AQUA));
                 INVENTORIES.remove(inventory);
                 player.closeInventory();
             }

@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.gui.*;
 import icu.suc.megawalls78.management.GameManager;
+import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.ItemUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -157,7 +158,7 @@ public class InventoryListener implements Listener {
     public void onInventoryOpen(InventoryOpenEvent event) {
         if (event.getPlayer() instanceof Player player) {
             Inventory inventory = event.getInventory();
-            if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() == null) {
+            if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() == null || event.getView().title().equals(InventoryUtil.TEAMCHEST_TITLE)) {
                 player.playSound(player, Sound.BLOCK_ENDER_CHEST_OPEN, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
         }
@@ -167,7 +168,7 @@ public class InventoryListener implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         if (event.getPlayer() instanceof Player player) {
             Inventory inventory = event.getInventory();
-            if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() == null) {
+            if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() == null || event.getView().title().equals(InventoryUtil.TEAMCHEST_TITLE)) {
                 player.playSound(player, Sound.BLOCK_ENDER_CHEST_CLOSE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             } else {
                 IdentityGui.INVENTORIES.remove(inventory);

@@ -37,7 +37,7 @@ public class SkinGui {
     public static void open(Player player, int page) {
         Identity identity = MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity();
         List<Skin> skins = MegaWalls78.getInstance().getSkinManager().getSkins(identity);
-        int MAX_PAGE = skins.size() / SLOT_COUNT + 1;
+        int MAX_PAGE = skins.size() / SLOT_COUNT + skins.size() % SLOT_COUNT == 0 ? 0 : 1;
 
         Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.skin").append(Component.space()).append(Component.translatable("mw78.gui.skin.title", Component.text(page), Component.text(MAX_PAGE))));
 

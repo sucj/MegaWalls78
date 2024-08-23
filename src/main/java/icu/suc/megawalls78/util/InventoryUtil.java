@@ -17,6 +17,7 @@ import java.util.*;
 public class InventoryUtil {
 
     private static final Component ENDERCHEST_TITLE = Component.translatable("container.enderchest");
+    public static final net.kyori.adventure.text.Component TEAMCHEST_TITLE = net.kyori.adventure.text.Component.translatable("mw78.gui.team_chest");
 
     public static OptionalInt openEnderChest(Player player) {
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();

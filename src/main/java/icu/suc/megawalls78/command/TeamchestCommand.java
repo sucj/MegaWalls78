@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class SuicideCommand implements CommandExecutor {
+public class TeamchestCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
@@ -20,10 +20,7 @@ public class SuicideCommand implements CommandExecutor {
             if (gameManager.isSpectator(player)) {
                 return true;
             }
-            if (gameManager.getRunner().isDm()) {
-                return true;
-            }
-            player.setHealth(0);
+            player.openInventory(gameManager.teamChest(gameManager.getPlayer(player).getTeam()));
             return true;
         }
         return false;

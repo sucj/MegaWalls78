@@ -84,6 +84,9 @@ bukkitPluginYaml {
     register("mw78.trigger") {
       default = Permission.Default.TRUE
     }
+    register("mw78.teamchest") {
+      default = Permission.Default.TRUE
+    }
   }
   commands {
     register("id") {
@@ -123,6 +126,11 @@ bukkitPluginYaml {
     register("trigger") {
       permission = "mw78.trigger"
       usage = "/trigger"
+    }
+    register("teamchest") {
+      permission = "mw78.teamchest"
+      aliases = listOf("tchest")
+      usage = "/teamchest"
     }
   }
 }

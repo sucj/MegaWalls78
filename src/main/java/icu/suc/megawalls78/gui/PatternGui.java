@@ -3,6 +3,7 @@ package icu.suc.megawalls78.gui;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.management.EquipmentManager;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.RandomUtil;
@@ -24,7 +25,7 @@ public class PatternGui {
 
     private static final int SLOT_COUNT = 21;
     private static final int MIN_PAGE = 1;
-    private static final int MAX_PAGE = EquipmentManager.PATTERNS.values().size() / SLOT_COUNT + 1;
+    private static final int MAX_PAGE = EquipmentManager.PATTERNS.values().size() / SLOT_COUNT + EquipmentManager.PATTERNS.values().size() % SLOT_COUNT == 0 ? 0 : 1;
     private static final int[] ID_SLOT = new int[]{
             10, 11, 12, 13, 14, 15, 16,
             19, 20, 21, 22, 23, 24, 25,

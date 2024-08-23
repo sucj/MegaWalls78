@@ -200,7 +200,14 @@ public class GamePlayer {
     }
 
     public void setTeam(GameTeam team) {
-        MegaWalls78.getInstance().getGameManager().getTeamPlayersMap().computeIfAbsent(team, k -> Sets.newHashSet()).add(this);
+        Map<GameTeam, Set<GamePlayer>> teamPlayersMap = MegaWalls78.getInstance().getGameManager().getTeamPlayersMap();
+        if (team == null) {
+            for (Set<GamePlayer> players : teamPlayersMap.values()) {
+                players.remove(this);
+            }
+        } else {
+            teamPlayersMap.computeIfAbsent(team, k -> Sets.newHashSet()).add(this);
+        }
         this.team = team;
     }
 

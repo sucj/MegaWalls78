@@ -492,6 +492,14 @@ public class GameRunner implements Runnable {
                     if (mvp != null || mincer != null || rusher != null || resister != null) {
                         ComponentUtil.sendMessage(Component.empty(), Bukkit.getOnlinePlayers());
                     }
+
+                    try {
+                        Thread.sleep(10000L);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    Bukkit.shutdown();
                 });
             }
         }

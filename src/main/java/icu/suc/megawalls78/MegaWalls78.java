@@ -76,6 +76,7 @@ public final class MegaWalls78 extends JavaPlugin {
         Objects.requireNonNull(getCommand("suicide")).setExecutor(new SuicideCommand());
         Objects.requireNonNull(getCommand("surface")).setExecutor(new SurfaceCommand());
         Objects.requireNonNull(getCommand("trigger")).setExecutor(new TriggerCommand());
+        Objects.requireNonNull(getCommand("teamchest")).setExecutor(new TeamchestCommand());
     }
 
     private void registerListeners() {

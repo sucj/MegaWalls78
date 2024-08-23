@@ -13,6 +13,7 @@ import icu.suc.megawalls78.game.record.GameMap;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.ExpiringValue;
+import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.Redis;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -24,6 +25,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
+import org.bukkit.inventory.Inventory;
 import redis.clients.jedis.Jedis;
 
 import java.util.*;
@@ -46,6 +48,7 @@ public class GameManager {
     private final Map<GameTeam, Wither> witherMap;
     private final Map<GameTeam, BossBar> witherBossBars;
     private final Map<GameTeam, Boolean> teamEliminateMap;
+    private final Map<GameTeam, Inventory> teamChests;
 
     private final GameRunner runner;
 
@@ -58,6 +61,7 @@ public class GameManager {
         this.witherMap = Maps.newHashMap();
         this.witherBossBars = Maps.newHashMap();
         this.teamEliminateMap = Maps.newHashMap();
+        this.teamChests = Maps.newHashMap();
         this.runner = new GameRunner();
         Bukkit.getScheduler().runTaskTimer(MegaWalls78.getInstance(), runner, 0L, 1L);
     }
@@ -168,7 +172,13 @@ public class GameManager {
 
     public Map<GameTeam, Set<GamePlayer>> getTeamPlayersMap() {
         for (GameTeam team : teamPlayersMap.keySet()) {
-            teamPlayersMap.get(team).removeIf(gamePlayer -> !gamePlayer.getTeam().equals(team));
+            teamPlayersMap.get(team).removeIf(gamePlayer -> {
+                GameTeam gameTeam = gamePlayer.getTeam();
+                if (gameTeam == null) {
+                    return true;
+                }
+                return !gameTeam.equals(team);
+            });
         }
         return teamPlayersMap;
     }
@@ -324,5 +334,9 @@ public class GameManager {
             return Integer.compare(p2.getRight(), p1.getRight());
         });
         return list;
+    }
+
+    public Inventory teamChest(GameTeam team) {
+        return teamChests.computeIfAbsent(team, k -> Bukkit.createInventory(null, 54, InventoryUtil.TEAMCHEST_TITLE));
     }
 }
