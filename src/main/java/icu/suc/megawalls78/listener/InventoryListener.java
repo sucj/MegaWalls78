@@ -7,9 +7,11 @@ import icu.suc.megawalls78.gui.*;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.ItemUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.craftbukkit.inventory.CraftInventoryCustom;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -157,8 +159,8 @@ public class InventoryListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryOpen(InventoryOpenEvent event) {
         if (event.getPlayer() instanceof Player player) {
-            Inventory inventory = event.getInventory();
-            if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() == null || event.getView().title().equals(InventoryUtil.TEAMCHEST_TITLE)) {
+            Component title = event.getView().title();
+            if (event.getInventory() instanceof CraftInventoryCustom && title.equals(InventoryUtil.ENDERCHEST_TITLE) || title.equals(InventoryUtil.TEAMCHEST_TITLE)) {
                 player.playSound(player, Sound.BLOCK_ENDER_CHEST_OPEN, SoundCategory.BLOCKS, 1.0F, 1.0F);
             }
         }
@@ -168,7 +170,8 @@ public class InventoryListener implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         if (event.getPlayer() instanceof Player player) {
             Inventory inventory = event.getInventory();
-            if (inventory.getType().equals(InventoryType.ENDER_CHEST) && inventory.getLocation() == null || event.getView().title().equals(InventoryUtil.TEAMCHEST_TITLE)) {
+            Component title = event.getView().title();
+            if (inventory instanceof CraftInventoryCustom && title.equals(InventoryUtil.ENDERCHEST_TITLE) || title.equals(InventoryUtil.TEAMCHEST_TITLE)) {
                 player.playSound(player, Sound.BLOCK_ENDER_CHEST_CLOSE, SoundCategory.BLOCKS, 1.0F, 1.0F);
             } else {
                 IdentityGui.INVENTORIES.remove(inventory);

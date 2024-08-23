@@ -1,11 +1,9 @@
 package icu.suc.megawalls78.util;
 
 import com.google.common.collect.Lists;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.inventory.ChestMenu;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import com.google.common.collect.Maps;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -16,14 +14,13 @@ import java.util.*;
 
 public class InventoryUtil {
 
-    private static final Component ENDERCHEST_TITLE = Component.translatable("container.enderchest");
-    public static final net.kyori.adventure.text.Component TEAMCHEST_TITLE = net.kyori.adventure.text.Component.translatable("mw78.gui.team_chest");
+    public static final Component ENDERCHEST_TITLE = Component.translatable("container.enderchest");
+    public static final Component TEAMCHEST_TITLE = Component.translatable("mw78.gui.team_chest");
 
-    public static OptionalInt openEnderChest(Player player) {
-        ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
-        return serverPlayer.openMenu(
-                new SimpleMenuProvider((i, inventory, playerx) -> ChestMenu.threeRows(i, inventory, serverPlayer.getEnderChestInventory()), ENDERCHEST_TITLE)
-        );
+    private static final Map<UUID, Inventory> ENDERCHESTS = Maps.newHashMap();
+
+    public static void openEnderChest(Player player) {
+        player.openInventory(ENDERCHESTS.computeIfAbsent(player.getUniqueId(), k -> Bukkit.createInventory(null, 45, ENDERCHEST_TITLE)));
     }
 
     public static List<ItemStack> addItem(Inventory inventory, Collection<ItemStack> itemStacks) {
