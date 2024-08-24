@@ -226,8 +226,16 @@ public enum Identity {
         return energy;
     }
 
+    public Map<EnergyWay, Float> getEnergyWay() {
+        return energyWay;
+    }
+
     public float getEnergyByWay(EnergyWay way) {
         return this.energyWay.getOrDefault(way, 0.0F);
+    }
+
+    public Map<Trigger, Class<? extends Skill>> getSkillClasses() {
+        return skillClasses;
     }
 
     public Map<Skill.Trigger, Skill> getSkills(GamePlayer player, List<Passive> passives) {
@@ -260,6 +268,10 @@ public enum Identity {
         }
     }
 
+    public List<Class<? extends Passive>> getPassiveClasses() {
+        return passiveClasses;
+    }
+
     public List<Passive> getPassives(GamePlayer player) {
         try {
             List<Passive> passives = Lists.newArrayList();
@@ -272,6 +284,10 @@ public enum Identity {
                  NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public Class<? extends Gathering> getGatheringClass() {
+        return gatheringClass;
     }
 
     public Gathering getGathering(GamePlayer player, List<Passive> passives) {

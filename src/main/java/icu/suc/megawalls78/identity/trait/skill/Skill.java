@@ -89,6 +89,7 @@ public abstract class Skill extends Trait implements IActionbar {
         WARPED_FUNGUS_ON_A_STICK("warped_fungus_on_a_stick", Action.RIGHT, Material.WARPED_FUNGUS_ON_A_STICK);
 
         private final String id;
+        private final Component name;
         private final Action action;
         private final Predicate<Material> filter;
 
@@ -102,12 +103,21 @@ public abstract class Skill extends Trait implements IActionbar {
 
         Trigger(String id, Action action, Predicate<Material> filter) {
             this.id = id;
+            this.name = Component.translatable("mw78.trigger." + id);
             this.action = action;
             this.filter = filter;
         }
 
         public String getId() {
             return id;
+        }
+
+        public Component getName() {
+            return name;
+        }
+
+        public Action getAction() {
+            return action;
         }
 
         private boolean isTriggered(org.bukkit.event.block.Action action, Material material) {
@@ -123,14 +133,20 @@ public abstract class Skill extends Trait implements IActionbar {
             return null;
         }
 
-        enum Action {
-            LEFT(org.bukkit.event.block.Action.LEFT_CLICK_AIR, org.bukkit.event.block.Action.LEFT_CLICK_BLOCK),
-            RIGHT(org.bukkit.event.block.Action.RIGHT_CLICK_AIR, org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK);
+        public enum Action {
+            LEFT(Component.keybind("key.attack"), org.bukkit.event.block.Action.LEFT_CLICK_AIR, org.bukkit.event.block.Action.LEFT_CLICK_BLOCK),
+            RIGHT(Component.keybind("key.use"), org.bukkit.event.block.Action.RIGHT_CLICK_AIR, org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK);
 
+            private final Component name;
             private final Set<org.bukkit.event.block.Action> actions;
 
-            Action(org.bukkit.event.block.Action... actions) {
+            Action(Component name, org.bukkit.event.block.Action... actions) {
+                this.name = name;
                 this.actions = Sets.newHashSet(actions);
+            }
+
+            public Component getName() {
+                return name;
             }
 
             private static Action getAction(org.bukkit.event.block.Action action) {

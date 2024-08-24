@@ -22,15 +22,6 @@ public class TriggerGui { // TODO k
 
     private static final Component TRUE = Component.translatable("mw78.gui.trigger.true", NamedTextColor.GREEN);
     private static final Component FALSE = Component.translatable("mw78.gui.trigger.false", NamedTextColor.RED);
-    private static final Component SWORD = Component.translatable("mw78.gui.trigger.sword");
-    private static final Component BOW = Component.translatable("mw78.gui.trigger.bow");
-    private static final Component CROSSBOW = Component.translatable("mw78.gui.trigger.crossbow");
-    private static final Component SHOVEL = Component.translatable("mw78.gui.trigger.shovel");
-    private static final Component PICKAXE = Component.translatable("mw78.gui.trigger.pickaxe");
-    private static final Component AXE = Component.translatable("mw78.gui.trigger.axe");
-    private static final Component HOE = Component.translatable("mw78.gui.trigger.hoe");
-    private static final Component CARROT_ON_A_STICK = Component.translatable("mw78.gui.trigger.carrot_on_a_stick");
-    private static final Component WARPED_FUNGUS_ON_A_STICK = Component.translatable("mw78.gui.trigger.warped_fungus_on_a_stick");
 
     private static final int SWORD_ICON_SLOT = 0;
     private static final int SWORD_SET_SLOT = 9;
@@ -60,63 +51,63 @@ public class TriggerGui { // TODO k
         UUID uuid = player.getUniqueId();
 
         inventory.setItem(SWORD_ICON_SLOT, ItemBuilder.of(Material.IRON_SWORD)
-                .setDisplayName(SWORD)
+                .setDisplayName(Skill.Trigger.SWORD.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
         inventory.setItem(SWORD_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.SWORD)));
 
         inventory.setItem(BOW_ICON_SLOT, ItemBuilder.of(Material.BOW)
-                .setDisplayName(BOW)
+                .setDisplayName(Skill.Trigger.BOW.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
         inventory.setItem(BOW_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.BOW)));
 
         inventory.setItem(CROSSBOW_ICON_SLOT, ItemBuilder.of(Material.CROSSBOW)
-                .setDisplayName(CROSSBOW)
+                .setDisplayName(Skill.Trigger.CROSSBOW.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
         inventory.setItem(CROSSBOW_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.CROSSBOW)));
 
         inventory.setItem(SHOVEL_ICON_SLOT, ItemBuilder.of(Material.IRON_SHOVEL)
-                .setDisplayName(SHOVEL)
+                .setDisplayName(Skill.Trigger.SHOVEL.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
         inventory.setItem(SHOVEL_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.SHOVEL)));
 
         inventory.setItem(PICKAXE_ICON_SLOT, ItemBuilder.of(Material.IRON_PICKAXE)
-                .setDisplayName(PICKAXE)
+                .setDisplayName(Skill.Trigger.PICKAXE.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
         inventory.setItem(PICKAXE_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.PICKAXE)));
 
         inventory.setItem(AXE_ICON_SLOT, ItemBuilder.of(Material.IRON_AXE)
-                .setDisplayName(AXE)
+                .setDisplayName(Skill.Trigger.AXE.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
         inventory.setItem(AXE_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.AXE)));
 
         inventory.setItem(HOE_ICON_SLOT, ItemBuilder.of(Material.IRON_HOE)
-                .setDisplayName(HOE)
+                .setDisplayName(Skill.Trigger.HOE.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
         inventory.setItem(HOE_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.HOE)));
 
         inventory.setItem(CARROT_ON_A_STICK_ICON_SLOT, ItemBuilder.of(Material.CARROT_ON_A_STICK)
-                .setDisplayName(CARROT_ON_A_STICK)
+                .setDisplayName(Skill.Trigger.CARROT_ON_A_STICK.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
         inventory.setItem(CARROT_ON_A_STICK_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.CARROT_ON_A_STICK)));
 
         inventory.setItem(WARPED_FUNGUS_ON_A_STICK_ICON_SLOT, ItemBuilder.of(Material.WARPED_FUNGUS_ON_A_STICK)
-                .setDisplayName(WARPED_FUNGUS_ON_A_STICK)
+                .setDisplayName(Skill.Trigger.WARPED_FUNGUS_ON_A_STICK.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());

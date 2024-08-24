@@ -119,11 +119,11 @@ public class ScoreboardManager implements Listener {
             TeamDisplay teamDisplay = teamManager.createIfAbsent(String.valueOf(player.getUniqueId())).defaultDisplay();
             teamDisplay.canSeeFriendlyInvisibles(true);
             if (MegaWalls78.getInstance().getGameManager().isSpectator(player)) {
-                teamDisplay.prefix(Component.translatable("ms78.brackets", GRAY, Component.translatable("mw78.team.spec.abbr")).append(Component.space()));
+                teamDisplay.prefix(Component.translatable("mw78.brackets", GRAY, Component.translatable("mw78.team.spec.abbr")).append(Component.space()));
                 teamDisplay.playerColor(GRAY);
             } else if (gamePlayer != null) {
-                teamDisplay.prefix(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(Component.space()));
-                teamDisplay.suffix(Component.space().append(Component.translatable("ms78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
+                teamDisplay.prefix(Component.translatable("mw78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(Component.space()));
+                teamDisplay.suffix(Component.space().append(Component.translatable("mw78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
                 teamDisplay.playerColor(gamePlayer.getTeam().color());
             }
             objectiveManager.addPlayer(player);
@@ -147,11 +147,11 @@ public class ScoreboardManager implements Listener {
         TeamDisplay teamDisplay = teamManager.createIfAbsent(String.valueOf(player.getUniqueId())).defaultDisplay();
         teamDisplay.canSeeFriendlyInvisibles(true);
         if (MegaWalls78.getInstance().getGameManager().isSpectator(player)) {
-            teamDisplay.prefix(Component.translatable("ms78.brackets", GRAY, Component.translatable("mw78.team.spec.abbr")).append(Component.space()));
+            teamDisplay.prefix(Component.translatable("mw78.brackets", GRAY, Component.translatable("mw78.team.spec.abbr")).append(Component.space()));
             teamDisplay.playerColor(GRAY);
         } else {
-            teamDisplay.prefix(Component.translatable("ms78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(Component.space()));
-            teamDisplay.suffix(Component.space().append(Component.translatable("ms78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
+            teamDisplay.prefix(Component.translatable("mw78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).append(Component.space()));
+            teamDisplay.suffix(Component.space().append(Component.translatable("mw78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
             teamDisplay.playerColor(gamePlayer.getTeam().color());
         }
         objectiveManager.addPlayer(player);
@@ -240,7 +240,7 @@ public class ScoreboardManager implements Listener {
                 if (gameManager.isEliminated(team)) {
                     return Component.translatable("mw78.sb.team.eliminated", GRAY, team.name());
                 } else {
-                    Component component = Component.translatable("ms78.brackets", team.color(), team.abbr()).append(Component.space());
+                    Component component = Component.translatable("mw78.brackets", team.color(), team.abbr()).append(Component.space());
                     Component label;
                     Component value;
                     if (gameManager.isWitherDead(team)) {
