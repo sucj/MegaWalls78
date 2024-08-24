@@ -9,14 +9,11 @@ import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
 import org.bukkit.Bukkit;
-import org.bukkit.inventory.CookingRecipe;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.Objects;
 
 public final class MegaWalls78 extends JavaPlugin {
@@ -75,8 +72,9 @@ public final class MegaWalls78 extends JavaPlugin {
         Objects.requireNonNull(getCommand("start")).setExecutor(new StartCommand());
         Objects.requireNonNull(getCommand("suicide")).setExecutor(new SuicideCommand());
         Objects.requireNonNull(getCommand("surface")).setExecutor(new SurfaceCommand());
-        Objects.requireNonNull(getCommand("trigger")).setExecutor(new TriggerCommand());
         Objects.requireNonNull(getCommand("teamchest")).setExecutor(new TeamchestCommand());
+        Objects.requireNonNull(getCommand("trait")).setExecutor(new TraitCommand());
+        Objects.requireNonNull(getCommand("trigger")).setExecutor(new TriggerCommand());
     }
 
     private void registerListeners() {

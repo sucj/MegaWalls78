@@ -87,6 +87,9 @@ bukkitPluginYaml {
     register("mw78.teamchest") {
       default = Permission.Default.TRUE
     }
+    register("mw78.trait") {
+      default = Permission.Default.TRUE
+    }
   }
   commands {
     register("id") {
@@ -131,6 +134,10 @@ bukkitPluginYaml {
       permission = "mw78.teamchest"
       aliases = listOf("tchest")
       usage = "/teamchest"
+    }
+    register("trait") {
+      permission = "mw78.trait"
+      usage = "/trait"
     }
   }
 }
