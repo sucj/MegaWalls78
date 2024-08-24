@@ -494,7 +494,7 @@ public class GameRunner implements Runnable {
                     }
 
                     try {
-                        Thread.sleep(10000L);
+                        Thread.sleep(30000L);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
