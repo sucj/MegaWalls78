@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.hunter.skill;
 
 import icu.suc.megawalls78.entity.custom.arrow.HomingArrow;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
@@ -11,13 +12,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 
+@Trait("eagle_eye")
 public final class EagleEye extends DurationSkill {
 
     private static final double MELEE = 0.25D;
     private static final double ARROW = 1.0D;
 
     public EagleEye() {
-        super("eagle_eye", 100, 1000L, 10000L, Internal.class);
+        super(100, 1000L, 10000L, Internal.class);
     }
 
     private Task task;
@@ -67,10 +69,6 @@ public final class EagleEye extends DurationSkill {
     }
 
     public static final class Internal extends Passive {
-
-        public Internal() {
-            super("eagle_eye");
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onPlayerShoot(ProjectileLaunchEvent event) {

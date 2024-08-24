@@ -9,8 +9,7 @@ public abstract class CooldownPassive extends TimerPassive implements IActionbar
 
     long COOLDOWN_LAST;
 
-    public CooldownPassive(String id, long cooldown) {
-        super(id);
+    public CooldownPassive(long cooldown) {
         COOLDOWN = cooldown;
     }
 

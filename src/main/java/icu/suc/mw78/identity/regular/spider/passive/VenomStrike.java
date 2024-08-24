@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.spider.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargeCooldownPassive;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.entity.Player;
@@ -8,12 +9,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("venom_strike")
 public final class VenomStrike extends ChargeCooldownPassive {
 
     private static final PotionEffect POISON = new PotionEffect(PotionEffectType.POISON, 100, 0);
 
     public VenomStrike() {
-        super("venom_strike", 7000L, 4);
+        super(7000L, 4);
     }
 
     @EventHandler(ignoreCancelled = true)

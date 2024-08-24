@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.enderman.passive;
 
 import icu.suc.megawalls78.event.EnergyChangeEvent;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.Effect;
 import org.bukkit.Sound;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("soul_charge")
 public final class SoulCharge extends CooldownPassive {
 
     private static final int ENERGY = 100;
@@ -19,7 +21,7 @@ public final class SoulCharge extends CooldownPassive {
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMAN_SCREAM, SoundCategory.PLAYERS, 1.0F, 1.0F));
 
     public SoulCharge() {
-        super("soul_charge", 15000L);
+        super(15000L);
     }
 
     @EventHandler(ignoreCancelled = true)

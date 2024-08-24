@@ -9,8 +9,7 @@ public abstract class ChargePassive extends Passive implements IActionbar {
 
     int CHARGE_COUNT;
 
-    public ChargePassive(String id, int charge) {
-        super(id);
+    public ChargePassive(int charge) {
         CHARGE = charge;
         CHARGE_COUNT = CHARGE;
     }

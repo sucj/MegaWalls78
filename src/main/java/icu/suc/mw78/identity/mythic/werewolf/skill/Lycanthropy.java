@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.mythic.werewolf.skill;
 
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.AtomicDouble;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
@@ -24,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("lycanthropy")
 public final class Lycanthropy extends DurationSkill {
 
     private static final long DURATION = 6000L;
@@ -46,7 +48,7 @@ public final class Lycanthropy extends DurationSkill {
     private Task task;
 
     public Lycanthropy() {
-        super("lycanthropy", 100, 6000L, 6000L, Internal.class);
+        super(100, 6000L, 6000L, Internal.class);
     }
 
     @Override
@@ -130,10 +132,6 @@ public final class Lycanthropy extends DurationSkill {
 
         private final Set<UUID> unique = Sets.newHashSet();
         private double heal;
-
-        public Internal() {
-            super("lycanthropy");
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onPlayerAttack(EntityDamageByEntityEvent event) {

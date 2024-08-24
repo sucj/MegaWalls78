@@ -4,6 +4,7 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.*;
 import net.kyori.adventure.text.Component;
@@ -16,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 
+@Trait("ultra_pasteurized")
 public final class UltraPasteurized extends Gathering {
 
     private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET)
@@ -28,13 +30,13 @@ public final class UltraPasteurized extends Gathering {
     private static final Effect<Location> EFFECT_SKILL = Effect.create(location -> location.getWorld().playSound(location, Sound.BLOCK_WET_SPONGE_DRIES, SoundCategory.BLOCKS, 1.0F, 1.0F));
 
     public UltraPasteurized() {
-        super("ultra_pasteurized", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends ChargePassive {
 
         public Internal() {
-            super("ultra_pasteurized", 60);
+            super(60);
         }
 
         @EventHandler(ignoreCancelled = true)

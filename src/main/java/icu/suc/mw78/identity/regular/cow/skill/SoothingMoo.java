@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.cow.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -15,6 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("soothing_moo")
 public final class SoothingMoo extends Skill {
 
     private static final double RADIUS = 7.0D;
@@ -34,7 +36,7 @@ public final class SoothingMoo extends Skill {
     });
 
     public SoothingMoo() {
-        super("soothing_moo", 100, 1000L);
+        super(100, 1000L);
     }
 
     @Override

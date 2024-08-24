@@ -10,12 +10,12 @@ public abstract class DurationSkill extends Skill {
 
     long DURATION_LAST;
 
-    public DurationSkill(String id, int cost, long cooldown, long duration) {
-        this(id, cost, cooldown, duration, null);
+    public DurationSkill(int cost, long cooldown, long duration) {
+        this(cost, cooldown, duration, null);
     }
 
-    public DurationSkill(String id, int cost, long cooldown, long duration, Class<? extends Passive> internal) {
-        super(id, cost, cooldown, internal);
+    public DurationSkill(int cost, long cooldown, long duration, Class<? extends Passive> internal) {
+        super(cost, cooldown, internal);
         this.DURATION = duration;
     }
 

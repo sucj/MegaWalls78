@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.mythic.moleman.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import org.bukkit.Tag;
 import org.bukkit.entity.Player;
@@ -8,13 +9,14 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("shortcut")
 public final class Shortcut extends ChargePassive {
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 80, 1);
     private static final PotionEffect HASTE = new PotionEffect(PotionEffectType.HASTE, 80, 1);
 
     public Shortcut() {
-        super("shortcut", 3);
+        super(3);
     }
 
     @EventHandler(ignoreCancelled = true)

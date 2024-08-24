@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.herobrine.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -10,13 +11,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("wrath")
 public final class Wrath extends Skill {
 
     private static final double RADIUS = 5.0D;
     private static final double DAMAGE = 5.0D;
 
     public Wrath() {
-        super("wrath", 100, 1000L);
+        super(100, 1000L);
     }
 
     @Override

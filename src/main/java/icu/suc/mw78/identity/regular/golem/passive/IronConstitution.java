@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.golem.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -11,15 +12,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("iron_constitution")
 public final class IronConstitution extends Passive {
 
     private static final double SCALE = 0.8D;
 
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 180, 0);
-
-    public IronConstitution() {
-        super("iron_constitution");
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) {

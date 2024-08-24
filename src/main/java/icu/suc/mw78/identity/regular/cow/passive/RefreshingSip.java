@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.cow.passive;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -14,6 +15,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import static icu.suc.megawalls78.util.PlayerUtil.getIdentity;
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("refreshing_sip")
 public final class RefreshingSip extends CooldownPassive {
 
     private static final double RADIUS = 7.0D;
@@ -29,7 +31,7 @@ public final class RefreshingSip extends CooldownPassive {
     });
 
     public RefreshingSip() {
-        super("refreshing_sip", 5000L);
+        super(5000L);
     }
 
     @EventHandler(ignoreCancelled = true)

@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.squid.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.Effect;
@@ -18,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("squid_splash")
 public class SquidSplash extends Skill {
 
     private static final double RADIUS = 5.25D;
@@ -32,7 +34,7 @@ public class SquidSplash extends Skill {
     });
 
     public SquidSplash() {
-        super("squid_splash", 100, 2000L);
+        super(100, 2000L);
     }
 
     @Override

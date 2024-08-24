@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.regular.shaman.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import com.google.common.collect.Lists;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargeCooldownPassive;
 import icu.suc.megawalls78.util.Color;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -16,6 +17,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.List;
 
+@Trait("wolf_pack")
 public final class WolfPack extends ChargeCooldownPassive {
 
     private static final int MAX = 3;
@@ -26,7 +28,7 @@ public final class WolfPack extends ChargeCooldownPassive {
     private final List<LivingEntity> entities = Lists.newArrayList();
 
     public WolfPack() {
-        super("wolf_pack", 4000L, 6);
+        super(4000L, 6);
     }
 
     @EventHandler(ignoreCancelled = true)

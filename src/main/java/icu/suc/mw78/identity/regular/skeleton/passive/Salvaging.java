@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.skeleton.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
@@ -9,15 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+@Trait("salvaging")
 public final class Salvaging extends Passive {
 
     private static final int FOOD = 1;
 
     private static final ItemBuilder ARROW = ItemBuilder.of(Material.ARROW).setAmount(2);
-
-    public Salvaging() {
-        super("salvaging");
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerShoot(EntityDamageByEntityEvent event) {

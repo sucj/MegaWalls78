@@ -3,6 +3,7 @@ package icu.suc.mw78.identity.regular.squid.gathering;
 import icu.suc.megawalls78.event.ChestRollEvent;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
@@ -13,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("luck_of_the_sea")
 public class LuckOfTheSea extends Gathering {
 
     private static final ItemBuilder POTION = ItemBuilder.of(Material.POTION)
@@ -24,13 +26,13 @@ public class LuckOfTheSea extends Gathering {
             .addCustomEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1200, 1), false);
 
     public LuckOfTheSea() {
-        super("luck_of_the_sea", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends ChargePassive {
 
         public Internal() {
-            super("luck_of_the_sea", 5);
+            super(5);
         }
 
         @EventHandler

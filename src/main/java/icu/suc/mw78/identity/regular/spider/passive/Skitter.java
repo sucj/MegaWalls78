@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.spider.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.mw78.identity.regular.spider.skill.Leap;
 import icu.suc.megawalls78.identity.trait.passive.DurationPassive;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -11,6 +12,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("skitter")
 public final class Skitter extends DurationPassive {
 
     private static final int ENERGY = 10;
@@ -18,7 +20,7 @@ public final class Skitter extends DurationPassive {
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 60, 0);
 
     public Skitter() {
-        super("skitter", 3000L);
+        super(3000L);
     }
 
     @EventHandler(ignoreCancelled = true)

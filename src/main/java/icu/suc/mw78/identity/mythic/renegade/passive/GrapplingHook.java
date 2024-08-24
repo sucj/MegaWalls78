@@ -3,6 +3,7 @@ package icu.suc.mw78.identity.mythic.renegade.passive;
 import icu.suc.megawalls78.event.GrapplingHookEvent;
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ItemUtil;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("grappling_hook")
 public final class GrapplingHook extends DurationCooldownPassive {
 
     private static final int ENERGY = 60;
@@ -29,7 +31,7 @@ public final class GrapplingHook extends DurationCooldownPassive {
     private boolean noFall;
 
     public GrapplingHook() {
-        super("grappling_hook", 15000L, 4000L);
+        super(15000L, 4000L);
     }
 
     @EventHandler(ignoreCancelled = true)

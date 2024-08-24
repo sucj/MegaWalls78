@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.next.vindicator.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
@@ -14,6 +15,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.Set;
 
+@Trait("johnny")
 public final class Johnny extends DurationSkill {
 
     private static final long DURATION = 5000L;
@@ -26,7 +28,7 @@ public final class Johnny extends DurationSkill {
     private Task task;
 
     public Johnny() {
-        super("johnny", 100, 1000L, DURATION, Internal.class);
+        super(100, 1000L, DURATION, Internal.class);
     }
 
     @Override
@@ -74,10 +76,6 @@ public final class Johnny extends DurationSkill {
     }
 
     public static final class Internal extends Passive {
-
-        public Internal() {
-            super("johnny");
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onPlayerAttack(EntityDamageByEntityEvent event) {

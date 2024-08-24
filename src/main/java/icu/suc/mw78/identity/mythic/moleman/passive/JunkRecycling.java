@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.mythic.moleman.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.ItemUtil;
 import org.bukkit.Material;
@@ -8,10 +9,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 
+@Trait("junk_recycling")
 public class JunkRecycling extends ChargePassive {
 
     public JunkRecycling() {
-        super("junk_recycling", 5);
+        super(5);
     }
 
     @EventHandler(ignoreCancelled = true)

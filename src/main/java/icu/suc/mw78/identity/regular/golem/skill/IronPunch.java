@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.golem.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.Effect;
@@ -19,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("iron_punch")
 public final class IronPunch extends Skill {
 
     private static final double RADIUS = 4.5D;
@@ -29,7 +31,7 @@ public final class IronPunch extends Skill {
     private static final Effect<Location> EFFECT_SKILL = Effect.create(location -> location.getWorld().playSound(location, Sound.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 1.0F, 1.0F));
 
     public IronPunch() {
-        super("iron_punch", 100, 2000L);
+        super(100, 2000L);
     }
 
     @Override

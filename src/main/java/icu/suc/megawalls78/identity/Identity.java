@@ -3,6 +3,7 @@ package icu.suc.megawalls78.identity;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.management.TraitManager;
 import icu.suc.mw78.identity.mythic.assassin.Assassin;
 import icu.suc.mw78.identity.mythic.assassin.gathering.ArrowCatch;
 import icu.suc.mw78.identity.mythic.assassin.passive.MasterAlchemist;
@@ -242,12 +243,10 @@ public enum Identity {
                             break add;
                         }
                     }
-                    Skill skill = skillClass.getConstructor().newInstance();
-                    skill.PLAYER(player);
+                    Skill skill = TraitManager.trait(skillClass, player);
                     Class<? extends Passive> passiveClass = skill.getInternal();
                     if (passiveClass != null) {
-                        Passive passive = passiveClass.getConstructor().newInstance();
-                        passive.PLAYER(player);
+                        Passive passive = TraitManager.trait(passiveClass, player, skill.getId());
                         passives.add(passive);
                         skill.setPassive(passive);
                     }
@@ -265,8 +264,7 @@ public enum Identity {
         try {
             List<Passive> passives = Lists.newArrayList();
             for (Class<? extends Passive> passiveClass : passiveClasses) {
-                Passive passive = passiveClass.getConstructor().newInstance();
-                passive.PLAYER(player);
+                Passive passive = TraitManager.trait(passiveClass, player);
                 passives.add(passive);
             }
             return passives;
@@ -278,12 +276,10 @@ public enum Identity {
 
     public Gathering getGathering(GamePlayer player, List<Passive> passives) {
         try {
-            Gathering gathering = gatheringClass.getConstructor().newInstance();
-            gathering.PLAYER(player);
+            Gathering gathering = TraitManager.trait(gatheringClass, player);
             Class<? extends Passive> passiveClass = gathering.getInternal();
             if (passiveClass != null) {
-                Passive passive = passiveClass.getConstructor().newInstance();
-                passive.PLAYER(player);
+                Passive passive = TraitManager.trait(passiveClass, player, gathering.getId());
                 passives.add(passive);
                 gathering.setPassive(passive);
             }

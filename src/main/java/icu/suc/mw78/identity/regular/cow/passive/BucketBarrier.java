@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.regular.cow.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
 import icu.suc.megawalls78.util.Effect;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,6 +19,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 
+@Trait("bucket_barrier")
 public final class BucketBarrier extends DurationCooldownPassive {
 
     private static final long PER = 5000L;
@@ -37,7 +39,7 @@ public final class BucketBarrier extends DurationCooldownPassive {
     private ItemDisplay[] barriers;
 
     public BucketBarrier() {
-        super("bucket_barrier", 30000L, 20000L);
+        super(30000L, 20000L);
     }
 
     @EventHandler(ignoreCancelled = true)

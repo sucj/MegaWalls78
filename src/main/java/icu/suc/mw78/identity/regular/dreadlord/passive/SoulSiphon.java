@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.regular.dreadlord.passive;
 
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.DurationPassive;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,6 +10,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("soul_siphon")
 public final class SoulSiphon extends DurationPassive {
 
     private static final double SCALE = 1.85D;
@@ -16,7 +18,7 @@ public final class SoulSiphon extends DurationPassive {
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 0);
 
     public SoulSiphon() {
-        super("soul_siphon", 5000L);
+        super(5000L);
     }
 
     @EventHandler(ignoreCancelled = true)

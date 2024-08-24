@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.squid.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("inner_ink")
 public class InnerInk extends Passive {
 
     private static final double RADIUS = 5.0D;
@@ -23,10 +25,6 @@ public class InnerInk extends Passive {
     private static final PotionEffect BLINDNESS = new PotionEffect(PotionEffectType.BLINDNESS, 60, 0);
 
     private static final Effect<Player> EFFECT_SOUND = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_GHAST_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F));
-
-    public InnerInk() {
-        super("inner_ink");
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPotionConsume(PlayerItemConsumeEvent event) {

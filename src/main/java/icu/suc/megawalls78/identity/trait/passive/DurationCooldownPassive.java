@@ -2,14 +2,14 @@ package icu.suc.megawalls78.identity.trait.passive;
 
 import net.kyori.adventure.text.Component;
 
-public class DurationCooldownPassive extends CooldownPassive {
+public abstract class DurationCooldownPassive extends CooldownPassive {
 
     protected long DURATION;
 
     long DURATION_LAST;
 
-    public DurationCooldownPassive(String id, long cooldown, long duration) {
-        super(id, cooldown);
+    public DurationCooldownPassive(long cooldown, long duration) {
+        super(cooldown);
         DURATION = duration;
     }
 

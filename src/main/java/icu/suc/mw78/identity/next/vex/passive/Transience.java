@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.IActionbar;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -21,6 +22,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 
+@Trait("transience")
 public final class Transience extends Passive implements IActionbar {
 
     private static final double HEALTH = 10.0D;
@@ -34,10 +36,6 @@ public final class Transience extends Passive implements IActionbar {
 
     private int tick;
     private boolean state;
-
-    public Transience() {
-        super("transience");
-    }
 
     @EventHandler
     public void onPLayerTickStart(ServerTickStartEvent event) {

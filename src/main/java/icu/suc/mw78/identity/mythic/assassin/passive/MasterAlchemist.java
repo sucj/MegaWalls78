@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.mythic.assassin.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("master_alchemist")
 public final class MasterAlchemist extends CooldownPassive {
 
     private static final long TIME = 1000L;
@@ -17,7 +19,7 @@ public final class MasterAlchemist extends CooldownPassive {
     private final MutablePair<Long, Double> lastDamage = MutablePair.of(0L, 0.0D);
 
     public MasterAlchemist() {
-        super("master_alchemist", 12000L);
+        super(12000L);
     }
 
     @EventHandler(ignoreCancelled = true)

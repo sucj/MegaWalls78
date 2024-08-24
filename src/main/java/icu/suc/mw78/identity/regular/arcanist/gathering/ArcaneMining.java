@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.arcanist.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.BlockUtil;
 import org.bukkit.Material;
@@ -8,19 +9,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 
+@Trait("arcane_mining")
 public final class ArcaneMining extends Gathering {
 
     private static final int ENERGY = 20;
 
     public ArcaneMining() {
-        super("arcane_mining", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends Passive {
-
-        public Internal() {
-            super("arcane_mining");
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onBreakBlock(BlockBreakEvent event) {

@@ -11,6 +11,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
@@ -36,7 +37,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 
-// 因为即将重构Passive的计时方式顺便加入Skill的监听实现，暂时推迟隐身时攻击的编写
+@Trait("shadow_cloak")
 public final class ShadowCloak extends DurationSkill {
 
     public static final String ID = "shadow_cloak";
@@ -60,7 +61,7 @@ public final class ShadowCloak extends DurationSkill {
     private Task task;
 
     public ShadowCloak() {
-        super(ID, 100, 1000L, DURATION, Internal.class);
+        super(100, 1000L, DURATION, Internal.class);
     }
 
     @Override
@@ -83,7 +84,6 @@ public final class ShadowCloak extends DurationSkill {
             task.fire();
         }
 
-        //TODO:不是asn隐身的粒子效果是什么来着老子忘了草拟吗反正肯定不是dust但我也不知道是什么所以等会再补
         return true;
     }
 
@@ -92,7 +92,7 @@ public final class ShadowCloak extends DurationSkill {
         private Task(Player player) {
             super(player, TICK);
 
-            EntityUtil.setMetadata(player, ID, true);
+            EntityUtil.setMetadata(player, getId(), true);
 
             updateArmor();
         }
@@ -106,7 +106,7 @@ public final class ShadowCloak extends DurationSkill {
 
             super.run();
 
-            if (!EntityUtil.getMetadata(player, ID)) {
+            if (!EntityUtil.getMetadata(player, getId())) {
                 player.removePotionEffect(PotionEffectType.INVISIBILITY);
                 if (EntityUtil.hasPotionEffect(player, RESISTANCE)) {
                     player.removePotionEffect(PotionEffectType.RESISTANCE);
@@ -174,7 +174,7 @@ public final class ShadowCloak extends DurationSkill {
                 if (player.getEntityId() != packet.getIntegers().read(0)) {
                     return;
                 }
-                if (!EntityUtil.getMetadata(player, ID)) {
+                if (!EntityUtil.getMetadata(player, getId())) {
                     return;
                 }
                 StructureModifier<List<Pair<EnumWrappers.ItemSlot, ItemStack>>> modifier = packet.getSlotStackPairLists();
@@ -191,17 +191,13 @@ public final class ShadowCloak extends DurationSkill {
             }
         };
 
-        public Internal() {
-            super("shadow_cloak");
-        }
-
         @EventHandler(ignoreCancelled = true)
         public void onPlayerDamage(EntityDamageByEntityEvent event) {
-            if (event.getDamager() instanceof Player player && PASSIVE(player) && EntityUtil.getMetadata(player, ID) && condition(event)) {
+            if (event.getDamager() instanceof Player player && PASSIVE(player) && EntityUtil.getMetadata(player, getId()) && condition(event)) {
                 LivingEntity entity = (LivingEntity) event.getEntity();
                 double damage = Math.max((entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() - entity.getHealth()) * SCALE, MIN);
                 event.setDamage(event.getDamage() + damage);
-                EntityUtil.removeMetadata(player, ID);
+                EntityUtil.removeMetadata(player, getId());
             }
         }
 

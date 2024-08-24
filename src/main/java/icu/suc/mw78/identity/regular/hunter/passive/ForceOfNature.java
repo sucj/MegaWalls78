@@ -3,6 +3,7 @@ package icu.suc.mw78.identity.regular.hunter.passive;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GameState;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -17,6 +18,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Set;
 
+@Trait("force_of_nature")
 public class ForceOfNature extends DurationCooldownPassive {
 
     private static final double SCALE = 2.0D;
@@ -38,7 +40,7 @@ public class ForceOfNature extends DurationCooldownPassive {
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, SoundCategory.PLAYERS, 1.0F, 1.0F));
 
     public ForceOfNature() {
-        super("force_of_nature", 20000L, 5000L);
+        super(20000L, 5000L);
     }
 
     @EventHandler

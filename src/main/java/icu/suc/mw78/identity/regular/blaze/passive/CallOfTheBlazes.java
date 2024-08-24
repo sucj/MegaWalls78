@@ -3,6 +3,7 @@ package icu.suc.mw78.identity.regular.blaze.passive;
 import com.google.common.collect.Lists;
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.EntityUtil;
 import net.kyori.adventure.text.Component;
@@ -12,13 +13,10 @@ import org.bukkit.event.EventHandler;
 
 import java.util.List;
 
+@Trait("call_of_the_blazes")
 public final class CallOfTheBlazes extends Passive {
 
     private final List<Blaze> blazes = Lists.newArrayList();
-
-    public CallOfTheBlazes() {
-        super("call_of_the_blazes");
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerKill(IncreaseStatsEvent.Kill event) {

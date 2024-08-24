@@ -2,14 +2,14 @@ package icu.suc.megawalls78.identity.trait.passive;
 
 import net.kyori.adventure.text.Component;
 
-public class ChargeCooldownPassive extends CooldownPassive {
+public abstract class ChargeCooldownPassive extends CooldownPassive {
 
     protected int CHARGE;
 
     int CHARGE_COUNT;
 
-    public ChargeCooldownPassive(String id, long cooldown, int charge) {
-        super(id, cooldown);
+    public ChargeCooldownPassive(long cooldown, int charge) {
+        super(cooldown);
         CHARGE = charge;
         CHARGE_COUNT = CHARGE;
     }

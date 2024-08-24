@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.GameState;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.listener.GameListener;
 import icu.suc.megawalls78.management.GameManager;
@@ -21,6 +22,7 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
+@Trait("arcane_beam")
 public final class ArcaneBeam extends Skill {
 
     private static final double DAMAGE = 2.0D;
@@ -51,7 +53,7 @@ public final class ArcaneBeam extends Skill {
     });
 
     public ArcaneBeam() {
-        super("arcane_beam", 100, 1000L);
+        super(100, 1000L);
     }
 
     @Override

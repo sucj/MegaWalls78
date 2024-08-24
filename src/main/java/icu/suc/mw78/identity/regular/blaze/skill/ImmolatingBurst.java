@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.blaze.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.Effect;
@@ -8,6 +9,7 @@ import icu.suc.megawalls78.util.ParticleUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
+@Trait("immolating_burst")
 public final class ImmolatingBurst extends Skill {
 
     private static final float DAMAGE = 3F;
@@ -23,7 +25,7 @@ public final class ImmolatingBurst extends Skill {
     private Task task;
 
     public ImmolatingBurst() {
-        super("immolating_burst", 100, 1000L);
+        super(100, 1000L);
     }
 
     @Override

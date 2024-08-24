@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.mythic.renegade.gathering;
 
 import icu.suc.megawalls78.event.ChestRollEvent;
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.InventoryUtil;
@@ -11,19 +12,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+@Trait("ammo_bin")
 public final class AmmoBin extends Gathering {
 
     private static final int AMOUNT = 30;
 
     public AmmoBin() {
-        super("ammo_bin", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends Passive {
-
-        public Internal() {
-            super("ammo_bin");
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onBlockBreak(BlockDropItemEvent event) {

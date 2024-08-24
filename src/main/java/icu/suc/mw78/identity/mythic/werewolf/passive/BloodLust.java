@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.mythic.werewolf.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.entity.Player;
@@ -9,13 +10,14 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("blood_lust")
 public class BloodLust extends ChargePassive {
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 120, 0);
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 120, 0);
 
     public BloodLust() {
-        super("blood_lust", 2);
+        super(2);
     }
 
     @EventHandler(ignoreCancelled = true)

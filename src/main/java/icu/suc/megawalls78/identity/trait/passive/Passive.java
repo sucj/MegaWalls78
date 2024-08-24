@@ -9,10 +9,6 @@ import java.util.UUID;
 
 public abstract class Passive extends Trait implements Listener {
 
-    public Passive(String id) {
-        super(id);
-    }
-
     protected boolean PASSIVE(Player player) {
         return player != null && PASSIVE(player.getUniqueId());
     }

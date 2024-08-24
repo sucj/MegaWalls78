@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.zombie.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,12 +8,13 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("toughness")
 public final class Toughness extends ChargePassive {
 
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 20, 0);
 
     public Toughness() {
-        super("toughness", 3);
+        super(3);
     }
 
     @EventHandler(ignoreCancelled = true)

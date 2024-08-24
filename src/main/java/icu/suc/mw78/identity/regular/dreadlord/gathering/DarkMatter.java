@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.dreadlord.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.InventoryUtil;
 import org.bukkit.Material;
@@ -14,13 +15,14 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Set;
 
+@Trait("dark_matter")
 public class DarkMatter extends Gathering {
 
     private static final Set<Material> ORES = Set.of(Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE);
     private static final List<Material> ARMORS = List.of(Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS);
 
     public DarkMatter() {
-        super("dark_matter", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends ChargePassive {
@@ -28,7 +30,7 @@ public class DarkMatter extends Gathering {
         private int armor;
 
         public Internal() {
-            super("dark_matter", 20);
+            super(20);
         }
 
         @EventHandler(ignoreCancelled = true)

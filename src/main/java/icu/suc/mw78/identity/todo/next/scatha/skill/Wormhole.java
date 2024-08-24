@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.todo.next.scatha.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.ItemUtil;
@@ -10,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("wormhole")
 public final class Wormhole extends Skill {
 
     private static final int DURATION = 60;
@@ -19,7 +21,7 @@ public final class Wormhole extends Skill {
     private Task task;
 
     public Wormhole() {
-        super("wormhole", 100, 1000L);
+        super(100, 1000L);
     }
 
     @Override

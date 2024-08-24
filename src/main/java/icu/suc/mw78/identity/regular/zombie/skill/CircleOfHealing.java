@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.zombie.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("circle_of_healing")
 public final class CircleOfHealing extends Skill {
 
     private static final double RADIUS = 5.0D;
@@ -26,7 +28,7 @@ public final class CircleOfHealing extends Skill {
     private static final Effect<LivingEntity> EFFECT_HEAD = Effect.create(entity -> ParticleUtil.spawnParticleOverhead(entity, Particle.HEART, (int) (OTHER / 2)));
 
     public CircleOfHealing() {
-        super("circle_of_healing", 100, 1000L);
+        super(100, 1000L);
     }
 
     @Override

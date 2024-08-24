@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.mythic.moleman.skill;
 
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.management.GameManager;
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Trait("dig")
 public final class Dig extends Skill {
 
     private static final double FORWARD = 8.0D;
@@ -39,7 +41,7 @@ public final class Dig extends Skill {
     private Task task;
 
     public Dig() {
-        super("dig", 100, 1000L);
+        super(100, 1000L);
     }
 
     @Override

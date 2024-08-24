@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.next.vindicator.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import org.bukkit.Tag;
 import org.bukkit.entity.HumanEntity;
@@ -9,13 +10,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("door_breaker")
 public final class DoorBreaker extends Passive {
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 60, 2);
-
-    public DoorBreaker() {
-        super("door_breaker");
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {

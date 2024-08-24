@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.regular.hunter.gathering;
 
 import icu.suc.megawalls78.event.ChestRollEvent;
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.RandomUtil;
@@ -9,19 +10,16 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
+@Trait("golden_glasses")
 public class GoldenGlasses extends Gathering {
 
     private static final double CHANCE = 0.5D;
 
     public GoldenGlasses() {
-        super("golden_glasses", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends Passive {
-
-        public Internal() {
-            super("golden_glasses");
-        }
 
         @EventHandler
         public void onChestRoll(ChestRollEvent.Post event) {

@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.next.warden.gathering;
 
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.Effect;
@@ -16,19 +17,16 @@ import org.bukkit.event.block.BlockDropItemEvent;
 
 import java.util.Set;
 
+@Trait("spreads")
 public final class Spreads extends Gathering {
 
     private static final Effect<Location> EFFECT_SOUND = Effect.create(location -> location.getWorld().playSound(location, Sound.BLOCK_SCULK_SPREAD, SoundCategory.BLOCKS, 1.0F, 1.0F));
 
     public Spreads() {
-        super("spreads", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends Passive {
-
-        public Internal() {
-            super("spreads");
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onBlockBreak(BlockDropItemEvent event) {

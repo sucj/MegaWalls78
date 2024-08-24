@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.next.vex.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.Effect;
@@ -9,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
+@Trait("flight")
 public final class Flight extends DurationSkill {
 
     private static final long DURATION = 5000L;
@@ -20,7 +22,7 @@ public final class Flight extends DurationSkill {
     private Task task;
 
     public Flight() {
-        super("flight", 100, 10000L, DURATION);
+        super(100, 10000L, DURATION);
     }
 
     @Override

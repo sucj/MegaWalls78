@@ -3,6 +3,7 @@ package icu.suc.mw78.identity.mythic.renegade.passive;
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
@@ -15,6 +16,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("looting")
 public final class Looting extends ChargePassive {
 
     private static final double HEAL = 5.0D;
@@ -29,7 +31,7 @@ public final class Looting extends ChargePassive {
             .addCustomEffect(new PotionEffect(PotionEffectType.REGENERATION, 120, 0), false);
 
     public Looting() {
-        super("looting", 5);
+        super(5);
     }
 
     @EventHandler(ignoreCancelled = true)

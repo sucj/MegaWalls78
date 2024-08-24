@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.next.warden.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -19,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("sniffs")
 public final class Sniffs extends CooldownPassive {
 
     private static final double RADIUS = 20.0D;
@@ -33,7 +35,7 @@ public final class Sniffs extends CooldownPassive {
     });
 
     public Sniffs() {
-        super("sniffs", 10000L);
+        super(10000L);
     }
 
     @EventHandler

@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.blaze.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargeCooldownPassive;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("melting_core")
 public final class MeltingCore extends ChargeCooldownPassive {
 
     private static final int DURATION = 60;
@@ -16,7 +18,7 @@ public final class MeltingCore extends ChargeCooldownPassive {
     private static final PotionEffect REGENERATION_2 = new PotionEffect(PotionEffectType.REGENERATION, DURATION, 1);
 
     public MeltingCore() {
-        super("melting_core", 4000L, 8);
+        super(4000L, 8);
     }
 
     @EventHandler(ignoreCancelled = true)

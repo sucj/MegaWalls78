@@ -3,6 +3,7 @@ package icu.suc.megawalls78.identity.trait;
 import com.google.common.collect.Lists;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.management.TraitManager;
 import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.Formatters;
 import net.kyori.adventure.text.Component;
@@ -21,15 +22,7 @@ public abstract class Trait {
 
     private static final JoinConfiguration EFFECT_JOIN = JoinConfiguration.builder().separator(Component.translatable("mw78.summary.effect.join")).build();
 
-    private final String id;
-    private final Component name;
-
     private GamePlayer player;
-
-    public Trait(String id) {
-        this.id = id;
-        this.name = Component.translatable("mw78.trait." + id);
-    }
 
     protected boolean noTarget(Player player) {
         ComponentUtil.sendMessage(Component.translatable("mw78.summary.no_target", NamedTextColor.RED, name(player)), player);
@@ -93,11 +86,11 @@ public abstract class Trait {
     }
 
     public String getId() {
-        return id;
+        return TraitManager.id(getClass());
     }
 
     public Component getName() {
-        return name;
+        return TraitManager.name(getClass());
     }
 
 

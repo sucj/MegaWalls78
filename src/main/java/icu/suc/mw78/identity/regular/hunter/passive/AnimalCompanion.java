@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.hunter.passive;
 
 import com.google.common.collect.Lists;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.Color;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -24,6 +25,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.List;
 import java.util.UUID;
 
+@Trait("animal_companion")
 public class AnimalCompanion extends CooldownPassive {
 
     private static final double CHANCE = 0.2D;
@@ -37,7 +39,7 @@ public class AnimalCompanion extends CooldownPassive {
     private final List<LivingEntity> entities = Lists.newArrayList();
 
     public AnimalCompanion() {
-        super("animal_companion", 4000L);
+        super(4000L);
     }
 
     @EventHandler(ignoreCancelled = true)

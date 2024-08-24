@@ -9,8 +9,7 @@ public abstract class DurationPassive extends TimerPassive implements IActionbar
 
     long DURATION_LAST;
 
-    public DurationPassive(String id, long duration) {
-        super(id);
+    public DurationPassive(long duration) {
         DURATION = duration;
     }
 

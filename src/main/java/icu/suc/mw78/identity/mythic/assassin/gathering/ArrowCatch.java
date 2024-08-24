@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.mythic.assassin.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.entity.Arrow;
@@ -8,16 +9,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+@Trait("arrow_catch")
 public final class ArrowCatch extends Gathering {
 
     public ArrowCatch() {
-        super("arrow_catch", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends CooldownPassive {
 
         public Internal() {
-            super("arrow_catch", 3000L);
+            super(3000L);
         }
 
         @EventHandler(ignoreCancelled = true)

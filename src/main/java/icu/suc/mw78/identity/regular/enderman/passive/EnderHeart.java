@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.regular.enderman.passive;
 
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
 import icu.suc.megawalls78.game.GamePlayer;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.ParticleUtil;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
+@Trait("ender_heart")
 public final class EnderHeart extends ChargePassive {
 
     private static final double KILL = 3.0D;
@@ -23,7 +25,7 @@ public final class EnderHeart extends ChargePassive {
     });
 
     public EnderHeart() {
-        super("ender_heart", 3);
+        super(3);
     }
 
     @EventHandler(ignoreCancelled = true)

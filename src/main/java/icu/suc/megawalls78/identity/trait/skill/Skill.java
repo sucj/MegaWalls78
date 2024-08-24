@@ -23,12 +23,11 @@ public abstract class Skill extends Trait implements IActionbar {
     private final Class<? extends Passive> internal;
     private Passive passive;
 
-    public Skill(String id, float cost, long cooldown) {
-        this(id, cost, cooldown, null);
+    public Skill(float cost, long cooldown) {
+        this(cost, cooldown, null);
     }
 
-    public Skill(String id, float cost, long cooldown, Class<? extends Passive> internal) {
-        super(id);
+    public Skill(float cost, long cooldown, Class<? extends Passive> internal) {
         this.cost = cost;
         this.COOLDOWN = cooldown;
         this.internal = internal;

@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.next.vex.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.ItemUtil;
 import org.bukkit.Material;
@@ -10,17 +11,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
+@Trait("soul_bound")
 public class SoulBound extends Gathering {
 
     public SoulBound() {
-        super("soul_bound", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends Passive {
-
-        public Internal() {
-            super("soul_bound");
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onPlayerDeath(PlayerDeathEvent event) {

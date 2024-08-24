@@ -3,6 +3,7 @@ package icu.suc.mw78.identity.mythic.renegade.skill;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.DamageSource;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("rend")
 public final class Rend extends Skill {
 
     private static final double RADIUS = 8.0D;
@@ -34,7 +36,7 @@ public final class Rend extends Skill {
     private static final int ENERGY = 100;
 
     public Rend() {
-        super("rend", 100, 1000L, Internal.class);
+        super(100, 1000L, Internal.class);
     }
 
     @Override
@@ -98,10 +100,6 @@ public final class Rend extends Skill {
     public static final class Internal extends Passive {
 
         private final Map<UUID, List<Long>> arrows = Maps.newHashMap();
-
-        public Internal() {
-            super("rend");
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onPlayerAttack(EntityDamageByEntityEvent event) {

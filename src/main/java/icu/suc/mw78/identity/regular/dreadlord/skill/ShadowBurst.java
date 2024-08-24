@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.dreadlord.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -10,6 +11,7 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+@Trait("shadow_burst")
 public final class ShadowBurst extends Skill {
 
     private static final float DAMAGE = 8.0F;
@@ -17,7 +19,7 @@ public final class ShadowBurst extends Skill {
     private static final Effect<Location> EFFECT_SKILL = Effect.create(location -> location.getWorld().playSound(location, Sound.ENTITY_WITHER_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F, 0));
 
     public ShadowBurst() {
-        super("shadow_burst", 100, 1000L);
+        super(100, 1000L);
     }
 
     @Override

@@ -1,17 +1,19 @@
 package icu.suc.mw78.identity.regular.skeleton.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+@Trait("explosive_arrow")
 public final class ExplosiveArrow extends Skill {
 
     private static final float RADIUS = 6.0F;
     private static final float DAMAGE = 6.0F;
 
     public ExplosiveArrow() {
-        super("explosive_arrow", 100, 1000L);
+        super(100, 1000L);
     }
 
     @Override

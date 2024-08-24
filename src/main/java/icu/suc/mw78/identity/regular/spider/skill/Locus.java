@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.spider.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.EntityUtil;
 import net.kyori.adventure.text.Component;
@@ -8,13 +9,14 @@ import org.bukkit.util.Vector;
 
 import java.util.function.Consumer;
 
+@Trait("locus")
 public final class Locus extends Skill {
 
     public static final String ID = "locus";
     public static final Mode DEFAULT = Mode.ARROW;
 
     public Locus() {
-        super(ID, 0, 0L);
+        super(0, 0L);
     }
 
     @Override

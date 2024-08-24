@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.mythic.werewolf.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.PlayerUtil;
@@ -12,16 +13,13 @@ import org.bukkit.potion.PotionEffectType;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("devour")
 public class Devour extends Passive {
 
     private static final double RADIUS = 5.0D;
     private static final int HUNGER = 3;
 
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 50, 1);
-
-    public Devour() {
-        super("devour");
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onEatSteak(PlayerItemConsumeEvent event) {

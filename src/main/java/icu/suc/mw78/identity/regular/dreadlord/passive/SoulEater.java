@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.dreadlord.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargeCooldownPassive;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.PlayerUtil;
@@ -7,13 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+@Trait("soul_eater")
 public final class SoulEater extends ChargeCooldownPassive {
 
     private static final int FOOD = 3;
     private static final double HEAL = 2;
 
     public SoulEater() {
-        super("soul_eater", 1000L, 4);
+        super(1000L, 4);
     }
 
     @EventHandler(ignoreCancelled = true)

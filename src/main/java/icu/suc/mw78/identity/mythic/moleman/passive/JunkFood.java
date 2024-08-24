@@ -4,6 +4,7 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.IActionbar;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
@@ -17,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+@Trait("junk_food")
 public final class JunkFood extends ChargePassive implements IActionbar {
 
     private static final int COOKIE_APPEAR = 50;
@@ -38,7 +40,7 @@ public final class JunkFood extends ChargePassive implements IActionbar {
             .setMW78Id(ItemUtil.MOLEMAN_JUNK_APPLE);
 
     public JunkFood() {
-        super("junk_food", JUNK_APPLE_APPEAR);
+        super(JUNK_APPLE_APPEAR);
     }
 
     @EventHandler(ignoreCancelled = true)

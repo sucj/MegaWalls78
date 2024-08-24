@@ -1,7 +1,7 @@
 package icu.suc.megawalls78.command;
 
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.listener.TraitManager;
+import icu.suc.megawalls78.management.TraitManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

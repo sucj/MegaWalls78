@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.golem.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.InventoryUtil;
@@ -10,16 +11,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+@Trait("momentum")
 public final class Momentum extends Gathering {
 
     public Momentum() {
-        super("momentum", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends ChargePassive {
 
         public Internal() {
-            super("momentum", 4);
+            super(4);
         }
 
         @EventHandler(ignoreCancelled = true)

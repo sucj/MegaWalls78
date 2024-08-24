@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.arcanist.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargeCooldownPassive;
 import icu.suc.megawalls78.util.*;
 import icu.suc.megawalls78.util.Effect;
@@ -15,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("arcane_explosion")
 public final class ArcaneExplosion extends ChargeCooldownPassive {
 
     private static final double RADIUS = 5.0D;
@@ -26,7 +28,7 @@ public final class ArcaneExplosion extends ChargeCooldownPassive {
     });
 
     public ArcaneExplosion() {
-        super("arcane_explosion", 1000L, 5);
+        super(1000L, 5);
     }
 
     @EventHandler(ignoreCancelled = true)

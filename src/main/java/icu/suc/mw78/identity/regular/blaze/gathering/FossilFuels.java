@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.blaze.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.BlockUtil;
 import org.bukkit.Material;
@@ -10,18 +11,19 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("fossil_fuels")
 public final class FossilFuels extends Gathering {
 
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 50, 2);
 
     public FossilFuels() {
-        super("fossil_fuels", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends CooldownPassive {
 
         public Internal() {
-            super("fossil_fuels", 10000L);
+            super(10000L);
         }
 
         @EventHandler(ignoreCancelled = true)

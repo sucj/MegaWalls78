@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.mythic.assassin.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.mw78.identity.mythic.assassin.skill.ShadowCloak;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -7,12 +8,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+@Trait("shadow_step")
 public final class ShadowStep extends CooldownPassive {
 
     private static final double RADIUS = 25.0D; // 25格内的远程伤害
 
     public ShadowStep() {
-        super("shadow_step", 10000L);
+        super(10000L);
     }
 
     @EventHandler(ignoreCancelled = true)

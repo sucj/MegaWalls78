@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.enderman.skill;
 
 import com.google.common.collect.Lists;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("teleport")
 public final class Teleport extends Skill {
 
     private static final double RADIUS = 25.0D;
@@ -34,7 +36,7 @@ public final class Teleport extends Skill {
     });
 
     public Teleport() {
-        super("teleport", 100, 8000L);
+        super(100, 8000L);
     }
 
     @Override

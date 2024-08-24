@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.zombie.passive;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.DurationCooldownPassive;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -12,6 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("berserk")
 public final class Berserk extends DurationCooldownPassive {
 
     private static final double SCALE = 1.75D;
@@ -21,7 +23,7 @@ public final class Berserk extends DurationCooldownPassive {
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ZOMBIE_HURT, SoundCategory.PLAYERS, 1.0F, 1.0F));
 
     public Berserk() {
-        super("berserk", 15000L, 6000L);
+        super(15000L, 6000L);
     }
 
     @EventHandler(ignoreCancelled = true)

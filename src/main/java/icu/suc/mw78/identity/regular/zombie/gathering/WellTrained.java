@@ -4,6 +4,7 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.event.StateChangeEvent;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -14,20 +15,17 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("well_trained")
 public final class WellTrained extends Gathering {
 
     private static final PotionEffect HASTE_2 = new PotionEffect(PotionEffectType.HASTE, 100, 1);
     private static final PotionEffect HASTE_3 = new PotionEffect(PotionEffectType.HASTE, PotionEffect.INFINITE_DURATION, 2);
 
     public WellTrained() {
-        super("well_trained", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends Passive {
-
-        public Internal() {
-            super("well_trained");
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {

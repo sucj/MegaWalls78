@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.squid.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.ParticleUtil;
@@ -12,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("rejuvenate")
 public class Rejuvenate extends CooldownPassive {
 
     private static final double HEALTH = 21.0D;
@@ -25,7 +27,7 @@ public class Rejuvenate extends CooldownPassive {
     });
 
     public Rejuvenate() {
-        super("rejuvenate", 40000L);
+        super(40000L);
     }
 
     @EventHandler

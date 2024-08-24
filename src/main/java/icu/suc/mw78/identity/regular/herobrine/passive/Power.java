@@ -1,18 +1,20 @@
 package icu.suc.mw78.identity.regular.herobrine.passive;
 
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.DurationPassive;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+@Trait("power")
 public final class Power extends DurationPassive {
 
     private static final double SCALE = 1.85D;
 
     public Power() {
-        super("power", 6000L);
+        super(6000L);
     }
 
     @EventHandler(ignoreCancelled = true)

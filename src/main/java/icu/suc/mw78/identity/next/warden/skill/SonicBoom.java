@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.next.warden.skill;
 
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.task.AbstractTask;
 import icu.suc.megawalls78.util.DamageSource;
@@ -27,6 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("sonic_boom")
 public final class SonicBoom extends Skill {
 
     private static final double RANGE = 7.5D;
@@ -42,7 +44,7 @@ public final class SonicBoom extends Skill {
     private Task task;
 
     public SonicBoom() {
-        super("sonic_boom", 50, 13000L);
+        super(50, 13000L);
     }
 
     @Override

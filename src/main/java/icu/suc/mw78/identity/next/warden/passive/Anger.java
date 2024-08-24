@@ -3,6 +3,7 @@ package icu.suc.mw78.identity.next.warden.passive;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.IActionbar;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Sound;
@@ -12,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("anger")
 public final class Anger extends Passive implements IActionbar {
 
     private static final int MIN = 20;
@@ -23,10 +25,6 @@ public final class Anger extends Passive implements IActionbar {
     private int tick;
     private boolean state;
     private boolean deactivated;
-
-    public Anger() {
-        super("anger");
-    }
 
     @EventHandler
     public void onPlayerTick(ServerTickStartEvent event) {

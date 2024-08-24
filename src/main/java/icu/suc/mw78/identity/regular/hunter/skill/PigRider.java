@@ -1,5 +1,6 @@
 package icu.suc.mw78.identity.regular.hunter.skill;
 
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.EntityUtil;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@Trait("pig_rider")
 public final class PigRider extends DurationSkill {
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 10, 4, true, false);
@@ -17,7 +19,7 @@ public final class PigRider extends DurationSkill {
     private Task task;
 
     public PigRider() {
-        super("pig_rider", 0, 60000L, 30000L);
+        super(0, 60000L, 30000L);
     }
 
     @Override

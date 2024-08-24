@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.shaman.gathering;
 
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.BlockUtil;
 import org.bukkit.Material;
@@ -10,16 +11,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
+@Trait("spirit_gathering")
 public final class SpiritGathering extends Gathering {
 
     public SpiritGathering() {
-        super("spirit_gathering", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends ChargePassive {
 
         public Internal() {
-            super("spirit_gathering", 2);
+            super(2);
         }
 
         @EventHandler(ignoreCancelled = true)

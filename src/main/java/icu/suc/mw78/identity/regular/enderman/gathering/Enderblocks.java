@@ -3,6 +3,7 @@ package icu.suc.mw78.identity.regular.enderman.gathering;
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargePassive;
 import icu.suc.megawalls78.util.BlockUtil;
 import icu.suc.megawalls78.util.InventoryUtil;
@@ -19,16 +20,17 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Set;
 
+@Trait("enderblocks")
 public final class Enderblocks extends Gathering {
 
     public Enderblocks() {
-        super("enderblocks", Internal.class);
+        super(Internal.class);
     }
 
     public static final class Internal extends ChargePassive {
 
         public Internal() {
-            super("enderblocks", 3);
+            super(3);
         }
 
         @EventHandler(ignoreCancelled = true)

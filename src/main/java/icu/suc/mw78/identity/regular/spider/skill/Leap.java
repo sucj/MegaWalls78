@@ -1,6 +1,6 @@
 package icu.suc.mw78.identity.regular.spider.skill;
 
-import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.task.AbstractTask;
 import icu.suc.megawalls78.util.*;
@@ -19,6 +19,7 @@ import org.bukkit.util.Vector;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Trait("leap")
 public final class Leap extends Skill {
 
     public static final String ID = "leap";
@@ -42,7 +43,7 @@ public final class Leap extends Skill {
     private Task task;
 
     public Leap() {
-        super(ID, 100, 1000L);
+        super(100, 1000L);
     }
 
     @Override

@@ -2,6 +2,7 @@ package icu.suc.mw78.identity.regular.shaman.skill;
 
 import com.google.common.collect.Lists;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.DamageSource;
@@ -21,6 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
+@Trait("tornado")
 public final class Tornado extends Skill {
 
     private static final int DURATION = 100;
@@ -35,7 +37,7 @@ public final class Tornado extends Skill {
     private final List<Task> tasks = Lists.newArrayList();
 
     public Tornado() {
-        super("tornado", 100, 1000L);
+        super(100, 1000L);
     }
 
     @Override
