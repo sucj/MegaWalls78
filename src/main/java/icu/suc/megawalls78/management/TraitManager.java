@@ -37,9 +37,9 @@ public class TraitManager {
     private static final Component C_P = Component.translatable("mw78.gui.trait.passive").decorate(TextDecoration.BOLD);
     private static final Component C_G = Component.translatable("mw78.gui.trait.gathering").decorate(TextDecoration.BOLD);
     private static final Component C_ST = Component.translatable("mw78.gui.trait.skill_trigger");
-    private static final Component C_SD = Component.translatable("mw78.gui.trait.skill_describe");
-    private static final Component C_PD = Component.translatable("mw78.gui.trait.passive_describe");
-    private static final Component C_GD = Component.translatable("mw78.gui.trait.gathering_describe");
+    private static final Component C_SD = Component.translatable("mw78.gui.trait.skill_description");
+    private static final Component C_PD = Component.translatable("mw78.gui.trait.passive_description");
+    private static final Component C_GD = Component.translatable("mw78.gui.trait.gathering_description");
 
     public static <T extends Trait> T trait(Class<? extends T> clazz, GamePlayer player) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         return trait(clazz, player, null);
@@ -49,7 +49,7 @@ public class TraitManager {
         id = id == null ? clazz.getAnnotation(icu.suc.megawalls78.identity.trait.annotation.Trait.class).value() : id;
         ID_MAP.put(clazz, id);
         NAME_MAP.put(clazz, Component.translatable("mw78.trait." + id));
-        DESCRIBE_MAP.put(clazz, Component.translatable("mw78.trait." + id + ".describe"));
+        DESCRIBE_MAP.put(clazz, Component.translatable("mw78.trait." + id + ".description"));
         T trait = clazz.getConstructor().newInstance();
         trait.PLAYER(player);
         return trait;
