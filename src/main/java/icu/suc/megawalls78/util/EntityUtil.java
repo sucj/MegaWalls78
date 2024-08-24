@@ -16,6 +16,7 @@ import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.floats.FloatArraySet;
 import it.unimi.dsi.fastutil.floats.FloatArrays;
 import it.unimi.dsi.fastutil.floats.FloatSet;
+import net.kyori.adventure.text.Component;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.TraceableEntity;
@@ -27,6 +28,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.attribute.Attributable;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.CraftServer;
@@ -46,6 +50,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.metadata.Metadatable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Team;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
@@ -57,16 +62,7 @@ import java.util.function.Consumer;
 
 public class EntityUtil {
 
-    private static final Vector[][] SAFE_RIDE = new Vector[][]{
-            {new Vector(0.2, 0, 0)},
-            {new Vector(-0.2, 0, 0)},
-            {new Vector(0, 0, 0.2)},
-            {new Vector(0, 0, -0.2)},
-            {new Vector(0.2, 0, 0), new Vector(0, 0, 0.2)},
-            {new Vector(-0.2, 0, 0), new Vector(0, 0, -0.2)},
-            {new Vector(-0.2, 0, 0), new Vector(0, 0, 0.2)},
-            {new Vector(0.2, 0, 0), new Vector(0, 0, -0.2)},
-    };
+    private static final Vector[][] SAFE_RIDE = new Vector[][] {{new Vector(0.2, 0, 0)}, {new Vector(-0.2, 0, 0)}, {new Vector(0, 0, 0.2)}, {new Vector(0, 0, -0.2)}, {new Vector(0.2, 0, 0), new Vector(0, 0, 0.2)}, {new Vector(-0.2, 0, 0), new Vector(0, 0, -0.2)}, {new Vector(-0.2, 0, 0), new Vector(0, 0, 0.2)}, {new Vector(0.2, 0, 0), new Vector(0, 0, -0.2)},};
 
     public static Entity spawn(Location location, Type type, Object... data) {
         return spawn(location, type, null, data);
@@ -444,6 +440,31 @@ public class EntityUtil {
             }
         }
         vehicle.addPassenger(player);
+    }
+
+    public static void setTamed(Player player, Entity entity) {
+        entity.customName(Component.translatable("mw78.entity.tamed", player.name(), entity.name()));
+        Team team = player.getScoreboard().getPlayerTeam(player);
+        if (team == null) {
+            return;
+        }
+        team.addEntity(entity);
+    }
+
+    public static void setAttributeValue(Attributable attributable, Attribute attribute, double value) {
+        AttributeInstance instance = attributable.getAttribute(attribute);
+        if (instance == null) {
+            return;
+        }
+        instance.setBaseValue(value);
+    }
+
+    public static void scaleAttributeBaseValue(Attributable attributable, Attribute attribute, double scale) {
+        AttributeInstance instance = attributable.getAttribute(attribute);
+        if (instance == null) {
+            return;
+        }
+        instance.setBaseValue(instance.getBaseValue() * scale);
     }
 
     public enum Type {

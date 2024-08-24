@@ -7,12 +7,10 @@ import icu.suc.megawalls78.util.Color;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.RandomUtil;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -111,8 +109,7 @@ public class AnimalCompanion extends CooldownPassive {
                     EntityUtil.spawn(location, EntityUtil.Type.TAMED_WOLF, entity -> {
                         Wolf wolf = (Wolf) entity;
                         add(player, wolf);
-                        AttributeInstance maxHealth = wolf.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                        maxHealth.setBaseValue(maxHealth.getBaseValue() / 2);
+                        EntityUtil.scaleAttributeBaseValue(wolf, Attribute.GENERIC_MAX_HEALTH, 0.5D);
                         wolf.setCollarColor(Color.getDye(PLAYER().getTeam().color()));
                     }, uuid);
         }
@@ -128,8 +125,7 @@ public class AnimalCompanion extends CooldownPassive {
         entities.clear();
         for (LivingEntity living : livings) {
             entities.add(living);
-            living.customName(Component.translatable("mw78.entity.tamed", player.name(), living.name()));
-            player.getScoreboard().getPlayerTeam(player).addEntity(living);
+            EntityUtil.setTamed(player, living);
         }
     }
 

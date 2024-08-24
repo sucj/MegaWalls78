@@ -5,7 +5,6 @@ import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
@@ -66,8 +65,7 @@ public final class PigRider extends DurationSkill {
         private void spawn() {
             EntityUtil.spawn(player.getLocation(), EntityUtil.Type.CONTROLLABLE_PIG, entity -> {
                 pig = (Pig) entity;
-                AttributeInstance attribute = pig.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
-                attribute.setBaseValue(attribute.getBaseValue() * 2.5);
+                EntityUtil.scaleAttributeBaseValue(pig, Attribute.GENERIC_MOVEMENT_SPEED, 2.5D);
                 pig.setInvulnerable(true);
                 pig.addPotionEffect(SPEED);
                 EntityUtil.safeRide(pig, player);

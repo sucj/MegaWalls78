@@ -6,9 +6,7 @@ import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.ChargeCooldownPassive;
 import icu.suc.megawalls78.util.Color;
 import icu.suc.megawalls78.util.EntityUtil;
-import net.kyori.adventure.text.Component;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -39,11 +37,9 @@ public final class WolfPack extends ChargeCooldownPassive {
             }
             EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TAMED_WOLF, entity -> {
                 Wolf wolf = (Wolf) entity;
-                wolf.customName(Component.translatable("mw78.entity.tamed", player.name(), wolf.name()));
-                player.getScoreboard().getPlayerTeam(player).addEntity(wolf);
-                wolf.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(HEALTH);
-                AttributeInstance attribute = wolf.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
-                attribute.setBaseValue(attribute.getBaseValue() * SCALE);
+                EntityUtil.setTamed(player, wolf);
+                EntityUtil.setAttributeValue(wolf, Attribute.GENERIC_MAX_HEALTH, HEALTH);
+                EntityUtil.scaleAttributeBaseValue(wolf, Attribute.GENERIC_ATTACK_DAMAGE, SCALE);
                 wolf.setCollarColor(Color.getDye(PLAYER().getTeam().color()));
                 entities.add(wolf);
             }, player.getUniqueId());
