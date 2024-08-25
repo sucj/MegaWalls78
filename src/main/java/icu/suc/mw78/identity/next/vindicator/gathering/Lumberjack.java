@@ -13,8 +13,6 @@ import org.bukkit.inventory.ItemStack;
 @Trait("lumberjack")
 public final class Lumberjack extends Gathering {
 
-    private static final double CHANCE = 0.2;
-
     public Lumberjack() {
         super(Internal.class);
     }
@@ -29,7 +27,7 @@ public final class Lumberjack extends Gathering {
         }
 
         private static boolean condition(BlockDropItemEvent event) {
-            return BlockUtil.isWood(event.getBlockState().getType()) && RandomUtil.roll(CHANCE);
+            return BlockUtil.isWood(event.getBlockState().getType());
         }
 
         private static void handle(BlockDropItemEvent event) {
