@@ -53,7 +53,7 @@ bukkitPluginYaml {
   authors = listOf("557")
   apiVersion = "1.21"
   load = BukkitPluginYaml.PluginLoadOrder.POSTWORLD
-  depend = listOf("SkinsRestorer", "SuperVanish", "LuckPerms", "ProtocolLib")
+  depend = listOf("SkinsRestorer", "SuperVanish", "LuckPerms")
   libraries = listOf("com.mysql:mysql-connector-j:9.0.0", "redis.clients:jedis:5.1.3", "net.megavex:scoreboard-library-api:2.1.12", "net.megavex:scoreboard-library-implementation:2.1.12", "net.megavex:scoreboard-library-modern:2.1.12")
   prefix = "MW78"
   permissions {
