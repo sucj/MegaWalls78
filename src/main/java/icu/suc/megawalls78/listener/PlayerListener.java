@@ -1,6 +1,5 @@
 package icu.suc.megawalls78.listener;
 
-import com.destroystokyo.paper.event.player.PlayerClientOptionsChangeEvent;
 import com.google.common.collect.Lists;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.event.IncreaseStatsEvent;
@@ -523,13 +522,6 @@ public class PlayerListener implements Listener {
     public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
         if (ItemUtil.mw78SoulBound(event.getPlayerItem())) {
             event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerClientOptionsChange(PlayerClientOptionsChangeEvent event) {
-        if (event.hasLocaleChanged()) {
-            event.getPlayer().updateInventory();
         }
     }
 

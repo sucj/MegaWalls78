@@ -14,12 +14,9 @@ import icu.suc.megawalls78.util.Formatters;
 import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
-import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.translation.GlobalTranslator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -63,7 +60,7 @@ public class TraitManager {
         return NAME_MAP.get(clazz);
     }
 
-    public static Component describe(Class<? extends Trait> clazz) {
+    public static Component description(Class<? extends Trait> clazz) {
         return DESCRIBE_MAP.get(clazz);
     }
 
@@ -103,7 +100,6 @@ public class TraitManager {
             List<Component> sPages = Lists.newArrayList();
             for (Class<? extends Skill> skill : Sets.newLinkedHashSet(skillClasses.values())) {
                 Component skillName = name(skill);
-                skills.add(Component.translatable("mw78.brackets", NamedTextColor.DARK_GRAY, skillName.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)).decorate(TextDecoration.BOLD).clickEvent(ClickEvent.changePage(++i)));
                 Component sPage = Component.empty().append(skillName.decorate(TextDecoration.BOLD))
                         .appendNewline()
                         .appendNewline();
@@ -117,11 +113,16 @@ public class TraitManager {
                 sPage = sPage.append(Component.translatable("mw78.brackets", C_ST.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)).decorate(TextDecoration.BOLD).hoverEvent(Component.join(JoinConfiguration.newlines(), components)))
                         .appendNewline()
                         .appendNewline();
-                sPage = sPage.append(Component.translatable("mw78.brackets", C_SD.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)).decorate(TextDecoration.BOLD).hoverEvent(skillName.appendNewline().append(describe(skill))))
+                Component skillDescription = skillName.appendNewline().append(description(skill));
+                sPage = sPage.append(Component.translatable("mw78.brackets", C_SD.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)).decorate(TextDecoration.BOLD).hoverEvent(skillDescription))
                         .appendNewline()
                         .appendNewline();
                 sPage = sPage.append(C_HOME);
                 sPages.add(sPage);
+                skills.add(Component.translatable("mw78.brackets", NamedTextColor.DARK_GRAY, skillName.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE))
+                        .decorate(TextDecoration.BOLD)
+                        .hoverEvent(skillDescription)
+                        .clickEvent(ClickEvent.changePage(++i)));
             }
             info = info.append(Component.join(JoinConfiguration.spaces(), skills))
                     .appendNewline();
@@ -132,14 +133,18 @@ public class TraitManager {
             List<Component> pPages = Lists.newArrayList();
             for (Class<? extends Passive> passive : passiveClasses) {
                 Component passiveName = name(passive);
-                passives.add(Component.translatable("mw78.brackets", NamedTextColor.DARK_GRAY, passiveName.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)).decorate(TextDecoration.BOLD).clickEvent(ClickEvent.changePage(++i)));
+                Component passiveDescription = passiveName.appendNewline().append(description(passive));
                 pPages.add(Component.empty().append(passiveName.decorate(TextDecoration.BOLD))
                         .appendNewline()
                         .appendNewline()
-                        .append(Component.translatable("mw78.brackets", C_PD.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)).decorate(TextDecoration.BOLD).hoverEvent(passiveName.appendNewline().append(describe(passive))))
+                        .append(Component.translatable("mw78.brackets", C_PD.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)).decorate(TextDecoration.BOLD).hoverEvent(passiveDescription))
                         .appendNewline()
                         .appendNewline()
                         .append(C_HOME));
+                passives.add(Component.translatable("mw78.brackets", NamedTextColor.DARK_GRAY, passiveName.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE))
+                        .decorate(TextDecoration.BOLD)
+                        .hoverEvent(passiveDescription)
+                        .clickEvent(ClickEvent.changePage(++i)));
             }
             info = info.append(Component.join(JoinConfiguration.spaces(), passives))
                     .appendNewline();
@@ -147,14 +152,15 @@ public class TraitManager {
             info = info.append(C_G).appendNewline();
             Class<? extends Gathering> gathering = identity.getGatheringClass();
             Component gatheringName = name(gathering);
+            Component gatheringDescription = gatheringName.appendNewline().append(description(gathering));
             Component gPage = Component.empty().append(gatheringName.decorate(TextDecoration.BOLD))
                     .appendNewline()
                     .appendNewline()
-                    .append(Component.translatable("mw78.brackets", C_GD.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)).decorate(TextDecoration.BOLD).hoverEvent(gatheringName.appendNewline().append(describe(gathering))))
+                    .append(Component.translatable("mw78.brackets", C_GD.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)).decorate(TextDecoration.BOLD).hoverEvent(gatheringDescription))
                     .appendNewline()
                     .appendNewline()
                     .append(C_HOME);
-            info = info.append(Component.translatable("mw78.brackets", NamedTextColor.DARK_GRAY, gatheringName.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)).decorate(TextDecoration.BOLD).clickEvent(ClickEvent.changePage(++i)))
+            info = info.append(Component.translatable("mw78.brackets", NamedTextColor.DARK_GRAY, gatheringName.decoration(TextDecoration.BOLD, TextDecoration.State.FALSE)).decorate(TextDecoration.BOLD).hoverEvent(gatheringDescription).clickEvent(ClickEvent.changePage(++i)))
                     .appendNewline();
 
             pages.add(info);

@@ -87,6 +87,16 @@ public final class Transience extends Passive implements IActionbar {
         }
     }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerAssist(IncreaseStatsEvent.Assist event) {
+        GamePlayer gamePlayer = event.getPlayer();
+        if (PASSIVE(gamePlayer)) {
+            if (state) {
+                gamePlayer.getBukkitPlayer().setHealth(HEALTH);
+            }
+        }
+    }
+
     @Override
     public void unregister() {
         tick = 0;

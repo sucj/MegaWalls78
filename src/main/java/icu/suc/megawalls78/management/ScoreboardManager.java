@@ -255,7 +255,7 @@ public class ScoreboardManager implements Listener {
                     } else {
                         label = label.color(WHITE);
                     }
-                    component = component.append(label).append(Component.translatable("mw78.sb.colon", WHITE)).append(Component.space()).append(value.color(team.color()));
+                    component = component.append(label).append(Component.translatable("mw78.sb.colon", WHITE)).append(value.color(team.color()));
                     return component;
                 }
             });

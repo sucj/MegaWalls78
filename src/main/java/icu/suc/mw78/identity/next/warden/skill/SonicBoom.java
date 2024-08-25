@@ -35,8 +35,8 @@ public final class SonicBoom extends Skill {
     private static final double DAMAGE = 10.0D;
     private static final long CHARGE = 1700L;
     private static final int TICK = (int) (CHARGE / 50);
-    private static final PotionEffect SLOWNESS = new PotionEffect(PotionEffectType.SLOWNESS, TICK, 2);
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, TICK, 2);
+    private static final PotionEffect SLOWNESS = new PotionEffect(PotionEffectType.SLOWNESS, TICK, 2);
     private static final double RADIUS = 1.5D;
     private static final double SCALE = 0.6D;
     private static final PotionEffect DARKNESS = new PotionEffect(PotionEffectType.DARKNESS, 100, 0);
@@ -105,9 +105,9 @@ public final class SonicBoom extends Skill {
         }
 
         public void resetCharge() {
-            player.addPotionEffect(SLOWNESS);
             player.addPotionEffect(RESISTANCE);
-            summaryEffectSelf(player, SLOWNESS, RESISTANCE);
+            player.addPotionEffect(SLOWNESS);
+            summaryEffectSelf(player, RESISTANCE, SLOWNESS);
             playChargeSoundEffect();
             charge = 0;
         }

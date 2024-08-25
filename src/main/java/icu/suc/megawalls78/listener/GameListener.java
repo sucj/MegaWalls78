@@ -151,7 +151,7 @@ public class GameListener implements Listener {
 
             ChestRollEvent.Pre pre = new ChestRollEvent.Pre(player, event.getBlockState(), MegaWalls78.getInstance().getGameManager().getState().equals(GameState.PREPARING) ? BEFORE_PBB : AFTER_PBB);
             Bukkit.getPluginManager().callEvent(pre);
-            if (pre.isCancelled() || RandomUtil.RANDOM.nextDouble() > pre.getChance()) {
+            if (pre.isCancelled() || !RandomUtil.roll(pre.getChance())) {
                 return;
             }
 

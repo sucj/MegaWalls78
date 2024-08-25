@@ -38,4 +38,8 @@ public class RandomUtil {
         }
         return null;
     }
+
+    public static boolean roll(double chance) {
+        return RANDOM.nextDouble() < chance;
+    }
 }

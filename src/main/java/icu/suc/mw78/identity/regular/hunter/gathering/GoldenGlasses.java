@@ -29,7 +29,7 @@ public class GoldenGlasses extends Gathering {
         }
 
         private static boolean condition() {
-            return RandomUtil.RANDOM.nextDouble() > CHANCE;
+            return RandomUtil.roll(CHANCE);
         }
 
         private static void handle(ChestRollEvent.Post event) {

@@ -32,7 +32,6 @@ public class ShoutCommand implements CommandExecutor {
                             .append(LP.getPrefix(player.getUniqueId()))
                             .append(player.teamDisplayName().color(LP.getNameColor(player.getUniqueId())))
                             .append(Component.translatable("mw78.sb.colon", NamedTextColor.WHITE))
-                            .append(Component.space())
                             .append(Component.text(String.join(" ", strings), NamedTextColor.WHITE)));
                 }
                 return true;
