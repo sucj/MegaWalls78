@@ -34,7 +34,7 @@ dependencies {
   implementation("com.github.LeonMangler", "SuperVanish", "6.2.19")
   implementation("net.luckperms", "api", "5.4")
   implementation("net.megavex", "scoreboard-library-api", "2.1.12")
-  implementation("com.comphenix.protocol", "ProtocolLib", "5.3.0-SNAPSHOT")
+//  implementation("com.comphenix.protocol", "ProtocolLib", "5.3.0-SNAPSHOT")
   implementation("redis.clients", "jedis", "5.1.3")
   implementation("com.mysql", "mysql-connector-j", "9.0.0")
 }
