@@ -1,13 +1,14 @@
 package icu.suc.mw78.identity.regular.dreadlord;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 import org.bukkit.enchantments.Enchantment;
 
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.BLAST_PROTECTION;
 import static org.bukkit.enchantments.Enchantment.FIRE_PROTECTION;
 
-public final class Dreadlord extends icu.suc.megawalls78.identity.Kit {
+public final class Dreadlord extends Kit {
 
     public Dreadlord(Identity identity) {
         super(identity);

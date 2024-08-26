@@ -18,12 +18,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-@Trait("junk_food")
+@Trait(value = "junk_food", charge = JunkFood.JUNK_APPLE_APPEAR)
 public final class JunkFood extends ChargePassive implements IActionbar {
 
-    private static final int COOKIE_APPEAR = 50;
-    private static final int PIE_APPEAR = 100;
-    private static final int JUNK_APPLE_APPEAR = 300;
+    public static final int COOKIE_APPEAR = 50;
+    public static final int PIE_APPEAR = 100;
+    public static final int JUNK_APPLE_APPEAR = 300;
 
     private static final ItemBuilder COOKIE = ItemBuilder.of(Material.COOKIE)
             .setAmount(3)
@@ -39,9 +39,7 @@ public final class JunkFood extends ChargePassive implements IActionbar {
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .setMW78Id(ItemUtil.MOLEMAN_JUNK_APPLE);
 
-    public JunkFood() {
-        super(JUNK_APPLE_APPEAR);
-    }
+    private int CHARGE = JUNK_APPLE_APPEAR;
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockDropItemEvent event) {
@@ -75,6 +73,11 @@ public final class JunkFood extends ChargePassive implements IActionbar {
 
     @Override
     public Component acb() {
-        return Type.CHARGE_STATE.accept(CHARGE_COUNT(), CHARGE, condition_available());
+        return Type.CHARGE_STATE.accept(CHARGE_COUNT(), CHARGE_GET(), condition_available());
+    }
+
+    @Override
+    protected int CHARGE_GET() {
+        return CHARGE;
     }
 }

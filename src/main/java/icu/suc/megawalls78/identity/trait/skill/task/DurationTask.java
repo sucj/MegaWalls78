@@ -4,12 +4,12 @@ import org.bukkit.entity.Player;
 
 public abstract class DurationTask extends AbstractTask {
 
-    protected final int maxTick;
+    protected final int max;
     protected int tick;
 
-    public DurationTask(Player player, int maxTick) {
+    public DurationTask(Player player, int max) {
         super(player);
-        this.maxTick = maxTick - 1;
+        this.max = max - 1;
         reset();
     }
 
@@ -20,7 +20,7 @@ public abstract class DurationTask extends AbstractTask {
 
     @Override
     protected boolean shouldCancel() {
-        return super.shouldCancel() || tick >= maxTick;
+        return super.shouldCancel() || tick >= max;
     }
 
     public void reset() {
@@ -28,6 +28,6 @@ public abstract class DurationTask extends AbstractTask {
     }
 
     public int remain() {
-        return maxTick - tick;
+        return max - tick;
     }
 }

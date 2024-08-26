@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Trait("dig")
+@Trait(value = "dig", cost = 100F, cooldown = 1000L)
 public final class Dig extends Skill {
 
     private static final double FORWARD = 8.0D;
@@ -39,10 +39,6 @@ public final class Dig extends Skill {
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ITEM_BREAK, SoundCategory.PLAYERS, 0.5F, 1.0F));
 
     private Task task;
-
-    public Dig() {
-        super(100, 1000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

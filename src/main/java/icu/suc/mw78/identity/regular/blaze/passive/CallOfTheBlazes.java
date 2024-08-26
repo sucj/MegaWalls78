@@ -6,7 +6,6 @@ import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.EntityUtil;
-import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Blaze;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

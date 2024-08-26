@@ -12,15 +12,11 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 
-@Trait("agile")
+@Trait(value = "agile", cooldown = 12000L)
 public final class Agile extends CooldownPassive {
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 140, 1);
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 140, 0);
-
-    public Agile() {
-        super(12000L);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerShoot(EntityDamageByEntityEvent event) {

@@ -12,14 +12,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-@Trait("ammo_bin")
+@Trait(value = "ammo_bin", internal = AmmoBin.Internal.class)
 public final class AmmoBin extends Gathering {
 
     private static final int AMOUNT = 30;
-
-    public AmmoBin() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

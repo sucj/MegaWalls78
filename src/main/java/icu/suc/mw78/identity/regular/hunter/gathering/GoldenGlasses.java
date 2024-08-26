@@ -10,14 +10,10 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
-@Trait("golden_glasses")
-public class GoldenGlasses extends Gathering {
+@Trait(value = "golden_glasses", internal = GoldenGlasses.Internal.class)
+public final class GoldenGlasses extends Gathering {
 
     private static final double CHANCE = 0.5D;
-
-    public GoldenGlasses() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

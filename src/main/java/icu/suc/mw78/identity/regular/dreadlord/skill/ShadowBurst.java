@@ -11,16 +11,12 @@ import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-@Trait("shadow_burst")
+@Trait(value = "shadow_burst", cost = 100F, cooldown = 1000L)
 public final class ShadowBurst extends Skill {
 
     private static final float DAMAGE = 8.0F;
 
     private static final Effect<Location> EFFECT_SKILL = Effect.create(location -> location.getWorld().playSound(location, Sound.ENTITY_WITHER_SHOOT, SoundCategory.PLAYERS, 1.0F, 1.0F, 0));
-
-    public ShadowBurst() {
-        super(100, 1000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

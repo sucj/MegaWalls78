@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.squid;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 import org.bukkit.potion.PotionEffect;
 
 import static org.bukkit.Material.*;
@@ -8,7 +9,7 @@ import static org.bukkit.enchantments.Enchantment.DEPTH_STRIDER;
 import static org.bukkit.enchantments.Enchantment.PROTECTION;
 import static org.bukkit.potion.PotionEffectType.REGENERATION;
 
-public class Squid extends icu.suc.megawalls78.identity.Kit {
+public class Squid extends Kit {
 
     public Squid(Identity identity) {
         super(identity);

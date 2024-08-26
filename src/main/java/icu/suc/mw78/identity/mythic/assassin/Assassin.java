@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.mythic.assassin;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 import net.kyori.adventure.text.Component;
 import org.bukkit.potion.PotionEffect;
 
@@ -9,7 +10,7 @@ import static org.bukkit.enchantments.Enchantment.*;
 import static org.bukkit.potion.PotionEffectType.REGENERATION;
 import static org.bukkit.potion.PotionEffectType.SPEED;
 
-public final class Assassin extends icu.suc.megawalls78.identity.Kit {
+public final class Assassin extends Kit {
 
     public Assassin(Identity identity) {
         super(identity);

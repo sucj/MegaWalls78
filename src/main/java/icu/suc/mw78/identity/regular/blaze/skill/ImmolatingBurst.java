@@ -9,7 +9,7 @@ import icu.suc.megawalls78.util.ParticleUtil;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 
-@Trait("immolating_burst")
+@Trait(value = "immolating_burst", cost = 100F, cooldown = 1000L)
 public final class ImmolatingBurst extends Skill {
 
     private static final float DAMAGE = 3F;
@@ -23,10 +23,6 @@ public final class ImmolatingBurst extends Skill {
     });
 
     private Task task;
-
-    public ImmolatingBurst() {
-        super(100, 1000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

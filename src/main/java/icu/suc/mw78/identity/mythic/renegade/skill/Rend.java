@@ -24,7 +24,7 @@ import java.util.UUID;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("rend")
+@Trait(value = "rend", cost = 100F, cooldown = 1000L, internal = Rend.Internal.class)
 public final class Rend extends Skill {
 
     private static final double RADIUS = 8.0D;
@@ -34,10 +34,6 @@ public final class Rend extends Skill {
     private static final double DAMAGE_MAX = 18.0D;
     private static final int RETRIEVE = 6;
     private static final int ENERGY = 100;
-
-    public Rend() {
-        super(100, 1000L, Internal.class);
-    }
 
     @Override
     protected boolean use0(Player player) {

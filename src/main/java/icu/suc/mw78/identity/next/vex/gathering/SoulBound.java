@@ -11,12 +11,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-@Trait("soul_bound")
+@Trait(value = "soul_bound", internal = SoulBound.Internal.class)
 public class SoulBound extends Gathering {
-
-    public SoulBound() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

@@ -11,18 +11,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-@Trait("spirit_gathering")
+@Trait(value = "spirit_gathering", internal = SpiritGathering.Internal.class)
 public final class SpiritGathering extends Gathering {
 
-    public SpiritGathering() {
-        super(Internal.class);
-    }
-
+    @Trait(charge = 2)
     public static final class Internal extends ChargePassive {
-
-        public Internal() {
-            super(2);
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onBreakBlock(BlockDropItemEvent event) {

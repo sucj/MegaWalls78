@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("teleport")
+@Trait(value = "teleport", cost = 100F, cooldown = 8000L)
 public final class Teleport extends Skill {
 
     private static final double RADIUS = 25.0D;
@@ -34,10 +34,6 @@ public final class Teleport extends Skill {
         ParticleUtil.spawnParticleRandomBody(player, Particle.PORTAL, 8);
         player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F);
     });
-
-    public Teleport() {
-        super(100, 8000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

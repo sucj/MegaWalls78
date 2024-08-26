@@ -9,18 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-@Trait("arrow_catch")
+@Trait(value = "arrow_catch", internal = ArrowCatch.Internal.class)
 public final class ArrowCatch extends Gathering {
 
-    public ArrowCatch() {
-        super(Internal.class);
-    }
-
+    @Trait(cooldown = 3000L)
     public static final class Internal extends CooldownPassive {
-
-        public Internal() {
-            super(3000L);
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void shot(EntityDamageByEntityEvent event) {

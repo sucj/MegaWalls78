@@ -1,11 +1,12 @@
 package icu.suc.mw78.identity.regular.spider;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.*;
 
-public final class Spider extends icu.suc.megawalls78.identity.Kit {
+public final class Spider extends Kit {
 
     public Spider(Identity identity) {
         super(identity);

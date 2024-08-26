@@ -1,20 +1,19 @@
 package icu.suc.megawalls78.identity.trait.passive;
 
 import icu.suc.megawalls78.identity.trait.IActionbar;
+import icu.suc.megawalls78.management.TraitManager;
 import net.kyori.adventure.text.Component;
 
 public abstract class CooldownPassive extends TimerPassive implements IActionbar {
 
-    protected long COOLDOWN;
-
     long COOLDOWN_LAST;
 
-    public CooldownPassive(long cooldown) {
-        COOLDOWN = cooldown;
+    protected long COOLDOWN_GET() {
+        return TraitManager.cooldown(getClass());
     }
 
     protected boolean COOLDOWN() {
-        return CURRENT() - COOLDOWN_LAST() >= COOLDOWN;
+        return CURRENT() - COOLDOWN_LAST() >= COOLDOWN_GET();
     }
 
     protected long COOLDOWN(long delta) {
@@ -34,7 +33,7 @@ public abstract class CooldownPassive extends TimerPassive implements IActionbar
     }
 
     protected long COOLDOWN_REMAIN() {
-        return COOLDOWN - CURRENT() + COOLDOWN_LAST();
+        return COOLDOWN_GET() - CURRENT() + COOLDOWN_LAST();
     }
 
     @Override

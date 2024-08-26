@@ -1,13 +1,14 @@
 package icu.suc.mw78.identity.mythic.werewolf;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 import org.bukkit.potion.PotionEffect;
 
 import static org.bukkit.Material.*;
 import static org.bukkit.potion.PotionEffectType.JUMP_BOOST;
 import static org.bukkit.potion.PotionEffectType.REGENERATION;
 
-public final class Werewolf extends icu.suc.megawalls78.identity.Kit {
+public final class Werewolf extends Kit {
 
     public Werewolf(Identity identity) {
         super(identity);

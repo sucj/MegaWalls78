@@ -11,18 +11,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-@Trait("momentum")
+@Trait(value = "momentum", internal = Momentum.Internal.class)
 public final class Momentum extends Gathering {
 
-    public Momentum() {
-        super(Internal.class);
-    }
-
+    @Trait(charge = 4)
     public static final class Internal extends ChargePassive {
-
-        public Internal() {
-            super(4);
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onBreakBlock(BlockDropItemEvent event) {
@@ -38,7 +31,7 @@ public final class Momentum extends Gathering {
         }
 
         private static void handle(BlockDropItemEvent event) {
-            InventoryUtil.addItem(event.getPlayer(), event, ItemStack.of(Material.IRON_INGOT));
+            InventoryUtil.addItem(event.getPlayer(), event, ItemStack.of(Material.IRON_BLOCK));
         }
     }
 }

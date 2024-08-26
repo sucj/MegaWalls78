@@ -9,12 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 
-@Trait("junk_recycling")
-public class JunkRecycling extends ChargePassive {
-
-    public JunkRecycling() {
-        super(5);
-    }
+@Trait(value = "junk_recycling", charge = 5)
+public final class JunkRecycling extends ChargePassive {
 
     @EventHandler(ignoreCancelled = true)
     public void onConsumeApple(PlayerItemConsumeEvent event) {

@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.regular.cow;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 import icu.suc.megawalls78.util.ItemUtil;
 import org.bukkit.potion.PotionEffect;
 
@@ -8,7 +9,7 @@ import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.PROTECTION;
 import static org.bukkit.potion.PotionEffectType.REGENERATION;
 
-public final class Cow extends icu.suc.megawalls78.identity.Kit {
+public final class Cow extends Kit {
 
     public Cow(Identity identity) {
         super(identity);

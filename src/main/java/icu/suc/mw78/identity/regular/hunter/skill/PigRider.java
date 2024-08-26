@@ -10,16 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("pig_rider")
+@Trait(value = "pig_rider", cost = 0F, cooldown = 60000L, duration = 30000L)
 public final class PigRider extends DurationSkill {
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 10, 4, true, false);
 
     private Task task;
-
-    public PigRider() {
-        super(0, 60000L, 30000L);
-    }
 
     @Override
     protected boolean use0(Player player) {
@@ -42,7 +38,7 @@ public final class PigRider extends DurationSkill {
         private Pig pig;
 
         public Task(Player player) {
-            super(player, (int) (getDuration() / 50));
+            super(player, (int) (DURATION_GET() / 50));
 
             spawn();
         }

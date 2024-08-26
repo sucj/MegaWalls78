@@ -22,7 +22,7 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
-@Trait("arcane_beam")
+@Trait(value = "arcane_beam", cost = 100F, cooldown = 1000L)
 public final class ArcaneBeam extends Skill {
 
     private static final double DAMAGE = 2.0D;
@@ -51,10 +51,6 @@ public final class ArcaneBeam extends Skill {
         location.setY(beam.getY());
         ParticleUtil.spawnFirework(location, FireworkEffect.builder().flicker(true).withColor(Color.fromRGB(gamePlayer.getTeam().color().value())).build());
     });
-
-    public ArcaneBeam() {
-        super(100, 1000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

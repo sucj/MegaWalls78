@@ -12,16 +12,12 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("skitter")
+@Trait(value = "skitter", duration = 3000L)
 public final class Skitter extends DurationPassive {
 
     private static final int ENERGY = 10;
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 60, 0);
-
-    public Skitter() {
-        super(3000L);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {

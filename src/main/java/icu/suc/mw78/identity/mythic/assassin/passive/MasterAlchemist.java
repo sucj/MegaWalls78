@@ -9,7 +9,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("master_alchemist")
+@Trait(value = "master_alchemist", cooldown = 12000L)
 public final class MasterAlchemist extends CooldownPassive {
 
     private static final long TIME = 1000L;
@@ -17,10 +17,6 @@ public final class MasterAlchemist extends CooldownPassive {
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 2);
 
     private final MutablePair<Long, Double> lastDamage = MutablePair.of(0L, 0.0D);
-
-    public MasterAlchemist() {
-        super(12000L);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) { // 实际上这个技能不需要在意是谁造成了伤害

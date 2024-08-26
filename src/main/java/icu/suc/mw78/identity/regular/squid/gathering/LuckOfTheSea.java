@@ -14,8 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("luck_of_the_sea")
-public class LuckOfTheSea extends Gathering {
+@Trait(value = "luck_of_the_sea", internal = LuckOfTheSea.Internal.class)
+public final class LuckOfTheSea extends Gathering {
 
     private static final ItemBuilder POTION = ItemBuilder.of(Material.POTION)
             .setDisplayName(Component.translatable("item.minecraft.potion"))
@@ -25,15 +25,8 @@ public class LuckOfTheSea extends Gathering {
             .setMaxStackSize(64)
             .addCustomEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1200, 1), false);
 
-    public LuckOfTheSea() {
-        super(Internal.class);
-    }
-
+    @Trait(charge = 5)
     public static final class Internal extends ChargePassive {
-
-        public Internal() {
-            super(5);
-        }
 
         @EventHandler
         public void onChestRoll(ChestRollEvent.Post event) {

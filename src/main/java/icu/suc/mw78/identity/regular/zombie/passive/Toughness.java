@@ -8,14 +8,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("toughness")
+@Trait(value = "toughness", charge = 3)
 public final class Toughness extends ChargePassive {
 
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 20, 0);
-
-    public Toughness() {
-        super(3);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) {

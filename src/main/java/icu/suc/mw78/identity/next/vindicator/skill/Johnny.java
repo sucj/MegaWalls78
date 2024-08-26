@@ -1,6 +1,6 @@
 package icu.suc.mw78.identity.next.vindicator.skill;
 
-import icu.suc.megawalls78.identity.trait.annotation.Trait;
+import icu.suc.megawalls78.identity.trait.annotation.*;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
@@ -15,21 +15,14 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.Set;
 
-@Trait("johnny")
+@Trait(value = "johnny", cost = 100F, cooldown = 1000L, duration = 5000L, internal = Johnny.Internal.class)
 public final class Johnny extends DurationSkill {
-
-    private static final long DURATION = 5000L;
-    private static final int TICK = (int) (DURATION / 50);
 
     private static final Set<EntityDamageEvent.DamageModifier> MODIFIERS = Set.of(EntityDamageEvent.DamageModifier.ARMOR, EntityDamageEvent.DamageModifier.RESISTANCE);
 
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_VINDICATOR_CELEBRATE, SoundCategory.PLAYERS, 1.0F, 1.0F));
 
     private Task task;
-
-    public Johnny() {
-        super(100, 1000L, DURATION, Internal.class);
-    }
 
     @Override
     protected boolean use0(Player player) {
@@ -52,7 +45,7 @@ public final class Johnny extends DurationSkill {
     private final class Task extends DurationTask {
 
         public Task(Player player) {
-            super(player, TICK);
+            super(player, 100);
 
             EntityUtil.setMetadata(player, getId(), true);
         }

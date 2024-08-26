@@ -10,14 +10,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-@Trait("tetanus")
+@Trait(value = "tetanus", cooldown = 2)
 public final class Tetanus extends ChargePassive {
 
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_VINDICATOR_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F));
-
-    public Tetanus() {
-        super(2);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {

@@ -8,15 +8,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-@Trait("soul_eater")
+@Trait(value = "soul_eater", cooldown = 1000L, charge = 4)
 public final class SoulEater extends ChargeCooldownPassive {
 
     private static final int FOOD = 3;
     private static final double HEAL = 2;
-
-    public SoulEater() {
-        super(1000L, 4);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {

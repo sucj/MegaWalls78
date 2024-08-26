@@ -6,15 +6,11 @@ import icu.suc.megawalls78.util.EntityUtil;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-@Trait("explosive_arrow")
+@Trait(value = "explosive_arrow", cost = 100F, cooldown = 1000L)
 public final class ExplosiveArrow extends Skill {
 
     private static final float RADIUS = 6.0F;
     private static final float DAMAGE = 6.0F;
-
-    public ExplosiveArrow() {
-        super(100, 1000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

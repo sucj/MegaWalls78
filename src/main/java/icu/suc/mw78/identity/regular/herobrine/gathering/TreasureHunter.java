@@ -6,14 +6,10 @@ import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import org.bukkit.event.EventHandler;
 
-@Trait("treasure_hunter")
+@Trait(value = "treasure_hunter", internal = TreasureHunter.Internal.class)
 public final class TreasureHunter extends Gathering {
 
     private static final double SCALE = 3.0D;
-
-    public TreasureHunter() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

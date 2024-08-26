@@ -9,15 +9,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("shortcut")
+@Trait(value = "shortcut", charge = 3)
 public final class Shortcut extends ChargePassive {
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 80, 1);
     private static final PotionEffect HASTE = new PotionEffect(PotionEffectType.HASTE, 80, 1);
-
-    public Shortcut() {
-        super(3);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {

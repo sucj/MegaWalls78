@@ -19,7 +19,7 @@ import org.bukkit.util.Vector;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Trait("leap")
+@Trait(value = "leap", cost = 100F, cooldown = 1000L)
 public final class Leap extends Skill {
 
     public static final String ID = "leap";
@@ -41,10 +41,6 @@ public final class Leap extends Skill {
     private static final Effect<Player> EFFECT_LAND = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.AMBIENT, 0.7F, 0.5F));
 
     private Task task;
-
-    public Leap() {
-        super(100, 1000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

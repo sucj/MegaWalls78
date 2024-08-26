@@ -11,15 +11,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("wrath")
+@Trait(value = "wrath", cost = 100F, cooldown = 1000L)
 public final class Wrath extends Skill {
 
     private static final double RADIUS = 5.0D;
     private static final double DAMAGE = 5.0D;
-
-    public Wrath() {
-        super(100, 1000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

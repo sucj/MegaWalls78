@@ -17,14 +17,10 @@ import org.bukkit.event.block.BlockDropItemEvent;
 
 import java.util.Set;
 
-@Trait("spreads")
+@Trait(value = "spreads", internal = Spreads.Internal.class)
 public final class Spreads extends Gathering {
 
     private static final Effect<Location> EFFECT_SOUND = Effect.create(location -> location.getWorld().playSound(location, Sound.BLOCK_SCULK_SPREAD, SoundCategory.BLOCKS, 1.0F, 1.0F));
-
-    public Spreads() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

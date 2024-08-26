@@ -18,8 +18,8 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Set;
 
-@Trait("force_of_nature")
-public class ForceOfNature extends DurationCooldownPassive {
+@Trait(value = "force_of_nature", cooldown = 20000L, duration = 5000L)
+public final class ForceOfNature extends DurationCooldownPassive {
 
     private static final double SCALE = 2.0D;
     private static final long PER = 1000L;
@@ -38,10 +38,6 @@ public class ForceOfNature extends DurationCooldownPassive {
             new PotionEffect[]{new PotionEffect(PotionEffectType.SPEED, 160, 1)});
 
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_SPLASH_POTION_BREAK, SoundCategory.PLAYERS, 1.0F, 1.0F));
-
-    public ForceOfNature() {
-        super(20000L, 5000L);
-    }
 
     @EventHandler
     public void onPlayerTick(ServerTickStartEvent event) {

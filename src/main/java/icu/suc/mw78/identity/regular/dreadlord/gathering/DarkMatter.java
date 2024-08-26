@@ -15,23 +15,16 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Set;
 
-@Trait("dark_matter")
+@Trait(value = "dark_matter", internal = DarkMatter.Internal.class)
 public class DarkMatter extends Gathering {
 
     private static final Set<Material> ORES = Set.of(Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE);
     private static final List<Material> ARMORS = List.of(Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS);
 
-    public DarkMatter() {
-        super(Internal.class);
-    }
-
+    @Trait(charge = 20)
     public static final class Internal extends ChargePassive {
 
         private int armor;
-
-        public Internal() {
-            super(20);
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onBreakBlock(BlockDropItemEvent event) {

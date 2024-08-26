@@ -11,14 +11,10 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-@Trait("burrowing")
+@Trait(value = "burrowing", internal = Burrowing.Internal.class)
 public final class Burrowing extends Gathering {
 
     private static final int SCALE = 2;
-
-    public Burrowing() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

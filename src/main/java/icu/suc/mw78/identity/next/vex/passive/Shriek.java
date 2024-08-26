@@ -10,16 +10,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-@Trait("shriek")
+@Trait(value = "shriek", cooldown = 3000L)
 public final class Shriek extends CooldownPassive {
 
     private static final double SCALE = 1.5D;
 
     private static final Effect<Player> EFFECT_SOUND = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_VEX_CHARGE, SoundCategory.PLAYERS, 1.0F, 1.0F));
-
-    public Shriek() {
-        super(3000L);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {

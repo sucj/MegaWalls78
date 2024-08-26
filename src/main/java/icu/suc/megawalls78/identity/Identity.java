@@ -100,7 +100,7 @@ import icu.suc.mw78.identity.regular.zombie.skill.CircleOfHealing;
 import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
-import icu.suc.megawalls78.identity.trait.skill.Skill.Trigger;
+import icu.suc.megawalls78.identity.trait.skill.Trigger;
 import icu.suc.mw78.identity.regular.arcanist.Arcanist;
 import icu.suc.mw78.identity.regular.arcanist.gathering.ArcaneMining;
 import icu.suc.mw78.identity.regular.arcanist.passive.ArcaneExplosion;
@@ -153,7 +153,7 @@ public enum Identity {
     private final Class<? extends Kit> kitClass;
     private final float energy;
     private final Map<EnergyWay, Float> energyWay;
-    private final Map<Skill.Trigger, Class<? extends Skill>> skillClasses;
+    private final Map<Trigger, Class<? extends Skill>> skillClasses;
     private final List<Class<? extends Passive>> passiveClasses;
     private final Class<? extends Gathering> gatheringClass;
 
@@ -162,15 +162,7 @@ public enum Identity {
     private final Component abbr;
     private final Component icon;
 
-    Identity(String id,
-             TextColor color,
-             Material material,
-             Class<? extends Kit> kitClass,
-             float energy,
-             Map<EnergyWay, Float> energyWay,
-             Map<Skill.Trigger, Class<? extends Skill>> skillClasses,
-             List<Class<? extends Passive>> passiveClasses,
-             Class<? extends Gathering> gatheringClass) {
+    Identity(String id, TextColor color, Material material, Class<? extends Kit> kitClass, float energy, Map<EnergyWay, Float> energyWay, Map<Trigger, Class<? extends Skill>> skillClasses, List<Class<? extends Passive>> passiveClasses, Class<? extends Gathering> gatheringClass) {
         this.id = id;
         this.color = color;
         this.material = material;
@@ -210,6 +202,30 @@ public enum Identity {
         return material;
     }
 
+    public Class<? extends Kit> getKitClass() {
+        return kitClass;
+    }
+
+    public float getEnergy() {
+        return energy;
+    }
+
+    public Map<EnergyWay, Float> getEnergyWay() {
+        return energyWay;
+    }
+
+    public Map<Trigger, Class<? extends Skill>> getSkillClasses() {
+        return skillClasses;
+    }
+
+    public List<Class<? extends Passive>> getPassiveClasses() {
+        return passiveClasses;
+    }
+
+    public Class<? extends Gathering> getGatheringClass() {
+        return gatheringClass;
+    }
+
     public Kit getKit() {
         if (kit == null) {
             try {
@@ -222,26 +238,14 @@ public enum Identity {
         return kit;
     }
 
-    public float getEnergy() {
-        return energy;
-    }
-
-    public Map<EnergyWay, Float> getEnergyWay() {
-        return energyWay;
-    }
-
     public float getEnergyByWay(EnergyWay way) {
         return this.energyWay.getOrDefault(way, 0.0F);
     }
 
-    public Map<Trigger, Class<? extends Skill>> getSkillClasses() {
-        return skillClasses;
-    }
-
-    public Map<Skill.Trigger, Skill> getSkills(GamePlayer player, List<Passive> passives) {
+    public Map<Trigger, Skill> getSkills(GamePlayer player, List<Passive> passives) {
         try {
-            Map<Skill.Trigger, Skill> skills = Maps.newHashMap();
-            for (Skill.Trigger trigger : skillClasses.keySet()) {
+            Map<Trigger, Skill> skills = Maps.newHashMap();
+            for (Trigger trigger : skillClasses.keySet()) {
                 add:
                 {
                     Class<? extends Skill> skillClass = skillClasses.get(trigger);
@@ -268,10 +272,6 @@ public enum Identity {
         }
     }
 
-    public List<Class<? extends Passive>> getPassiveClasses() {
-        return passiveClasses;
-    }
-
     public List<Passive> getPassives(GamePlayer player) {
         try {
             List<Passive> passives = Lists.newArrayList();
@@ -284,10 +284,6 @@ public enum Identity {
                  NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public Class<? extends Gathering> getGatheringClass() {
-        return gatheringClass;
     }
 
     public Gathering getGathering(GamePlayer player, List<Passive> passives) {

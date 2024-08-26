@@ -12,15 +12,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 
-@Trait("eagle_eye")
+@Trait(value = "eagle_eye", cost = 100F, cooldown = 1000L, duration = 10000L, internal = EagleEye.Internal.class)
 public final class EagleEye extends DurationSkill {
 
     private static final double MELEE = 0.25D;
     private static final double ARROW = 1.0D;
-
-    public EagleEye() {
-        super(100, 1000L, 10000L, Internal.class);
-    }
 
     private Task task;
 
@@ -45,7 +41,7 @@ public final class EagleEye extends DurationSkill {
     private final class Task extends DurationTask {
 
         private Task(Player player) {
-            super(player, (int) (EagleEye.this.getDuration() / 50));
+            super(player, (int) (EagleEye.this.DURATION_GET() / 50));
 
             EntityUtil.setMetadata(player, EagleEye.this.getId(), true);
         }

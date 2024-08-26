@@ -10,20 +10,13 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
-@Trait("flight")
+@Trait(value = "flight", cost = 100F, cooldown = 10000L, duration = 5000L)
 public final class Flight extends DurationSkill {
-
-    private static final long DURATION = 5000L;
-    private static final int TICK = (int) (DURATION / 50);
 
     private static final Effect<Player> EFFECT_SOUND = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_VEX_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F));
     private static final Effect<Player> EFFECT_PARTICLE = Effect.create(player -> ParticleUtil.spawnParticleRandomBody(player, Particle.WHITE_SMOKE, 1, 0));
 
     private Task task;
-
-    public Flight() {
-        super(100, 10000L, DURATION);
-    }
 
     @Override
     protected boolean use0(Player player) {
@@ -47,7 +40,7 @@ public final class Flight extends DurationSkill {
     private final class Task extends DurationTask {
 
         public Task(Player player) {
-            super(player, TICK);
+            super(player, 100);
 
             player.setAllowFlight(true);
             player.setFlying(true);

@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("squid_splash")
+@Trait(value = "squid_splash", cost = 100F, cooldown = 2000L)
 public class SquidSplash extends Skill {
 
     private static final double RADIUS = 5.25D;
@@ -32,10 +32,6 @@ public class SquidSplash extends Skill {
         ParticleUtil.playContractingCircleParticle(player.getLocation(), Particle.SPLASH, 64, RADIUS, 525L);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_FISHING_BOBBER_SPLASH, SoundCategory.PLAYERS, 1.0F, 1.0F);
     });
-
-    public SquidSplash() {
-        super(100, 2000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

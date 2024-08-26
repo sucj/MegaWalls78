@@ -14,6 +14,7 @@ import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
+import icu.suc.megawalls78.identity.trait.skill.Trigger;
 import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.SupplierComponent;
 import net.kyori.adventure.text.Component;
@@ -48,7 +49,7 @@ public class GamePlayer {
     private int finalAssists;
 
     private float energy;
-    private Map<Skill.Trigger, Skill> skills;
+    private Map<Trigger, Skill> skills;
     private Set<Skill> uniqueSkills;
     private List<Passive> passives;
     private Gathering gathering;
@@ -91,7 +92,7 @@ public class GamePlayer {
     }
 
     public boolean useSkill(Player player, Action action, Material material) {
-        Skill.Trigger trigger = Skill.Trigger.getTrigger(action, material);
+        Trigger trigger = Trigger.getTrigger(action, material);
         if (trigger == null) {
             return false;
         }
@@ -332,7 +333,7 @@ public class GamePlayer {
         }
     }
 
-    public Map<Skill.Trigger, Skill> getSkills() {
+    public Map<Trigger, Skill> getSkills() {
         return skills;
     }
 

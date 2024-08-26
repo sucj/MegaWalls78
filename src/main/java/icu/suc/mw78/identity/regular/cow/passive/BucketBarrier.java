@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Transformation;
 
-@Trait("bucket_barrier")
+@Trait(value = "bucket_barrier", cooldown = 30000L, duration = 20000L)
 public final class BucketBarrier extends DurationCooldownPassive {
 
     private static final long PER = 5000L;
@@ -38,14 +38,10 @@ public final class BucketBarrier extends DurationCooldownPassive {
     private Location center;
     private ItemDisplay[] barriers;
 
-    public BucketBarrier() {
-        super(30000L, 20000L);
-    }
-
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player && PASSIVE(player) && DURATION() && block(event)) {
-            EFFECT_SKILL.play(Pair.of(player, (float) DURATION_REMAIN() / DURATION));
+            EFFECT_SKILL.play(Pair.of(player, (float) DURATION_REMAIN() / DURATION_GET()));
             DURATION(PER);
         }
     }

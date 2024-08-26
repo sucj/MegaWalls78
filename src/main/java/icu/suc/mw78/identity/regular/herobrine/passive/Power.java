@@ -8,14 +8,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-@Trait("power")
+@Trait(value = "power", duration = 6000L)
 public final class Power extends DurationPassive {
 
     private static final double SCALE = 1.85D;
-
-    public Power() {
-        super(6000L);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerKill(IncreaseStatsEvent.Kill event) {

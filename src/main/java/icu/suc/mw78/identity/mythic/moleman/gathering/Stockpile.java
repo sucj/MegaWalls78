@@ -8,14 +8,10 @@ import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
-@Trait("stockpile")
+@Trait(value = "stockpile", internal = Stockpile.Internal.class)
 public final class Stockpile extends Gathering {
 
     private static final double SCALE = 3.0D;
-
-    public Stockpile() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

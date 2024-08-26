@@ -16,7 +16,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("looting")
+@Trait(value = "looting", charge = 5)
 public final class Looting extends ChargePassive {
 
     private static final double HEAL = 5.0D;
@@ -29,10 +29,6 @@ public final class Looting extends ChargePassive {
             .setMaxStackSize(64)
             .addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 240, 1), false)
             .addCustomEffect(new PotionEffect(PotionEffectType.REGENERATION, 120, 0), false);
-
-    public Looting() {
-        super(5);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerKill(PlayerDeathEvent event) {

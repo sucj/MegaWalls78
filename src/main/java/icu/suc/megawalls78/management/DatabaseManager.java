@@ -3,7 +3,7 @@ package icu.suc.megawalls78.management;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.Skin;
-import icu.suc.megawalls78.identity.trait.skill.Skill;
+import icu.suc.megawalls78.identity.trait.skill.Trigger;
 import org.bukkit.block.banner.Pattern;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 
@@ -242,7 +242,7 @@ public class DatabaseManager {
         });
     }
 
-    public CompletableFuture<Boolean> getTrigger(UUID player, Skill.Trigger trigger) {
+    public CompletableFuture<Boolean> getTrigger(UUID player, Trigger trigger) {
         return CompletableFuture.supplyAsync(() -> {
             try (PreparedStatement statement = connection.prepareStatement(TRIGGER_GET)) {
                 statement.setString(1, player.toString());
@@ -259,7 +259,7 @@ public class DatabaseManager {
         });
     }
 
-    public void setTrigger(UUID player, Skill.Trigger trigger, boolean sneak) {
+    public void setTrigger(UUID player, Trigger trigger, boolean sneak) {
         CompletableFuture.supplyAsync(() -> {
             try (PreparedStatement statement = connection.prepareStatement(TRIGGER_SET)) {
                 statement.setString(1, player.toString());

@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("sniffs")
+@Trait(value = "sniffs", cooldown = 10000L)
 public final class Sniffs extends CooldownPassive {
 
     private static final double RADIUS = 20.0D;
@@ -33,10 +33,6 @@ public final class Sniffs extends CooldownPassive {
         Player player = pair.getRight();
         ParticleUtil.spawnParticle(entity.getWorld(), Particle.VIBRATION, entity.getLocation(), 1, new Vibration(new Vibration.Destination.EntityDestination(player), 20));
     });
-
-    public Sniffs() {
-        super(10000L);
-    }
 
     @EventHandler
     public void onPlayerTick(ServerTickStartEvent event) {

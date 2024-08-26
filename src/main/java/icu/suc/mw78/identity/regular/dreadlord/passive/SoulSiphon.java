@@ -10,16 +10,12 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("soul_siphon")
+@Trait(value = "soul_siphon", duration = 5000L)
 public final class SoulSiphon extends DurationPassive {
 
     private static final double SCALE = 1.85D;
 
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 0);
-
-    public SoulSiphon() {
-        super(5000L);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerKill(IncreaseStatsEvent.Kill event) {

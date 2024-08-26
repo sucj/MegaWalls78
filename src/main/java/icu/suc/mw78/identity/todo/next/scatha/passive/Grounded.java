@@ -10,17 +10,22 @@ import org.bukkit.event.block.BlockBreakEvent;
 @Trait("grounded")
 public final class Grounded extends Passive {
 
-    private static final int ENERGY = 10;
+    private static final int STONE = 1;
+    private static final int ORE = 10;
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerBreak(BlockBreakEvent event) {
-        if (PASSIVE(event.getPlayer()) && condition(event)) {
-            PLAYER().increaseEnergy(ENERGY);
+        if (PASSIVE(event.getPlayer())) {
+            handle(event);
         }
     }
 
-    private static boolean condition(BlockBreakEvent event) {
+    private void handle(BlockBreakEvent event) {
         Material type = event.getBlock().getType();
-        return BlockUtil.isStone(type) || BlockUtil.isOre(type);
+        if (BlockUtil.isStone(type) || BlockUtil.isCobblestone(type)) {
+            PLAYER().increaseEnergy(STONE);
+        } else if (BlockUtil.isOre(type)) {
+            PLAYER().increaseEnergy(ORE);
+        }
     }
 }

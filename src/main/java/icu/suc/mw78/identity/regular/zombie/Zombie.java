@@ -1,11 +1,12 @@
 package icu.suc.mw78.identity.regular.zombie;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.PROTECTION;
 
-public final class Zombie extends icu.suc.megawalls78.identity.Kit {
+public final class Zombie extends Kit {
 
     public Zombie(Identity identity) {
         super(identity);

@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 
-@Trait("ultra_pasteurized")
+@Trait(value = "ultra_pasteurized", internal = UltraPasteurized.Internal.class)
 public final class UltraPasteurized extends Gathering {
 
     private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET)
@@ -29,15 +29,8 @@ public final class UltraPasteurized extends Gathering {
 
     private static final Effect<Location> EFFECT_SKILL = Effect.create(location -> location.getWorld().playSound(location, Sound.BLOCK_WET_SPONGE_DRIES, SoundCategory.BLOCKS, 1.0F, 1.0F));
 
-    public UltraPasteurized() {
-        super(Internal.class);
-    }
-
+    @Trait(charge = 60)
     public static final class Internal extends ChargePassive {
-
-        public Internal() {
-            super(60);
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onBreakBlock(BlockDropItemEvent event) {
@@ -63,7 +56,7 @@ public final class UltraPasteurized extends Gathering {
 
         @Override
         public Component acb() {
-            return Type.CHARGE_STATE.accept(CHARGE_COUNT(), CHARGE, condition_available());
+            return Type.CHARGE_STATE.accept(CHARGE_COUNT(), CHARGE_GET(), condition_available());
         }
     }
 }

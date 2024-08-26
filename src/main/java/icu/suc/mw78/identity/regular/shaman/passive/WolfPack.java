@@ -15,7 +15,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.List;
 
-@Trait("wolf_pack")
+@Trait(value = "wolf_pack", cooldown = 4000L, charge = 6)
 public final class WolfPack extends ChargeCooldownPassive {
 
     private static final int MAX = 3;
@@ -24,10 +24,6 @@ public final class WolfPack extends ChargeCooldownPassive {
     private static final int LIVE = 240;
 
     private final List<LivingEntity> entities = Lists.newArrayList();
-
-    public WolfPack() {
-        super(4000L, 6);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {

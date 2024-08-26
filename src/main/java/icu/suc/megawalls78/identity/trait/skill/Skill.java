@@ -1,37 +1,17 @@
 package icu.suc.megawalls78.identity.trait.skill;
 
-import com.google.common.collect.Sets;
 import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.management.TraitManager;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Material;
-import org.bukkit.Tag;
 import org.bukkit.entity.Player;
-
-import java.util.Set;
-import java.util.function.Predicate;
 
 public abstract class Skill extends Trait implements IActionbar {
 
-    private final float cost;
-
-    private final long COOLDOWN;
-
     long COOLDOWN_LAST;
 
-    private final Class<? extends Passive> internal;
     private Passive passive;
-
-    public Skill(float cost, long cooldown) {
-        this(cost, cooldown, null);
-    }
-
-    public Skill(float cost, long cooldown, Class<? extends Passive> internal) {
-        this.cost = cost;
-        this.COOLDOWN = cooldown;
-        this.internal = internal;
-    }
 
     public boolean use(Player player) {
         if (!available()) {
@@ -47,7 +27,7 @@ public abstract class Skill extends Trait implements IActionbar {
     }
 
     protected boolean available() {
-        return PLAYER().getEnergy() >= cost;
+        return PLAYER().getEnergy() >= getCost();
     }
 
     @Override
@@ -58,15 +38,15 @@ public abstract class Skill extends Trait implements IActionbar {
     protected abstract boolean use0(Player player);
 
     public float getCost() {
-        return cost;
+        return TraitManager.cost(getClass());
     }
 
     public long getCooldown() {
-        return COOLDOWN;
+        return TraitManager.cooldown(getClass());
     }
 
     public Class<? extends Passive> getInternal() {
-        return internal;
+        return TraitManager.internal(getClass());
     }
 
     public Passive getPassive() {
@@ -77,95 +57,12 @@ public abstract class Skill extends Trait implements IActionbar {
         this.passive = passive;
     }
 
-    public enum Trigger {
-        SWORD("sword", Action.RIGHT, Tag.ITEMS_SWORDS),
-        BOW("bow", Action.LEFT, Tag.ITEMS_ENCHANTABLE_BOW),
-        CROSSBOW("crossbow", Action.LEFT, Tag.ITEMS_ENCHANTABLE_CROSSBOW),
-        SHOVEL("shovel", Action.RIGHT, Tag.ITEMS_SHOVELS),
-        PICKAXE("pickaxe", Action.RIGHT, Tag.ITEMS_PICKAXES),
-        AXE("axe", Action.RIGHT, Tag.ITEMS_AXES),
-        HOE("hoe", Action.RIGHT, Tag.ITEMS_HOES),
-        CARROT_ON_A_STICK("carrot_on_a_stick", Action.RIGHT, Material.CARROT_ON_A_STICK),
-        WARPED_FUNGUS_ON_A_STICK("warped_fungus_on_a_stick", Action.RIGHT, Material.WARPED_FUNGUS_ON_A_STICK);
-
-        private final String id;
-        private final Component name;
-        private final Action action;
-        private final Predicate<Material> filter;
-
-        Trigger(String id, Action action, Material material) {
-            this(id, action, material::equals);
-        }
-
-        Trigger(String id, Action action, Tag<Material> tag) {
-            this(id, action, tag::isTagged);
-        }
-
-        Trigger(String id, Action action, Predicate<Material> filter) {
-            this.id = id;
-            this.name = Component.translatable("mw78.trigger." + id);
-            this.action = action;
-            this.filter = filter;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public Component getName() {
-            return name;
-        }
-
-        public Action getAction() {
-            return action;
-        }
-
-        private boolean isTriggered(org.bukkit.event.block.Action action, Material material) {
-            return this.action.equals(Action.getAction(action)) && this.filter.test(material);
-        }
-
-        public static Trigger getTrigger(org.bukkit.event.block.Action action, Material material) {
-            for (Trigger value : values()) {
-                if (value.isTriggered(action, material)) {
-                    return value;
-                }
-            }
-            return null;
-        }
-
-        public enum Action {
-            LEFT(Component.keybind("key.attack"), org.bukkit.event.block.Action.LEFT_CLICK_AIR, org.bukkit.event.block.Action.LEFT_CLICK_BLOCK),
-            RIGHT(Component.keybind("key.use"), org.bukkit.event.block.Action.RIGHT_CLICK_AIR, org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK);
-
-            private final Component name;
-            private final Set<org.bukkit.event.block.Action> actions;
-
-            Action(Component name, org.bukkit.event.block.Action... actions) {
-                this.name = name;
-                this.actions = Sets.newHashSet(actions);
-            }
-
-            public Component getName() {
-                return name;
-            }
-
-            private static Action getAction(org.bukkit.event.block.Action action) {
-                for (Action value : Action.values()) {
-                    if (value.actions.contains(action)) {
-                        return value;
-                    }
-                }
-                return null;
-            }
-        }
-    }
-
     protected long CURRENT() {
         return System.currentTimeMillis();
     }
 
     protected boolean COOLDOWN() {
-        return CURRENT() - COOLDOWN_LAST() >= COOLDOWN;
+        return CURRENT() - COOLDOWN_LAST() >= getCooldown();
     }
 
     protected long COOLDOWN(long delta) {
@@ -185,6 +82,6 @@ public abstract class Skill extends Trait implements IActionbar {
     }
 
     protected long COOLDOWN_REMAIN() {
-        return COOLDOWN - CURRENT() + COOLDOWN_LAST();
+        return getCooldown() - CURRENT() + COOLDOWN_LAST();
     }
 }

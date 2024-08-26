@@ -10,15 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
 
-@Trait("carnivore")
+@Trait(value = "carnivore", internal = Carnivore.Internal.class)
 public class Carnivore extends Gathering {
 
     private static final int KILL = 2;
     private static final int FINAL_KILL = 4;
-
-    public Carnivore() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

@@ -1,13 +1,14 @@
 package icu.suc.mw78.identity.mythic.moleman;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 import org.bukkit.potion.PotionEffect;
 
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.*;
 import static org.bukkit.potion.PotionEffectType.REGENERATION;
 
-public final class Moleman extends icu.suc.megawalls78.identity.Kit {
+public final class Moleman extends Kit {
 
     public Moleman(Identity identity) {
         super(identity);

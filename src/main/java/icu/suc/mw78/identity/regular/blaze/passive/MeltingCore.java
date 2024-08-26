@@ -9,17 +9,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("melting_core")
+@Trait(value = "melting_core", cooldown = 4000L, charge = 8)
 public final class MeltingCore extends ChargeCooldownPassive {
 
     private static final int DURATION = 60;
 
     private static final PotionEffect REGENERATION_1 = new PotionEffect(PotionEffectType.REGENERATION, DURATION, 0);
     private static final PotionEffect REGENERATION_2 = new PotionEffect(PotionEffectType.REGENERATION, DURATION, 1);
-
-    public MeltingCore() {
-        super(4000L, 8);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerMelee(EntityDamageByEntityEvent event) {

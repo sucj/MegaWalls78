@@ -1,20 +1,18 @@
 package icu.suc.megawalls78.identity.trait.passive;
 
+import icu.suc.megawalls78.management.TraitManager;
 import net.kyori.adventure.text.Component;
 
 public abstract class DurationCooldownPassive extends CooldownPassive {
 
-    protected long DURATION;
-
     long DURATION_LAST;
 
-    public DurationCooldownPassive(long cooldown, long duration) {
-        super(cooldown);
-        DURATION = duration;
+    protected long DURATION_GET() {
+        return TraitManager.duration(getClass());
     }
 
     protected boolean DURATION() {
-        return CURRENT() - DURATION_LAST() <= DURATION;
+        return CURRENT() - DURATION_LAST() <= DURATION_GET();
     }
 
     protected long DURATION(long delta) {
@@ -28,7 +26,7 @@ public abstract class DurationCooldownPassive extends CooldownPassive {
 
     protected void DURATION_RESET() {
         DURATION_RESET_ONLY();
-        COOLDOWN(DURATION);
+        COOLDOWN(DURATION_GET());
     }
 
     protected void DURATION_RESET_ONLY() {
@@ -46,7 +44,7 @@ public abstract class DurationCooldownPassive extends CooldownPassive {
     }
 
     protected long DURATION_REMAIN() {
-        return DURATION - CURRENT() + DURATION_LAST();
+        return DURATION_GET() - CURRENT() + DURATION_LAST();
     }
 
     @Override

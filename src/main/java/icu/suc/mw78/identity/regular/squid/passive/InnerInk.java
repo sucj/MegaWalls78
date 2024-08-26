@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
 @Trait("inner_ink")
-public class InnerInk extends Passive {
+public final class InnerInk extends Passive {
 
     private static final double RADIUS = 5.0D;
 

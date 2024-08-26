@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("wormhole")
+@Trait(value = "wormhole", cost = 100F, cooldown = 1000L)
 public final class Wormhole extends Skill {
 
     private static final int DURATION = 60;
@@ -19,10 +19,6 @@ public final class Wormhole extends Skill {
     private static final PotionEffect WEAKNESS = new PotionEffect(PotionEffectType.WEAKNESS, DURATION, 2);
 
     private Task task;
-
-    public Wormhole() {
-        super(100, 1000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

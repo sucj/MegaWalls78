@@ -1,6 +1,6 @@
 package icu.suc.mw78.identity.mythic.assassin.skill;
 
-import icu.suc.megawalls78.identity.trait.annotation.Trait;
+import icu.suc.megawalls78.identity.trait.annotation.*;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
@@ -20,16 +20,14 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("shadow_cloak")
+@Trait(value = "shadow_cloak", cost = 100F, cooldown = 1000L, duration = 10000L, internal = ShadowCloak.Internal.class)
 public final class ShadowCloak extends DurationSkill {
 
     public static final String ID = "shadow_cloak";
 
-    private static final long DURATION = 10000L; // 持续10秒
-    private static final int TICK = (int) (DURATION / 50);
-    private static final PotionEffect INVISIBILITY = new PotionEffect(PotionEffectType.INVISIBILITY, TICK, 0); // 关于隐藏盔甲，将以后以Util形式提供发级别的隐藏
-    private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, TICK, 0);
-    private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, TICK, 0);
+    private static final PotionEffect INVISIBILITY = new PotionEffect(PotionEffectType.INVISIBILITY, 200, 0); // 关于隐藏盔甲，将以后以Util形式提供发级别的隐藏
+    private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 200, 0);
+    private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 200, 0);
     private static final int REMAIN = 20; // 每剩余1秒隐身时间
     private static final int RETURN = 4; // 返还4点能量
     private static final double SCALE = 0.1D; //损失的生命值10%
@@ -42,10 +40,6 @@ public final class ShadowCloak extends DurationSkill {
     private static final Effect<Player> EFFECT_END = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 1.0F, 1.0F));
 
     private Task task;
-
-    public ShadowCloak() {
-        super(100, 1000L, DURATION, Internal.class);
-    }
 
     @Override
     protected boolean use0(Player player) {
@@ -73,10 +67,9 @@ public final class ShadowCloak extends DurationSkill {
     private final class Task extends DurationTask {
 
         private Task(Player player) {
-            super(player, TICK);
+            super(player, 200);
 
             EntityUtil.setMetadata(player, getId(), true);
-//            updateArmor();
         }
 
         @Override

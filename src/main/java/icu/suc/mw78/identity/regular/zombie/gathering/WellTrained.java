@@ -15,15 +15,11 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("well_trained")
+@Trait(value = "well_trained", internal = WellTrained.Internal.class)
 public final class WellTrained extends Gathering {
 
     private static final PotionEffect HASTE_2 = new PotionEffect(PotionEffectType.HASTE, 100, 1);
     private static final PotionEffect HASTE_3 = new PotionEffect(PotionEffectType.HASTE, PotionEffect.INFINITE_DURATION, 2);
-
-    public WellTrained() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

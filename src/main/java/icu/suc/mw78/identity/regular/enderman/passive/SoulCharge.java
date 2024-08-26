@@ -11,7 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("soul_charge")
+@Trait(value = "soul_charge", cooldown = 15000L)
 public final class SoulCharge extends CooldownPassive {
 
     private static final int ENERGY = 100;
@@ -19,10 +19,6 @@ public final class SoulCharge extends CooldownPassive {
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 200, 0);
 
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ENDERMAN_SCREAM, SoundCategory.PLAYERS, 1.0F, 1.0F));
-
-    public SoulCharge() {
-        super(15000L);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onEnergyChange(EnergyChangeEvent event) {

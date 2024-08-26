@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("arcane_explosion")
+@Trait(value = "arcane_explosion", cooldown = 1000L, charge = 5)
 public final class ArcaneExplosion extends ChargeCooldownPassive {
 
     private static final double RADIUS = 5.0D;
@@ -26,10 +26,6 @@ public final class ArcaneExplosion extends ChargeCooldownPassive {
         ParticleUtil.spawnParticle(location.getWorld(), Particle.EXPLOSION, location, 1);
         location.getWorld().playSound(location, Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.AMBIENT, 1.0F, 1.0F);
     });
-
-    public ArcaneExplosion() {
-        super(1000L, 5);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageByEntityEvent event) {

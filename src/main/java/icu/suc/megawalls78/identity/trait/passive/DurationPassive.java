@@ -1,20 +1,19 @@
 package icu.suc.megawalls78.identity.trait.passive;
 
 import icu.suc.megawalls78.identity.trait.IActionbar;
+import icu.suc.megawalls78.management.TraitManager;
 import net.kyori.adventure.text.Component;
 
 public abstract class DurationPassive extends TimerPassive implements IActionbar {
 
-    protected long DURATION;
-
     long DURATION_LAST;
 
-    public DurationPassive(long duration) {
-        DURATION = duration;
+    protected long DURATION_GET() {
+        return TraitManager.duration(getClass());
     }
 
     protected boolean DURATION() {
-        return CURRENT() - DURATION_LAST() <= DURATION;
+        return CURRENT() - DURATION_LAST() <= DURATION_GET();
     }
 
     protected long DURATION(long delta) {
@@ -35,6 +34,6 @@ public abstract class DurationPassive extends TimerPassive implements IActionbar
 
     @Override
     public Component acb() {
-        return Type.DURATION.accept(DURATION - CURRENT() + DURATION_LAST());
+        return Type.DURATION.accept(DURATION_GET() - CURRENT() + DURATION_LAST());
     }
 }

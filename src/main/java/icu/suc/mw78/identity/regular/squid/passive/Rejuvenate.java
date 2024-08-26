@@ -13,8 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("rejuvenate")
-public class Rejuvenate extends CooldownPassive {
+@Trait(value = "rejuvenate", cooldown = 40000L)
+public final class Rejuvenate extends CooldownPassive {
 
     private static final double HEALTH = 21.0D;
 
@@ -25,10 +25,6 @@ public class Rejuvenate extends CooldownPassive {
         ParticleUtil.spawnParticleRandomBody(player, Particle.TOTEM_OF_UNDYING, 8, 0);
         player.getWorld().playSound(player.getLocation(), Sound.BLOCK_WATER_AMBIENT, SoundCategory.PLAYERS, 1.0F, 1.0F);
     });
-
-    public Rejuvenate() {
-        super(40000L);
-    }
 
     @EventHandler
     public void onPlayerTick(ServerTickStartEvent event) {

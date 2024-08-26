@@ -1,21 +1,23 @@
 package icu.suc.megawalls78.identity.trait.passive;
 
 import icu.suc.megawalls78.identity.trait.IActionbar;
+import icu.suc.megawalls78.management.TraitManager;
 import net.kyori.adventure.text.Component;
 
 public abstract class ChargePassive extends Passive implements IActionbar {
 
-    protected int CHARGE;
-
     int CHARGE_COUNT;
 
-    public ChargePassive(int charge) {
-        CHARGE = charge;
-        CHARGE_COUNT = CHARGE;
+    public ChargePassive() {
+        CHARGE_COUNT = CHARGE_GET();
+    }
+
+    protected int CHARGE_GET() {
+        return TraitManager.charge(getClass());
     }
 
     protected boolean CHARGE() {
-        return CHARGE(1) > CHARGE;
+        return CHARGE(1) > CHARGE_GET();
     }
 
     protected int CHARGE(int delta) {
@@ -27,7 +29,7 @@ public abstract class ChargePassive extends Passive implements IActionbar {
     }
 
     protected void CHARGE_MAX() {
-        CHARGE_COUNT = CHARGE;
+        CHARGE_COUNT = CHARGE_GET();
     }
 
     protected void CHARGE_RESET() {
@@ -36,6 +38,6 @@ public abstract class ChargePassive extends Passive implements IActionbar {
 
     @Override
     public Component acb() {
-        return Type.CHARGE.accept(CHARGE_COUNT(), CHARGE);
+        return Type.CHARGE.accept(CHARGE_COUNT(), CHARGE_GET());
     }
 }

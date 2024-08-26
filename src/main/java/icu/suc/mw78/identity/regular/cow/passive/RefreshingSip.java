@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import static icu.suc.megawalls78.util.PlayerUtil.getIdentity;
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("refreshing_sip")
+@Trait(value = "refreshing_sip", cooldown = 5000L)
 public final class RefreshingSip extends CooldownPassive {
 
     private static final double RADIUS = 7.0D;
@@ -29,10 +29,6 @@ public final class RefreshingSip extends CooldownPassive {
     private static final Effect<Player> EFFECT_HEAL = Effect.create(player -> {
         ParticleUtil.spawnParticleOverhead(player, Particle.HEART, 2);
     });
-
-    public RefreshingSip() {
-        super(5000L);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onConsumeMilk(PlayerItemConsumeEvent event) {

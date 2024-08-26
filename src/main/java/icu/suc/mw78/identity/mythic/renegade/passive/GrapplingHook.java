@@ -17,7 +17,7 @@ import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("grappling_hook")
+@Trait(value = "grappling_hook", cooldown = 15000L, duration = 4000L)
 public final class GrapplingHook extends DurationCooldownPassive {
 
     private static final int ENERGY = 60;
@@ -29,10 +29,6 @@ public final class GrapplingHook extends DurationCooldownPassive {
 //    private static final Effect<Player> EFFECT_REPAIR = Effect.create(player -> player.getWorld().playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, SoundCategory.AMBIENT, 0.4F, 1.0F));
 
     private boolean noFall;
-
-    public GrapplingHook() {
-        super(15000L, 4000L);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onCast(GrapplingHookEvent event) {

@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-@Trait("ender_heart")
+@Trait(value = "ender_heart", charge = 3)
 public final class EnderHeart extends ChargePassive {
 
     private static final double KILL = 3.0D;
@@ -23,10 +23,6 @@ public final class EnderHeart extends ChargePassive {
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> {
         ParticleUtil.spawnParticleRandomBody(player, Particle.PORTAL, 8);
     });
-
-    public EnderHeart() {
-        super(3);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDeath(PlayerDeathEvent event) {

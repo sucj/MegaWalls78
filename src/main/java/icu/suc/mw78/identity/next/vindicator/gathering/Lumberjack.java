@@ -4,18 +4,13 @@ import icu.suc.megawalls78.identity.trait.Gathering;
 import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.util.BlockUtil;
-import icu.suc.megawalls78.util.RandomUtil;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-@Trait("lumberjack")
+@Trait(value = "lumberjack", internal = Lumberjack.Internal.class)
 public final class Lumberjack extends Gathering {
-
-    public Lumberjack() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

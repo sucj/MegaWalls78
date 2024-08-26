@@ -1,6 +1,7 @@
 package icu.suc.mw78.identity.mythic.renegade;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 import icu.suc.megawalls78.util.ItemUtil;
 import net.kyori.adventure.text.Component;
 import org.bukkit.persistence.PersistentDataType;
@@ -8,7 +9,8 @@ import org.bukkit.persistence.PersistentDataType;
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.*;
 
-public final class Renegade extends icu.suc.megawalls78.identity.Kit {
+public final class Renegade extends Kit {
+
     public Renegade(Identity identity) {
         super(identity);
     }

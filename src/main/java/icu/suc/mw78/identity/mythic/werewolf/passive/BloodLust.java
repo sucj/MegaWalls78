@@ -10,15 +10,11 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("blood_lust")
+@Trait(value = "blood_lust", charge = 2)
 public class BloodLust extends ChargePassive {
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 120, 0);
     private static final PotionEffect RESISTANCE = new PotionEffect(PotionEffectType.RESISTANCE, 120, 0);
-
-    public BloodLust() {
-        super(2);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {

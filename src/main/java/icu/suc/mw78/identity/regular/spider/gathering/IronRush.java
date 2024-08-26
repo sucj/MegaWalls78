@@ -12,12 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-@Trait("iron_rush")
+@Trait(value = "iron_rush", internal = IronRush.Internal.class)
 public final class IronRush extends Gathering {
-
-    public IronRush() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

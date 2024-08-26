@@ -1,21 +1,22 @@
 package icu.suc.megawalls78.identity.trait.passive;
 
+import icu.suc.megawalls78.management.TraitManager;
 import net.kyori.adventure.text.Component;
 
 public abstract class ChargeCooldownPassive extends CooldownPassive {
 
-    protected int CHARGE;
-
     int CHARGE_COUNT;
 
-    public ChargeCooldownPassive(long cooldown, int charge) {
-        super(cooldown);
-        CHARGE = charge;
-        CHARGE_COUNT = CHARGE;
+    public ChargeCooldownPassive() {
+        CHARGE_COUNT = CHARGE_GET();
+    }
+
+    protected int CHARGE_GET() {
+        return TraitManager.charge(getClass());
     }
 
     protected boolean CHARGE() {
-        return CHARGE(1) > CHARGE;
+        return CHARGE(1) > CHARGE_GET();
     }
 
     protected int CHARGE(int delta) {
@@ -27,7 +28,7 @@ public abstract class ChargeCooldownPassive extends CooldownPassive {
     }
 
     protected void CHARGE_MAX() {
-        CHARGE_COUNT = CHARGE;
+        CHARGE_COUNT = CHARGE_GET();
     }
 
     protected void CHARGE_RESET() {
@@ -36,6 +37,6 @@ public abstract class ChargeCooldownPassive extends CooldownPassive {
 
     @Override
     public Component acb() {
-        return Type.CHARGE_COOLDOWN.accept(COOLDOWN_REMAIN(), CHARGE_COUNT(), CHARGE);
+        return Type.CHARGE_COOLDOWN.accept(COOLDOWN_REMAIN(), CHARGE_COUNT(), CHARGE_GET());
     }
 }

@@ -9,15 +9,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("flurry")
+@Trait(value = "flurry", charge = 3)
 public final class Flurry extends ChargePassive {
 
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 60, 1);
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 100, 0);
-
-    public Flurry() {
-        super(3);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {

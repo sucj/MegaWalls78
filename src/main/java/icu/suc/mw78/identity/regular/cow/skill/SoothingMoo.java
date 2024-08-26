@@ -16,7 +16,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("soothing_moo")
+@Trait(value = "soothing_moo", cost = 100F, cooldown = 1000L)
 public final class SoothingMoo extends Skill {
 
     private static final double RADIUS = 7.0D;
@@ -34,10 +34,6 @@ public final class SoothingMoo extends Skill {
         Integer count = pair.getRight();
         ParticleUtil.spawnParticleOverhead(player, Particle.HEART, count);
     });
-
-    public SoothingMoo() {
-        super(100, 1000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

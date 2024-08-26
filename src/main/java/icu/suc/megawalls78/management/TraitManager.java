@@ -7,9 +7,10 @@ import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.Gathering;
-import icu.suc.megawalls78.identity.trait.Trait;
+import icu.suc.megawalls78.identity.trait.annotation.*;
+import icu.suc.megawalls78.identity.trait.passive.NullPassive;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
-import icu.suc.megawalls78.identity.trait.skill.Skill;
+import icu.suc.megawalls78.identity.trait.skill.Trigger;
 import icu.suc.megawalls78.util.Formatters;
 import net.kyori.adventure.inventory.Book;
 import net.kyori.adventure.text.Component;
@@ -23,9 +24,14 @@ import java.util.*;
 
 public class TraitManager {
 
-    private static final Map<Class<? extends Trait>, String> ID_MAP = Maps.newHashMap();
-    private static final Map<Class<? extends Trait>, Component> NAME_MAP = Maps.newHashMap();
-    private static final Map<Class<? extends Trait>, Component> DESCRIBE_MAP = Maps.newHashMap();
+    private static final Map<Class<? extends icu.suc.megawalls78.identity.trait.Trait>, String> ID_MAP = Maps.newHashMap();
+    private static final Map<Class<? extends icu.suc.megawalls78.identity.trait.Trait>, Component> NAME_MAP = Maps.newHashMap();
+    private static final Map<Class<? extends icu.suc.megawalls78.identity.trait.Trait>, Component> DESCRIBE_MAP = Maps.newHashMap();
+    private static final Map<Class<? extends icu.suc.megawalls78.identity.trait.Trait>, Float> COST_MAP = Maps.newHashMap();
+    private static final Map<Class<? extends icu.suc.megawalls78.identity.trait.Trait>, Long> COOLDOWN_MAP = Maps.newHashMap();
+    private static final Map<Class<? extends icu.suc.megawalls78.identity.trait.Trait>, Long> DURATION_MAP = Maps.newHashMap();
+    private static final Map<Class<? extends icu.suc.megawalls78.identity.trait.Trait>, Integer> CHARGE_MAP = Maps.newHashMap();
+    private static final Map<Class<? extends icu.suc.megawalls78.identity.trait.Trait>, Class<? extends Passive>> INTERNAL_MAP = Maps.newHashMap();
     private static final Map<Identity, Book> PAGES = Maps.newHashMap();
 
     private static final Component C_HOME = Component.translatable("mw78.brackets", NamedTextColor.GRAY, Component.translatable("mw78.gui.trait.home")).clickEvent(ClickEvent.changePage(1));
@@ -38,30 +44,82 @@ public class TraitManager {
     private static final Component C_PD = Component.translatable("mw78.gui.trait.passive_description");
     private static final Component C_GD = Component.translatable("mw78.gui.trait.gathering_description");
 
-    public static <T extends Trait> T trait(Class<? extends T> clazz, GamePlayer player) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static <T extends icu.suc.megawalls78.identity.trait.Trait> T trait(Class<? extends T> clazz, GamePlayer player) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         return trait(clazz, player, null);
     }
 
-    public static <T extends Trait> T trait(Class<? extends T> clazz, GamePlayer player, String id) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-        id = id == null ? clazz.getAnnotation(icu.suc.megawalls78.identity.trait.annotation.Trait.class).value() : id;
+    public static <T extends icu.suc.megawalls78.identity.trait.Trait> T trait(Class<? extends T> clazz, GamePlayer player, String id) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        Trait annotation = clazz.getAnnotation(Trait.class);
+
+        boolean flag = id == null;
+
+        id = flag ? annotation.value() : id;
         ID_MAP.put(clazz, id);
         NAME_MAP.put(clazz, Component.translatable("mw78.trait." + id));
         DESCRIBE_MAP.put(clazz, Component.translatable("mw78.trait." + id + ".description"));
+
+        if (flag) {
+            float cost = annotation.cost();
+            if (cost != -1) {
+                COST_MAP.put(clazz, cost);
+            }
+
+            long cooldown = annotation.cooldown();
+            if (cooldown != -1) {
+                COOLDOWN_MAP.put(clazz, cooldown);
+            }
+
+            long duration = annotation.duration();
+            if (duration != -1) {
+                DURATION_MAP.put(clazz, duration);
+            }
+
+            int charge = annotation.charge();
+            if (charge != -1) {
+                CHARGE_MAP.put(clazz, charge);
+            }
+
+            Class<? extends Passive> internal = annotation.internal();
+            if (internal != NullPassive.class) {
+                INTERNAL_MAP.put(clazz, internal);
+            }
+        }
+
         T trait = clazz.getConstructor().newInstance();
         trait.PLAYER(player);
         return trait;
     }
 
-    public static String id(Class<? extends Trait> clazz) {
+    public static String id(Class<? extends icu.suc.megawalls78.identity.trait.Trait> clazz) {
         return ID_MAP.get(clazz);
     }
 
-    public static Component name(Class<? extends Trait> clazz) {
+    public static Component name(Class<? extends icu.suc.megawalls78.identity.trait.Trait> clazz) {
         return NAME_MAP.get(clazz);
     }
 
-    public static Component description(Class<? extends Trait> clazz) {
+    public static Component description(Class<? extends icu.suc.megawalls78.identity.trait.Trait> clazz) {
         return DESCRIBE_MAP.get(clazz);
+    }
+
+    public static float cost(Class<? extends icu.suc.megawalls78.identity.trait.Trait> clazz) {
+        return COST_MAP.get(clazz);
+    }
+
+    public static long cooldown(Class<? extends icu.suc.megawalls78.identity.trait.Trait> clazz) {
+        return COOLDOWN_MAP.get(clazz);
+    }
+
+    public static long duration(Class<? extends icu.suc.megawalls78.identity.trait.Trait> clazz) {
+        return DURATION_MAP.get(clazz);
+    }
+
+    public static int charge(Class<? extends icu.suc.megawalls78.identity.trait.Trait> clazz) {
+        return CHARGE_MAP.get(clazz);
+    }
+
+    public static Class<? extends Passive> internal(Class<? extends icu.suc.megawalls78.identity.trait.Trait> clazz) {
+        return INTERNAL_MAP.get(clazz);
     }
 
     public static Book book(Identity identity) {
@@ -95,17 +153,17 @@ public class TraitManager {
             int i = 1;
 
             info = info.append(C_S).appendNewline();
-            Map<Skill.Trigger, Class<? extends Skill>> skillClasses = identity.getSkillClasses();
+            Map<Trigger, Class<? extends icu.suc.megawalls78.identity.trait.skill.Skill>> skillClasses = identity.getSkillClasses();
             List<Component> skills = Lists.newArrayList();
             List<Component> sPages = Lists.newArrayList();
-            for (Class<? extends Skill> skill : Sets.newLinkedHashSet(skillClasses.values())) {
+            for (Class<? extends icu.suc.megawalls78.identity.trait.skill.Skill> skill : Sets.newLinkedHashSet(skillClasses.values())) {
                 Component skillName = name(skill);
                 Component sPage = Component.empty().append(skillName.decorate(TextDecoration.BOLD))
                         .appendNewline()
                         .appendNewline();
                 List<Component> components = Lists.newArrayList();
                 components.add(C_ST);
-                for (Skill.Trigger trigger : Skill.Trigger.values()) {
+                for (Trigger trigger : Trigger.values()) {
                     if (Objects.equals(skillClasses.get(trigger), skill)) {
                         components.add(Component.translatable("mw78.gui.trait.skill.trigger", NamedTextColor.GRAY, trigger.getName(), trigger.getAction().getName().color(NamedTextColor.AQUA)));
                     }

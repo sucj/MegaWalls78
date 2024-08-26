@@ -2,7 +2,7 @@ package icu.suc.mw78.identity.mythic.werewolf.skill;
 
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.AtomicDouble;
-import icu.suc.megawalls78.identity.trait.annotation.Trait;
+import icu.suc.megawalls78.identity.trait.annotation.*;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("lycanthropy")
+@Trait(value = "lycanthropy", cost = 100F, cooldown = 6000L, duration = 6000L, internal = Lycanthropy.Internal.class)
 public final class Lycanthropy extends DurationSkill {
 
     private static final long DURATION = 6000L;
@@ -46,10 +46,6 @@ public final class Lycanthropy extends DurationSkill {
     private static final Effect<Entity> EFFECT_HIT = Effect.create(entity -> ParticleUtil.spawnParticleRandomBody(entity, Particle.BLOCK, 4, 1, Material.REDSTONE_BLOCK.createBlockData()));
 
     private Task task;
-
-    public Lycanthropy() {
-        super(100, 6000L, 6000L, Internal.class);
-    }
 
     @Override
     protected boolean use0(Player player) {

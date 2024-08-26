@@ -9,14 +9,14 @@ import org.bukkit.util.Vector;
 
 import java.util.function.Consumer;
 
-@Trait("locus")
+@Trait(value = "locus", cost = 0F, cooldown = 0L)
 public final class Locus extends Skill {
 
     public static final String ID = "locus";
     public static final Mode DEFAULT = Mode.ARROW;
 
     public Locus() {
-        super(0, 0L);
+        super();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package icu.suc.mw78.identity.next.warden.skill;
 
 import com.google.common.collect.Sets;
-import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.task.AbstractTask;
@@ -19,7 +18,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Wither;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import java.util.Set;
@@ -28,7 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("sonic_boom")
+@Trait(value = "sonic_boom", cost = 50F, cooldown = 13000L)
 public final class SonicBoom extends Skill {
 
     private static final double RANGE = 7.5D;
@@ -42,10 +40,6 @@ public final class SonicBoom extends Skill {
     private static final PotionEffect DARKNESS = new PotionEffect(PotionEffectType.DARKNESS, 100, 0);
 
     private Task task;
-
-    public SonicBoom() {
-        super(50, 13000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

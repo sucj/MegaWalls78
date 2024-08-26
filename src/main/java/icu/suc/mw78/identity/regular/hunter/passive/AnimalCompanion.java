@@ -23,8 +23,8 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.List;
 import java.util.UUID;
 
-@Trait("animal_companion")
-public class AnimalCompanion extends CooldownPassive {
+@Trait(value = "animal_companion", cooldown = 4000L)
+public final class AnimalCompanion extends CooldownPassive {
 
     private static final double CHANCE = 0.2D;
 
@@ -35,10 +35,6 @@ public class AnimalCompanion extends CooldownPassive {
     private static final PotionEffect COW_POTION = new PotionEffect(PotionEffectType.RESISTANCE, PotionEffect.INFINITE_DURATION, 1);
     
     private final List<LivingEntity> entities = Lists.newArrayList();
-
-    public AnimalCompanion() {
-        super(4000L);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageByEntityEvent event) {

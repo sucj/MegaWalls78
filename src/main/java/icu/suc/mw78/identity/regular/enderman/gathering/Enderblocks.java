@@ -20,18 +20,12 @@ import org.bukkit.inventory.ItemStack;
 import java.util.List;
 import java.util.Set;
 
-@Trait("enderblocks")
+@Trait(value = "enderblocks", internal = Enderblocks.Internal.class)
 public final class Enderblocks extends Gathering {
 
-    public Enderblocks() {
-        super(Internal.class);
-    }
 
+    @Trait(charge = 3)
     public static final class Internal extends ChargePassive {
-
-        public Internal() {
-            super(3);
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onBlockBreak(BlockBreakEvent event) {
@@ -75,7 +69,7 @@ public final class Enderblocks extends Gathering {
 
         @Override
         public Component acb() {
-            return Type.CHARGE_STATE.accept(CHARGE_COUNT(), CHARGE, condition_available());
+            return Type.CHARGE_STATE.accept(CHARGE_COUNT(), CHARGE_GET(), condition_available());
         }
     }
 }

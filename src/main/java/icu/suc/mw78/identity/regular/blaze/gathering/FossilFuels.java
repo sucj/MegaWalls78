@@ -11,20 +11,13 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("fossil_fuels")
+@Trait(value = "fossil_fuels", internal = FossilFuels.Internal.class)
 public final class FossilFuels extends Gathering {
 
     private static final PotionEffect REGENERATION = new PotionEffect(PotionEffectType.REGENERATION, 50, 2);
 
-    public FossilFuels() {
-        super(Internal.class);
-    }
-
+    @Trait(cooldown = 10000L)
     public static final class Internal extends CooldownPassive {
-
-        public Internal() {
-            super(10000L);
-        }
 
         @EventHandler(ignoreCancelled = true)
         public void onBreakBlock(BlockBreakEvent event) {

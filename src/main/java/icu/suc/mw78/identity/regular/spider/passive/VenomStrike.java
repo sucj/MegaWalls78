@@ -9,14 +9,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("venom_strike")
+@Trait(value = "venom_strike", cooldown = 7000L, charge = 4)
 public final class VenomStrike extends ChargeCooldownPassive {
 
     private static final PotionEffect POISON = new PotionEffect(PotionEffectType.POISON, 100, 0);
-
-    public VenomStrike() {
-        super(7000L, 4);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerAttack(EntityDamageByEntityEvent event) {

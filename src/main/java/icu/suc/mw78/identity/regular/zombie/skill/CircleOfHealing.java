@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("circle_of_healing")
+@Trait(value = "circle_of_healing", cost = 100F, cooldown = 1000L)
 public final class CircleOfHealing extends Skill {
 
     private static final double RADIUS = 5.0D;
@@ -26,10 +26,6 @@ public final class CircleOfHealing extends Skill {
         player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ZOMBIE_VILLAGER_CONVERTED, SoundCategory.PLAYERS, 1.0F, 1.0F);
     });
     private static final Effect<LivingEntity> EFFECT_HEAD = Effect.create(entity -> ParticleUtil.spawnParticleOverhead(entity, Particle.HEART, (int) (OTHER / 2)));
-
-    public CircleOfHealing() {
-        super(100, 1000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

@@ -2,7 +2,7 @@ package icu.suc.megawalls78.gui;
 
 import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.identity.trait.skill.Skill;
+import icu.suc.megawalls78.identity.trait.skill.Trigger;
 import icu.suc.megawalls78.management.TriggerManager;
 import icu.suc.megawalls78.util.ItemBuilder;
 import net.kyori.adventure.text.Component;
@@ -51,67 +51,67 @@ public class TriggerGui { // TODO k
         UUID uuid = player.getUniqueId();
 
         inventory.setItem(SWORD_ICON_SLOT, ItemBuilder.of(Material.IRON_SWORD)
-                .setDisplayName(Skill.Trigger.SWORD.getName())
+                .setDisplayName(Trigger.SWORD.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
-        inventory.setItem(SWORD_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.SWORD)));
+        inventory.setItem(SWORD_SET_SLOT, flag(manager.sneak(uuid, Trigger.SWORD)));
 
         inventory.setItem(BOW_ICON_SLOT, ItemBuilder.of(Material.BOW)
-                .setDisplayName(Skill.Trigger.BOW.getName())
+                .setDisplayName(Trigger.BOW.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
-        inventory.setItem(BOW_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.BOW)));
+        inventory.setItem(BOW_SET_SLOT, flag(manager.sneak(uuid, Trigger.BOW)));
 
         inventory.setItem(CROSSBOW_ICON_SLOT, ItemBuilder.of(Material.CROSSBOW)
-                .setDisplayName(Skill.Trigger.CROSSBOW.getName())
+                .setDisplayName(Trigger.CROSSBOW.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
-        inventory.setItem(CROSSBOW_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.CROSSBOW)));
+        inventory.setItem(CROSSBOW_SET_SLOT, flag(manager.sneak(uuid, Trigger.CROSSBOW)));
 
         inventory.setItem(SHOVEL_ICON_SLOT, ItemBuilder.of(Material.IRON_SHOVEL)
-                .setDisplayName(Skill.Trigger.SHOVEL.getName())
+                .setDisplayName(Trigger.SHOVEL.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
-        inventory.setItem(SHOVEL_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.SHOVEL)));
+        inventory.setItem(SHOVEL_SET_SLOT, flag(manager.sneak(uuid, Trigger.SHOVEL)));
 
         inventory.setItem(PICKAXE_ICON_SLOT, ItemBuilder.of(Material.IRON_PICKAXE)
-                .setDisplayName(Skill.Trigger.PICKAXE.getName())
+                .setDisplayName(Trigger.PICKAXE.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
-        inventory.setItem(PICKAXE_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.PICKAXE)));
+        inventory.setItem(PICKAXE_SET_SLOT, flag(manager.sneak(uuid, Trigger.PICKAXE)));
 
         inventory.setItem(AXE_ICON_SLOT, ItemBuilder.of(Material.IRON_AXE)
-                .setDisplayName(Skill.Trigger.AXE.getName())
+                .setDisplayName(Trigger.AXE.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
-        inventory.setItem(AXE_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.AXE)));
+        inventory.setItem(AXE_SET_SLOT, flag(manager.sneak(uuid, Trigger.AXE)));
 
         inventory.setItem(HOE_ICON_SLOT, ItemBuilder.of(Material.IRON_HOE)
-                .setDisplayName(Skill.Trigger.HOE.getName())
+                .setDisplayName(Trigger.HOE.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
-        inventory.setItem(HOE_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.HOE)));
+        inventory.setItem(HOE_SET_SLOT, flag(manager.sneak(uuid, Trigger.HOE)));
 
         inventory.setItem(CARROT_ON_A_STICK_ICON_SLOT, ItemBuilder.of(Material.CARROT_ON_A_STICK)
-                .setDisplayName(Skill.Trigger.CARROT_ON_A_STICK.getName())
+                .setDisplayName(Trigger.CARROT_ON_A_STICK.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
-        inventory.setItem(CARROT_ON_A_STICK_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.CARROT_ON_A_STICK)));
+        inventory.setItem(CARROT_ON_A_STICK_SET_SLOT, flag(manager.sneak(uuid, Trigger.CARROT_ON_A_STICK)));
 
         inventory.setItem(WARPED_FUNGUS_ON_A_STICK_ICON_SLOT, ItemBuilder.of(Material.WARPED_FUNGUS_ON_A_STICK)
-                .setDisplayName(Skill.Trigger.WARPED_FUNGUS_ON_A_STICK.getName())
+                .setDisplayName(Trigger.WARPED_FUNGUS_ON_A_STICK.getName())
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
                 .build());
-        inventory.setItem(WARPED_FUNGUS_ON_A_STICK_SET_SLOT, flag(manager.sneak(uuid, Skill.Trigger.WARPED_FUNGUS_ON_A_STICK)));
+        inventory.setItem(WARPED_FUNGUS_ON_A_STICK_SET_SLOT, flag(manager.sneak(uuid, Trigger.WARPED_FUNGUS_ON_A_STICK)));
 
         INVENTORIES.add(inventory);
         player.openInventory(inventory);
@@ -120,19 +120,19 @@ public class TriggerGui { // TODO k
     public static void handle(Player player, int slot) {
         TriggerManager manager = MegaWalls78.getInstance().getTriggerManager();
         switch (slot) {
-            case SWORD_SET_SLOT -> toggle(manager, player, Skill.Trigger.SWORD);
-            case BOW_SET_SLOT -> toggle(manager, player, Skill.Trigger.BOW);
-            case CROSSBOW_SET_SLOT -> toggle(manager, player, Skill.Trigger.CROSSBOW);
-            case SHOVEL_SET_SLOT -> toggle(manager, player, Skill.Trigger.SHOVEL);
-            case PICKAXE_SET_SLOT -> toggle(manager, player, Skill.Trigger.PICKAXE);
-            case AXE_SET_SLOT -> toggle(manager, player, Skill.Trigger.AXE);
-            case HOE_SET_SLOT -> toggle(manager, player, Skill.Trigger.HOE);
-            case CARROT_ON_A_STICK_SET_SLOT -> toggle(manager, player, Skill.Trigger.CARROT_ON_A_STICK);
-            case WARPED_FUNGUS_ON_A_STICK_SET_SLOT -> toggle(manager, player, Skill.Trigger.WARPED_FUNGUS_ON_A_STICK);
+            case SWORD_SET_SLOT -> toggle(manager, player, Trigger.SWORD);
+            case BOW_SET_SLOT -> toggle(manager, player, Trigger.BOW);
+            case CROSSBOW_SET_SLOT -> toggle(manager, player, Trigger.CROSSBOW);
+            case SHOVEL_SET_SLOT -> toggle(manager, player, Trigger.SHOVEL);
+            case PICKAXE_SET_SLOT -> toggle(manager, player, Trigger.PICKAXE);
+            case AXE_SET_SLOT -> toggle(manager, player, Trigger.AXE);
+            case HOE_SET_SLOT -> toggle(manager, player, Trigger.HOE);
+            case CARROT_ON_A_STICK_SET_SLOT -> toggle(manager, player, Trigger.CARROT_ON_A_STICK);
+            case WARPED_FUNGUS_ON_A_STICK_SET_SLOT -> toggle(manager, player, Trigger.WARPED_FUNGUS_ON_A_STICK);
         }
     }
 
-    private static void toggle(TriggerManager manager, Player player, Skill.Trigger trigger) {
+    private static void toggle(TriggerManager manager, Player player, Trigger trigger) {
         manager.toggle(player.getUniqueId(), trigger);
         open(player);
     }

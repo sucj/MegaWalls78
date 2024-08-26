@@ -9,14 +9,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 
-@Trait("arcane_mining")
+@Trait(value = "arcane_mining", internal = ArcaneMining.Internal.class)
 public final class ArcaneMining extends Gathering {
 
     private static final int ENERGY = 20;
-
-    public ArcaneMining() {
-        super(Internal.class);
-    }
 
     public static final class Internal extends Passive {
 

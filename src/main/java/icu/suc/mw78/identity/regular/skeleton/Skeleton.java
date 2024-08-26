@@ -1,11 +1,12 @@
 package icu.suc.mw78.identity.regular.skeleton;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.*;
 
-public final class Skeleton extends icu.suc.megawalls78.identity.Kit {
+public final class Skeleton extends Kit {
 
     public Skeleton(Identity identity) {
         super(identity);

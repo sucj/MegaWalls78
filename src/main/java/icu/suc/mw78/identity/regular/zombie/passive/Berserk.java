@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-@Trait("berserk")
+@Trait(value = "berserk", cooldown = 15000L, duration = 6000L)
 public final class Berserk extends DurationCooldownPassive {
 
     private static final double SCALE = 1.75D;
@@ -21,10 +21,6 @@ public final class Berserk extends DurationCooldownPassive {
     private static final PotionEffect SPEED = new PotionEffect(PotionEffectType.SPEED, 120, 1);
 
     private static final Effect<Player> EFFECT_SKILL = Effect.create(player -> player.getWorld().playSound(player.getEyeLocation(), Sound.ENTITY_ZOMBIE_HURT, SoundCategory.PLAYERS, 1.0F, 1.0F));
-
-    public Berserk() {
-        super(15000L, 6000L);
-    }
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageByEntityEvent event) {

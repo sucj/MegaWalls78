@@ -1,22 +1,14 @@
 package icu.suc.megawalls78.identity.trait;
 
 import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.management.TraitManager;
 
 public abstract class Gathering extends Trait {
 
-    private final Class<? extends Passive> internal;
     private Passive passive;
 
-    public Gathering() {
-        this(null);
-    }
-
-    public Gathering(Class<? extends Passive> internal) {
-        this.internal = internal;
-    }
-
     public Class<? extends Passive> getInternal() {
-        return internal;
+        return TraitManager.internal(getClass());
     }
 
     public Passive getPassive() {

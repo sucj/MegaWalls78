@@ -1,7 +1,6 @@
 package icu.suc.mw78.identity.regular.shaman.skill;
 
 import com.google.common.collect.Lists;
-import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
@@ -22,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("tornado")
+@Trait(value = "tornado", cost = 100F, cooldown = 1000L)
 public final class Tornado extends Skill {
 
     private static final int DURATION = 100;
@@ -35,10 +34,6 @@ public final class Tornado extends Skill {
     private static final Effect<Location> EFFECT_SKILL = Effect.create(location -> location.getWorld().playSound(location, Sound.ENTITY_BREEZE_IDLE_AIR, SoundCategory.AMBIENT, 0.5F, 0.5F));
 
     private final List<Task> tasks = Lists.newArrayList();
-
-    public Tornado() {
-        super(100, 1000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

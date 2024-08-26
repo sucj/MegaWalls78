@@ -1,11 +1,12 @@
 package icu.suc.mw78.identity.next.warden;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.FIRE_PROTECTION;
 
-public final class Warden extends icu.suc.megawalls78.identity.Kit {
+public final class Warden extends Kit {
 
     public Warden(Identity identity) {
         super(identity);

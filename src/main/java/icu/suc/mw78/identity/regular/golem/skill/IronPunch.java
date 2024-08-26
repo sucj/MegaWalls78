@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static icu.suc.megawalls78.util.PlayerUtil.isValidAllies;
 
-@Trait("iron_punch")
+@Trait(value = "iron_punch", cost = 100F, cooldown = 2000L)
 public final class IronPunch extends Skill {
 
     private static final double RADIUS = 4.5D;
@@ -29,10 +29,6 @@ public final class IronPunch extends Skill {
     private static final Vector VECTOR = new Vector(0.0D, -0.235200005D, 0.0D);
 
     private static final Effect<Location> EFFECT_SKILL = Effect.create(location -> location.getWorld().playSound(location, Sound.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 1.0F, 1.0F));
-
-    public IronPunch() {
-        super(100, 2000L);
-    }
 
     @Override
     protected boolean use0(Player player) {

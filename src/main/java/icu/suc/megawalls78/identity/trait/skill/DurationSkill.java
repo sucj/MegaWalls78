@@ -1,23 +1,12 @@
 package icu.suc.megawalls78.identity.trait.skill;
 
-import icu.suc.megawalls78.identity.trait.passive.Passive;
+import icu.suc.megawalls78.management.TraitManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 public abstract class DurationSkill extends Skill {
 
-    protected long DURATION;
-
     long DURATION_LAST;
-
-    public DurationSkill(int cost, long cooldown, long duration) {
-        this(cost, cooldown, duration, null);
-    }
-
-    public DurationSkill(int cost, long cooldown, long duration, Class<? extends Passive> internal) {
-        super(cost, cooldown, internal);
-        this.DURATION = duration;
-    }
 
     @Override
     public boolean use(Player player) {
@@ -33,12 +22,12 @@ public abstract class DurationSkill extends Skill {
         return false;
     }
 
-    public long getDuration() {
-        return DURATION;
+    protected long DURATION_GET() {
+        return TraitManager.duration(getClass());
     }
 
     protected boolean DURATION() {
-        return CURRENT() - DURATION_LAST() <= DURATION;
+        return CURRENT() - DURATION_LAST() <= DURATION_GET();
     }
 
     protected long DURATION(long delta) {
@@ -54,7 +43,7 @@ public abstract class DurationSkill extends Skill {
         long current = CURRENT();
         COOLDOWN_LAST = current;
         DURATION_LAST = current;
-        COOLDOWN(DURATION);
+        COOLDOWN(DURATION_GET());
     }
 
     protected void DURATION_END() {
@@ -66,7 +55,7 @@ public abstract class DurationSkill extends Skill {
     }
 
     protected long DURATION_REMAIN() {
-        return DURATION - CURRENT() + DURATION_LAST();
+        return DURATION_GET() - CURRENT() + DURATION_LAST();
     }
 
     @Override

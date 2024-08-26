@@ -1,12 +1,13 @@
 package icu.suc.mw78.identity.regular.enderman;
 
 import icu.suc.megawalls78.identity.Identity;
+import icu.suc.megawalls78.identity.Kit;
 
 import static org.bukkit.Material.*;
 import static org.bukkit.enchantments.Enchantment.FEATHER_FALLING;
 import static org.bukkit.enchantments.Enchantment.PROJECTILE_PROTECTION;
 
-public final class Enderman extends icu.suc.megawalls78.identity.Kit {
+public final class Enderman extends Kit {
 
     public Enderman(Identity identity) {
         super(identity);

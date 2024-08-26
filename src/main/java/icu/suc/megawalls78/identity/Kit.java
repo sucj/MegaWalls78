@@ -23,6 +23,7 @@ public abstract class Kit {
     private ItemBuilder chestplateBuilder;
     private ItemBuilder leggingsBuilder;
     private ItemBuilder bootsBuilder;
+
     private final Identity identity;
 
     public Kit(Identity identity) {
