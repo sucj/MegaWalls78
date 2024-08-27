@@ -5,11 +5,9 @@ import com.google.common.collect.Sets;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.game.record.GameTeam;
-import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.Color;
 import icu.suc.megawalls78.util.ItemBuilder;
-import icu.suc.megawalls78.util.RandomUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -37,7 +35,7 @@ public class TeamGui {
     public static final Map<Inventory, Integer> INVENTORIES = Maps.newHashMap();
 
     public static void open(Player player, int page) {
-        Inventory inventory = Bukkit.createInventory(player, 36, Component.translatable("mw78.gui.team").append(Component.space()).append(Component.translatable("mw78.gui.team.title", Component.text(page), Component.text(MAX_PAGE))));
+        Inventory inventory = Bukkit.createInventory(player, 36, Component.translatable("mw78.gui.team").appendSpace().append(Component.translatable("mw78.gui.team.title", Component.text(page), Component.text(MAX_PAGE))));
 
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         List<GameTeam> teams = gameManager.getTeams().stream().skip((page - 1L) * SLOT_COUNT).limit(SLOT_COUNT).toList();
@@ -136,7 +134,7 @@ public class TeamGui {
 
     public static ItemStack trigger(Player player) {
         return ItemBuilder.of(material(MegaWalls78.getInstance().getGameManager().getPlayer(player).getTeam()))
-                .setDisplayName(Component.translatable("mw78.gui.team", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.team.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
+                .setDisplayName(Component.translatable("mw78.gui.team", NamedTextColor.WHITE).appendSpace().append(Component.translatable("mw78.gui.team.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .setHideToolTip(true)
                 .build();

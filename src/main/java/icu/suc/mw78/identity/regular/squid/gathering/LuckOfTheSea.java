@@ -20,7 +20,7 @@ public final class LuckOfTheSea extends Gathering {
     private static final ItemBuilder POTION = ItemBuilder.of(Material.POTION)
             .setDisplayName(Component.translatable("item.minecraft.potion"))
             .setAmount(3)
-            .addPrefix(Identity.SQUID.getName().append(Component.space()))
+            .addPrefix(Identity.SQUID.getName().appendSpace())
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .setMaxStackSize(64)
             .addCustomEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1200, 1), false);

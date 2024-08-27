@@ -24,7 +24,7 @@ public final class Looting extends ChargePassive {
     private static final ItemBuilder POTION = ItemBuilder.of(Material.SPLASH_POTION)
             .setDisplayName(Component.translatable("item.minecraft.splash_potion"))
             .setAmount(2)
-            .addPrefix(Identity.RENEGADE.getName().append(Component.space()))
+            .addPrefix(Identity.RENEGADE.getName().appendSpace())
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .setMaxStackSize(64)
             .addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 240, 1), false)

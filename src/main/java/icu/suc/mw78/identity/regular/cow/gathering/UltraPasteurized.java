@@ -22,7 +22,7 @@ public final class UltraPasteurized extends Gathering {
 
     private static final ItemBuilder MILK = ItemBuilder.of(Material.MILK_BUCKET)
             .setAmount(2)
-            .addPrefix(Identity.COW.getName().append(Component.space()))
+            .addPrefix(Identity.COW.getName().appendSpace())
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .setMaxStackSize(64)
             .setMW78Id(ItemUtil.COW_MILK);

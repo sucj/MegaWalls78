@@ -38,7 +38,7 @@ public class PatternGui {
     public static final Map<Inventory, Integer> INVENTORIES = Maps.newHashMap();
 
     public static void open(Player player, int page) {
-        Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.pattern").append(Component.space()).append(Component.translatable("mw78.gui.pattern.title", Component.text(page), Component.text(MAX_PAGE))));
+        Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.pattern").appendSpace().append(Component.translatable("mw78.gui.pattern.title", Component.text(page), Component.text(MAX_PAGE))));
 
         List<Pattern> patterns = EquipmentManager.PATTERNS.values().stream().skip((page - 1L) * SLOT_COUNT).limit(SLOT_COUNT).collect(Collectors.toList());
         patterns.addFirst(null);

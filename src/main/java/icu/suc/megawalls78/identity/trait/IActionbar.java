@@ -25,7 +25,7 @@ public interface IActionbar {
         private static final Component D = Component.translatable("mw78.actionbar.deactivate", NamedTextColor.RED);
         private static final TranslatableComponent C = Component.translatable("mw78.actionbar.charge", NamedTextColor.DARK_GRAY);
 
-        private static final double SECOND_MILLS_D = 1000.0D;
+        public static final double SECOND_MILLS_D = 1000.0D;
 
         public Component accept(Object... args) {
             switch (this) {

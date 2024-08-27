@@ -17,7 +17,7 @@ public class LP {
 
     public static Component getPrefix(UUID uuid) {
         try {
-            return MiniMessage.miniMessage().deserialize(getUser(uuid).getCachedData().getMetaData().getPrefix()).append(Component.space());
+            return MiniMessage.miniMessage().deserialize(getUser(uuid).getCachedData().getMetaData().getPrefix()).appendSpace();
         } catch (NullPointerException e) {
             return Component.empty();
         }

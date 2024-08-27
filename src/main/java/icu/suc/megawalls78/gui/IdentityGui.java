@@ -37,7 +37,7 @@ public class IdentityGui {
     public static final Map<Inventory, Integer> INVENTORIES = Maps.newHashMap();
 
     public static void open(Player player, int page) {
-        Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.identity").append(Component.space()).append(Component.translatable("mw78.gui.identity.title", Component.text(page), Component.text(MAX_PAGE))));
+        Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.identity").appendSpace().append(Component.translatable("mw78.gui.identity.title", Component.text(page), Component.text(MAX_PAGE))));
 
         List<Identity> identities = Arrays.stream(Identity.values()).skip((page - 1L) * SLOT_COUNT).limit(SLOT_COUNT).toList();
 
@@ -132,7 +132,7 @@ public class IdentityGui {
 
     public static ItemStack trigger(Player player) {
         return ItemBuilder.of(MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity().getMaterial())
-                .setDisplayName(Component.translatable("mw78.gui.identity", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.identity.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
+                .setDisplayName(Component.translatable("mw78.gui.identity", NamedTextColor.WHITE).appendSpace().append(Component.translatable("mw78.gui.identity.trigger", NamedTextColor.GRAY, Component.keybind("key.use"))))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
                 .clearAttributes()
                 .setHideToolTip(true)

@@ -3,7 +3,6 @@ package icu.suc.megawalls78.util;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import de.myzelyam.api.vanish.VanishAPI;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.entity.custom.*;
 import icu.suc.megawalls78.entity.custom.arrow.ExplosiveArrow;
@@ -26,6 +25,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attributable;
@@ -154,7 +154,7 @@ public class EntityUtil {
     public static Collection<Entity> getNearbyEntitiesSphere(Location location, double radius) {
         Collection<Entity> entities = getNearbyEntities(location.getWorld(), BoundingBox.of(location, radius, radius, radius));
         entities.removeIf(e -> !inSphere(e, location.toVector(), radius));
-        return filterVanished(entities);
+        return filterSpectator(entities);
     }
 
     public static Collection<Entity> getNearbyEntitiesCylinder(Location location, double height, double radius) {
@@ -162,7 +162,7 @@ public class EntityUtil {
         double y = location.getY();
         double z = location.getZ();
         BoundingBox boundingBox = new BoundingBox(x + radius, y, z + radius, x - radius, y + height, z - radius);
-        return filterVanished(location.getWorld().getNearbyEntities(boundingBox, entity -> {
+        return filterSpectator(location.getWorld().getNearbyEntities(boundingBox, entity -> {
             BoundingBox box = entity.getBoundingBox();
 
             double dx = x;
@@ -178,22 +178,22 @@ public class EntityUtil {
     }
 
     public static Collection<Entity> getNearbyEntities(Entity entity, double x, double y, double z) {
-        return filterVanished(entity.getNearbyEntities(x, y, z));
+        return filterSpectator(entity.getNearbyEntities(x, y, z));
     }
 
     public static Collection<Entity> getNearbyEntities(Entity entity, double radius) {
         Collection<Entity> entities = getNearbyEntities(entity, radius, radius, radius);
         Vector center = entity.getBoundingBox().getCenter();
         entities.removeIf(e -> !inSphere(e, center, radius));
-        return filterVanished(entities);
+        return filterSpectator(entities);
     }
 
     public static Collection <Entity> getNearbyEntities(World world, BoundingBox box) {
-        return filterVanished(world.getNearbyEntities(box));
+        return filterSpectator(world.getNearbyEntities(box));
     }
 
-    private static Collection<Entity> filterVanished(Collection<Entity> entities) {
-        entities.removeIf(e -> (e instanceof Player && VanishAPI.isInvisible((Player) e)));
+    private static Collection<Entity> filterSpectator(Collection<Entity> entities) {
+        entities.removeIf(e -> (e instanceof Player player && !player.getGameMode().equals(GameMode.SURVIVAL)));
         return entities;
     }
 

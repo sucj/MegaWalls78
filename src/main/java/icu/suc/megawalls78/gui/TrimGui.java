@@ -39,7 +39,7 @@ public class TrimGui {
     public static final Map<Inventory, Integer> INVENTORIES = Maps.newHashMap();
 
     public static void open(Player player, int page) {
-        Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.trim").append(Component.space()).append(Component.translatable("mw78.gui.trim.title", Component.text(page), Component.text(MAX_PAGE))));
+        Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.trim").appendSpace().append(Component.translatable("mw78.gui.trim.title", Component.text(page), Component.text(MAX_PAGE))));
 
         List<TrimPattern> trims = EquipmentManager.TRIMS.values().stream().skip((page - 1L) * SLOT_COUNT).limit(SLOT_COUNT).toList();
         boolean flag = true;

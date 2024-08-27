@@ -35,7 +35,7 @@ public abstract class Kit {
     protected abstract void init();
 
     protected Component prefix() {
-        return identity.getName().append(Component.space());
+        return identity.getName().appendSpace();
     }
 
     protected ItemBuilder addBuilder(ItemBuilder builder) {

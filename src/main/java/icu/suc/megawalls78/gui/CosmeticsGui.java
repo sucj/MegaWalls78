@@ -17,7 +17,7 @@ import java.util.Set;
 public class CosmeticsGui {
 
     private static final Component TITLE = Component.translatable("mw78.gui.cosmetic");
-    private static final Component TRIGGER = Component.translatable("mw78.gui.cosmetic", NamedTextColor.WHITE).append(Component.space()).append(Component.translatable("mw78.gui.cosmetic.trigger", NamedTextColor.GRAY, Component.keybind("key.use")));
+    private static final Component TRIGGER = Component.translatable("mw78.gui.cosmetic", NamedTextColor.WHITE).appendSpace().append(Component.translatable("mw78.gui.cosmetic.trigger", NamedTextColor.GRAY, Component.keybind("key.use")));
 
     private static final int PATTERN_SLOT = 0;
     private static final int SKIN_SLOT = 2;

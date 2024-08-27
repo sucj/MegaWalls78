@@ -297,6 +297,11 @@ public class GameRunner implements Runnable {
                 gameManager.setState(GameState.ENDING);
                 allowedBlocks.clear();
 
+                Iterator<Player> iterator = gameManager.getSpectators().iterator();
+                while (iterator.hasNext()) {
+                    gameManager.removeSpectator(iterator.next());
+                }
+
                 for (GamePlayer gamePlayer : gameManager.getPlayers().values()) {
                     if (gameManager.isSpectator(gamePlayer.getUuid())) {
                         continue;
@@ -432,7 +437,7 @@ public class GameRunner implements Runnable {
                     if (mincer != null) {
                         UUID uuid = mincer.getUuid();
                         GameTeam team = mincer.getTeam();
-                        Component mincerMessage = Component.translatable("mw78.mincer", Component.translatable("mw78.brackets", team.color(), team.chat()).append(Component.space()).append(LP.getPrefix(uuid).append(Component.text(Bukkit.getOfflinePlayer(uuid).getName(), LP.getNameColor(uuid))))).decorate(TextDecoration.BOLD);
+                        Component mincerMessage = Component.translatable("mw78.mincer", Component.translatable("mw78.brackets", team.color(), team.chat()).appendSpace().append(LP.getPrefix(uuid).append(Component.text(Bukkit.getOfflinePlayer(uuid).getName(), LP.getNameColor(uuid))))).decorate(TextDecoration.BOLD);
                         Component mincerSummary = Component.translatable("mw78.mincer.summary", NamedTextColor.GRAY, Component.text(Formatters.NUMBER.format(mincerScore)));
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             ComponentUtil.sendMessage(mincerMessage, player);
@@ -447,7 +452,7 @@ public class GameRunner implements Runnable {
                     if (rusher != null) {
                         UUID uuid = rusher.getUuid();
                         GameTeam team = rusher.getTeam();
-                        Component rusherMessage = Component.translatable("mw78.rusher", Component.translatable("mw78.brackets", team.color(), team.chat()).append(Component.space()).append(LP.getPrefix(uuid).append(Component.text(Bukkit.getOfflinePlayer(uuid).getName(), LP.getNameColor(uuid))))).decorate(TextDecoration.BOLD);
+                        Component rusherMessage = Component.translatable("mw78.rusher", Component.translatable("mw78.brackets", team.color(), team.chat()).appendSpace().append(LP.getPrefix(uuid).append(Component.text(Bukkit.getOfflinePlayer(uuid).getName(), LP.getNameColor(uuid))))).decorate(TextDecoration.BOLD);
                         Component rusherSummary = Component.translatable("mw78.rusher.summary", NamedTextColor.GRAY, Component.text(Formatters.NUMBER.format(rusherScore)));
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             ComponentUtil.sendMessage(rusherMessage, player);
@@ -462,7 +467,7 @@ public class GameRunner implements Runnable {
                     if (resister != null) {
                         UUID uuid = resister.getUuid();
                         GameTeam team = resister.getTeam();
-                        Component resisterMessage = Component.translatable("mw78.resister", Component.translatable("mw78.brackets", team.color(), team.chat()).append(Component.space()).append(LP.getPrefix(uuid).append(Component.text(Bukkit.getOfflinePlayer(uuid).getName(), LP.getNameColor(uuid))))).decorate(TextDecoration.BOLD);
+                        Component resisterMessage = Component.translatable("mw78.resister", Component.translatable("mw78.brackets", team.color(), team.chat()).appendSpace().append(LP.getPrefix(uuid).append(Component.text(Bukkit.getOfflinePlayer(uuid).getName(), LP.getNameColor(uuid))))).decorate(TextDecoration.BOLD);
                         Component resisterSummary = Component.translatable("mw78.resister.summary", NamedTextColor.GRAY, Component.text(Formatters.NUMBER.format(resisterScore)));
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             ComponentUtil.sendMessage(resisterMessage, player);
@@ -477,7 +482,7 @@ public class GameRunner implements Runnable {
                     if (mvp != null) {
                         UUID mvpUuid = mvp.getUuid();
                         GameTeam team = mvp.getTeam();
-                        Component mvpMessage = Component.translatable("mw78.mvp", Component.translatable("mw78.brackets", team.color(), team.chat()).append(Component.space()).append(LP.getPrefix(mvpUuid).append(Component.text(Bukkit.getOfflinePlayer(mvpUuid).getName(), LP.getNameColor(mvpUuid))))).decorate(TextDecoration.BOLD);
+                        Component mvpMessage = Component.translatable("mw78.mvp", Component.translatable("mw78.brackets", team.color(), team.chat()).appendSpace().append(LP.getPrefix(mvpUuid).append(Component.text(Bukkit.getOfflinePlayer(mvpUuid).getName(), LP.getNameColor(mvpUuid))))).decorate(TextDecoration.BOLD);
                         Component mvpSummary = Component.translatable("mw78.mvp.summary", NamedTextColor.GRAY, Component.text(Formatters.COMPASS.format(mvpScore)));
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             ComponentUtil.sendMessage(mvpMessage, player);
@@ -499,6 +504,9 @@ public class GameRunner implements Runnable {
                         throw new RuntimeException(e);
                     }
 
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        player.kick();
+                    }
                     Bukkit.shutdown();
                 });
             }

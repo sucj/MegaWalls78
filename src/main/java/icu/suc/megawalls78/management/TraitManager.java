@@ -7,6 +7,7 @@ import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.trait.Gathering;
+import icu.suc.megawalls78.identity.trait.IActionbar;
 import icu.suc.megawalls78.identity.trait.annotation.*;
 import icu.suc.megawalls78.identity.trait.passive.NullPassive;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
@@ -51,14 +52,12 @@ public class TraitManager {
     public static <T extends icu.suc.megawalls78.identity.trait.Trait> T trait(Class<? extends T> clazz, GamePlayer player, String id) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         Trait annotation = clazz.getAnnotation(Trait.class);
 
-        boolean flag = id == null;
-
-        id = flag ? annotation.value() : id;
+        id = id == null ? annotation.value() : id;
         ID_MAP.put(clazz, id);
         NAME_MAP.put(clazz, Component.translatable("mw78.trait." + id));
         DESCRIBE_MAP.put(clazz, Component.translatable("mw78.trait." + id + ".description"));
 
-        if (flag) {
+        if (annotation != null) {
             float cost = annotation.cost();
             if (cost != -1) {
                 COST_MAP.put(clazz, cost);
@@ -156,9 +155,13 @@ public class TraitManager {
             Map<Trigger, Class<? extends icu.suc.megawalls78.identity.trait.skill.Skill>> skillClasses = identity.getSkillClasses();
             List<Component> skills = Lists.newArrayList();
             List<Component> sPages = Lists.newArrayList();
-            for (Class<? extends icu.suc.megawalls78.identity.trait.skill.Skill> skill : Sets.newLinkedHashSet(skillClasses.values())) {
+            for (Class<? extends icu.suc.megawalls78.identity.trait.skill.Skill> skill : Sets.newHashSet(skillClasses.values())) {
                 Component skillName = name(skill);
                 Component sPage = Component.empty().append(skillName.decorate(TextDecoration.BOLD))
+                        .appendNewline()
+                        .append(Component.translatable("mw78.gui.trait.energy", NamedTextColor.DARK_GRAY, Component.text(Formatters.NUMBER.format(cost(skill)), NamedTextColor.DARK_BLUE)))
+                        .appendNewline()
+                        .append(Component.translatable("mw78.gui.trait.cooldown", NamedTextColor.DARK_GRAY, Component.translatable("mw78.seconds", NamedTextColor.DARK_BLUE, Component.text(Formatters.NUMBER.format(cooldown(skill) / IActionbar.Type.SECOND_MILLS_D)))))
                         .appendNewline()
                         .appendNewline();
                 List<Component> components = Lists.newArrayList();

@@ -27,15 +27,15 @@ public final class JunkFood extends ChargePassive implements IActionbar {
 
     private static final ItemBuilder COOKIE = ItemBuilder.of(Material.COOKIE)
             .setAmount(3)
-            .addPrefix(Identity.MOLEMAN.getName().append(Component.space()))
+            .addPrefix(Identity.MOLEMAN.getName().appendSpace())
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .setMW78Id(ItemUtil.MOLEMAN_COOKIE);
     private static final ItemBuilder PIE = ItemBuilder.of(Material.PUMPKIN_PIE)
-            .addPrefix(Identity.MOLEMAN.getName().append(Component.space()))
+            .addPrefix(Identity.MOLEMAN.getName().appendSpace())
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .setMW78Id(ItemUtil.MOLEMAN_PIE);
     private static final ItemBuilder JUNK_APPLE = ItemBuilder.of(Material.APPLE)
-            .addPrefix(Identity.MOLEMAN.getName().append(Component.space()))
+            .addPrefix(Identity.MOLEMAN.getName().appendSpace())
             .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE)
             .setMW78Id(ItemUtil.MOLEMAN_JUNK_APPLE);
 

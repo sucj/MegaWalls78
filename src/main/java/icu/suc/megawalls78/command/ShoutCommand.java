@@ -13,6 +13,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 public class ShoutCommand implements CommandExecutor {
 
     @Override
@@ -24,15 +26,9 @@ public class ShoutCommand implements CommandExecutor {
                     return true;
                 }
                 if (gameManager.inFighting()) {
-                    GamePlayer gamePlayer = gameManager.getPlayer(player);
-                    Bukkit.broadcast(Component.translatable("mw78.brackets", NamedTextColor.GOLD, Component.translatable("mw78.shout"))
-                            .append(Component.space())
-                            .append(Component.translatable("mw78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().chat()))
-                            .append(Component.space())
-                            .append(LP.getPrefix(player.getUniqueId()))
-                            .append(player.teamDisplayName().color(LP.getNameColor(player.getUniqueId())))
-                            .append(Component.translatable("mw78.sb.colon", NamedTextColor.WHITE))
-                            .append(Component.text(String.join(" ", strings), NamedTextColor.WHITE)));
+                    UUID uuid = player.getUniqueId();
+                    GamePlayer gamePlayer = gameManager.getPlayer(uuid);
+                    Bukkit.broadcast(Component.translatable("mw78.brackets", NamedTextColor.GOLD, Component.translatable("mw78.shout")).appendSpace().append(Component.translatable("mw78.chat", NamedTextColor.GRAY, Component.translatable("mw78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().chat()).appendSpace().append(LP.getPrefix(uuid)).append(player.name().color(LP.getNameColor(uuid))).hoverEvent(player).clickEvent(player.teamDisplayName().clickEvent()), Component.text(String.join(" ", strings), NamedTextColor.WHITE))));
                 }
                 return true;
             }

@@ -4,6 +4,7 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.management.GameManager;
+import icu.suc.megawalls78.management.IdentityManager;
 import icu.suc.megawalls78.util.LP;
 import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AsyncChatEvent;
@@ -17,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
+import java.util.UUID;
 
 public class ChatListener implements Listener, ChatRenderer {
 
@@ -40,30 +42,35 @@ public class ChatListener implements Listener, ChatRenderer {
     @Override
     public @NotNull Component render(@NotNull Player player, @NotNull Component component, @NotNull Component component1, @NotNull Audience audience) {
         Component name;
-        if (MegaWalls78.getInstance().getGameManager().inFighting()) {
-            GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+
+        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+        IdentityManager identityManager = MegaWalls78.getInstance().getIdentityManager();
+
+        UUID uuid = player.getUniqueId();
+
+        if (gameManager.inFighting()) {
             NamedTextColor color;
             Component chat;
-            if (gameManager.isSpectator(player)) {
+            if (gameManager.isSpectator(uuid)) {
                 color = NamedTextColor.GRAY;
                 chat = Component.translatable("mw78.team.spec.chat");
             } else {
-                GamePlayer gamePlayer = gameManager.getPlayer(player);
+                GamePlayer gamePlayer = gameManager.getPlayer(uuid);
                 color = gamePlayer.getTeam().color();
                 chat = gamePlayer.getTeam().chat();
             }
             name = Component.translatable("mw78.brackets", color, chat)
-                    .append(Component.space())
-                    .append(LP.getPrefix(player.getUniqueId()))
-                    .append(player.teamDisplayName().color(LP.getNameColor(player.getUniqueId())));
+                    .appendSpace()
+                    .append(LP.getPrefix(uuid))
+                    .append(player.name().color(LP.getNameColor(uuid)));
         } else {
-            name = LP.getPrefix(player.getUniqueId())
-                    .append(player.teamDisplayName().color(LP.getNameColor(player.getUniqueId())));
-            Identity identity = MegaWalls78.getInstance().getIdentityManager().getRankedIdentity(player.getUniqueId());
+            name = LP.getPrefix(uuid)
+                    .append(player.name().color(LP.getNameColor(uuid)));
+            Identity identity = identityManager.getRankedIdentity(uuid);
             if (identity != null) {
-                name = identity.getIcon().color(MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), identity)).append(Component.space()).append(name);
+                name = identity.getIcon().color(identityManager.getIdentityColor(uuid, identity)).appendSpace().append(name);
             }
         }
-        return Component.translatable("mw78.chat", NamedTextColor.GRAY, name, component1.color(LP.getChatColor(player.getUniqueId())));
+        return Component.translatable("mw78.chat", NamedTextColor.GRAY, name.hoverEvent(player).clickEvent(player.teamDisplayName().clickEvent()), component1.color(LP.getChatColor(uuid)));
     }
 }

@@ -3,7 +3,6 @@ package icu.suc.megawalls78.management;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import de.myzelyam.api.vanish.VanishAPI;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.event.StateChangeEvent;
 import icu.suc.megawalls78.game.GamePlayer;
@@ -95,13 +94,15 @@ public class GameManager {
     public void addSpectator(Player player) {
         spectators.add(player.getUniqueId());
         player.setGameMode(GameMode.ADVENTURE);
-        VanishAPI.hidePlayer(player);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            onlinePlayer.unlistPlayer(player);
+        }
     }
 
     public void removeSpectator(Player player) {
         spectators.remove(player.getUniqueId());
-        if (VanishAPI.isInvisible(player)) {
-            VanishAPI.showPlayer(player);
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            onlinePlayer.listPlayer(player);
         }
     }
 

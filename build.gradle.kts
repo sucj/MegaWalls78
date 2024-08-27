@@ -31,7 +31,7 @@ repositories {
 dependencies {
   paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
   implementation("net.skinsrestorer", "skinsrestorer-api", "15.4.2-SNAPSHOT")
-  implementation("com.github.LeonMangler", "SuperVanish", "6.2.19")
+//  implementation("com.github.LeonMangler", "SuperVanish", "6.2.19")
   implementation("net.luckperms", "api", "5.4")
   implementation("net.megavex", "scoreboard-library-api", "2.1.12")
 //  implementation("com.comphenix.protocol", "ProtocolLib", "5.3.0-SNAPSHOT")
@@ -53,7 +53,7 @@ bukkitPluginYaml {
   authors = listOf("557")
   apiVersion = "1.21"
   load = BukkitPluginYaml.PluginLoadOrder.POSTWORLD
-  depend = listOf("SkinsRestorer", "SuperVanish", "LuckPerms")
+  depend = listOf("SkinsRestorer", "LuckPerms")
   libraries = listOf("com.mysql:mysql-connector-j:9.0.0", "redis.clients:jedis:5.1.3", "net.megavex:scoreboard-library-api:2.1.12", "net.megavex:scoreboard-library-implementation:2.1.12", "net.megavex:scoreboard-library-modern:2.1.12")
   prefix = "MW78"
   permissions {

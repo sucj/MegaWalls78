@@ -80,7 +80,7 @@ public abstract class Trait {
         List<Component> effects = Lists.newArrayList();
         for (PotionEffect potionEffect : potionEffects) {
             PotionEffectType type = potionEffect.getType();
-            effects.add(Component.translatable(type).append(Component.space()).append(Component.translatable("enchantment.level." + (potionEffect.getAmplifier() + 1))).color(TextColor.color(type.getColor().asRGB())).decorate(TextDecoration.BOLD));
+            effects.add(Component.translatable(type).appendSpace().append(Component.translatable("enchantment.level." + (potionEffect.getAmplifier() + 1))).color(TextColor.color(type.getColor().asRGB())).decorate(TextDecoration.BOLD));
         }
         return Component.join(EFFECT_JOIN, effects);
     }
