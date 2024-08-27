@@ -1,8 +1,6 @@
 package icu.suc.megawalls78.entity.custom;
 
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.entity.pathfinder.HurtByOtherTeamTargetGoal;
-import icu.suc.megawalls78.entity.pathfinder.NearestAttackableOtherTeamTargetGoal;
 import icu.suc.megawalls78.game.GameState;
 import net.kyori.adventure.bossbar.BossBar;
 import net.minecraft.tags.EntityTypeTags;
@@ -14,6 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.player.Player;
@@ -57,8 +57,8 @@ public class MegaWither extends WitherBoss {
     protected void registerGoals() {
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 10.0F));
-        this.targetSelector.addGoal(1, new HurtByOtherTeamTargetGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableOtherTeamTargetGoal<>(this, LivingEntity.class, 0, false, false, LIVING_ENTITY_SELECTOR));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 0, false, false, LIVING_ENTITY_SELECTOR));
     }
 
     @Override

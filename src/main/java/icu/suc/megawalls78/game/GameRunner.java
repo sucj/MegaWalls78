@@ -504,10 +504,12 @@ public class GameRunner implements Runnable {
                         throw new RuntimeException(e);
                     }
 
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        player.kick();
-                    }
-                    Bukkit.shutdown();
+                    Bukkit.getScheduler().runTask(instance, () -> {
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            player.kick();
+                        }
+                        Bukkit.shutdown();
+                    });
                 });
             }
         }
