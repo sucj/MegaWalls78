@@ -70,8 +70,7 @@ public class ItemBuilder {
     private List<Decoration> decorationList;
 
     public static ItemBuilder of(Material type) {
-        ItemBuilder instance = new ItemBuilder();
-        return instance.setType(type);
+        return new ItemBuilder().setType(type);
     }
 
     public ItemBuilder setType(Material type) {
