@@ -9,6 +9,7 @@ import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.identity.EnergyWay;
 import icu.suc.megawalls78.management.ConfigManager;
 import icu.suc.megawalls78.management.GameManager;
+import icu.suc.megawalls78.management.ScoreboardManager;
 import icu.suc.megawalls78.util.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
@@ -141,7 +142,6 @@ public class GameRunner implements Runnable {
 //                                        player.addPotionEffect(GLOWING);
 //                                    }
 //                                }
-                                Bukkit.getWorlds().getFirst().setHardcore(true);
                             } else {
                                 dmTimer -= 1000L;
                                 if (dmTimer == 10000L || dmTimer <= 5000L && dmTimer > 0) {
@@ -564,12 +564,15 @@ public class GameRunner implements Runnable {
             gameManager.setTeamEliminate(gameTeam, false);
         }
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        ScoreboardManager scoreboardManager = MegaWalls78.getInstance().getScoreboardManager();
         for (GameTeam gameTeam : gameManager.getTeams()) {
             Team mcTeam = scoreboard.registerNewTeam(gameTeam.id());
             mcTeam.color(gameTeam.color());
             mcTeam.setAllowFriendlyFire(false);
             for (GamePlayer player : gameManager.getTeamPlayersMap().get(gameTeam)) {
-                mcTeam.addPlayer(player.getBukkitPlayer());
+                Player bukkitPlayer = player.getBukkitPlayer();
+                mcTeam.addPlayer(bukkitPlayer);
+                scoreboardManager.teamDisplay(gameTeam, bukkitPlayer);
             }
             EntityUtil.spawn(gameTeam.wither(), EntityUtil.Type.MEGA_WITHER, entity -> {
                 Wither wither = (Wither) entity;

@@ -49,13 +49,38 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+        IdentityManager identityManager = MegaWalls78.getInstance().getIdentityManager();
         Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        String group = LP.getGroup(uuid);
+        NamedTextColor groupColor = LP.getNameColor(group);
+        if (gameManager.inFighting()) {
+            if (!gameManager.isSpectator(uuid)) {
+                GamePlayer gamePlayer = gameManager.getPlayer(uuid);
+                GameTeam team = gamePlayer.getTeam();
+                NamedTextColor color = team.color();
+                player.playerListName(Component.translatable("mw78.brackets", color, team.abbr())
+                        .appendSpace()
+                        .append(player.name().color(color))
+                        .appendSpace()
+                        .append(Component.translatable("mw78.brackets", identityManager.getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr()))
+                );
+            }
+        } else {
+            Component name = LP.getPrefix(group)
+                    .append(player.name().color(groupColor));
+            Identity identity = identityManager.getRankedIdentity(uuid);
+            if (identity != null) {
+                name = name.appendSpace().append(identity.getIcon().color(identityManager.getIdentityColor(uuid, identity)));
+            }
+            player.playerListName(name);
+        }
         if (gameManager.inWaiting()) {
             player.getInventory().setItem(0, IdentityGui.trigger(player));
             player.getInventory().setItem(1, CosmeticsGui.trigger());
             player.getInventory().setItem(7, TeamGui.trigger(player));
             MegaWalls78.getInstance().getSkinManager().applySkin(player);
-            event.joinMessage(Component.translatable("multiplayer.player.joined", player.teamDisplayName().color(LP.getNameColor(player.getUniqueId())))
+            event.joinMessage(Component.translatable("multiplayer.player.joined", player.teamDisplayName().color(groupColor))
                     .appendSpace()
                     .append(Component.translatable("mw78.online", Component.text(gameManager.getPlayers().values().size(), NamedTextColor.WHITE), Component.text(MegaWalls78.getInstance().getConfigManager().maxPlayer, NamedTextColor.WHITE)))
                     .color(NamedTextColor.AQUA));
@@ -221,32 +246,44 @@ public class PlayerListener implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         GameManager gameManager = MegaWalls78.getInstance().getGameManager();
         Player player = event.getPlayer();
-        if (gameManager.inWaiting()) {
+        if (gameManager.inFighting()) {
+            if (gameManager.isSpectator(player)) {
+                if (gameManager.getPlayer(player) != null) {
+                    ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), Component.empty(), ComponentUtil.DEFAULT_TIMES, player);
+                    MegaWalls78.getInstance().getSkinManager().resetSkin(player);
+                }
+                Location deathLocation = PlayerUtil.getLastDeathLocation(player);
+                if (deathLocation == null) {
+                    event.setRespawnLocation(gameManager.getMap().spectator());
+                } else {
+                    event.setRespawnLocation(deathLocation);
+                }
+                player.setGameMode(GameMode.SPECTATOR);
+                player.playerListName(null);
+            } else {
+                GamePlayer gamePlayer = gameManager.getPlayer(player);
+                event.setRespawnLocation(RandomUtil.getRandomSpawn(gamePlayer.getTeam().spawn()));
+                Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+                    GameTeam team = gamePlayer.getTeam();
+                    NamedTextColor color = team.color();
+                    player.playerListName(Component.translatable("mw78.brackets", color, team.abbr())
+                            .appendSpace()
+                            .append(player.name().color(color))
+                            .appendSpace()
+                            .append(Component.translatable("mw78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr()))
+                    );
+
+                    player.setGameMode(GameMode.SURVIVAL);
+                    EntityUtil.setAttributeValue(player, Attribute.GENERIC_MAX_HEALTH, 40);
+                    player.setHealth(40);
+                    PlayerUtil.setStarvation(player, 20);
+                    gamePlayer.getIdentity().getKit().equip(player);
+                    gamePlayer.enablePassives();
+                });
+            }
+        } else {
             event.setRespawnLocation(RandomUtil.getRandomSpawn(gameManager.getMap().spawn()));
             player.setGameMode(GameMode.ADVENTURE);
-        } else if (gameManager.isSpectator(player)) {
-            if (gameManager.getPlayer(player) != null) {
-                ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), Component.empty(), ComponentUtil.DEFAULT_TIMES, player);
-                MegaWalls78.getInstance().getSkinManager().resetSkin(player);
-            }
-            Location deathLocation = PlayerUtil.getLastDeathLocation(player);
-            if (deathLocation == null) {
-                event.setRespawnLocation(gameManager.getMap().spectator());
-            } else {
-                event.setRespawnLocation(deathLocation);
-            }
-            player.setGameMode(GameMode.SPECTATOR);
-        } else {
-            GamePlayer gamePlayer = gameManager.getPlayer(player);
-            event.setRespawnLocation(RandomUtil.getRandomSpawn(gamePlayer.getTeam().spawn()));
-            Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
-                player.setGameMode(GameMode.SURVIVAL);
-                EntityUtil.setAttributeValue(player, Attribute.GENERIC_MAX_HEALTH, 40);
-                player.setHealth(40);
-                PlayerUtil.setStarvation(player, 20);
-                gamePlayer.getIdentity().getKit().equip(player);
-                gamePlayer.enablePassives();
-            });
         }
     }
 

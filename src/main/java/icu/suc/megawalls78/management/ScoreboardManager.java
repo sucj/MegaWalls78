@@ -12,6 +12,7 @@ import icu.suc.megawalls78.util.ComponentUtil;
 import icu.suc.megawalls78.util.Formatters;
 import icu.suc.megawalls78.util.LP;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -22,9 +23,12 @@ import net.megavex.scoreboardlibrary.api.objective.ScoreboardObjective;
 import net.megavex.scoreboardlibrary.api.sidebar.Sidebar;
 import net.megavex.scoreboardlibrary.api.sidebar.component.ComponentSidebarLayout;
 import net.megavex.scoreboardlibrary.api.sidebar.component.SidebarComponent;
+import net.megavex.scoreboardlibrary.api.team.ScoreboardTeam;
 import net.megavex.scoreboardlibrary.api.team.TeamDisplay;
 import net.megavex.scoreboardlibrary.api.team.TeamManager;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,10 +36,13 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 
@@ -85,16 +92,21 @@ public class ScoreboardManager implements Listener {
             sidebar.tick();
         }
         for (Player player : Bukkit.getOnlinePlayers()) {
-            int health = (int) player.getHealth();
-            belowName.score(player.getName(), health);
+            if (player.getGameMode().equals(GameMode.SURVIVAL)) {
+                int health = (int) player.getHealth();
+                belowName.score(player.getName(), health);
 
-            TextColor color;
-            if (health > 20) {
-                color = TextColor.lerp((float) (health - 20) / 20, YELLOW, GREEN);
+                TextColor color;
+                if (health > 20) {
+                    color = TextColor.lerp((float) (health - 20) / 20, YELLOW, GREEN);
+                } else {
+                    color = TextColor.lerp((float) health / 20, RED, YELLOW);
+                }
+                playerList.score(player.getName(), health, ScoreFormat.styled(Style.style(color)));
             } else {
-                color = TextColor.lerp((float) health / 20, RED, YELLOW);
+                belowName.removeScore(player.getName());
+                playerList.removeScore(player.getName());
             }
-            playerList.score(player.getName(), health, ScoreFormat.styled(Style.style(color)));
         }
     }
 
@@ -104,28 +116,22 @@ public class ScoreboardManager implements Listener {
         Player player = event.getPlayer();
         updateSidebar(player, gameManager.getState());
         teamManager.addPlayer(player);
-        if (MegaWalls78.getInstance().getGameManager().inWaiting()) {
-            TeamDisplay teamDisplay = teamManager.createIfAbsent(String.valueOf(player.getUniqueId())).defaultDisplay();
-            teamDisplay.prefix(LP.getPrefix(player.getUniqueId()));
-            Identity identity = MegaWalls78.getInstance().getIdentityManager().getRankedIdentity(player.getUniqueId());
-            if (identity != null) {
-                teamDisplay.suffix(Component.space().append(identity.getIcon().color(MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), identity))));
+        UUID uuid = player.getUniqueId();
+        if (gameManager.inWaiting()) {
+            String group = LP.getGroup(uuid);
+            ScoreboardTeam scoreboardTeam = teamManager.team(group);
+            TeamDisplay teamDisplay;
+            if (scoreboardTeam == null) {
+                scoreboardTeam = teamManager.createIfAbsent(group);
+                teamDisplay = scoreboardTeam.defaultDisplay();
+            } else {
+                teamDisplay = scoreboardTeam.defaultDisplay();
+                teamDisplay.prefix(LP.getPrefix(group));
+                teamDisplay.playerColor(LP.getNameColor(group));
             }
-            teamDisplay.playerColor(LP.getNameColor(player.getUniqueId()));
             teamDisplay.addEntry(player.getName());
         } else {
-            GamePlayer gamePlayer = MegaWalls78.getInstance().getGameManager().getPlayer(player);
-            TeamDisplay teamDisplay = teamManager.createIfAbsent(String.valueOf(player.getUniqueId())).defaultDisplay();
-            if (MegaWalls78.getInstance().getGameManager().isSpectator(player)) {
-                teamDisplay.prefix(Component.translatable("mw78.brackets", GRAY, Component.translatable("mw78.team.spec.abbr")).appendSpace());
-                teamDisplay.playerColor(GRAY);
-            } else if (gamePlayer != null) {
-                teamDisplay.prefix(Component.translatable("mw78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).appendSpace());
-                teamDisplay.suffix(Component.space().append(Component.translatable("mw78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
-                teamDisplay.playerColor(gamePlayer.getTeam().color());
-            }
             objectiveManager.addPlayer(player);
-            teamDisplay.addEntry(player.getName());
         }
     }
 
@@ -134,36 +140,43 @@ public class ScoreboardManager implements Listener {
         Player player = event.getPlayer();
         removeSidebar(player);
         teamManager.removePlayer(player);
-        teamManager.removeTeam(String.valueOf(player.getUniqueId()));
         objectiveManager.removePlayer(player);
     }
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-        GamePlayer gamePlayer = MegaWalls78.getInstance().getGameManager().getPlayer(player);
-        TeamDisplay teamDisplay = teamManager.createIfAbsent(String.valueOf(player.getUniqueId())).defaultDisplay();
-        if (MegaWalls78.getInstance().getGameManager().isSpectator(player)) {
-            teamDisplay.prefix(Component.translatable("mw78.brackets", GRAY, Component.translatable("mw78.team.spec.abbr")).appendSpace());
-            teamDisplay.playerColor(GRAY);
-        } else {
-            teamDisplay.prefix(Component.translatable("mw78.brackets", gamePlayer.getTeam().color(), gamePlayer.getTeam().abbr()).appendSpace());
-            teamDisplay.suffix(Component.space().append(Component.translatable("mw78.brackets", MegaWalls78.getInstance().getIdentityManager().getIdentityColor(player.getUniqueId(), gamePlayer.getIdentity()), gamePlayer.getIdentity().getAbbr())));
-            teamDisplay.playerColor(gamePlayer.getTeam().color());
-        }
-        objectiveManager.addPlayer(player);
-        teamDisplay.addEntry(player.getName());
-    }
-
-    @EventHandler
-    public void onDeath(PlayerDeathEvent event) {
-        Player player = event.getPlayer();
-        teamManager.removeTeam(String.valueOf(player.getUniqueId()));
+        objectiveManager.addPlayer(event.getPlayer());
     }
 
     @EventHandler
     public void onChange(StateChangeEvent event) {
-        updateSidebar(event.getState());
+        GameState state = event.getState();
+        updateSidebar(state);
+        Set<String> set = MegaWalls78.getInstance().getGameManager().getTeamPlayersMap().keySet().stream().map(GameTeam::id).collect(Collectors.toSet());
+        if (state.equals(GameState.OPENING)) {
+            for (ScoreboardTeam scoreboardTeam : teamManager.teams()) {
+                if (!set.contains(scoreboardTeam.name())) {
+                    teamManager.removeTeam(scoreboardTeam);
+                }
+            }
+        }
+    }
+
+    public void teamDisplay(GameTeam team, Player player) {
+        String id = team.id();
+        ScoreboardTeam scoreboardTeam = teamManager.team(id);
+        TeamDisplay teamDisplay;
+        if (scoreboardTeam == null) {
+            scoreboardTeam = teamManager.createIfAbsent(id);
+            teamDisplay = scoreboardTeam.defaultDisplay();
+            teamDisplay.canSeeFriendlyInvisibles(true);
+            NamedTextColor color = team.color();
+            teamDisplay.prefix(Component.translatable("mw78.brackets", color, team.abbr()).appendSpace());
+            teamDisplay.playerColor(color);
+        } else {
+            teamDisplay = scoreboardTeam.defaultDisplay();
+        }
+        teamDisplay.addEntry(player.getName());
     }
 
     private static ComponentSidebarLayout getLayout(Player player, GameState state) {

@@ -94,10 +94,10 @@ public class GameManager {
 
     public void addSpectator(Player player) {
         spectators.add(player.getUniqueId());
-        player.setGameMode(GameMode.ADVENTURE);
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.unlistPlayer(player);
         }
+        MegaWalls78.getInstance().getScoreboardManager().teamDisplay(GameTeam.SPEC, player);
     }
 
     public void removeSpectator(Player player) {

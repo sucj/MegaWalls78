@@ -1,17 +1,12 @@
 package icu.suc.megawalls78.entity.custom.tamed;
 
 import icu.suc.megawalls78.entity.pathfinder.CustomFollowOwnerGoal;
-import icu.suc.megawalls78.entity.pathfinder.HurtByOtherTeamTargetGoal;
-import icu.suc.megawalls78.entity.pathfinder.NearestAttackableOtherTeamTargetGoal;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Blaze;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
