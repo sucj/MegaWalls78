@@ -121,7 +121,7 @@ public class ConfigManager {
             } else {
                 namedTextColor = NamedTextColor.NAMES.value(color);
             }
-            gameManager.getTeams().add(GameTeam.of(key, namedTextColor, toLocations(section.getList("palace")), toLocations(section.getList("spawn")), toLocations(section.getList("region")), toLocation(section.getList("wither"))));
+            gameManager.getTeams().add(new GameTeam(key, namedTextColor, toLocations(section.getList("palace")), toLocations(section.getList("spawn")), toLocations(section.getList("region")), toLocation(section.getList("wither"))));
         }
 
         Configuration skinConfig = YamlConfiguration.loadConfiguration(skinFile);

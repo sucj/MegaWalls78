@@ -5,9 +5,9 @@ import org.bukkit.Location;
 
 import java.util.List;
 
-public record GameMap(String id, String version, List<String> authors, int size, Location[][] spawn, Location[][] wall, Location[][] region, Location spectator) {
+public record GameMap(String id, String version, List<String> authors, int size, Location[][] spawn, Location[][] wall, Location[][] region, Location spectator, Component name) {
 
-    public Component name() {
-        return Component.translatable("mw78.map." + id);
+    public GameMap(String id, String version, List<String> authors, int size, Location[][] spawn, Location[][] wall, Location[][] region, Location spectator) {
+        this(id, version, authors, size, spawn, wall, region, spectator, Component.translatable("mw78.map." + id));
     }
 }
