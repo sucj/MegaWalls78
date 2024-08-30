@@ -1,16 +1,25 @@
 package icu.suc.megawalls78.command;
 
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GameRunner;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 
-public class CancelCommand implements CommandExecutor {
+public class CancelCommand extends Command {
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        GameRunner.force = false;
-        return true;
+    public static LiteralCommandNode<CommandSourceStack> register(String name, String permission) {
+        return Commands.literal(name)
+                .requires(source -> {
+                    if (hasPermission(source, permission)) {
+                        return MegaWalls78.getInstance().getGameManager().inWaiting();
+                    }
+                    return false;
+                })
+                .executes(context -> {
+                    GameRunner.force = false;
+                    return 0;
+                })
+                .build();
     }
 }

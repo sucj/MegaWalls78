@@ -124,12 +124,13 @@ public class ScoreboardManager implements Listener {
             if (scoreboardTeam == null) {
                 scoreboardTeam = teamManager.createIfAbsent(group);
                 teamDisplay = scoreboardTeam.defaultDisplay();
-            } else {
-                teamDisplay = scoreboardTeam.defaultDisplay();
                 teamDisplay.prefix(LP.getPrefix(group));
                 teamDisplay.playerColor(LP.getNameColor(group));
+            } else {
+                teamDisplay = scoreboardTeam.defaultDisplay();
             }
             teamDisplay.addEntry(player.getName());
+//            scoreboardTeam.display(player);
         } else {
             objectiveManager.addPlayer(player);
         }

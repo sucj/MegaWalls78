@@ -57,12 +57,12 @@ bukkitPluginYaml {
   libraries = listOf("com.mysql:mysql-connector-j:9.0.0", "redis.clients:jedis:5.1.3", "net.megavex:scoreboard-library-api:2.1.12", "net.megavex:scoreboard-library-implementation:2.1.12", "net.megavex:scoreboard-library-modern:2.1.12")
   prefix = "MW78"
   permissions {
-    register("mw78.id") {
-      default = Permission.Default.TRUE
-    }
-    register("mw78.map") {
-      default = Permission.Default.TRUE
-    }
+//    register("mw78.id") {
+//      default = Permission.Default.TRUE
+//    }
+//    register("mw78.map") {
+//      default = Permission.Default.TRUE
+//    }
     register("mw78.shout") {
       default = Permission.Default.TRUE
     }
@@ -92,17 +92,18 @@ bukkitPluginYaml {
     }
   }
   commands {
-    register("id") {
-      permission = "mw78.id"
-      usage = "/id <identity>"
-    }
-    register("map") {
-      permission = "mw78.map"
-      usage = "/map"
-    }
+//    register("id") {
+//      permission = "mw78.id"
+//      usage = "/id <identity>"
+//    }
+//    register("map") {
+//      permission = "mw78.map"
+//      usage = "/map"
+//    }
     register("shout") {
       permission = "mw78.shout"
-      usage = "/shout <message>"
+      description = "Shout a message."
+      aliases = listOf("!")
     }
     register("surface") {
       permission = "mw78.surface"
@@ -111,33 +112,33 @@ bukkitPluginYaml {
     }
     register("suicide") {
       permission = "mw78.suicide"
+      description = "Kill yourself."
       aliases = listOf("kill", "die")
-      usage = "/suicide"
     }
     register("energy") {
       permission = "mw78.energy"
-      usage = "/energy [energy]"
+      description = "Modify your energy."
     }
     register("start") {
       permission = "mw78.start"
-      usage = "/start"
+      description = "Force to start the game."
     }
     register("cancel") {
       permission = "mw78.cancel"
-      usage = "/cancel"
+      description = "Force to cancel the game starts."
     }
     register("trigger") {
       permission = "mw78.trigger"
-      usage = "/trigger"
+      description = "Open trigger manager."
     }
     register("teamchest") {
       permission = "mw78.teamchest"
+      description = "Open your team chest"
       aliases = listOf("tchest")
-      usage = "/teamchest"
     }
     register("trait") {
       permission = "mw78.trait"
-      usage = "/trait"
+      description = "Read your identity traits."
     }
   }
 }

@@ -1,34 +1,31 @@
 package icu.suc.megawalls78.command;
 
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.RandomUtil;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class SurfaceCommand implements CommandExecutor {
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if (commandSender instanceof Player player) {
-            GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-            if (gameManager.inWaiting()) {
-                return true;
-            }
-            if (gameManager.isSpectator(player)) {
-                return true;
-            }
-            if (gameManager.getRunner().isDm()) {
-                return true;
-            }
-            if (gameManager.getState().equals(GameState.OPENING) || gameManager.getState().equals(GameState.PREPARING)) {
-                player.teleport(RandomUtil.getRandomSpawn(gameManager.getPlayer(player).getTeam().spawn()));
-            }
-            return true;
-        }
-        return false;
+public class SurfaceCommand extends Command {
+
+    public static LiteralCommandNode<CommandSourceStack> register(String name, String permission) {
+        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+        return Commands.literal(name)
+                .requires(source -> {
+                    if (hasPermission(source, permission)) {
+                        if (gameManager.inFighting()) {
+                            return source.getExecutor() instanceof Player player && !gameManager.isSpectator(player);
+                        }
+                    }
+                    return false;
+                })
+                .executes(context -> {
+                    Player player = (Player) context.getSource().getExecutor();
+                    player.teleport(RandomUtil.getRandomSpawn(gameManager.getPlayer(player).getTeam().spawn()));
+                    return 0;
+                })
+                .build();
     }
 }

@@ -1,20 +1,23 @@
 package icu.suc.megawalls78;
 
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import icu.suc.megawalls78.command.*;
 import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.listener.*;
 import icu.suc.megawalls78.management.*;
 import icu.suc.megawalls78.util.Redis;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
 import net.megavex.scoreboardlibrary.api.exception.NoPacketAdapterAvailableException;
 import net.megavex.scoreboardlibrary.api.noop.NoopScoreboardLibrary;
 import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
 import java.sql.SQLException;
-import java.util.Objects;
 
 public final class MegaWalls78 extends JavaPlugin {
 
@@ -64,17 +67,47 @@ public final class MegaWalls78 extends JavaPlugin {
     }
 
     private void registerCommands() {
-        Objects.requireNonNull(getCommand("cancel")).setExecutor(new CancelCommand());
-        Objects.requireNonNull(getCommand("id")).setExecutor(new IdCommand());
-        Objects.requireNonNull(getCommand("map")).setExecutor(new MapCommand());
-        Objects.requireNonNull(getCommand("shout")).setExecutor(new ShoutCommand());
-        Objects.requireNonNull(getCommand("energy")).setExecutor(new EnergyCommand());
-        Objects.requireNonNull(getCommand("start")).setExecutor(new StartCommand());
-        Objects.requireNonNull(getCommand("suicide")).setExecutor(new SuicideCommand());
-        Objects.requireNonNull(getCommand("surface")).setExecutor(new SurfaceCommand());
-        Objects.requireNonNull(getCommand("teamchest")).setExecutor(new TeamchestCommand());
-        Objects.requireNonNull(getCommand("trait")).setExecutor(new TraitCommand());
-        Objects.requireNonNull(getCommand("trigger")).setExecutor(new TriggerCommand());
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
+            Commands commands = event.registrar();
+
+            // State
+            if (getCommand("start") instanceof PluginCommand start) {
+                commands.register(StartCommand.register(start.getName(), start.getPermission()), start.getDescription(), start.getAliases());
+            }
+            if (getCommand("cancel") instanceof PluginCommand cancel) {
+                commands.register(CancelCommand.register(cancel.getName(), cancel.getPermission()), cancel.getDescription(), cancel.getAliases());
+            }
+
+            // Debug
+            if (getCommand("energy") instanceof PluginCommand energy) {
+                commands.register(EnergyCommand.register(energy.getName(), energy.getPermission()), energy.getDescription(), energy.getAliases());
+            }
+
+            // Fighting
+            if (getCommand("shout") instanceof PluginCommand shout) {
+                commands.register((LiteralCommandNode) ShoutCommand.register(shout.getName(), shout.getPermission()), shout.getDescription(), shout.getAliases());
+            }
+            if (getCommand("suicide") instanceof PluginCommand suicide) {
+                commands.register(SuicideCommand.register(suicide.getName(), suicide.getPermission()), suicide.getDescription(), suicide.getAliases());
+            }
+            if (getCommand("surface") instanceof PluginCommand surface) {
+                commands.register(SurfaceCommand.register(surface.getName(), surface.getPermission()), surface.getDescription(), surface.getAliases());
+            }
+            if (getCommand("teamchest") instanceof PluginCommand teamchest) {
+                commands.register(TeamchestCommand.register(teamchest.getName(), teamchest.getPermission()), teamchest.getDescription(), teamchest.getAliases());
+            }
+
+            // Misc
+            if (getCommand("trait") instanceof PluginCommand trait) {
+                commands.register(TraitCommand.register(trait.getName(), trait.getPermission()), trait.getDescription(), trait.getAliases());
+            }
+            if (getCommand("trigger") instanceof PluginCommand trigger) {
+                commands.register(TriggerCommand.register(trigger.getName(), trigger.getPermission()), trigger.getDescription(), trigger.getAliases());
+            }
+        });
+
+//        Objects.requireNonNull(getCommand("id")).setExecutor(new IdCommand());
+//        Objects.requireNonNull(getCommand("map")).setExecutor(new MapCommand());
     }
 
     private void registerListeners() {

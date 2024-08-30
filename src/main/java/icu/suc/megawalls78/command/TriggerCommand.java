@@ -1,20 +1,25 @@
 package icu.suc.megawalls78.command;
 
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import icu.suc.megawalls78.gui.TriggerGui;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class TriggerCommand implements CommandExecutor {
+public class TriggerCommand extends Command {
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if (commandSender instanceof Player player) {
-            TriggerGui.open(player);
-            return true;
-        }
-        return false;
+    public static LiteralCommandNode<CommandSourceStack> register(String name, String permission) {
+        return Commands.literal(name)
+                .requires(source -> {
+                    if (hasPermission(source, permission)) {
+                        return source.getExecutor() instanceof Player;
+                    }
+                    return false;
+                })
+                .executes(context -> {
+                    TriggerGui.open((Player) context.getSource().getExecutor());
+                    return 0;
+                })
+                .build();
     }
 }

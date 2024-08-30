@@ -1,41 +1,36 @@
 package icu.suc.megawalls78.command;
 
+import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GamePlayer;
 import icu.suc.megawalls78.management.GameManager;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class EnergyCommand implements CommandExecutor {
+public class EnergyCommand extends Command {
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if (commandSender instanceof Player player) {
-            if (strings.length == 1) {
-                GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-                if (gameManager.isSpectator(player)) {
-                    return true;
-                }
-                if (gameManager.inFighting()) {
-                    GamePlayer gamePlayer = gameManager.getPlayer(player);
-                    gamePlayer.setEnergy(Integer.parseInt(strings[0]));
-                }
-                return true;
-            } else if (strings.length == 0) {
-                GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-                if (gameManager.isSpectator(player)) {
-                    return true;
-                }
-                if (gameManager.inFighting()) {
-                    GamePlayer gamePlayer = gameManager.getPlayer(player);
-                    gamePlayer.setEnergy(gamePlayer.getIdentity().getEnergy());
-                }
-                return true;
-            }
-        }
-        return false;
+    public static LiteralCommandNode<CommandSourceStack> register(String name, String permission) {
+        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+        return Commands.literal(name)
+                .requires(source -> {
+                    if (hasPermission(source, permission)) {
+                        return gameManager.inFighting() && source.getSender() instanceof Player player && !gameManager.isSpectator(player);
+                    }
+                    return false;
+                })
+                .executes(context -> {
+                    GamePlayer player = gameManager.getPlayer(((Player) context.getSource().getExecutor()));
+                    player.setEnergy(player.getIdentity().getEnergy());
+                    return 0;
+                })
+                .then(Commands.argument("energy", FloatArgumentType.floatArg())
+                        .executes(context -> {
+                            gameManager.getPlayer(((Player) context.getSource().getExecutor())).setEnergy(context.getArgument("energy", Float.class));
+                            return 0;
+                        })
+                )
+                .build();
     }
 }

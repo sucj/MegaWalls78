@@ -1,28 +1,30 @@
 package icu.suc.megawalls78.command;
 
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.management.GameManager;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
+import io.papermc.paper.command.brigadier.Commands;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-public class TeamchestCommand implements CommandExecutor {
+public class TeamchestCommand extends Command {
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        if (commandSender instanceof Player player) {
-            GameManager gameManager = MegaWalls78.getInstance().getGameManager();
-            if (gameManager.inWaiting()) {
-                return true;
-            }
-            if (gameManager.isSpectator(player)) {
-                return true;
-            }
-            player.openInventory(gameManager.teamChest(gameManager.getPlayer(player).getTeam()));
-            return true;
-        }
-        return false;
+    public static LiteralCommandNode<CommandSourceStack> register(String name, String permission) {
+        GameManager gameManager = MegaWalls78.getInstance().getGameManager();
+        return Commands.literal(name)
+                .requires(source -> {
+                    if (hasPermission(source, permission)) {
+                        if (gameManager.inFighting()) {
+                            return source.getExecutor() instanceof Player player && !gameManager.isSpectator(player);
+                        }
+                    }
+                    return false;
+                })
+                .executes(context -> {
+                    Player player = (Player) context.getSource().getExecutor();
+                    player.openInventory(gameManager.teamChest(gameManager.getPlayer(player).getTeam()));
+                    return 0;
+                })
+                .build();
     }
 }
