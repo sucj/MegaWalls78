@@ -8,6 +8,7 @@ import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;
+import icu.suc.megawalls78.util.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.damage.DamageType;
@@ -88,7 +89,7 @@ public final class Rend extends Skill {
             count++;
         }
         if (energy) {
-            Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> summaryRefund(player, ENERGY));
+            Scheduler.runTask(() -> summaryRefund(player, ENERGY));
         }
         return summaryHit(player, count);
     }

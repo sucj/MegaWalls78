@@ -67,7 +67,7 @@ public class GameRunner implements Runnable {
 
     private void init(GameManager gameManager) {
         initializing = true;
-        Bukkit.getScheduler().runTaskAsynchronously(MegaWalls78.getInstance(), () -> {
+        Scheduler.runTaskAsync(() -> {
             MegaWalls78.getInstance().getLogger().info("Map initializing...");
             for (GameTeam team : gameManager.getTeams()) {
                 Set<Vector> palace = Sets.newHashSet();
@@ -269,7 +269,7 @@ public class GameRunner implements Runnable {
                     }
                 }
                 destroyTeamGate();
-                Bukkit.getScheduler().runTaskAsynchronously(MegaWalls78.getInstance(), () -> {
+                Scheduler.runTaskAsync(() -> {
                     for (GameTeam team : gameManager.getTeams()) {
                         allowedBlocks.addAll(getTeamRegion(team));
                         allowedBlocks.removeAll(getPalace(team));
@@ -284,7 +284,7 @@ public class GameRunner implements Runnable {
                 gameManager.setState(GameState.BUFFING);
                 timer = configManager.buffingTime;
                 destroyWalls();
-                Bukkit.getScheduler().runTaskAsynchronously(MegaWalls78.getInstance(), () -> {
+                Scheduler.runTaskAsync(() -> {
                     allowedBlocks.addAll(walls);
                     allowedBlocks.addAll(region);
                 });
@@ -313,7 +313,7 @@ public class GameRunner implements Runnable {
 
                 Bukkit.getWorlds().getFirst().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
 
-                Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
+                Scheduler.runTaskAsync(() -> {
                     List<Map.Entry<GameTeam, Pair<Integer, Integer>>> winners = Lists.newArrayList();
                     for (Map.Entry<GameTeam, Pair<Integer, Integer>> teamScore : gameManager.teamScore()) {
                         if (winners.isEmpty()) {
@@ -359,7 +359,7 @@ public class GameRunner implements Runnable {
                         }
                         if (teams.contains(gamePlayer.getTeam())) {
                             ComponentUtil.sendTitle(victory, Component.empty(), ComponentUtil.DEFAULT_TIMES, player);
-                            Bukkit.getScheduler().runTask(instance, () -> player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET));
+                            Scheduler.runTask(() -> player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET));
                         } else {
                             ComponentUtil.sendTitle(defeat, Component.empty(), ComponentUtil.DEFAULT_TIMES, player);
                         }
@@ -444,7 +444,7 @@ public class GameRunner implements Runnable {
                             ComponentUtil.sendMessage(mincerSummary, player);
 
                             if (mincer.getUuid().equals(player.getUniqueId())) {
-                                Bukkit.getScheduler().runTask(instance, () -> player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET));
+                                Scheduler.runTask(() -> player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET));
                             }
                         }
                     }
@@ -459,7 +459,7 @@ public class GameRunner implements Runnable {
                             ComponentUtil.sendMessage(rusherSummary, player);
 
                             if (rusher.getUuid().equals(player.getUniqueId())) {
-                                Bukkit.getScheduler().runTask(instance, () -> player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET));
+                                Scheduler.runTask(() -> player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET));
                             }
                         }
                     }
@@ -474,7 +474,7 @@ public class GameRunner implements Runnable {
                             ComponentUtil.sendMessage(resisterSummary, player);
 
                             if (resister.getUuid().equals(player.getUniqueId())) {
-                                Bukkit.getScheduler().runTask(instance, () -> player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET));
+                                Scheduler.runTask(() -> player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET));
                             }
                         }
                     }
@@ -489,7 +489,7 @@ public class GameRunner implements Runnable {
                             ComponentUtil.sendMessage(mvpSummary, player);
 
                             if (mvp.getUuid().equals(player.getUniqueId())) {
-                                Bukkit.getScheduler().runTask(instance, () -> player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET));
+                                Scheduler.runTask(() -> player.getWorld().spawnEntity(player.getLocation(), EntityType.FIREWORK_ROCKET));
                             }
                         }
                     }
@@ -504,7 +504,7 @@ public class GameRunner implements Runnable {
                         throw new RuntimeException(e);
                     }
 
-                    Bukkit.getScheduler().runTask(instance, () -> {
+                    Scheduler.runTask(() -> {
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             player.kick();
                         }

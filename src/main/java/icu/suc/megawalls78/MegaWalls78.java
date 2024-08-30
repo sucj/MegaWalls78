@@ -6,6 +6,7 @@ import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.listener.*;
 import icu.suc.megawalls78.management.*;
 import icu.suc.megawalls78.util.Redis;
+import icu.suc.megawalls78.util.Scheduler;
 import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.megavex.scoreboardlibrary.api.ScoreboardLibrary;
@@ -196,7 +197,7 @@ public final class MegaWalls78 extends JavaPlugin {
                 }
             }
         };
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> jedis.subscribe(sub, "mw78"));
+        Scheduler.runTaskAsync(() -> jedis.subscribe(sub, "mw78"));
     }
 
     public void initSql() {

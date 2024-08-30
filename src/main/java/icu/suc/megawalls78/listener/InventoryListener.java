@@ -7,6 +7,7 @@ import icu.suc.megawalls78.gui.*;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.ItemUtil;
+import icu.suc.megawalls78.util.Scheduler;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -66,7 +67,7 @@ public class InventoryListener implements Listener {
                                 } else {
                                     playerInventory.setItem(i, playerInventoryItem);
                                 }
-                                Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), player::updateInventory);
+                                Scheduler.runTask(player::updateInventory);
                                 break;
                             }
                             event.setCancelled(true);

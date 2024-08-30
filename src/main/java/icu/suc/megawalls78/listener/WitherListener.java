@@ -9,6 +9,7 @@ import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.game.record.GameTeam;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.ComponentUtil;
+import icu.suc.megawalls78.util.Scheduler;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -78,7 +79,7 @@ public class WitherListener implements Listener {
             GameTeam team = gameManager.getWitherTeam(wither);
 
             GameRunner runner = gameManager.getRunner();
-            Bukkit.getScheduler().runTaskAsynchronously(MegaWalls78.getInstance(), () -> runner.getAllowedBlocks().addAll(runner.getTeamRegion(team)));
+            Scheduler.runTaskAsync(() -> runner.getAllowedBlocks().addAll(runner.getTeamRegion(team)));
 
             BossBar bossBar = gameManager.getBossBar(team);
             Set<GamePlayer> gamePlayers = gameManager.getTeamPlayersMap().get(team);

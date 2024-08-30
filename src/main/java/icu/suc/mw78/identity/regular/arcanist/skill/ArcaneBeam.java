@@ -119,7 +119,7 @@ public final class ArcaneBeam extends Skill {
             } else if (BlockUtil.isOre(type)) {
                 breakBlock(player, block);
                 if (energy && gen) {
-                    Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> PLAYER().increaseEnergy(ENERGY));
+                    Scheduler.runTask(() -> PLAYER().increaseEnergy(ENERGY));
                     energy = false;
                 }
                 flag = true;

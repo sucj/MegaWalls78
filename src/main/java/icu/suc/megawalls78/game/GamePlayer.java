@@ -16,6 +16,7 @@ import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.identity.trait.skill.Trigger;
 import icu.suc.megawalls78.util.ComponentUtil;
+import icu.suc.megawalls78.util.Scheduler;
 import icu.suc.megawalls78.util.SupplierComponent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
@@ -245,7 +246,7 @@ public class GamePlayer {
 
         kills++;
 
-        Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+        Scheduler.runTask(() -> {
             Player player = getBukkitPlayer();
             if (player != null) {
                 ComponentUtil.sendMessage(Component.translatable("mw78.message.kill", NamedTextColor.AQUA), player);
@@ -272,7 +273,7 @@ public class GamePlayer {
 
         assists++;
 
-        Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+        Scheduler.runTask(() -> {
             Player player = getBukkitPlayer();
             if (player != null) {
                 ComponentUtil.sendMessage(Component.translatable("mw78.message.assist", NamedTextColor.AQUA), player);
@@ -289,7 +290,7 @@ public class GamePlayer {
 
         finalKills++;
 
-        Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+        Scheduler.runTask(() -> {
             Player player = getBukkitPlayer();
             if (player != null) {
                 ComponentUtil.sendMessage(Component.translatable("mw78.message.final_kill", NamedTextColor.AQUA), player);
@@ -315,7 +316,8 @@ public class GamePlayer {
         }
 
         finalAssists++;
-        Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+
+        Scheduler.runTask(() -> {
             Player player = getBukkitPlayer();
             if (player != null) {
                 ComponentUtil.sendMessage(Component.translatable("mw78.message.final_assist", NamedTextColor.AQUA), player);

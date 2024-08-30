@@ -200,7 +200,7 @@ public class PlayerListener implements Listener {
         }
         event.deathMessage(null);
         event.setKeepLevel(true);
-        Bukkit.getScheduler().runTaskLater(MegaWalls78.getInstance(), () -> {
+        Scheduler.runTaskLater(() -> {
             if (player.isDead()) {
                 player.spigot().respawn();
             }
@@ -221,7 +221,7 @@ public class PlayerListener implements Listener {
             if (gamePlayer == null || gamePlayer.getFinalDeaths() != 0) {
                 gameManager.addSpectator(player);
                 event.setSpawnLocation(gameManager.getMap().spectator());
-                Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+                Scheduler.runTask(() -> {
                     if (gamePlayer != null && gamePlayer.getFinalDeaths() != 0) {
                         ComponentUtil.sendTitle(Component.translatable("mw78.died", NamedTextColor.RED), Component.empty(), ComponentUtil.DEFAULT_TIMES, player);
                     }
@@ -229,7 +229,7 @@ public class PlayerListener implements Listener {
                 });
             } else if (gamePlayer.getFinalDeaths() == 0) {
                 event.setSpawnLocation(RandomUtil.getRandomSpawn(gamePlayer.getTeam().spawn()));
-                Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+                Scheduler.runTask(() -> {
                     player.setGameMode(GameMode.SURVIVAL);
                     EntityUtil.setAttributeValue(player, Attribute.GENERIC_MAX_HEALTH, 40);
                     player.setHealth(40);
@@ -263,7 +263,7 @@ public class PlayerListener implements Listener {
             } else {
                 GamePlayer gamePlayer = gameManager.getPlayer(player);
                 event.setRespawnLocation(RandomUtil.getRandomSpawn(gamePlayer.getTeam().spawn()));
-                Bukkit.getScheduler().runTask(MegaWalls78.getInstance(), () -> {
+                Scheduler.runTask(() -> {
                     GameTeam team = gamePlayer.getTeam();
                     NamedTextColor color = team.color();
                     player.playerListName(Component.translatable("mw78.brackets", color, team.abbr())
