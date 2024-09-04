@@ -3,7 +3,6 @@ package icu.suc.megawalls78.gui;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import icu.suc.megawalls78.MegaWalls78;
-import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.management.EquipmentManager;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.RandomUtil;

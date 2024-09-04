@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.event.block.Action;
 
 import java.util.Set;
 import java.util.function.Predicate;

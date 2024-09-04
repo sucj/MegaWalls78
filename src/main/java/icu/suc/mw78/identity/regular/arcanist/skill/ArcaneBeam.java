@@ -9,18 +9,21 @@ import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.listener.GameListener;
 import icu.suc.megawalls78.management.GameManager;
-import icu.suc.megawalls78.util.*;
 import icu.suc.megawalls78.util.Effect;
+import icu.suc.megawalls78.util.*;
 import org.apache.commons.lang3.tuple.Triple;
-import org.bukkit.*;
 import org.bukkit.Color;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Trait(value = "arcane_beam", cost = 100F, cooldown = 1000L)
 public final class ArcaneBeam extends Skill {

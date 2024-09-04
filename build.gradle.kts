@@ -39,6 +39,15 @@ dependencies {
   implementation("com.mysql", "mysql-connector-j", "9.0.0")
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.guardsquare:proguard-gradle:7.5.0")
+    }
+}
+
 tasks {
   compileJava {
     options.release = 21

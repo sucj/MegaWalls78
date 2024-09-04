@@ -2,14 +2,12 @@ package icu.suc.mw78.identity.mythic.renegade.skill;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.Skill;
 import icu.suc.megawalls78.util.DamageSource;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.Scheduler;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Player;

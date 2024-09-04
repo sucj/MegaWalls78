@@ -9,7 +9,6 @@ import icu.suc.megawalls78.util.InventoryUtil;
 import icu.suc.megawalls78.util.ItemUtil;
 import icu.suc.megawalls78.util.Scheduler;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.craftbukkit.inventory.CraftInventoryCustom;

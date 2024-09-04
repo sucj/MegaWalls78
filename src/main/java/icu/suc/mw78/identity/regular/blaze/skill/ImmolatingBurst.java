@@ -6,7 +6,10 @@ import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
 import icu.suc.megawalls78.util.Effect;
 import icu.suc.megawalls78.util.EntityUtil;
 import icu.suc.megawalls78.util.ParticleUtil;
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 
 @Trait(value = "immolating_burst", cost = 100F, cooldown = 1000L)

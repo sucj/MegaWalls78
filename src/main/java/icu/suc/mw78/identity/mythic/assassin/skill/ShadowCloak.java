@@ -1,6 +1,6 @@
 package icu.suc.mw78.identity.mythic.assassin.skill;
 
-import icu.suc.megawalls78.identity.trait.annotation.*;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;

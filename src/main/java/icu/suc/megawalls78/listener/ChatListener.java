@@ -8,9 +8,6 @@ import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.management.IdentityManager;
 import icu.suc.megawalls78.util.LP;
 import io.papermc.paper.chat.ChatRenderer;
-import io.papermc.paper.command.PaperCommand;
-import io.papermc.paper.command.PaperPluginsCommand;
-import io.papermc.paper.command.brigadier.PaperBrigadier;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -21,7 +18,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 

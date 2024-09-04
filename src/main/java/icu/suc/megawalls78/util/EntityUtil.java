@@ -7,7 +7,6 @@ import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.entity.custom.*;
 import icu.suc.megawalls78.entity.custom.arrow.ExplosiveArrow;
 import icu.suc.megawalls78.entity.custom.arrow.HomingArrow;
-import icu.suc.megawalls78.entity.custom.FakeLightning;
 import icu.suc.megawalls78.entity.custom.skill.ImmolatingBurstFireball;
 import icu.suc.megawalls78.entity.custom.skill.ShadowBurstSkull;
 import icu.suc.megawalls78.entity.custom.tamed.*;

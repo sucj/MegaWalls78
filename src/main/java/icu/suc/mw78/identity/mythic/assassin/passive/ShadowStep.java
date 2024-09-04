@@ -1,9 +1,9 @@
 package icu.suc.mw78.identity.mythic.assassin.passive;
 
 import icu.suc.megawalls78.identity.trait.annotation.Trait;
-import icu.suc.mw78.identity.mythic.assassin.skill.ShadowCloak;
 import icu.suc.megawalls78.identity.trait.passive.CooldownPassive;
 import icu.suc.megawalls78.util.EntityUtil;
+import icu.suc.mw78.identity.mythic.assassin.skill.ShadowCloak;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;

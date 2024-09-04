@@ -1,8 +1,5 @@
 package icu.suc.megawalls78.entity.pathfinder;
 
-import java.util.EnumSet;
-import javax.annotation.Nullable;
-
 import icu.suc.megawalls78.entity.custom.tamed.Tamable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -11,6 +8,9 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.pathfinder.PathType;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
 
 public class CustomFollowOwnerGoal extends Goal {
     private final Tamable tamable;

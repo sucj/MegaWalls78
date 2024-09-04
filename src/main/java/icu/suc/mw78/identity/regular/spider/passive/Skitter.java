@@ -2,9 +2,9 @@ package icu.suc.mw78.identity.regular.spider.passive;
 
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import icu.suc.megawalls78.identity.trait.annotation.Trait;
-import icu.suc.mw78.identity.regular.spider.skill.Leap;
 import icu.suc.megawalls78.identity.trait.passive.DurationPassive;
 import icu.suc.megawalls78.util.EntityUtil;
+import icu.suc.mw78.identity.regular.spider.skill.Leap;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;

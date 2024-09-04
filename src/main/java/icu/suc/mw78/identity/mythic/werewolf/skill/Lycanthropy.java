@@ -2,7 +2,7 @@ package icu.suc.mw78.identity.mythic.werewolf.skill;
 
 import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.AtomicDouble;
-import icu.suc.megawalls78.identity.trait.annotation.*;
+import icu.suc.megawalls78.identity.trait.annotation.Trait;
 import icu.suc.megawalls78.identity.trait.passive.Passive;
 import icu.suc.megawalls78.identity.trait.skill.DurationSkill;
 import icu.suc.megawalls78.identity.trait.skill.task.DurationTask;
