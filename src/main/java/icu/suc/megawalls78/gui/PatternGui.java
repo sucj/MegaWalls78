@@ -40,7 +40,7 @@ public class PatternGui {
         Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.pattern").appendSpace().append(Component.translatable("mw78.gui.pattern.title", Component.text(page), Component.text(MAX_PAGE))));
 
         List<Pattern> patterns = EquipmentManager.PATTERNS.values().stream().skip((page - 1L) * SLOT_COUNT).limit(SLOT_COUNT).collect(Collectors.toList());
-        patterns.addFirst(EquipmentManager.PATTERN_NONE);
+        patterns.addFirst(null);
 
         boolean flag = true;
         for (int i = 0; i < patterns.size(); i++) {
@@ -94,7 +94,7 @@ public class PatternGui {
             }
             case RANDOM_SLOT -> {
                 List<Pattern> patterns = Lists.newArrayList(EquipmentManager.PATTERNS.values());
-                patterns.addFirst(EquipmentManager.PATTERN_NONE);
+                patterns.addFirst(null);
                 int i = RandomUtil.RANDOM.nextInt(patterns.size());
                 Pattern pattern = patterns.get(i);
                 EquipmentManager equipmentManager = MegaWalls78.getInstance().getEquipmentManager();
@@ -122,12 +122,11 @@ public class PatternGui {
                     int index = Arrays.binarySearch(ID_SLOT, slot);
                     if (index >= 0) {
                         List<Pattern> patterns = Lists.newArrayList(EquipmentManager.PATTERNS.values());
-                        patterns.addFirst(EquipmentManager.PATTERN_NONE);
+                        patterns.addFirst(null);
                         Pattern pattern = patterns.get((INVENTORIES.get(inventory) - 1) * SLOT_COUNT + index);
                         EquipmentManager equipmentManager = MegaWalls78.getInstance().getEquipmentManager();
                         UUID uuid = player.getUniqueId();
-                        Pattern select = equipmentManager.getPattern(uuid);
-                        if (select == null && pattern == EquipmentManager.PATTERN_NONE || !Objects.equals(select, pattern)) {
+                        if (!Objects.equals(equipmentManager.getPattern(uuid), pattern)) {
                             equipmentManager.setPattern(uuid, pattern);
                             player.sendMessage(Component.translatable("mw78.message.pattern", NamedTextColor.AQUA, name(pattern).color(NamedTextColor.WHITE)));
                             INVENTORIES.remove(inventory);
@@ -151,7 +150,7 @@ public class PatternGui {
     }
 
     private static Component name(Pattern pattern) {
-        if (pattern == EquipmentManager.PATTERN_NONE) {
+        if (pattern == null) {
             return Component.translatable("mw78.gui.pattern.none");
         } else {
             return Component.translatable("item.minecraft." + pattern.getPattern().key().value() + "_banner_pattern.desc");
