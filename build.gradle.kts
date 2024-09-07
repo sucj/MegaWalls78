@@ -48,6 +48,11 @@ tasks {
     }
 }
 
+tasks.register<Copy>("deps") {
+    from(configurations.compileClasspath)
+    into(layout.buildDirectory.dir("deps"))
+}
+
 bukkitPluginYaml {
     main = "icu.suc.megawalls78.MegaWalls78"
     authors = listOf("557")

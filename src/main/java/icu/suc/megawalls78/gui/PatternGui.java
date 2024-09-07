@@ -126,7 +126,8 @@ public class PatternGui {
                         Pattern pattern = patterns.get((INVENTORIES.get(inventory) - 1) * SLOT_COUNT + index);
                         EquipmentManager equipmentManager = MegaWalls78.getInstance().getEquipmentManager();
                         UUID uuid = player.getUniqueId();
-                        if (!Objects.equals(equipmentManager.getPattern(uuid), pattern)) {
+                        Pattern select = equipmentManager.getPattern(uuid);
+                        if (select == null && pattern == EquipmentManager.PATTERN_NONE || !Objects.equals(select, pattern)) {
                             equipmentManager.setPattern(uuid, pattern);
                             player.sendMessage(Component.translatable("mw78.message.pattern", NamedTextColor.AQUA, name(pattern).color(NamedTextColor.WHITE)));
                             INVENTORIES.remove(inventory);
