@@ -3,10 +3,27 @@ package icu.suc.megawalls78.util;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.kyori.adventure.text.Component;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.PlayerEnderChestContainer;
+import net.minecraft.world.level.block.entity.EnderChestBlockEntity;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.BlockState;
+import org.bukkit.craftbukkit.block.CraftEnderChest;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.inventory.CraftInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,7 +37,7 @@ public class InventoryUtil {
     private static final Map<UUID, Inventory> ENDERCHESTS = Maps.newHashMap();
 
     public static void openEnderChest(Player player) {
-        player.openInventory(ENDERCHESTS.computeIfAbsent(player.getUniqueId(), k -> Bukkit.createInventory(null, 45, ENDERCHEST_TITLE)));
+        player.openInventory(ENDERCHESTS.computeIfAbsent(player.getUniqueId(), k -> Bukkit.createInventory(null, 54, ENDERCHEST_TITLE)));
     }
 
     public static List<ItemStack> addItem(Inventory inventory, Collection<ItemStack> itemStacks) {

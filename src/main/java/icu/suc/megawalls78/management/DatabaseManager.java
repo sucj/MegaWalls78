@@ -66,8 +66,13 @@ public class DatabaseManager {
         }
     }
 
+    public Connection getConnection() throws SQLException {
+        connect();
+        return connection;
+    }
+
     public void init() {
-        try (Statement statement = connection.createStatement()) {
+        try (Statement statement = getConnection().createStatement()) {
             statement.executeUpdate(IDENTITY_CREATE);
             statement.executeUpdate(RANK_CREATE);
             statement.executeUpdate(ID_COLOR_CREATE);
@@ -82,7 +87,7 @@ public class DatabaseManager {
 
     public CompletableFuture<String> getPlayerIdentity(UUID player) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(IDENTITY_GET)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(IDENTITY_GET)) {
                 statement.setString(1, player.toString());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
@@ -98,7 +103,7 @@ public class DatabaseManager {
 
     public void setPlayerIdentity(UUID player, Identity identity) {
         CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(IDENTITY_SET)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(IDENTITY_SET)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, identity.getId());
                 statement.executeUpdate();
@@ -111,7 +116,7 @@ public class DatabaseManager {
 
     public CompletableFuture<String> getRankedIdentity(UUID player) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(RANK_GET)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(RANK_GET)) {
                 statement.setString(1, player.toString());
                 try (ResultSet resultSet = statement.executeQuery()) {
                     if (resultSet.next()) {
@@ -127,7 +132,7 @@ public class DatabaseManager {
 
     public CompletableFuture<String> getIdentityColor(UUID player, Identity identity) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(ID_COLOR_GET)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(ID_COLOR_GET)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, identity.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -144,7 +149,7 @@ public class DatabaseManager {
 
     public CompletableFuture<String> getIdentitySkin(UUID player, Identity identity) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(ID_SKIN_GET)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(ID_SKIN_GET)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, identity.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -161,7 +166,7 @@ public class DatabaseManager {
 
     public void setIdentitySkin(UUID player, Identity identity, Skin skin) {
         CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(ID_SKIN_SET)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(ID_SKIN_SET)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, identity.getId());
                 statement.setString(3, skin.id());
@@ -176,7 +181,7 @@ public class DatabaseManager {
     public CompletableFuture<String> getPlayerPattern(UUID player, Identity identity) {
         return CompletableFuture.supplyAsync(() -> {
             String pattern = null;
-            try (PreparedStatement statement = connection.prepareStatement(PATTERN_GET)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(PATTERN_GET)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, identity.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -197,7 +202,7 @@ public class DatabaseManager {
             if (pattern == EquipmentManager.PATTERN_NONE) {
                 sql = PATTERN_SET_NULL;
             }
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, identity.getId());
                 if (pattern != null) {
@@ -213,7 +218,7 @@ public class DatabaseManager {
 
     public CompletableFuture<String> getPlayerTrim(UUID player, Identity identity) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(TRIM_GET)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(TRIM_GET)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, identity.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -230,7 +235,7 @@ public class DatabaseManager {
 
     public void setPlayerTrim(UUID player, Identity identity, TrimPattern trim) {
         CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(TRIM_SET)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(TRIM_SET)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, identity.getId());
                 statement.setString(3, trim.key().value());
@@ -244,7 +249,7 @@ public class DatabaseManager {
 
     public CompletableFuture<Boolean> getTrigger(UUID player, Trigger trigger) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(TRIGGER_GET)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(TRIGGER_GET)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, trigger.getId());
                 try (ResultSet resultSet = statement.executeQuery()) {
@@ -261,7 +266,7 @@ public class DatabaseManager {
 
     public void setTrigger(UUID player, Trigger trigger, boolean sneak) {
         CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = connection.prepareStatement(TRIGGER_SET)) {
+            try (PreparedStatement statement = getConnection().prepareStatement(TRIGGER_SET)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, trigger.getId());
                 statement.setBoolean(3, sneak);
