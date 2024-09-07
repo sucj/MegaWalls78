@@ -70,6 +70,9 @@ public class EquipmentManager {
     }
 
     public void setPattern(UUID player, Pattern pattern) {
+        if (pattern == null) {
+            pattern = EquipmentManager.PATTERN_NONE;
+        }
         Identity identity = MegaWalls78.getInstance().getGameManager().getPlayer(player).getIdentity();
         patternCache.computeIfAbsent(player, k -> Maps.newHashMap()).put(identity, pattern);
         MegaWalls78.getInstance().getDatabaseManager().setPlayerPattern(player, identity, pattern);
