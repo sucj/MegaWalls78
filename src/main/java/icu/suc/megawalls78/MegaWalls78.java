@@ -211,13 +211,15 @@ public final class MegaWalls78 extends JavaPlugin {
     }
 
     public void closeRedis() {
-        sub.unsubscribe();
-        Redis.close(jedis);
-        if (!gameManager.getState().equals(GameState.ENDING)) {
-            try (Jedis pub = Redis.get()) {
-                pub.publish("mw78", String.join("|", "remove", MegaWalls78.getInstance().getConfigManager().server));
+        try {
+            sub.unsubscribe();
+            Redis.close(jedis);
+            if (!gameManager.getState().equals(GameState.ENDING)) {
+                try (Jedis pub = Redis.get()) {
+                    pub.publish("mw78", String.join("|", "remove", MegaWalls78.getInstance().getConfigManager().server));
+                }
             }
-        }
+        } catch (Exception ignored) {}
     }
 
     public void closeSql() {

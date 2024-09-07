@@ -205,7 +205,7 @@ public class DatabaseManager {
             try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
                 statement.setString(1, player.toString());
                 statement.setString(2, identity.getId());
-                if (pattern != null) {
+                if (pattern != EquipmentManager.PATTERN_NONE) {
                     statement.setString(3, pattern.getPattern().key().value());
                 }
                 statement.executeUpdate();
