@@ -40,7 +40,7 @@ public class PatternGui {
         Inventory inventory = Bukkit.createInventory(player, 54, Component.translatable("mw78.gui.pattern").appendSpace().append(Component.translatable("mw78.gui.pattern.title", Component.text(page), Component.text(MAX_PAGE))));
 
         List<Pattern> patterns = EquipmentManager.PATTERNS.values().stream().skip((page - 1L) * SLOT_COUNT).limit(SLOT_COUNT).collect(Collectors.toList());
-        patterns.addFirst(null);
+        patterns.addFirst(EquipmentManager.PATTERN_NONE);
 
         boolean flag = true;
         for (int i = 0; i < patterns.size(); i++) {
@@ -150,7 +150,7 @@ public class PatternGui {
     }
 
     private static Component name(Pattern pattern) {
-        if (pattern == null) {
+        if (pattern == EquipmentManager.PATTERN_NONE) {
             return Component.translatable("mw78.gui.pattern.none");
         } else {
             return Component.translatable("item.minecraft." + pattern.getPattern().key().value() + "_banner_pattern.desc");
