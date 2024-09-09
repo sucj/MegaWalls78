@@ -111,8 +111,8 @@ bukkitPluginYaml {
         }
         register("surface") {
             permission = "mw78.surface"
+            description = "Go to surface."
             aliases = listOf("spawn")
-            usage = "/surface"
         }
         register("suicide") {
             permission = "mw78.suicide"

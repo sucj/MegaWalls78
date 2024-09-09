@@ -18,8 +18,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
-import java.sql.SQLException;
-
 public final class MegaWalls78 extends JavaPlugin {
 
     private GameManager gameManager;
@@ -54,7 +52,6 @@ public final class MegaWalls78 extends JavaPlugin {
         closeScoreboard();
         saveConfig();
         closeRedis();
-        closeSql();
     }
 
     private void initManagers() {
@@ -202,11 +199,6 @@ public final class MegaWalls78 extends JavaPlugin {
 
     public void initSql() {
         databaseManager = new DatabaseManager(configManager.url, configManager.user, configManager.password);
-        try {
-            databaseManager.connect();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
         databaseManager.init();
     }
 
@@ -220,13 +212,5 @@ public final class MegaWalls78 extends JavaPlugin {
                 }
             }
         } catch (Exception ignored) {}
-    }
-
-    public void closeSql() {
-        try {
-            databaseManager.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

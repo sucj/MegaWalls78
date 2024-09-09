@@ -46,40 +46,27 @@ public class DatabaseManager {
     private final String user;
     private final String password;
 
-    private Connection connection;
-
     public DatabaseManager(String url, String user, String password) {
         this.url = url;
         this.user = user;
         this.password = password;
     }
 
-    public void connect() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            connection = DriverManager.getConnection(url, user, password);
-        }
-    }
-
-    public void close() throws SQLException {
-        if (connection != null && !connection.isClosed()) {
-            connection.close();
-        }
-    }
-
     public Connection getConnection() throws SQLException {
-        connect();
-        return connection;
+        return DriverManager.getConnection(url, user, password);
     }
 
     public void init() {
-        try (Statement statement = getConnection().createStatement()) {
-            statement.executeUpdate(IDENTITY_CREATE);
-            statement.executeUpdate(RANK_CREATE);
-            statement.executeUpdate(ID_COLOR_CREATE);
-            statement.executeUpdate(ID_SKIN_CREATE);
-            statement.executeUpdate(PATTERN_CREATE);
-            statement.executeUpdate(TRIM_CREATE);
-            statement.executeUpdate(TRIGGER_CREATE);
+        try (Connection connection = getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                statement.executeUpdate(IDENTITY_CREATE);
+                statement.executeUpdate(RANK_CREATE);
+                statement.executeUpdate(ID_COLOR_CREATE);
+                statement.executeUpdate(ID_SKIN_CREATE);
+                statement.executeUpdate(PATTERN_CREATE);
+                statement.executeUpdate(TRIM_CREATE);
+                statement.executeUpdate(TRIGGER_CREATE);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -87,11 +74,13 @@ public class DatabaseManager {
 
     public CompletableFuture<String> getPlayerIdentity(UUID player) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = getConnection().prepareStatement(IDENTITY_GET)) {
-                statement.setString(1, player.toString());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return resultSet.getString(IDENTITY_LABEL);
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(IDENTITY_GET)) {
+                    statement.setString(1, player.toString());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            return resultSet.getString(IDENTITY_LABEL);
+                        }
                     }
                 }
             } catch (SQLException e) {
@@ -103,10 +92,12 @@ public class DatabaseManager {
 
     public void setPlayerIdentity(UUID player, Identity identity) {
         CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = getConnection().prepareStatement(IDENTITY_SET)) {
-                statement.setString(1, player.toString());
-                statement.setString(2, identity.getId());
-                statement.executeUpdate();
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(IDENTITY_SET)) {
+                    statement.setString(1, player.toString());
+                    statement.setString(2, identity.getId());
+                    statement.executeUpdate();
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -116,11 +107,13 @@ public class DatabaseManager {
 
     public CompletableFuture<String> getRankedIdentity(UUID player) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = getConnection().prepareStatement(RANK_GET)) {
-                statement.setString(1, player.toString());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return resultSet.getString(IDENTITY_LABEL);
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(RANK_GET)) {
+                    statement.setString(1, player.toString());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            return resultSet.getString(IDENTITY_LABEL);
+                        }
                     }
                 }
             } catch (SQLException e) {
@@ -132,12 +125,14 @@ public class DatabaseManager {
 
     public CompletableFuture<String> getIdentityColor(UUID player, Identity identity) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = getConnection().prepareStatement(ID_COLOR_GET)) {
-                statement.setString(1, player.toString());
-                statement.setString(2, identity.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return resultSet.getString(COLOR_LABEL);
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(ID_COLOR_GET)) {
+                    statement.setString(1, player.toString());
+                    statement.setString(2, identity.getId());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            return resultSet.getString(COLOR_LABEL);
+                        }
                     }
                 }
             } catch (SQLException e) {
@@ -149,12 +144,14 @@ public class DatabaseManager {
 
     public CompletableFuture<String> getIdentitySkin(UUID player, Identity identity) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = getConnection().prepareStatement(ID_SKIN_GET)) {
-                statement.setString(1, player.toString());
-                statement.setString(2, identity.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return resultSet.getString(SKIN_LABEL);
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(ID_SKIN_GET)) {
+                    statement.setString(1, player.toString());
+                    statement.setString(2, identity.getId());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            return resultSet.getString(SKIN_LABEL);
+                        }
                     }
                 }
             } catch (SQLException e) {
@@ -166,11 +163,13 @@ public class DatabaseManager {
 
     public void setIdentitySkin(UUID player, Identity identity, Skin skin) {
         CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = getConnection().prepareStatement(ID_SKIN_SET)) {
-                statement.setString(1, player.toString());
-                statement.setString(2, identity.getId());
-                statement.setString(3, skin.id());
-                statement.executeUpdate();
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(ID_SKIN_SET)) {
+                    statement.setString(1, player.toString());
+                    statement.setString(2, identity.getId());
+                    statement.setString(3, skin.id());
+                    statement.executeUpdate();
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -181,12 +180,14 @@ public class DatabaseManager {
     public CompletableFuture<String> getPlayerPattern(UUID player, Identity identity) {
         return CompletableFuture.supplyAsync(() -> {
             String pattern = null;
-            try (PreparedStatement statement = getConnection().prepareStatement(PATTERN_GET)) {
-                statement.setString(1, player.toString());
-                statement.setString(2, identity.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        pattern = resultSet.getString(PATTERN_LABEL);
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(PATTERN_GET)) {
+                    statement.setString(1, player.toString());
+                    statement.setString(2, identity.getId());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            pattern = resultSet.getString(PATTERN_LABEL);
+                        }
                     }
                 }
             } catch (SQLException e) {
@@ -202,13 +203,15 @@ public class DatabaseManager {
             if (pattern == EquipmentManager.PATTERN_NONE) {
                 sql = PATTERN_SET_NULL;
             }
-            try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
-                statement.setString(1, player.toString());
-                statement.setString(2, identity.getId());
-                if (pattern != EquipmentManager.PATTERN_NONE) {
-                    statement.setString(3, pattern.getPattern().key().value());
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                    statement.setString(1, player.toString());
+                    statement.setString(2, identity.getId());
+                    if (pattern != EquipmentManager.PATTERN_NONE) {
+                        statement.setString(3, pattern.getPattern().key().value());
+                    }
+                    statement.executeUpdate();
                 }
-                statement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -218,12 +221,14 @@ public class DatabaseManager {
 
     public CompletableFuture<String> getPlayerTrim(UUID player, Identity identity) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = getConnection().prepareStatement(TRIM_GET)) {
-                statement.setString(1, player.toString());
-                statement.setString(2, identity.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return resultSet.getString(TRIM_LABEL);
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(TRIM_GET)) {
+                    statement.setString(1, player.toString());
+                    statement.setString(2, identity.getId());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            return resultSet.getString(TRIM_LABEL);
+                        }
                     }
                 }
             } catch (SQLException e) {
@@ -235,11 +240,13 @@ public class DatabaseManager {
 
     public void setPlayerTrim(UUID player, Identity identity, TrimPattern trim) {
         CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = getConnection().prepareStatement(TRIM_SET)) {
-                statement.setString(1, player.toString());
-                statement.setString(2, identity.getId());
-                statement.setString(3, trim.key().value());
-                statement.executeUpdate();
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(TRIM_SET)) {
+                    statement.setString(1, player.toString());
+                    statement.setString(2, identity.getId());
+                    statement.setString(3, trim.key().value());
+                    statement.executeUpdate();
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -249,12 +256,14 @@ public class DatabaseManager {
 
     public CompletableFuture<Boolean> getTrigger(UUID player, Trigger trigger) {
         return CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = getConnection().prepareStatement(TRIGGER_GET)) {
-                statement.setString(1, player.toString());
-                statement.setString(2, trigger.getId());
-                try (ResultSet resultSet = statement.executeQuery()) {
-                    if (resultSet.next()) {
-                        return resultSet.getBoolean(TRIGGER_LABEL);
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(TRIGGER_GET)) {
+                    statement.setString(1, player.toString());
+                    statement.setString(2, trigger.getId());
+                    try (ResultSet resultSet = statement.executeQuery()) {
+                        if (resultSet.next()) {
+                            return resultSet.getBoolean(TRIGGER_LABEL);
+                        }
                     }
                 }
             } catch (SQLException e) {
@@ -266,11 +275,13 @@ public class DatabaseManager {
 
     public void setTrigger(UUID player, Trigger trigger, boolean sneak) {
         CompletableFuture.supplyAsync(() -> {
-            try (PreparedStatement statement = getConnection().prepareStatement(TRIGGER_SET)) {
-                statement.setString(1, player.toString());
-                statement.setString(2, trigger.getId());
-                statement.setBoolean(3, sneak);
-                statement.executeUpdate();
+            try (Connection connection = getConnection()) {
+                try (PreparedStatement statement = connection.prepareStatement(TRIGGER_SET)) {
+                    statement.setString(1, player.toString());
+                    statement.setString(2, trigger.getId());
+                    statement.setBoolean(3, sneak);
+                    statement.executeUpdate();
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
