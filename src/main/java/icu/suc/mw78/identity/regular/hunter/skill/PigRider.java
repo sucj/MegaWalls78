@@ -61,7 +61,7 @@ public final class PigRider extends DurationSkill {
         private void spawn() {
             EntityUtil.spawn(player.getLocation(), EntityUtil.Type.CONTROLLABLE_PIG, entity -> {
                 pig = (Pig) entity;
-                EntityUtil.scaleAttributeBaseValue(pig, Attribute.GENERIC_MOVEMENT_SPEED, 2.5D);
+                EntityUtil.scaleAttributeBaseValue(pig, Attribute.MOVEMENT_SPEED, 2.5D);
                 pig.setInvulnerable(true);
                 pig.addPotionEffect(SPEED);
                 EntityUtil.safeRide(pig, player);

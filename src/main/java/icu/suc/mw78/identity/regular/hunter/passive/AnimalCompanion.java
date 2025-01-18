@@ -105,7 +105,7 @@ public final class AnimalCompanion extends CooldownPassive {
                     EntityUtil.spawn(location, EntityUtil.Type.TAMED_WOLF, entity -> {
                         Wolf wolf = (Wolf) entity;
                         add(player, wolf);
-                        EntityUtil.scaleAttributeBaseValue(wolf, Attribute.GENERIC_MAX_HEALTH, 0.5D);
+                        EntityUtil.scaleAttributeBaseValue(wolf, Attribute.MAX_HEALTH, 0.5D);
                         wolf.setCollarColor(Color.getDye(PLAYER().getTeam().color()));
                     }, uuid);
         }

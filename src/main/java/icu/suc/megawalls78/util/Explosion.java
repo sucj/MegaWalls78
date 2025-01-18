@@ -14,10 +14,10 @@ public class Explosion {
 
     public static final ExplosionDamageCalculator ONLY_BLOCK = new OnlyBlockCalculator();
 
-    public static boolean create(World world, Entity source, ExplosionDamageCalculator behavior, double x, double y, double z, float power, boolean createFire, Level.ExplosionInteraction explosionType, boolean particles) {
+    public static void create(World world, Entity source, ExplosionDamageCalculator behavior, double x, double y, double z, float power, boolean createFire, Level.ExplosionInteraction explosionType, boolean particles) {
         net.minecraft.world.entity.Entity entity = source == null ? null : ((CraftEntity) source).getHandle();
         ServerLevel level = ((CraftWorld) world).getHandle();
-        return !level.explode(entity, net.minecraft.world.level.Explosion.getDefaultDamageSource(level, entity), behavior, x, y, z, power, createFire, explosionType, particles, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, SoundEvents.GENERIC_EXPLODE).wasCanceled;
+        level.explode(entity, net.minecraft.world.level.Explosion.getDefaultDamageSource(level, entity), behavior, x, y, z, power, createFire, explosionType);
     }
 
     private static class OnlyBlockCalculator extends ExplosionDamageCalculator {

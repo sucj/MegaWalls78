@@ -115,7 +115,7 @@ public class GrapplingHook extends FishingHook {
                 ProjectileUtil.rotateTowardsMovement(this, 0.2F);
 
                 this.setPos(x, y, z);
-                this.checkInsideBlocks();
+//                this.checkInsideBlocks();
             }
 
 //            if (!inGround) {

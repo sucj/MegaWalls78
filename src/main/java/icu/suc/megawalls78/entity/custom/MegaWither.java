@@ -3,6 +3,7 @@ package icu.suc.megawalls78.entity.custom;
 import icu.suc.megawalls78.MegaWalls78;
 import icu.suc.megawalls78.game.GameState;
 import net.kyori.adventure.bossbar.BossBar;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -28,12 +29,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
 
 public class MegaWither extends WitherBoss {
 
     private BossBar bossBar;
-    private static final Predicate<LivingEntity> LIVING_ENTITY_SELECTOR = (entity) -> !entity.getType().is(EntityTypeTags.WITHER_FRIENDS) && entity.attackable();
+    private static final TargetingConditions.Selector LIVING_ENTITY_SELECTOR = (entityliving, worldserver) -> !entityliving.getType().is(EntityTypeTags.WITHER_FRIENDS) && entityliving.attackable();
     private static final TargetingConditions TARGETING_CONDITIONS = TargetingConditions.forCombat().range(20.0D).selector(LIVING_ENTITY_SELECTOR);
 
     private final int[] nextHeadUpdate0;
@@ -62,7 +62,7 @@ public class MegaWither extends WitherBoss {
     }
 
     @Override
-    protected void customServerAiStep() {
+    protected void customServerAiStep(ServerLevel world) {
         int j;
 
         for (int i = 1; i < 3; ++i) {
@@ -81,7 +81,7 @@ public class MegaWither extends WitherBoss {
                         this.setAlternativeTarget(i, 0);
                     }
                 } else {
-                    List<LivingEntity> list = this.level().getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(20.0D, 8.0D, 20.0D));
+                    List<LivingEntity> list = world.getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(20.0D, 8.0D, 20.0D));
 
                     if (!list.isEmpty()) {
                         LivingEntity entityliving1 = list.get(this.random.nextInt(list.size()));
@@ -102,7 +102,7 @@ public class MegaWither extends WitherBoss {
         this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
 
         if (MegaWalls78.getInstance().getGameManager().getState().equals(GameState.BUFFING)) {
-            for (LivingEntity nearbyEntity : this.level().getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(5.0D, 5.0D, 5.0D))) {
+            for (LivingEntity nearbyEntity : world.getNearbyEntities(LivingEntity.class, TARGETING_CONDITIONS, this, this.getBoundingBox().inflate(5.0D, 5.0D, 5.0D))) {
                 if (this.tickCount % 100 == 0) {
                     if (this.tickCount % 200 == 0) {
                         nearbyEntity.setDeltaMovement(0.0D, 1.0D, 0.0D);
@@ -112,9 +112,9 @@ public class MegaWither extends WitherBoss {
                     }
                     float health = nearbyEntity.getHealth();
                     if (health <= 0 || health / 2 <= 0) {
-                        nearbyEntity.hurt(this.damageSources().wither(), random.nextFloat());
+                        nearbyEntity.hurtServer(world, this.damageSources().wither(), random.nextFloat());
                     } else {
-                        nearbyEntity.hurt(this.damageSources().wither(), health / 2);
+                        nearbyEntity.hurtServer(world, this.damageSources().wither(), health / 2);
                     }
                 }
                 if (this.tickCount % 20 == 0) {

@@ -88,9 +88,4 @@ public class ImmolatingBurstFireball extends LargeFireball {
     public boolean ignoreExplosion(net.minecraft.world.level.Explosion explosion) {
         return true;
     }
-
-    @Override
-    public boolean hurt(DamageSource source, float amount) {
-        return false;
-    }
 }

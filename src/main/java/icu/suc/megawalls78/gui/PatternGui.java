@@ -12,6 +12,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.banner.Pattern;
+import org.bukkit.craftbukkit.block.banner.CraftPatternType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -153,7 +154,7 @@ public class PatternGui {
         if (pattern == null) {
             return Component.translatable("mw78.gui.pattern.none");
         } else {
-            return Component.translatable("item.minecraft." + pattern.getPattern().key().value() + "_banner_pattern.desc");
+            return Component.translatable("item.minecraft." + ((CraftPatternType) pattern.getPattern()).getKey().value() + "_banner_pattern.desc");
         }
     }
 }

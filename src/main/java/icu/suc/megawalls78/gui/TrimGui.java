@@ -11,6 +11,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.inventory.trim.CraftTrimPattern;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -145,6 +146,6 @@ public class TrimGui {
     }
 
     private static ItemBuilder itemBuilder(TrimPattern trim) {
-        return ItemBuilder.of(Material.valueOf(trim.key().value().toUpperCase() + "_ARMOR_TRIM_SMITHING_TEMPLATE"));
+        return ItemBuilder.of(Material.valueOf(((CraftTrimPattern) trim).getKey().value().toUpperCase() + "_ARMOR_TRIM_SMITHING_TEMPLATE"));
     }
 }

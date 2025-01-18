@@ -18,10 +18,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.portal.DimensionTransition;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 
-import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class ExplodingSheep extends Sheep implements TraceableEntity {
@@ -82,20 +80,13 @@ public class ExplodingSheep extends Sheep implements TraceableEntity {
         this.level().explode(this, Explosion.getDefaultDamageSource(this.level(), this), this.usedPortal ? USED_PORTAL_DAMAGE_CALCULATOR : null, this.getX(), this.getY(0.0625D), this.getZ(), DEFAULT_RADIUS, false, Level.ExplosionInteraction.TNT);
     }
 
-    private void setUsedPortal(boolean teleported) {
-        this.usedPortal = teleported;
+    @Override
+    public boolean canUsePortal(boolean allowVehicles) {
+        return super.canUsePortal(allowVehicles);
     }
 
-    @Nullable
-    @Override
-    public Entity changeDimension(DimensionTransition teleportTarget) {
-        Entity entity = super.changeDimension(teleportTarget);
-
-        if (entity instanceof ExplodingSheep sheep) {
-            sheep.setUsedPortal(true);
-        }
-
-        return entity;
+    private void setUsedPortal(boolean teleported) {
+        this.usedPortal = teleported;
     }
 
     @Override

@@ -5,6 +5,8 @@ import icu.suc.megawalls78.identity.Identity;
 import icu.suc.megawalls78.identity.Skin;
 import icu.suc.megawalls78.identity.trait.skill.Trigger;
 import org.bukkit.block.banner.Pattern;
+import org.bukkit.craftbukkit.block.banner.CraftPatternType;
+import org.bukkit.craftbukkit.inventory.trim.CraftTrimPattern;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 
 import java.sql.*;
@@ -208,7 +210,7 @@ public class DatabaseManager {
                     statement.setString(1, player.toString());
                     statement.setString(2, identity.getId());
                     if (pattern != EquipmentManager.PATTERN_NONE) {
-                        statement.setString(3, pattern.getPattern().key().value());
+                        statement.setString(3, ((CraftPatternType) pattern.getPattern()).getKey().value());
                     }
                     statement.executeUpdate();
                 }
@@ -244,7 +246,7 @@ public class DatabaseManager {
                 try (PreparedStatement statement = connection.prepareStatement(TRIM_SET)) {
                     statement.setString(1, player.toString());
                     statement.setString(2, identity.getId());
-                    statement.setString(3, trim.key().value());
+                    statement.setString(3, ((CraftTrimPattern) trim).getKey().value());
                     statement.executeUpdate();
                 }
             } catch (SQLException e) {

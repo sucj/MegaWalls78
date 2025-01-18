@@ -34,8 +34,8 @@ public final class WolfPack extends ChargeCooldownPassive {
             EntityUtil.spawn(player.getLocation(), EntityUtil.Type.TAMED_WOLF, entity -> {
                 Wolf wolf = (Wolf) entity;
                 EntityUtil.setTamed(player, wolf);
-                EntityUtil.setAttributeValue(wolf, Attribute.GENERIC_MAX_HEALTH, HEALTH);
-                EntityUtil.scaleAttributeBaseValue(wolf, Attribute.GENERIC_ATTACK_DAMAGE, SCALE);
+                EntityUtil.setAttributeValue(wolf, Attribute.MAX_HEALTH, HEALTH);
+                EntityUtil.scaleAttributeBaseValue(wolf, Attribute.ATTACK_DAMAGE, SCALE);
                 wolf.setCollarColor(Color.getDye(PLAYER().getTeam().color()));
                 entities.add(wolf);
             }, player.getUniqueId());

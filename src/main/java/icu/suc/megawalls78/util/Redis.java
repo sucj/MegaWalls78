@@ -15,4 +15,8 @@ public class Redis {
     public static void close(Jedis jedis) {
         POOL.returnResource(jedis);
     }
+
+    public static void close() {
+        POOL.close();
+    }
 }

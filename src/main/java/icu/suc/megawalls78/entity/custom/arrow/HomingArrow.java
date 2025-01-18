@@ -26,7 +26,7 @@ public class HomingArrow extends NMSArrow {
     public void tick() {
         super.tick();
 
-        if (!inGround) {
+        if (!onGround) {
             CraftEntity bukkitArrow = getBukkitEntity();
             Player player = (Player) getOwner().getBukkitEntity();
             AtomicReference<Player> nearestPlayer = new AtomicReference<>();

@@ -46,7 +46,7 @@ public class ShadowBurstSkull extends WitherSkull {
             if (entity1 instanceof LivingEntity entityliving) {
                 DamageSource damagesource = this.damageSources().witherSkull(this, entityliving);
 
-                flag = entity.hurt(damagesource, damage);
+                flag = entity.hurtServer(worldserver, damagesource, damage);
                 if (flag) {
                     if (entity.isAlive()) {
                         EnchantmentHelper.doPostAttackEffects(worldserver, entity, damagesource);

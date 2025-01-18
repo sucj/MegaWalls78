@@ -3,8 +3,8 @@ import xyz.jpenilla.resourcefactory.bukkit.Permission
 
 plugins {
     `java-library`
-    id("io.papermc.paperweight.userdev").version("1.7.2")
-    id("xyz.jpenilla.run-paper").version("2.3.0")
+    id("io.papermc.paperweight.userdev").version("2.0.0-SNAPSHOT")
+    id("xyz.jpenilla.run-paper").version("2.3.1")
     id("xyz.jpenilla.resource-factory-bukkit-convention").version("1.1.1")
 }
 
@@ -24,17 +24,14 @@ repositories {
     maven("https://repo.codemc.org/repository/maven-public/")
     maven("https://jitpack.io")
     maven("https://repo.codemc.org/repository/maven-public/")
-//  maven("https://repo.dmulloy2.net/repository/public/")
     mavenCentral()
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.4-R0.1-SNAPSHOT")
     implementation("net.skinsrestorer", "skinsrestorer-api", "15.4.2-SNAPSHOT")
-//  implementation("com.github.LeonMangler", "SuperVanish", "6.2.19")
     implementation("net.luckperms", "api", "5.4")
-    implementation("net.megavex", "scoreboard-library-api", "2.1.12")
-//  implementation("com.comphenix.protocol", "ProtocolLib", "5.3.0-SNAPSHOT")
+    implementation("net.megavex", "scoreboard-library-api", "2.2.2")
     implementation("redis.clients", "jedis", "5.1.3")
     implementation("com.mysql", "mysql-connector-j", "9.0.0")
 }
@@ -56,10 +53,10 @@ tasks.register<Copy>("deps") {
 bukkitPluginYaml {
     main = "icu.suc.megawalls78.MegaWalls78"
     authors = listOf("557")
-    apiVersion = "1.21"
+    apiVersion = "1.21.4"
     load = BukkitPluginYaml.PluginLoadOrder.POSTWORLD
     depend = listOf("SkinsRestorer", "LuckPerms")
-    libraries = listOf("com.mysql:mysql-connector-j:9.0.0", "redis.clients:jedis:5.1.3", "net.megavex:scoreboard-library-api:2.1.12", "net.megavex:scoreboard-library-implementation:2.1.12", "net.megavex:scoreboard-library-modern:2.1.12")
+    libraries = listOf("com.mysql:mysql-connector-j:9.0.0", "redis.clients:jedis:5.1.3", "net.megavex:scoreboard-library-api:2.2.2", "net.megavex:scoreboard-library-implementation:2.2.2", "net.megavex:scoreboard-library-modern:2.2.2")
     prefix = "MW78"
     permissions {
 //    register("mw78.id") {

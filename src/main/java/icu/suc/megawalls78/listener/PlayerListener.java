@@ -142,7 +142,7 @@ public class PlayerListener implements Listener {
             } else {
                 GamePlayer gamePlayer = gameManager.getPlayer(player);
                 drops.removeIf(ItemUtil::mw78SoulBound);
-                EntityUtil.setAttributeValue(player, Attribute.GENERIC_MAX_HEALTH, 20);
+                EntityUtil.setAttributeValue(player, Attribute.MAX_HEALTH, 20);
                 GameTeam team = gamePlayer.getTeam();
                 boolean dead = gameManager.isWitherDead(team);
                 if (event.deathMessage() instanceof TranslatableComponent deathMessage) {
@@ -233,7 +233,7 @@ public class PlayerListener implements Listener {
                 event.setSpawnLocation(RandomUtil.getRandomSpawn(gamePlayer.getTeam().spawn()));
                 Scheduler.runTask(() -> {
                     player.setGameMode(GameMode.SURVIVAL);
-                    EntityUtil.setAttributeValue(player, Attribute.GENERIC_MAX_HEALTH, 40);
+                    EntityUtil.setAttributeValue(player, Attribute.MAX_HEALTH, 40);
                     player.setHealth(40);
                     PlayerUtil.setStarvation(player, 20);
                     MegaWalls78.getInstance().getSkinManager().applySkin(player);
@@ -276,7 +276,7 @@ public class PlayerListener implements Listener {
                     );
 
                     player.setGameMode(GameMode.SURVIVAL);
-                    EntityUtil.setAttributeValue(player, Attribute.GENERIC_MAX_HEALTH, 40);
+                    EntityUtil.setAttributeValue(player, Attribute.MAX_HEALTH, 40);
                     player.setHealth(40);
                     PlayerUtil.setStarvation(player, 20);
                     gamePlayer.getIdentity().getKit().equip(player);
