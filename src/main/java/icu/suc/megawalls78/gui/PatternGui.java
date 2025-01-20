@@ -25,7 +25,7 @@ public class PatternGui {
 
     private static final int SLOT_COUNT = 21;
     private static final int MIN_PAGE = 1;
-    private static final int MAX_PAGE = EquipmentManager.PATTERNS.values().size() / SLOT_COUNT + EquipmentManager.PATTERNS.values().size() % SLOT_COUNT == 0 ? 0 : 1;
+    private static final int MAX_PAGE = EquipmentManager.PATTERNS.size() / SLOT_COUNT + EquipmentManager.PATTERNS.size() % SLOT_COUNT == 0 ? 0 : 1;
     private static final int[] ID_SLOT = new int[]{
             10, 11, 12, 13, 14, 15, 16,
             19, 20, 21, 22, 23, 24, 25,
@@ -46,12 +46,9 @@ public class PatternGui {
         boolean flag = true;
         for (int i = 0; i < patterns.size(); i++) {
             Pattern pattern = patterns.get(i);
-            ItemBuilder itemBuilder = ItemBuilder.of(Material.WHITE_BANNER)
-                    .setDisplayName(name(pattern))
+            ItemBuilder itemBuilder = ItemBuilder.of(pattern == null ? Material.PAPER : Material.valueOf(id(pattern).toUpperCase()))
+                    .setDisplayName(name(pattern).color(NamedTextColor.WHITE))
                     .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE);
-            if (pattern != null) {
-                itemBuilder.addItemFlag(ItemFlag.HIDE_ADDITIONAL_TOOLTIP).addBannerPattern(pattern);
-            }
             if (flag && Objects.equals(MegaWalls78.getInstance().getEquipmentManager().getPattern(player.getUniqueId()), pattern)) {
                 itemBuilder.addSuffix(Component.space().append(Component.translatable("mw78.gui.selected", NamedTextColor.GRAY))).setEnchantmentGlintOverride(true);
                 flag = false;
@@ -140,13 +137,10 @@ public class PatternGui {
     }
 
     public static ItemStack trigger(Player player) {
-        ItemBuilder itemBuilder = ItemBuilder.of(Material.WHITE_BANNER)
+        Pattern pattern = MegaWalls78.getInstance().getEquipmentManager().getPattern(player.getUniqueId());
+        ItemBuilder itemBuilder = ItemBuilder.of(pattern == null ? Material.PAPER : Material.valueOf(id(pattern).toUpperCase()))
                 .setDisplayName(Component.translatable("mw78.gui.pattern", NamedTextColor.WHITE))
                 .addDecoration(TextDecoration.ITALIC, TextDecoration.State.FALSE);
-        Pattern pattern = MegaWalls78.getInstance().getEquipmentManager().getPattern(player.getUniqueId());
-        if (pattern != null) {
-            itemBuilder.addItemFlag(ItemFlag.HIDE_ADDITIONAL_TOOLTIP).addBannerPattern(pattern);
-        }
         return itemBuilder.build();
     }
 
@@ -154,7 +148,11 @@ public class PatternGui {
         if (pattern == null) {
             return Component.translatable("mw78.gui.pattern.none");
         } else {
-            return Component.translatable("item.minecraft." + ((CraftPatternType) pattern.getPattern()).getKey().value() + "_banner_pattern.desc");
+            return Component.translatable("item.minecraft." + id(pattern));
         }
+    }
+
+    private static String id(Pattern pattern) {
+        return ((CraftPatternType) pattern.getPattern()).getKey().value() + "_banner_pattern";
     }
 }
