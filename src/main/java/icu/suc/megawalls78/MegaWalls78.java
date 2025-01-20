@@ -55,7 +55,7 @@ public final class MegaWalls78 extends JavaPlugin {
     }
 
     private void initManagers() {
-        configManager = new ConfigManager(getConfig(), "map.yml", "skin.yml", "chat.yml");
+        configManager = new ConfigManager(getConfig(), "map.yml", "skin.yml", "bundle.yml");
         identityManager = new IdentityManager();
         skinManager = new SkinManager();
         gameManager = new GameManager();

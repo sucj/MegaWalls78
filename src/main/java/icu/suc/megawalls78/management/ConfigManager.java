@@ -33,6 +33,7 @@ public class ConfigManager {
     private final Configuration gameConfig;
     private final File mapFile;
     private final File skinFile;
+    private final File bundleFile;
 
     public String host;
     public int port;
@@ -55,10 +56,11 @@ public class ConfigManager {
     public long respawnTime;
     public float witherHealth;
 
-    public ConfigManager(Configuration gameConfig, String mapConfig, String skinConfig, String chatConfig) {
+    public ConfigManager(Configuration gameConfig, String mapConfig, String skinConfig, String bundleConfig) {
         this.gameConfig = gameConfig;
         this.mapFile = new File(MegaWalls78.getInstance().getDataFolder(), mapConfig);
         this.skinFile = new File(MegaWalls78.getInstance().getDataFolder(), skinConfig);
+        this.bundleFile = new File(MegaWalls78.getInstance().getDataFolder(), bundleConfig);
     }
 
     public void load() {
@@ -139,6 +141,10 @@ public class ConfigManager {
                 instance.getSkinManager().addSkin(identity, new Skin(key + "." + s, sc.getString("value"), sc.getString("signature")));
             }
         }
+
+        Configuration bundleConfig = YamlConfiguration.loadConfiguration(bundleFile);
+        BundleManager.enable = bundleConfig.getBoolean("enable");
+        BundleManager.contents = bundleConfig.getList("contents").toArray(new org.bukkit.inventory.ItemStack[0]);
     }
 
     public void save() {

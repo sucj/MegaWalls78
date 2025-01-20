@@ -1,6 +1,7 @@
 package icu.suc.megawalls78.identity;
 
 import com.google.common.collect.Lists;
+import icu.suc.megawalls78.management.BundleManager;
 import icu.suc.megawalls78.util.ItemBuilder;
 import icu.suc.megawalls78.util.ItemUtil;
 import net.kyori.adventure.text.Component;
@@ -148,6 +149,10 @@ public abstract class Kit {
         }
         if (bootsBuilder != null) {
             inventory.setBoots(bootsBuilder.build());
+        }
+
+        if (BundleManager.enable) {
+            player.getInventory().addItem(BundleManager.contents.clone());
         }
     }
 }
