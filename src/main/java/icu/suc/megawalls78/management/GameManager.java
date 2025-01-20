@@ -96,6 +96,9 @@ public class GameManager {
     }
 
     public void removeSpectator(Player player) {
+        if (player == null) {
+            return;
+        }
         spectators.remove(player.getUniqueId());
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             onlinePlayer.listPlayer(player);
