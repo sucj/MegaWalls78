@@ -1,47 +1,26 @@
 package icu.suc.megawalls78.entity.custom.tamed;
 
 import icu.suc.megawalls78.entity.pathfinder.CustomFollowOwnerGoal;
-import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Blaze;
 import net.minecraft.world.level.Level;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 public class TamedBlaze extends Blaze implements Tamable {
 
-    private static EntityDataAccessor<Byte> DATA_FLAGS_ID;
-
     private final UUID owner;
 
     public TamedBlaze(Level world, Object owner) {
         super(EntityType.BLAZE, world);
         this.owner = (UUID) owner;
-
-        try {
-            DATA_FLAGS_ID = (EntityDataAccessor<Byte>) FieldUtils.readStaticField(Blaze.class, "DATA_FLAGS_ID", true);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(6, new CustomFollowOwnerGoal(this, 1.0D, 10.0F, 2.0F));
         super.registerGoals();
-    }
-
-    void setCharged(boolean fireActive) {
-        byte b = this.entityData.get(DATA_FLAGS_ID);
-        if (fireActive) {
-            b = (byte)(b | 1);
-        } else {
-            b = (byte)(b & -2);
-        }
-
-        this.entityData.set(DATA_FLAGS_ID, b);
     }
 
     @Override

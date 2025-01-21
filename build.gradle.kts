@@ -109,12 +109,12 @@ bukkitPluginYaml {
         register("surface") {
             permission = "mw78.surface"
             description = "Go to surface."
-            aliases = listOf("spawn")
+//            aliases = listOf("spawn")
         }
         register("suicide") {
             permission = "mw78.suicide"
             description = "Kill yourself."
-            aliases = listOf("kill", "die")
+//            aliases = listOf("kill", "die")
         }
         register("energy") {
             permission = "mw78.energy"
@@ -135,7 +135,7 @@ bukkitPluginYaml {
         register("teamchest") {
             permission = "mw78.teamchest"
             description = "Open your team chest"
-            aliases = listOf("tchest")
+//            aliases = listOf("tchest")
         }
         register("trait") {
             permission = "mw78.trait"

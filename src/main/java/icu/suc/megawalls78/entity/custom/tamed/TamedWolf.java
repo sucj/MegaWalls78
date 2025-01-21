@@ -14,7 +14,7 @@ public class TamedWolf extends Wolf {
 
     public TamedWolf(Level world, Object owner) {
         super(EntityType.WOLF, world);
-        this.owner = ((UUID) owner);
+        this.owner = (UUID) owner;
         setTame(true, true);
     }
 

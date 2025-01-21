@@ -483,7 +483,7 @@ public class EntityUtil {
         TAMED_SKELETON(TamedSkeleton.class),
         TAMED_SPIDER(TamedSpider.class),
         MEGA_WITHER(MegaWither.class),
-        TAMED_ZOMBIFIED_PIGLIN(TeamZombifiedPiglin.class);
+        TAMED_ZOMBIFIED_PIGLIN(TamedZombifiedPiglin.class);
 
         private final Class<? extends net.minecraft.world.entity.Entity> clazz;
 

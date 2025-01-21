@@ -8,11 +8,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class TeamZombifiedPiglin extends ZombifiedPiglin implements Tamable {
+public class TamedZombifiedPiglin extends ZombifiedPiglin implements Tamable {
 
     private final UUID owner;
 
-    public TeamZombifiedPiglin(Level world, Object owner) {
+    public TamedZombifiedPiglin(Level world, Object owner) {
         super(EntityType.ZOMBIFIED_PIGLIN, world);
         this.owner = (UUID) owner;
     }

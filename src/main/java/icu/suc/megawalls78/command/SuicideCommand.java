@@ -2,6 +2,7 @@ package icu.suc.megawalls78.command;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.management.GameManager;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -15,7 +16,7 @@ public class SuicideCommand extends Command {
         return Commands.literal(name)
                 .requires(source -> {
                     if (hasPermission(source, permission)) {
-                        if (gameManager.inFighting()) {
+                        if (gameManager.getState().equals(GameState.PREPARING)) {
                             if (source.getExecutor() instanceof Damageable damageable) {
                                 return !(damageable instanceof Player player) || !gameManager.isSpectator(player);
                             }

@@ -2,6 +2,7 @@ package icu.suc.megawalls78.command;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import icu.suc.megawalls78.MegaWalls78;
+import icu.suc.megawalls78.game.GameState;
 import icu.suc.megawalls78.management.GameManager;
 import icu.suc.megawalls78.util.RandomUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -15,7 +16,7 @@ public class SurfaceCommand extends Command {
         return Commands.literal(name)
                 .requires(source -> {
                     if (hasPermission(source, permission)) {
-                        if (gameManager.inFighting()) {
+                        if (gameManager.getState().equals(GameState.PREPARING)) {
                             return source.getExecutor() instanceof Player player && !gameManager.isSpectator(player);
                         }
                     }

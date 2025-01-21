@@ -14,7 +14,7 @@ public class TamedSkeleton extends Skeleton implements Tamable {
 
     public TamedSkeleton(Level world, Object owner) {
         super(EntityType.SKELETON, world);
-        this.owner = ((UUID) owner);
+        this.owner = (UUID) owner;
     }
 
     @Override

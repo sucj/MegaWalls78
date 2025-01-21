@@ -11,11 +11,13 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
+import java.util.UUID;
 
 public abstract class Kit {
 
@@ -102,7 +104,7 @@ public abstract class Kit {
     }
 
     protected ItemBuilder addPotion(String name, int amount) {
-        return addItem(Material.POTION, amount).setDisplayName(Component.translatable("item.minecraft.potion.effect." + name));
+        return addItem(Material.POTION, amount).setCustomPotionName(name);
     }
 
     protected ItemBuilder addHealingPotion(int amount, int level) {
@@ -152,7 +154,12 @@ public abstract class Kit {
         }
 
         if (BundleManager.enable) {
+            UUID uuid = player.getUniqueId();
+            if (BundleManager.SET.contains(uuid)) {
+                return;
+            }
             player.getInventory().addItem(BundleManager.contents.clone());
+            BundleManager.SET.add(uuid);
         }
     }
 }

@@ -52,6 +52,7 @@ public class ItemBuilder {
     private List<Enchant> enchantList;
 
     private List<CustomEffect> customEffectList;
+    private String customPotionName;
 
     private Multimap<Attribute, AttributeModifier> attributeMap;
 
@@ -167,6 +168,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setCustomPotionName(String customPotionName) {
+        this.customPotionName = customPotionName;
+        return this;
+    }
+
     public ItemBuilder addAttribute(Attribute attribute, AttributeModifier attributeModifier) {
         if (this.attributeMap == null) {
             this.attributeMap = HashMultimap.create();
@@ -244,84 +250,90 @@ public class ItemBuilder {
     }
 
     public ItemStack build() {
-        ItemStack itemStack = ItemStack.of(type);
+        ItemStack item = ItemStack.of(type);
         if (amount != null) {
-            itemStack.setAmount(amount);
+            item.setAmount(amount);
         }
 
-        ItemMeta itemMeta = itemStack.getItemMeta();
+        ItemMeta meta = item.getItemMeta();
+
         if (maxStackSize != null) {
-            itemMeta.setMaxStackSize(maxStackSize);
+            meta.setMaxStackSize(maxStackSize);
         }
         if (displayName != null) {
-            itemMeta.displayName(displayName);
+            meta.displayName(displayName);
         }
         if (unbreakable != null) {
-            itemMeta.setUnbreakable(unbreakable);
+            meta.setUnbreakable(unbreakable);
         }
         if (hideToolTip != null) {
-            itemMeta.setHideTooltip(hideToolTip);
+            meta.setHideTooltip(hideToolTip);
         }
 
-        itemMeta.lore(lore);
+        meta.lore(lore);
 
-        if (itemMeta instanceof Damageable damageable) {
+        if (persistentDataList != null) {
+            for (PersistentData persistentData : persistentDataList) {
+                meta.getPersistentDataContainer().set(persistentData.namespacedKey(), persistentData.persistentDataType(), persistentData.c());
+            }
+        }
+
+        if (enchantmentGlintOverride != null) {
+            meta.setEnchantmentGlintOverride(enchantmentGlintOverride);
+        }
+        if (enchantList != null) {
+            for (Enchant enchant : enchantList) {
+                meta.addEnchant(enchant.enchantment(), enchant.level, enchant.ignoreRestrictions);
+            }
+        }
+
+        if (attributeMap != null) {
+            meta.setAttributeModifiers(attributeMap);
+        }
+
+        if (itemFlagList != null) {
+            for (ItemFlag itemFlag : itemFlagList) {
+                if (itemFlag.equals(ItemFlag.HIDE_ATTRIBUTES) && attributeMap == null) {
+                    meta.setAttributeModifiers(type.getDefaultAttributeModifiers());
+                }
+                meta.addItemFlags(itemFlag);
+            }
+        }
+
+        if (meta instanceof PotionMeta potion) {
+            if (customEffectList != null) {
+                for (CustomEffect customEffect : customEffectList) {
+                    potion.addCustomEffect(customEffect.potionEffect(), customEffect.ambient());
+                }
+            }
+            if (customPotionName != null) {
+                potion.setCustomPotionName(customPotionName);
+            }
+        }
+
+        if (meta instanceof Damageable damageable) {
             if (durability != null) {
                 damageable.setDamage(durability);
             }
             damageable.setMaxDamage(maxDurability);
         }
 
-        if (persistentDataList != null) {
-            for (PersistentData persistentData : persistentDataList) {
-                itemMeta.getPersistentDataContainer().set(persistentData.namespacedKey(), persistentData.persistentDataType(), persistentData.c());
+        if (meta instanceof SkullMeta skull) {
+            if (profile != null) {
+                skull.setPlayerProfile(profile);
             }
         }
 
-        if (enchantmentGlintOverride != null) {
-            itemMeta.setEnchantmentGlintOverride(enchantmentGlintOverride);
-        }
-        if (enchantList != null) {
-            for (Enchant enchant : enchantList) {
-                itemMeta.addEnchant(enchant.enchantment(), enchant.level, enchant.ignoreRestrictions);
+        if (meta instanceof ColorableArmorMeta colorableArmor) {
+            if (armorColor != null) {
+                colorableArmor.setColor(armorColor);
             }
         }
 
-        if (customEffectList != null) {
-            for (CustomEffect customEffect : customEffectList) {
-                ((PotionMeta) itemMeta).addCustomEffect(customEffect.potionEffect(), customEffect.ambient());
+        if (meta instanceof BannerMeta banner) {
+            if (bannerPatternList != null) {
+                banner.setPatterns(bannerPatternList);
             }
-        }
-
-        if (attributeMap != null) {
-            itemMeta.setAttributeModifiers(attributeMap);
-        }
-
-        if (itemFlagList != null) {
-            for (ItemFlag itemFlag : itemFlagList) {
-                if (itemFlag.equals(ItemFlag.HIDE_ATTRIBUTES) && attributeMap == null) {
-                    itemMeta.setAttributeModifiers(type.getDefaultAttributeModifiers());
-                }
-                itemMeta.addItemFlags(itemFlag);
-            }
-        }
-
-        if (profile != null) {
-            try {
-                ((SkullMeta) itemMeta).setPlayerProfile(profile);
-            } catch (ClassCastException ignored) {}
-        }
-
-        if (armorColor != null) {
-            try {
-                ((ColorableArmorMeta) itemMeta).setColor(armorColor);
-            } catch (ClassCastException ignored) {}
-        }
-
-        if (bannerPatternList != null) {
-            try {
-                ((BannerMeta) itemMeta).setPatterns(bannerPatternList);
-            } catch (ClassCastException ignored) {}
         }
 
         if (prefixList != null) {
@@ -329,20 +341,20 @@ public class ItemBuilder {
             for (Component prefix : prefixList) {
                 prefixes = prefixes.append(prefix);
             }
-            itemMeta.displayName(prefixes.append(displayName == null ? Component.translatable(itemStack) : displayName));
+            meta.displayName(prefixes.append(displayName == null ? Component.translatable(item) : displayName));
         }
         if (suffixList != null) {
             Component suffixes = Component.empty();
             for (Component suffix : suffixList) {
                 suffixes = suffixes.append(suffix);
             }
-            itemMeta.displayName((displayName == null ? Component.translatable(itemStack) : displayName).append(suffixes));
+            meta.displayName((displayName == null ? Component.translatable(item) : displayName).append(suffixes));
         }
 
-        Component component = itemMeta.displayName();
+        Component component = meta.displayName();
         if (component == null) {
             if (nameColor != null || decorationList != null) {
-                component = Component.translatable(itemStack);
+                component = Component.translatable(item);
                 if (nameColor != null) {
                     component = component.color(nameColor);
                 }
@@ -351,7 +363,7 @@ public class ItemBuilder {
                         component = component.decoration(decoration.decoration(), decoration.state());
                     }
                 }
-                itemMeta.displayName(component);
+                meta.displayName(component);
             }
         } else {
             if (nameColor != null) {
@@ -362,12 +374,12 @@ public class ItemBuilder {
                     component = component.decoration(decoration.decoration(), decoration.state());
                 }
             }
-            itemMeta.displayName(component);
+            meta.displayName(component);
         }
 
-        itemStack.setItemMeta(itemMeta);
+        item.setItemMeta(meta);
 
-        return itemStack;
+        return item;
     }
 
     private record PersistentData<P, C>(NamespacedKey namespacedKey, PersistentDataType<P, C> persistentDataType, C c) {
