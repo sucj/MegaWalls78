@@ -46,7 +46,7 @@ public class ScoreboardManager implements Listener {
 
     public static final SidebarComponent TITLE = SidebarComponent.staticLine(Component.translatable("mw78.sb.title").color(AQUA).decorate(TextDecoration.BOLD));
     public static final SidebarComponent IP = SidebarComponent.staticLine(Component.text("mc.suc.icu").color(AQUA));
-    public static final SidebarComponent INFO = SidebarComponent.dynamicLine(() -> Component.text(LocalDate.now().format(Formatters.DATE)).color(GRAY).appendSpace().append(Component.text("TEST").color(DARK_GRAY)));
+    public static final SidebarComponent INFO = SidebarComponent.dynamicLine(() -> Component.text(LocalDate.now().format(Formatters.DATE)).color(GRAY).appendSpace().append(Component.text(MegaWalls78.getInstance().getConfigManager().server).color(DARK_GRAY)));
 
     private final Map<UUID, SidebarWrapper> sidebarMap;
     private final TeamManager teamManager;

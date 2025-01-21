@@ -129,6 +129,7 @@ public class PlayerListener implements Listener {
             event.quitMessage(null);
         }
         MegaWalls78.getInstance().getIdentityManager().clearCache(uuid);
+        MegaWalls78.getInstance().getSkinManager().clearCache(uuid);
         MegaWalls78.getInstance().getEquipmentManager().clearCache(uuid);
     }
 

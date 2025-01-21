@@ -11,6 +11,7 @@ import net.skinsrestorer.api.SkinsRestorerProvider;
 import net.skinsrestorer.api.property.InputDataResult;
 import net.skinsrestorer.api.property.SkinProperty;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -39,7 +40,7 @@ public class SkinManager {
         this.applySkin(player, getPlayerSelectedSkin(player.getUniqueId(), identity));
     }
 
-    public void applySkin(Player player, Skin skin) {
+    public void applySkin(Player player, @NotNull Skin skin) {
         SkinsRestorer skinsRestorer = SkinsRestorerProvider.get();
         Optional<InputDataResult> result = skinsRestorer.getSkinStorage().findSkinData(skin.id());
         if (result.isEmpty()) {
@@ -52,7 +53,7 @@ public class SkinManager {
         SkinsRestorerProvider.get().getSkinApplier(Player.class).applySkin(player, playerSkins.get(player));
     }
 
-    public void addPlayerSkin(Player player) {
+    public void addPlayerSkin(@NotNull Player player) {
         for (ProfileProperty property : player.getPlayerProfile().getProperties()) {
             if (property.getName().equals(SkinProperty.TEXTURES_NAME)) {
                 playerSkins.put(player, SkinProperty.of(property.getValue(), Objects.requireNonNull(property.getSignature())));
@@ -103,5 +104,9 @@ public class SkinManager {
 
     public List<Skin> getSkins(Identity identity) {
         return skins.get(identity);
+    }
+
+    public void clearCache(UUID player) {
+        playerSelectedSkin.remove(player);
     }
 }
