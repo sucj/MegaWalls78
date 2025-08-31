@@ -2,6 +2,7 @@
 > 如果有疑问请询问作者
 
 [MegaWalls78-Open](https://github.com/sucj/MegaWalls78-Open)
+
 [QQ群](https://qm.qq.com/q/jT3SC3MP7i)
 
 此项目还有很多bug未修复
